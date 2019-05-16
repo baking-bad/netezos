@@ -19,7 +19,7 @@ Let's create the instance of `TezosRpc` class, build simple query and execute it
         var hash = await rpc.Blocks.Head.Hash.GetAsync();
     }
 
-Note that a real HTTP request is sent only when you call `GetAsync()`. Until then, you work with just the query object, which can be used to get subqueries.
+Note that a real HTTP request is sent only when you call `GetAsync()`. Until then, you work with just the query object, which can also be used to get subqueries.
 
 ### Accessing blocks
 You can access any block in two ways: by forward indexing and by backward indexing.
