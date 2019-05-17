@@ -8,7 +8,7 @@
         public DeepRpcDictionary<string, RpcObject> Commitments
             => new DeepRpcDictionary<string, RpcObject>(this, "commitments/");
 
-        public RpcObject ContractsCount
+        public RpcObject GlobalCounter
             => new RpcObject(this, "contracts/global_counter/");
 
         public DeepRpcDictionary<string, RawContractQuery> Contracts
