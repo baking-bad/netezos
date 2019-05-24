@@ -13,7 +13,7 @@
         /// <summary>
         /// Gets the query to the block header
         /// </summary>
-        public RpcObject Header => new RpcObject(this, "header/");
+        public BlockHeaderQuery Header => new BlockHeaderQuery(this, "header/");
 
         /// <summary>
         /// Gets the query to the block metadata
