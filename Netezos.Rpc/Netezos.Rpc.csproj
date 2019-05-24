@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    
+    <PackageId>Netezos.Rpc</PackageId>
+    <PackageTags>tezos rpc api</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/baking-bad/netezos</PackageProjectUrl>
+    
+    <RepositoryUrl>https://github.com/baking-bad/netezos</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    
+    <Authors>Groxan</Authors>
+    <Product>Netezos.Rpc</Product>
+    <Description>.Net Standard 2.0 library for working with Tezos RPC API</Description>
+    <Version>1.0.0</Version>
+    <Copyright>Copyright © Baking Bad 2019</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
