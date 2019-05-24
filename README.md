@@ -1,8 +1,13 @@
 # Netezos
 [![Made With](https://img.shields.io/badge/made%20with-C%23-success.svg?)](https://docs.microsoft.com/en-gb/dotnet/csharp/language-reference/)
 [![License: MIT](https://img.shields.io/github/license/baking-bad/netezos.svg)](https://opensource.org/licenses/MIT)
+[![NuGet](https://img.shields.io/nuget/v/Netezos.Rpc.svg)](https://www.nuget.org/packages/Netezos.Rpc/)
 
 .Net Standard 2.0 libraries pack for working with Tezos.
+
+## Installation
+
+`PM> Install-Package Netezos.Rpc`
 
 ## Netezos.Rpc
 Netezos.Rpc provides an access to the Tezos node via RPC API. There is `TezosRpc` class that you should use to build the queries, supported by Tezos RPC API.
