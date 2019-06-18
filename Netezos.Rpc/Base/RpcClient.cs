@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -65,6 +66,34 @@ namespace Netezos.Rpc
         public async Task<T> GetJson<T>(string path)
         {
             using (var stream = await HttpClient.GetStreamAsync(path))
+            using (var streamReader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(streamReader))
+            {
+                var serializer = new JsonSerializer();
+                return serializer.Deserialize<T>(jsonReader);
+            }
+        }
+        
+                
+        public async Task<JToken> Post(string path, string content)
+        {
+            var response = (await HttpClient.PostAsync(path, new JsonContent(content)))
+                .EnsureSuccessStatusCode();
+            
+            using (var stream = await response.Content.ReadAsStreamAsync())
+            using (var streamReader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(streamReader))
+            {
+                return JToken.ReadFrom(jsonReader);
+            }
+        }  
+        
+        public async Task<T> Post<T>(string path, string content)
+        {
+            var response = (await HttpClient.PostAsync(path, new JsonContent(content)))
+                .EnsureSuccessStatusCode();
+            
+            using (var stream = await response.Content.ReadAsStreamAsync())
             using (var streamReader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(streamReader))
             {

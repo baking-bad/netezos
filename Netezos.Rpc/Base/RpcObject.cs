@@ -50,7 +50,7 @@ namespace Netezos.Rpc
         public async Task<JToken> GetAsync() => await Client.GetJson(Query);
 
         /// <summary>
-        /// Executes the query and returns the json object, deserealized to the specified type
+        /// Executes the query and returns the json object, deserialized to the specified type
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>

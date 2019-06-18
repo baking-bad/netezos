@@ -1,4 +1,6 @@
-﻿namespace Netezos.Rpc.Queries
+﻿using Netezos.Rpc.Queries.Post;
+
+namespace Netezos.Rpc.Queries
 {
     /// <summary>
     /// Rpc query to access contract data
@@ -13,7 +15,7 @@
         /// <summary>
         /// Gets the query to the value associated with a key in the big map storage of the contract
         /// </summary>
-        public RpcObject BigMap => new RpcObject(this, "big_map_get/");
+        public BigMapQuery BigMap => new BigMapQuery(this, "big_map_get/");
 
         /// <summary>
         /// Gets the query to the counter of a contract, if any

@@ -1,4 +1,6 @@
-﻿namespace Netezos.Rpc.Queries
+﻿using Netezos.Rpc.Queries.Post;
+
+namespace Netezos.Rpc.Queries
 {
     /// <summary>
     /// Rpc query to get helpers assotiated with a block
@@ -14,7 +16,22 @@
         /// Gets the query to the endorsing rights
         /// </summary>
         public EndorsingRightsQuery EndorsingRights => new EndorsingRightsQuery(this, "endorsing_rights/");
-
+        
+        /// <summary>
+        /// Gets the query to the forging
+        /// </summary>
+        public ForgeQuery Forge => new ForgeQuery(this, "forge/");     
+        
+        /// <summary>
+        /// Gets the query to the forging
+        /// </summary>
+        public ForgeBlockHeaderQuery ForgeBlockHeader => new ForgeBlockHeaderQuery(this, "forge_block_header/");
+        
+        /// <summary>
+        /// Gets the query to the parse
+        /// </summary>
+        public ParseQuery Parse => new ParseQuery(this, "parse/");
+        
         internal HelpersQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }
 }
