@@ -18,6 +18,12 @@
             Client = baseQuery.Client;
             Query = baseQuery.Query + append;
         }
+        
+        internal RpcQuery(RpcQuery baseQuery)
+        {
+            Client = baseQuery.Client;
+            Query = baseQuery.Query;
+        }
 
         public override string ToString() => Query;
     }

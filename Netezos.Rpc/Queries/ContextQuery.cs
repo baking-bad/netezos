@@ -1,4 +1,6 @@
-﻿namespace Netezos.Rpc.Queries
+﻿using Netezos.Rpc.Queries.Post;
+
+namespace Netezos.Rpc.Queries
 {
     /// <summary>
     /// Rpc query to access context data
@@ -29,6 +31,11 @@
         /// Gets the query to the raw context data
         /// </summary>
         public RawContextQuery Raw => new RawContextQuery(this, "raw/json/");
+        
+        /// <summary>
+        /// Gets the query to the seed data
+        /// </summary>
+        public SeedQuery Seed => new SeedQuery(this, "seed/");
 
         internal ContextQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }
