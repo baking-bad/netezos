@@ -6,8 +6,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class DelegationQuery : RpcPost
     {
+        internal DelegationQuery(RpcQuery baseQuery) : base(baseQuery)
+        {
+        }
+
         /// <summary>
-        /// Forge a delegation operation
+        ///     Forge a delegation operation
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="source">Source</param>
@@ -24,7 +28,7 @@ namespace Netezos.Rpc.Queries.Post
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
-                new 
+                new
                 {
                     kind = "delegation",
                     source,
@@ -37,7 +41,5 @@ namespace Netezos.Rpc.Queries.Post
             });
             return await PostAsync(args);
         }
-        
-        internal DelegationQuery(RpcQuery baseQuery) : base(baseQuery) {}
     }
 }

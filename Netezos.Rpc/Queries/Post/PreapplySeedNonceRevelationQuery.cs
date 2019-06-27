@@ -4,22 +4,26 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    public class SeedNonceRevelationQuery : RpcPost
+    public class PreapplySeedNonceRevelationQuery : RpcPost
     {
-        internal SeedNonceRevelationQuery(RpcQuery baseQuery) : base(baseQuery)
+        internal PreapplySeedNonceRevelationQuery(RpcQuery baseQuery) : base(baseQuery)
         {
         }
 
         /// <summary>
         ///     Forge a seed nonce revelation operation
         /// </summary>
+        /// <param name="protocol">Protocol</param>
+        /// <param name="signature">Signature</param>
         /// <param name="branch">Branch</param>
         /// <param name="level">Level</param>
         /// <param name="nonce">Nonce</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string branch, int level, string nonce)
+        public async Task<JToken> PostAsync(string protocol, string signature, string branch, int level, string nonce)
         {
             var args = new RpcPostArgs();
+            args.Add("protocol", protocol);
+            args.Add("signature", signature);
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
@@ -30,7 +34,7 @@ namespace Netezos.Rpc.Queries.Post
                     nonce
                 }
             });
-            return await PostAsync(args);
+            return await PostListAsync(args);
         }
     }
 }

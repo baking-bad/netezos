@@ -8,9 +8,9 @@ namespace Netezos.Rpc.Queries.Post
         internal BigMapQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
         {
         }
-        
+
         /// <summary>
-        /// Access the value associated with a key in the big map storage of the contract.
+        ///     Access the value associated with a key in the big map storage of the contract.
         /// </summary>
         /// <param name="key">Key</param>
         /// <param name="type">Type of Key</param>
@@ -22,6 +22,5 @@ namespace Netezos.Rpc.Queries.Post
             args.Add(key, type, prim);
             return await PostAsync(args);
         }
-
     }
 }

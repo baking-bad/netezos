@@ -6,8 +6,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class TransactionQuery : RpcPost
     {
+        internal TransactionQuery(RpcQuery baseQuery) : base(baseQuery)
+        {
+        }
+
         /// <summary>
-        /// Forge a Proposals operation
+        ///     Forge a Proposals operation
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="source">Source</param>
@@ -26,7 +30,7 @@ namespace Netezos.Rpc.Queries.Post
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
-                new 
+                new
                 {
                     kind = "transaction",
                     source,
@@ -41,7 +45,5 @@ namespace Netezos.Rpc.Queries.Post
             });
             return await PostAsync(args);
         }
-        
-        internal TransactionQuery(RpcQuery baseQuery) : base(baseQuery) {}
     }
 }

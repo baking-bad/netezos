@@ -6,8 +6,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class ActivateAccountQuery : RpcPost
     {
+        internal ActivateAccountQuery(RpcQuery baseQuery) : base(baseQuery)
+        {
+        }
+
         /// <summary>
-        /// Forge an account activation operation
+        ///     Forge an account activation operation
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="pubKeyHash">Public key hash</param>
@@ -19,7 +23,7 @@ namespace Netezos.Rpc.Queries.Post
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
-                new 
+                new
                 {
                     kind = "activate_account",
                     pkh = pubKeyHash,
@@ -28,7 +32,5 @@ namespace Netezos.Rpc.Queries.Post
             });
             return await PostAsync(args);
         }
-        
-        internal ActivateAccountQuery(RpcQuery baseQuery) : base(baseQuery){}
     }
 }

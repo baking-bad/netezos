@@ -30,7 +30,12 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the parse
         /// </summary>
-        public ParseQuery Parse => new ParseQuery(this, "parse/");
+        public ParseQuery Parse => new ParseQuery(this, "parse/");   
+        
+        /// <summary>
+        /// Gets the query to the preapply
+        /// </summary>
+        public PreapplyQuery Preapply => new PreapplyQuery(this, "preapply/");
         
         internal HelpersQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

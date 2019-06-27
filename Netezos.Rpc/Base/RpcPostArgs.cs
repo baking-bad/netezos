@@ -12,6 +12,11 @@ namespace Netezos.Rpc
         public override string ToString() => JsonConvert.SerializeObject(Args, new JsonSerializerSettings { 
             NullValueHandling = NullValueHandling.Ignore
         });
+
+        public string ToListString() => JsonConvert.SerializeObject(new List<object> {Args}, new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        });
         public void Add(object key, string type, string prim)
         {
             Args["key"] = new Dictionary<string, object>

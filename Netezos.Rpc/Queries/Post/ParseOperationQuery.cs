@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -7,8 +6,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class ParseOperationQuery : RpcPost
     {
+        internal ParseOperationQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
+        {
+        }
+
         /// <summary>
-        /// Forge a protocol data
+        ///     Forge a protocol data
         /// </summary>
         /// <param name="level">Level</param>
         /// <param name="proto">Proto</param>
@@ -24,10 +27,9 @@ namespace Netezos.Rpc.Queries.Post
         {
             var args = new RpcPostArgs();
             args.Add("operations", operations);
-            args.Add("check_signature", checkSignature);
+            if (checkSignature != null)
+                args.Add("check_signature", checkSignature);
             return await PostAsync(args);
         }
-        
-        internal ParseOperationQuery(RpcQuery baseQuery, string append) : base(baseQuery, append){}
     }
 }

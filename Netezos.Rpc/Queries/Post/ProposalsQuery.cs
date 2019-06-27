@@ -6,8 +6,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class ProposalsQuery : RpcPost
     {
+        internal ProposalsQuery(RpcQuery baseQuery) : base(baseQuery)
+        {
+        }
+
         /// <summary>
-        /// Forge a Proposals operation
+        ///     Forge a Proposals operation
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="source">Tz Address</param>
@@ -20,7 +24,7 @@ namespace Netezos.Rpc.Queries.Post
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
-                new 
+                new
                 {
                     kind = "proposals",
                     source,
@@ -30,7 +34,5 @@ namespace Netezos.Rpc.Queries.Post
             });
             return await PostAsync(args);
         }
-        
-        internal ProposalsQuery(RpcQuery baseQuery) : base(baseQuery){}
     }
 }

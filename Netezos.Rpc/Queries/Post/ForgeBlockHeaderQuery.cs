@@ -7,8 +7,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class ForgeBlockHeaderQuery : RpcPost
     {
+        internal ForgeBlockHeaderQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
+        {
+        }
+
         /// <summary>
-        /// Forge a protocol data
+        ///     Forge a protocol data
         /// </summary>
         /// <param name="level">Level</param>
         /// <param name="proto">Proto</param>
@@ -35,7 +39,5 @@ namespace Netezos.Rpc.Queries.Post
             args.Add("protocol_data", protocolData);
             return await PostAsync(args);
         }
-        
-        internal ForgeBlockHeaderQuery(RpcQuery baseQuery, string append) : base(baseQuery, append){}
     }
 }

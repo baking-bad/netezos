@@ -6,8 +6,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class RevealQuery : RpcPost
     {
+        internal RevealQuery(RpcQuery baseQuery) : base(baseQuery)
+        {
+        }
+
         /// <summary>
-        /// Forge a delegation operation
+        ///     Forge a delegation operation
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="source">Source</param>
@@ -17,13 +21,14 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="counter">Counter</param>
         /// <param name="publicKey">Public key</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string branch, string source, long fee, long counter, long gasLimit, long storageLimit, string publicKey)
+        public async Task<JToken> PostAsync(string branch, string source, long fee, long counter, long gasLimit, long storageLimit,
+            string publicKey)
         {
             var args = new RpcPostArgs();
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
-                new 
+                new
                 {
                     kind = "reveal",
                     source,
@@ -36,7 +41,5 @@ namespace Netezos.Rpc.Queries.Post
             });
             return await PostAsync(args);
         }
-        
-        internal RevealQuery(RpcQuery baseQuery) : base(baseQuery){}
     }
 }
