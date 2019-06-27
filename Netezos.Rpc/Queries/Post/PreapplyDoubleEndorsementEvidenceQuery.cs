@@ -4,9 +4,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    public class DoubleEndorsementEvidenceQuery : RpcPost
+    public class PreapplyDoubleEndorsementEvidenceQuery : RpcPost
     {
-        internal DoubleEndorsementEvidenceQuery(RpcQuery baseQuery) : base(baseQuery)
+        internal PreapplyDoubleEndorsementEvidenceQuery(RpcQuery baseQuery) : base(baseQuery)
         {
         }
 
@@ -30,7 +30,7 @@ namespace Netezos.Rpc.Queries.Post
                     op2 = endorsement2
                 }
             });
-            return await PostAsync(args);
+            return await PostListAsync(args);
         }
     }
 }

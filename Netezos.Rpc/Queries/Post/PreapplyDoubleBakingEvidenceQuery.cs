@@ -4,9 +4,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    public class DoubleBakingEvidenceQuery : RpcPost
+    public class PreapplyDoubleBakingEvidenceQuery : RpcPost
     {
-        internal DoubleBakingEvidenceQuery(RpcQuery baseQuery) : base(baseQuery)
+        internal PreapplyDoubleBakingEvidenceQuery(RpcQuery baseQuery) : base(baseQuery)
         {
         }
 
@@ -17,9 +17,11 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="blockHeader1">First block header</param>
         /// <param name="blockHeader2">Second block header</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string branch, object blockHeader1, object blockHeader2)
+        public async Task<JToken> PostAsync(string protocol, string signature, string branch, object blockHeader1, object blockHeader2)
         {
             var args = new RpcPostArgs();
+            args.Add("protocol", protocol);
+            args.Add("signature", signature);
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
@@ -30,7 +32,7 @@ namespace Netezos.Rpc.Queries.Post
                     bh2 = blockHeader2
                 }
             });
-            return await PostAsync(args);
+            return await PostListAsync(args);
         }
     }
 }

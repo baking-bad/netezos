@@ -5,15 +5,17 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class SeedQuery : RpcPost
     {
+        internal SeedQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
+        {
+        }
+
         /// <summary>
-        /// Seed of the cycle to which the block belongs.
+        ///     Seed of the cycle to which the block belongs.
         /// </summary>
         /// <returns></returns>
         public async Task<JToken> PostAsync()
         {
             return await PostAsync(new RpcPostArgs());
         }
-        
-        internal SeedQuery(RpcQuery baseQuery, string append) : base(baseQuery, append){}
     }
 }

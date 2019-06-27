@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -6,8 +5,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class ProtocolDataQuery : RpcPost
     {
+        internal ProtocolDataQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
+        {
+        }
+
         /// <summary>
-        /// Forge a protocol data
+        ///     Forge a protocol data
         /// </summary>
         /// <param name="priority">Priority</param>
         /// <param name="nonceHash">Nonce hash</param>
@@ -21,7 +24,5 @@ namespace Netezos.Rpc.Queries.Post
             args.Add("proof_of_work_nonce", powNonce);
             return await PostAsync(args);
         }
-        
-        internal ProtocolDataQuery(RpcQuery baseQuery, string append) : base(baseQuery, append){}
     }
 }

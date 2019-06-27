@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -7,8 +6,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class BallotQuery : RpcPost
     {
+        internal BallotQuery(RpcQuery baseQuery) : base(baseQuery)
+        {
+        }
+
         /// <summary>
-        /// Forge a ballot operation
+        ///     Forge a ballot operation
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="source">Tz Address</param>
@@ -22,7 +25,7 @@ namespace Netezos.Rpc.Queries.Post
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
-                new 
+                new
                 {
                     kind = "ballot",
                     source,
@@ -33,7 +36,5 @@ namespace Netezos.Rpc.Queries.Post
             });
             return await PostAsync(args);
         }
-
-        internal BallotQuery(RpcQuery baseQuery) : base(baseQuery){}
     }
 }

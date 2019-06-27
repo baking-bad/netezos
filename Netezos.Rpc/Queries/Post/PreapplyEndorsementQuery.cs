@@ -4,21 +4,24 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    public class EndorsementQuery : RpcPost
+    public class PreapplyEndorsementQuery : RpcPost
     {
-        internal EndorsementQuery(RpcQuery baseQuery) : base(baseQuery)
+        internal PreapplyEndorsementQuery(RpcQuery baseQuery) : base(baseQuery)
         {
         }
 
         /// <summary>
-        ///     Forge an endorsement operation
+        ///     Preapply an endorsement operation
         /// </summary>
+        /// <param name="protocol">Protocol</param>
         /// <param name="branch">Branch</param>
         /// <param name="level">Block level</param>
+        /// <param name="signature">Signature</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string branch, int level)
+        public async Task<JToken> PostAsync(string protocol, string branch, int level, string signature)
         {
             var args = new RpcPostArgs();
+            args.Add("protocol", protocol);
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
@@ -28,7 +31,8 @@ namespace Netezos.Rpc.Queries.Post
                     level
                 }
             });
-            return await PostAsync(args);
+            args.Add("signature", signature);
+            return await PostListAsync(args);
         }
     }
 }

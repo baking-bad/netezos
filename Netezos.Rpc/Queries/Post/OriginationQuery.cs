@@ -6,8 +6,12 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class OriginationQuery : RpcPost
     {
+        internal OriginationQuery(RpcQuery baseQuery) : base(baseQuery)
+        {
+        }
+
         /// <summary>
-        /// Forge a delegation operation
+        ///     Forge a delegation operation
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="source">Source</param>
@@ -23,13 +27,14 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="script">Script(optional)</param>
         /// <returns></returns>
         public async Task<JToken> PostAsync(string branch, string source, long fee, long counter, long gasLimit, long storageLimit,
-            string ManagerPubKey, long balance, bool? spendable = null, bool? delegatable = null, string delegatePubKey = null, string script = null)
+            string ManagerPubKey, long balance, bool? spendable = null, bool? delegatable = null, string delegatePubKey = null,
+            string script = null)
         {
             var args = new RpcPostArgs();
             args.Add("branch", branch);
             args.Add("contents", new List<object>
             {
-                new 
+                new
                 {
                     kind = "origination",
                     source,
@@ -47,7 +52,5 @@ namespace Netezos.Rpc.Queries.Post
             });
             return await PostAsync(args);
         }
-        
-        internal OriginationQuery(RpcQuery baseQuery) : base(baseQuery) {}
     }
 }
