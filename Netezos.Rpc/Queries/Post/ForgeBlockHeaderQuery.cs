@@ -27,17 +27,18 @@ namespace Netezos.Rpc.Queries.Post
         public async Task<JToken> PostAsync(int level, int proto, string predecessor, DateTime timestamp, int validationPass,
             string operationsHash, List<string> fitness, string context, string protocolData)
         {
-            var args = new RpcPostArgs();
-            args.Add("level", level);
-            args.Add("proto", proto);
-            args.Add("predecessor", predecessor);
-            args.Add("timestamp", timestamp);
-            args.Add("validation_pass", validationPass);
-            args.Add("operations_hash", operationsHash);
-            args.Add("fitness", fitness);
-            args.Add("context", context);
-            args.Add("protocol_data", protocolData);
-            return await PostAsync(args);
+            return await PostAsync(new
+            {
+                level,
+                proto,
+                predecessor,
+                timestamp,
+                validation_pass = validationPass,
+                operations_hash = operationsHash,
+                fitness,
+                context,
+                protocol_data = protocolData
+            });
         }
     }
 }

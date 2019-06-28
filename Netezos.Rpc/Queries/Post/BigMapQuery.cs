@@ -22,5 +22,20 @@ namespace Netezos.Rpc.Queries.Post
             args.Add(key, type, prim);
             return await PostAsync(args);
         }
+        
+        /// <summary>
+        ///     Access the value associated with a key in the big map storage of the contract.
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="type">Type of Key</param>
+        /// <returns></returns>
+        public async Task<JToken> PostAsync(object key, object type)
+        {
+            return await PostAsync(new
+            {
+                key,
+                type
+            });
+        }
     }
 }

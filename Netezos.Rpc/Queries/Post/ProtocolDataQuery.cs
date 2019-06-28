@@ -18,11 +18,12 @@ namespace Netezos.Rpc.Queries.Post
         /// <returns></returns>
         public async Task<JToken> PostAsync(int priority, string nonceHash, string powNonce)
         {
-            var args = new RpcPostArgs();
-            args.Add("priority", priority);
-            args.Add("nonce_hash", nonceHash);
-            args.Add("proof_of_work_nonce", powNonce);
-            return await PostAsync(args);
+            return await PostAsync(new
+            {
+                priority,
+                nonce_hash = nonceHash,
+                proof_of_work_nonce = powNonce
+            });
         }
     }
 }
