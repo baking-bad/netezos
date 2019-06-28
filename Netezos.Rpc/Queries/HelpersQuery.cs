@@ -35,7 +35,12 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the preapply
         /// </summary>
-        public PreapplyQuery Preapply => new PreapplyQuery(this, "preapply/");
+        public PreapplyQuery Preapply => new PreapplyQuery(this, "preapply/");  
+        
+        /// <summary>
+        /// Gets the query to scripts
+        /// </summary>
+        public ScriptsQuery Scripts => new ScriptsQuery(this, "scripts/");
         
         internal HelpersQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

@@ -25,11 +25,11 @@ namespace Netezos.Rpc.Queries.Post
         /// <returns></returns>
         public async Task<JToken> PostAsync(List<object> operations, bool? checkSignature = null)
         {
-            var args = new RpcPostArgs();
-            args.Add("operations", operations);
-            if (checkSignature != null)
-                args.Add("check_signature", checkSignature);
-            return await PostAsync(args);
+            return await PostAsync(new
+            {
+                operations,
+                check_signature = checkSignature
+            });
         }
     }
 }

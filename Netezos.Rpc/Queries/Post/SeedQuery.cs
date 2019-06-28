@@ -15,7 +15,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <returns></returns>
         public async Task<JToken> PostAsync()
         {
-            return await PostAsync(new RpcPostArgs());
+            return await PostAsync(new {});
         }
     }
 }

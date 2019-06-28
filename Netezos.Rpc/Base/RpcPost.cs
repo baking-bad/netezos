@@ -23,13 +23,27 @@ namespace Netezos.Rpc
         /// <param name="args">Json input args</param>
         /// <returns></returns>
         protected async Task<JToken> PostAsync(RpcPostArgs args) => await Client.Post(Query, args.ToString());
+
+        /// <summary>
+        /// Executes the query and returns the json object
+        /// </summary>
+        /// <param name="json">Json input</param>
+        /// <returns></returns>
+        public async Task<JToken> PostAsync(string json) => await Client.Post(Query, json);
+
+        /// <summary>
+        /// Executes the query and returns the json object
+        /// </summary>
+        /// <param name="data">Data as an object</param>
+        /// <returns></returns>
+        public async Task<JToken> PostAsync(object data) => await Client.Post(Query, data.ToJson());
         
         /// <summary>
         /// Executes the query and returns the json object
         /// </summary>
-        /// <param name="args">Json input args</param>
+        /// <param name="data">Data as an object</param>
         /// <returns></returns>
-        protected async Task<JToken> PostListAsync(RpcPostArgs args) => await Client.Post(Query, args.ToListString());
+        protected async Task<JToken> PostListAsync(object data) => await Client.Post(Query, data.ToJsonList());
 
         /// <summary>
         /// Executes the query and returns the json object, deserialized to the specified type

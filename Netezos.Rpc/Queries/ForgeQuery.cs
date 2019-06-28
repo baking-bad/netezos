@@ -8,7 +8,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the operations
         /// </summary>
-        public OperationQuery Operation => new OperationQuery(this, "operations/");
+        public ForgeOperationsQuery Operations => new ForgeOperationsQuery(this, "operations/");
         /// <summary>
         /// Gets the query to the protocol data
         /// </summary>

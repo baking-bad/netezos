@@ -4,9 +4,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    public class OperationQuery : RpcPost
+    public class ForgeOperationsQuery : RpcPost
     {
-        internal OperationQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
+        internal ForgeOperationsQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
         {
         }
 
@@ -18,10 +18,11 @@ namespace Netezos.Rpc.Queries.Post
         /// <returns></returns>
         public async Task<JToken> PostAsync(string branch, List<object> contents)
         {
-            var args = new RpcPostArgs();
-            args.Add("branch", branch);
-            args.Add("contents", contents);
-            return await PostAsync(args);
+            return await PostAsync(new
+            {
+                branch,
+                contents
+            });
         }
     }
 }
