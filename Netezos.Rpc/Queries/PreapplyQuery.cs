@@ -12,12 +12,12 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the block preapply
         /// </summary>
-        public PreapplyBlockQuery Block => new PreapplyBlockQuery(this, "block/");
+        public PreapplyBlockQuery Block => new PreapplyBlockQuery(this, "block");
 
         /// <summary>
         /// Gets the query to the operations preapply
         /// </summary>
-        public PreapplyOperationQuery Operations => new PreapplyOperationQuery(this, "operations/");
+        public PreapplyOperationQuery Operations => new PreapplyOperationQuery(this, "operations");
 
 
         internal PreapplyQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }

@@ -5,16 +5,13 @@ namespace Netezos.Rpc.Queries.Post
 {
     public class InjectOperationQuery : RpcPost
     {
-        internal InjectOperationQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
-        {
-        }
-
-        /// <summary>Inject operation</summary>
+        internal InjectOperationQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) {}
+        /// <summary>Inject block query</summary>
         /// <param name="data">Data</param>
+        /// <param name="async">Async</param>
+        /// <param name="chain">Chain</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string data)
-        {
-            return await base.PostAsync(data);
-        }
+        public async Task<JToken> PostAsync(string data, bool async = false, string chain = "main")
+            => await Client.Post($"{Query}?async={async}&chain={chain}", $"\"{data}\"");
     }
 }
