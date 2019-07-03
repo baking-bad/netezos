@@ -2,6 +2,7 @@
 
 namespace Netezos.Rpc.Queries
 {
+    //TODO fix xml docs
     /// <summary>
     /// Rpc query to get helpers assotiated with a block
     /// </summary>
@@ -20,12 +21,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the forging
         /// </summary>
-        public ForgeQuery Forge => new ForgeQuery(this, "forge/");     
-        
-        /// <summary>
-        /// Gets the query to the forging
-        /// </summary>
-        public ForgeBlockHeaderQuery ForgeBlockHeader => new ForgeBlockHeaderQuery(this, "forge_block_header/");
+        public ForgeQuery Forge => new ForgeQuery(this, "forge/");
         
         /// <summary>
         /// Gets the query to the parse

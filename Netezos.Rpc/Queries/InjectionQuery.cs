@@ -2,6 +2,7 @@
 
 namespace Netezos.Rpc.Queries
 {
+    //TODO fix xml docs
     /// <summary>
     /// Rpc query to access blocks data
     /// </summary>
@@ -10,17 +11,17 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the Block injection
         /// </summary>
-        public InjectBlockQuery Block => new InjectBlockQuery(this, "block");
+        public InjectBlockQuery Block => new InjectBlockQuery(this, "block/");
         
         /// <summary>
         /// Gets the query to the operation injection
         /// </summary>
-        public InjectOperationQuery Operation => new InjectOperationQuery(this, "operation");
+        public InjectOperationQuery Operation => new InjectOperationQuery(this, "operation/");
         
         /// <summary>
         /// Gets the query to the protocol injection
         /// </summary>
-        public InjectProtocolQuery Protocol => new InjectProtocolQuery(this, "protocol");
+        public InjectProtocolQuery Protocol => new InjectProtocolQuery(this, "protocol/");
 
         internal InjectionQuery(RpcClient client, string query) : base(client, query) { }
     }

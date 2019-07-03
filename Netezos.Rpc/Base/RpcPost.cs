@@ -1,13 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc
 {
-    //TODO Edit summary
+    //TODO Fix xml docs
     /// <summary>
     /// Rpc query to Post a json object
     /// </summary>
@@ -15,42 +11,37 @@ namespace Netezos.Rpc
     {
         internal RpcPost(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
-        internal RpcPost(RpcQuery baseQuery) : base(baseQuery) {}
+        internal RpcPost(RpcQuery baseQuery) : base(baseQuery) { }
 
         /// <summary>
         /// Executes the query and returns the json object
         /// </summary>
-        /// <param name="args">Json input args</param>
+        /// <param name="content">Json input</param>
         /// <returns></returns>
-        protected async Task<JToken> PostAsync(RpcPostArgs args) => await Client.Post(Query, args.ToString());
+        public async Task<JToken> PostAsync(string content) => await Client.PostJson(Query, content);
 
         /// <summary>
         /// Executes the query and returns the json object
         /// </summary>
-        /// <param name="json">Json input</param>
+        /// <param name="content">Data as an object</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string json) => await Client.Post(Query, json);
-
-        /// <summary>
-        /// Executes the query and returns the json object
-        /// </summary>
-        /// <param name="data">Data as an object</param>
-        /// <returns></returns>
-        public async Task<JToken> PostAsync(object data) => await Client.Post(Query, data.ToJson());
-        
-        /// <summary>
-        /// Executes the query and returns the json object
-        /// </summary>
-        /// <param name="data">Data as an object</param>
-        /// <returns></returns>
-        protected async Task<JToken> PostListAsync(object data) => await Client.Post(Query, data.ToJsonList());
+        public async Task<JToken> PostAsync(object content) => await Client.PostJson(Query, content.ToJson());
 
         /// <summary>
         /// Executes the query and returns the json object, deserialized to the specified type
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
+        /// <param name="content">Json input</param>
         /// <returns></returns>
-        protected async Task<T> PostAsync<T>(RpcPostArgs args) => await Client.Post<T>(Query, args.ToString());
+        public async Task<T> PostAsync<T>(string content) => await Client.PostJson<T>(Query, content);
+
+        /// <summary>
+        /// Executes the query and returns the json object, deserialized to the specified type
+        /// </summary>
+        /// <typeparam name="T">Type of the object to deserialize to</typeparam>
+        /// <param name="content">Data as an object</param>
+        /// <returns></returns>
+        public async Task<T> PostAsync<T>(object content) => await Client.PostJson<T>(Query, content.ToJson());
 
         public override string ToString() => Query;
     }
