@@ -18,7 +18,7 @@ namespace Netezos.Rpc
         /// <summary>
         /// Gets the query to the injection
         /// </summary>
-        public InjectionQuery Injection { get; }
+        public InjectionQuery Inject { get; }
 
         private string Chain { get; }
         private RpcClient Client { get; }
@@ -34,7 +34,7 @@ namespace Netezos.Rpc
             Chain = chain.ToString().ToLower();
 
             Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
-            Injection = new InjectionQuery(Client, $"injection/");
+            Inject = new InjectionQuery(Client, $"injection/");
         }
 
         /// <summary>
@@ -49,6 +49,7 @@ namespace Netezos.Rpc
             Chain = chain.ToString().ToLower();
 
             Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Inject = new InjectionQuery(Client, $"injection/");
         }
 
         /// <summary>

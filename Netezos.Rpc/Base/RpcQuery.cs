@@ -5,6 +5,7 @@
     /// </summary>
     public class RpcQuery
     {
+        internal RpcQuery Base;
         internal RpcClient Client;
         internal string Query;
 
@@ -13,14 +14,17 @@
             Client = client;
             Query = query;
         }
+
         internal RpcQuery(RpcQuery baseQuery, string append)
         {
+            Base = baseQuery;
             Client = baseQuery.Client;
             Query = baseQuery.Query + append;
         }
-        
+
         internal RpcQuery(RpcQuery baseQuery)
         {
+            Base = baseQuery;
             Client = baseQuery.Client;
             Query = baseQuery.Query;
         }

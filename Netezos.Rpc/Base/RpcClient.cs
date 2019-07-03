@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Text;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -73,13 +73,12 @@ namespace Netezos.Rpc
                 return serializer.Deserialize<T>(jsonReader);
             }
         }
-        
                 
-        public async Task<JToken> Post(string path, string content)
+        public async Task<JToken> PostJson(string path, string content)
         {
-            var response = (await HttpClient.PostAsync(path, new JsonContent(content)))
-                .EnsureSuccessStatusCode();
-            
+            var response = await HttpClient.PostAsync(path, new JsonContent(content));
+            await EnsureResponceSuccessfull(response);
+
             using (var stream = await response.Content.ReadAsStreamAsync())
             using (var streamReader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(streamReader))
@@ -88,11 +87,11 @@ namespace Netezos.Rpc
             }
         }  
         
-        public async Task<T> Post<T>(string path, string content)
+        public async Task<T> PostJson<T>(string path, string content)
         {
-            var response = (await HttpClient.PostAsync(path, new JsonContent(content)))
-                .EnsureSuccessStatusCode();
-            
+            var response = await HttpClient.PostAsync(path, new JsonContent(content));
+            await EnsureResponceSuccessfull(response);
+
             using (var stream = await response.Content.ReadAsStreamAsync())
             using (var streamReader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(streamReader))
@@ -105,6 +104,26 @@ namespace Netezos.Rpc
         public void Dispose()
         {
             _HttpClient?.Dispose();
+        }
+
+        private async Task EnsureResponceSuccessfull(HttpResponseMessage response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var message = response.Content.Headers.ContentLength > 0
+                    ? await response.Content.ReadAsStringAsync()
+                    : String.Empty;
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.BadRequest:
+                        throw new BadRequestException(message);
+                    case HttpStatusCode.InternalServerError:
+                        throw new InternalErrorException(message);
+                    default:
+                        throw new RpcException(response.StatusCode, message);
+                }
+            }
         }
     }
 }

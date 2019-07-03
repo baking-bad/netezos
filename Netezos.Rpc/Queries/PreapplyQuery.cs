@@ -7,7 +7,6 @@ namespace Netezos.Rpc.Queries
     /// </summary>
     public class PreapplyQuery : RpcQuery
     {
-        
         //TODO Add options here
         /// <summary>
         /// Gets the query to the block preapply
@@ -18,7 +17,6 @@ namespace Netezos.Rpc.Queries
         /// Gets the query to the operations preapply
         /// </summary>
         public PreapplyOperationQuery Operations => new PreapplyOperationQuery(this, "operations");
-
 
         internal PreapplyQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }
