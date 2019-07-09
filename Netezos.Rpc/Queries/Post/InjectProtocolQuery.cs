@@ -4,18 +4,17 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    //TODO fix xml docs
     public class InjectProtocolQuery : RpcPost
     {
         internal InjectProtocolQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Inject protocol
+        /// Inject a protocol in node. Returns the ID of the protocol.
         /// </summary>
-        /// <param name="expectedEnvVersion">expected environment version</param>
-        /// <param name="components">Components</param>
-        /// <param name="async">Async</param>
-        /// <param name="force">Force</param>
+        /// <param name="expectedEnvVersion">Expected environment version</param>
+        /// <param name="components">List of components</param>
+        /// <param name="async">Async(optional)</param>
+        /// <param name="force">Force(optional)</param>
         /// <returns></returns>
         public async Task<JToken> PostAsync(int expectedEnvVersion, List<object> components,bool async = false, bool force = false)
             => await Client.PostJson(
@@ -27,13 +26,13 @@ namespace Netezos.Rpc.Queries.Post
                 }.ToJson());
 
         /// <summary>
-        /// 
+        /// Inject a protocol in node. Returns the ID of the protocol.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expectedEnvVersion"></param>
-        /// <param name="components"></param>
-        /// <param name="async"></param>
-        /// <param name="force"></param>
+        /// <param name="expectedEnvVersion">Expected environment version</param>
+        /// <param name="components">List of components</param>
+        /// <param name="async">Async(optional)</param>
+        /// <param name="force">Force(optional)</param>
+        /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(int expectedEnvVersion, List<object> components, bool async = false, bool force = false)
             => await Client.PostJson<T>(

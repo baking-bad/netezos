@@ -3,17 +3,16 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    //TODO fix xml docs
     public class TraceCodeQuery : RpcPost
     {
         internal TraceCodeQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Run code
+        /// Run a piece of code in the current context, keeping a trace. Returns the JToken with storage, operations, trace and big map data. 
         /// </summary>
-        /// <param name="script">Script</param>
-        /// <param name="storage">Storage</param>
-        /// <param name="input">Input</param>
+        /// <param name="script">Script. Micheline michelson expression.</param>
+        /// <param name="storage">Storage. Micheline michelson expression.</param>
+        /// <param name="input">Input. Micheline michelson expression.</param>
         /// <param name="amount">Amount</param>
         /// <param name="source">Source(optional)</param>
         /// <param name="payer">Payer(optional)</param>
@@ -32,16 +31,16 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// 
+        /// Run a piece of code in the current context, keeping a trace. Returns the JToken with storage, operations, trace and big map data.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="script"></param>
-        /// <param name="storage"></param>
-        /// <param name="input"></param>
-        /// <param name="amount"></param>
-        /// <param name="source"></param>
-        /// <param name="payer"></param>
-        /// <param name="gas"></param>
+        /// <typeparam name="T">Type of the object to deserialize to</typeparam>
+        /// <param name="script">Script. Micheline michelson expression.</param>
+        /// <param name="storage">Storage. Micheline michelson expression.</param>
+        /// <param name="input">Input. Micheline michelson expression.</param>
+        /// <param name="amount">Amount</param>
+        /// <param name="source">Source(optional)</param>
+        /// <param name="payer">Payer(optional)</param>
+        /// <param name="gas">Gas limit(optional)</param>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
             => await PostAsync<T>(new
