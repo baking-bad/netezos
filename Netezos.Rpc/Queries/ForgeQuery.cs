@@ -3,7 +3,7 @@ using Netezos.Rpc.Queries.Post;
 namespace Netezos.Rpc.Queries
 {
     /// <summary>
-    /// RPC query to access forging branch
+    /// RPC query to access forging
     /// </summary>
     public class ForgeQuery : RpcQuery
     {

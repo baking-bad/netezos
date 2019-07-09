@@ -4,12 +4,15 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
+    /// <summary>
+    /// Rpc query to access operations forging
+    /// </summary>
     public class ForgeOperationsQuery : RpcPost
     {
         internal ForgeOperationsQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Forge an operation and returns operation bytes which can be signed
+        /// Forges an operation and returns operation bytes which can be signed
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="contents">List of operation contents</param>
@@ -22,7 +25,7 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// Forge an operation and returns operation bytes which can be signed
+        /// Forges an operation and returns operation bytes which can be signed
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="contents">List of operation contents</param>

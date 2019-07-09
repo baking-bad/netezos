@@ -23,10 +23,10 @@
         /// <summary>
         /// Gets the query to the parsing
         /// </summary>
-        public ParseQuery Parse => new ParseQuery(this, "parse/");   
-        
+        public ParseQuery Parse => new ParseQuery(this, "parse/");
+
         /// <summary>
-        /// Gets the query to the preapply branch
+        /// Gets the query to the preapplying
         /// </summary>
         public PreapplyQuery Preapply => new PreapplyQuery(this, "preapply/");  
         

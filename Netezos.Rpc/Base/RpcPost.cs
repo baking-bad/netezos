@@ -13,32 +13,32 @@ namespace Netezos.Rpc
         internal RpcPost(RpcQuery baseQuery) : base(baseQuery) { }
 
         /// <summary>
-        /// Send a POST request with specified string content and returns the json object
+        /// Send a POST request with specified json content and returns the json object
         /// </summary>
-        /// <param name="content">Json input content</param>
+        /// <param name="content">Json content to send</param>
         /// <returns></returns>
         public async Task<JToken> PostAsync(string content) => await Client.PostJson(Query, content);
 
         /// <summary>
-        /// Send a POST request with specified object-type content and returns the json object
+        /// Send a POST request with specified json object content and returns the json object
         /// </summary>
-        /// <param name="content">Data as an object</param>
+        /// <param name="content">Object to send</param>
         /// <returns></returns>
         public async Task<JToken> PostAsync(object content) => await Client.PostJson(Query, content.ToJson());
 
         /// <summary>
-        /// Send a POST request with specified string content and returns the json object, deserialized to the specified type
+        /// Send a POST request with specified json content and returns the json object, deserialized to the specified type
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
-        /// <param name="content">Json input content</param>
+        /// <param name="content">Json content to send</param>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(string content) => await Client.PostJson<T>(Query, content);
 
         /// <summary>
-        /// Send a POST request with specified object-type content and returns the json object, deserialized to the specified type
+        /// Send a POST request with specified json object content and returns the json object, deserialized to the specified type
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
-        /// <param name="content">Data as an object</param>
+        /// <param name="content">Object to send</param>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(object content) => await Client.PostJson<T>(Query, content.ToJson());
 
