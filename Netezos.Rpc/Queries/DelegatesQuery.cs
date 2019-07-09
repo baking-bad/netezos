@@ -21,30 +21,30 @@ namespace Netezos.Rpc.Queries
         /// Executes the query and returns all registered delegates
         /// </summary>
         /// <returns></returns>
-        public new async Task<JToken> GetAsync()
-            => await Client.GetJson(Query);
+        public new Task<JToken> GetAsync()
+            => Client.GetJson(Query);
 
         /// <summary>
         /// Executes the query and returns all registered delegates with the specified status
         /// </summary>
         /// <param name="status">Status of the delegates to return</param>
         /// <returns></returns>
-        public async Task<JToken> GetAsync(DelegateStatus status)
-            => await Client.GetJson($"{Query}?{status.ToString().ToLower()}");
+        public Task<JToken> GetAsync(DelegateStatus status)
+            => Client.GetJson($"{Query}?{status.ToString().ToLower()}");
 
         /// <summary>
         /// Executes the query and returns all registered delegates
         /// </summary>
         /// <returns></returns>
-        public new async Task<T> GetAsync<T>()
-            => await Client.GetJson<T>(Query);
+        public new Task<T> GetAsync<T>()
+            => Client.GetJson<T>(Query);
 
         /// <summary>
         /// Executes the query and returns all registered delegates with the specified status
         /// </summary>
         /// <param name="status">Status of the delegates to return</param>
         /// <returns></returns>
-        public async Task<T> GetAsync<T>(DelegateStatus status)
-            => await Client.GetJson<T>($"{Query}?{status.ToString().ToLower()}");
+        public Task<T> GetAsync<T>(DelegateStatus status)
+            => Client.GetJson<T>($"{Query}?{status.ToString().ToLower()}");
     }
 }

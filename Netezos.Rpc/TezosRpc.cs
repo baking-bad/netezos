@@ -67,6 +67,9 @@ namespace Netezos.Rpc
         /// <returns></returns>
         public async Task<T> GetAsync<T>(string query) => await Client.GetJson<T>(query);
 
+        /// <summary>
+        /// Releases the unmanaged resourses and disposes of the managed resources used by the <c>TezosRpc</c>
+        /// </summary>
         public void Dispose()
         {
             Client?.Dispose();

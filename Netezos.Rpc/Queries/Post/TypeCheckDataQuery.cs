@@ -17,8 +17,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="type">Data expression type</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(object data, object type, long? gas = null)
-            => await PostAsync(new
+        public Task<JToken> PostAsync(object data, object type, long? gas = null)
+            => PostAsync(new
             {
                 data,
                 type,
@@ -33,8 +33,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="type">Data expression type</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(object data, object type, long? gas = null)
-            => await PostAsync<T>(new
+        public Task<T> PostAsync<T>(object data, object type, long? gas = null)
+            => PostAsync<T>(new
             {
                 data,
                 type,

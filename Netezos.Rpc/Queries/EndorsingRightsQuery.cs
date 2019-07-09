@@ -14,73 +14,24 @@ namespace Netezos.Rpc.Queries
         /// Executes the query and returns the endorsing rights
         /// </summary>
         /// <returns></returns>
-        public new async Task<JToken> GetAsync()
-            => await Client.GetJson(Query);
+        public new Task<JToken> GetAsync()
+            => Client.GetJson(Query);
 
         /// <summary>
         /// Executes the query and returns the endorsing rights
         /// </summary>
         /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
         /// <returns></returns>
-        public async Task<JToken> GetAsync(string baker)
-            => await Client.GetJson($"{Query}?delegate={baker}");
+        public Task<JToken> GetAsync(string baker)
+            => Client.GetJson($"{Query}?delegate={baker}");
 
         /// <summary>
         /// Executes the query and returns the endorsing rights
         /// </summary>
         /// <param name="level">Level of the block at which the endorsing rights are to be returned</param>
         /// <returns></returns>
-        public async Task<JToken> GetFromLevelAsync(int level)
-            => await Client.GetJson($"{Query}?level={level}");
-
-        /// <summary>
-        /// Executes the query and returns the endorsing rights
-        /// </summary>
-        /// <param name="level">Level of the block at which the endorsing rights are to be returned</param>
-        /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
-        /// <returns></returns>
-        public async Task<JToken> GetFromLevelAsync(int level, string baker)
-            => await Client.GetJson($"{Query}?level={level}&delegate={baker}");
-
-        /// <summary>
-        /// Executes the query and returns the endorsing rights
-        /// </summary>
-        /// <param name="cycle">Cycle at which the endorsing rights are to be returned</param>
-        /// <returns></returns>
-        public async Task<JToken> GetFromCycleAsync(int cycle)
-            => await Client.GetJson($"{Query}?cycle={cycle}");
-
-        /// <summary>
-        /// Executes the query and returns the endorsing rights
-        /// </summary>
-        /// <param name="cycle">Cycle at which the endorsing rights are to be returned</param>
-        /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
-        /// <returns></returns>
-        public async Task<JToken> GetFromCycleAsync(int cycle, string baker)
-            => await Client.GetJson($"{Query}?cycle={cycle}&delegate={baker}");
-
-        /// <summary>
-        /// Executes the query and returns the endorsing rights
-        /// </summary>
-        /// <returns></returns>
-        public new async Task<T> GetAsync<T>()
-            => await Client.GetJson<T>(Query);
-
-        /// <summary>
-        /// Executes the query and returns the endorsing rights
-        /// </summary>
-        /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
-        /// <returns></returns>
-        public async Task<T> GetAsync<T>(string baker)
-            => await Client.GetJson<T>($"{Query}?delegate={baker}");
-
-        /// <summary>
-        /// Executes the query and returns the endorsing rights
-        /// </summary>
-        /// <param name="level">Level of the block at which the endorsing rights are to be returned</param>
-        /// <returns></returns>
-        public async Task<T> GetFromLevelAsync<T>(int level)
-            => await Client.GetJson<T>($"{Query}?level={level}");
+        public Task<JToken> GetFromLevelAsync(int level)
+            => Client.GetJson($"{Query}?level={level}");
 
         /// <summary>
         /// Executes the query and returns the endorsing rights
@@ -88,16 +39,16 @@ namespace Netezos.Rpc.Queries
         /// <param name="level">Level of the block at which the endorsing rights are to be returned</param>
         /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
         /// <returns></returns>
-        public async Task<T> GetFromLevelAsync<T>(int level, string baker)
-            => await Client.GetJson<T>($"{Query}?level={level}&delegate={baker}");
+        public Task<JToken> GetFromLevelAsync(int level, string baker)
+            => Client.GetJson($"{Query}?level={level}&delegate={baker}");
 
         /// <summary>
         /// Executes the query and returns the endorsing rights
         /// </summary>
         /// <param name="cycle">Cycle at which the endorsing rights are to be returned</param>
         /// <returns></returns>
-        public async Task<T> GetFromCycleAsync<T>(int cycle)
-            => await Client.GetJson<T>($"{Query}?cycle={cycle}");
+        public Task<JToken> GetFromCycleAsync(int cycle)
+            => Client.GetJson($"{Query}?cycle={cycle}");
 
         /// <summary>
         /// Executes the query and returns the endorsing rights
@@ -105,7 +56,56 @@ namespace Netezos.Rpc.Queries
         /// <param name="cycle">Cycle at which the endorsing rights are to be returned</param>
         /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
         /// <returns></returns>
-        public async Task<T> GetFromCycleAsync<T>(int cycle, string baker)
-            => await Client.GetJson<T>($"{Query}?cycle={cycle}&delegate={baker}");
+        public Task<JToken> GetFromCycleAsync(int cycle, string baker)
+            => Client.GetJson($"{Query}?cycle={cycle}&delegate={baker}");
+
+        /// <summary>
+        /// Executes the query and returns the endorsing rights
+        /// </summary>
+        /// <returns></returns>
+        public new Task<T> GetAsync<T>()
+            => Client.GetJson<T>(Query);
+
+        /// <summary>
+        /// Executes the query and returns the endorsing rights
+        /// </summary>
+        /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
+        /// <returns></returns>
+        public Task<T> GetAsync<T>(string baker)
+            => Client.GetJson<T>($"{Query}?delegate={baker}");
+
+        /// <summary>
+        /// Executes the query and returns the endorsing rights
+        /// </summary>
+        /// <param name="level">Level of the block at which the endorsing rights are to be returned</param>
+        /// <returns></returns>
+        public Task<T> GetFromLevelAsync<T>(int level)
+            => Client.GetJson<T>($"{Query}?level={level}");
+
+        /// <summary>
+        /// Executes the query and returns the endorsing rights
+        /// </summary>
+        /// <param name="level">Level of the block at which the endorsing rights are to be returned</param>
+        /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
+        /// <returns></returns>
+        public Task<T> GetFromLevelAsync<T>(int level, string baker)
+            => Client.GetJson<T>($"{Query}?level={level}&delegate={baker}");
+
+        /// <summary>
+        /// Executes the query and returns the endorsing rights
+        /// </summary>
+        /// <param name="cycle">Cycle at which the endorsing rights are to be returned</param>
+        /// <returns></returns>
+        public Task<T> GetFromCycleAsync<T>(int cycle)
+            => Client.GetJson<T>($"{Query}?cycle={cycle}");
+
+        /// <summary>
+        /// Executes the query and returns the endorsing rights
+        /// </summary>
+        /// <param name="cycle">Cycle at which the endorsing rights are to be returned</param>
+        /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
+        /// <returns></returns>
+        public Task<T> GetFromCycleAsync<T>(int cycle, string baker)
+            => Client.GetJson<T>($"{Query}?cycle={cycle}&delegate={baker}");
     }
 }

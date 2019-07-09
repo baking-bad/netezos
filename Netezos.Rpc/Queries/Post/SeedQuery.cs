@@ -14,13 +14,13 @@ namespace Netezos.Rpc.Queries.Post
         /// Gets the seed of the cycle to which the block belongs
         /// </summary>
         /// <returns></returns>
-        public async Task<JToken> PostAsync() => await PostAsync(new { });
+        public Task<JToken> PostAsync() => PostAsync(new { });
 
         /// <summary>
         /// Gets the seed of the cycle to which the block belongs
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>() => await PostAsync<T>(new { });
+        public Task<T> PostAsync<T>() => PostAsync<T>(new { });
     }
 }

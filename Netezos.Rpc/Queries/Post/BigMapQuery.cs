@@ -18,8 +18,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="type">Type of the key (micheline michelson expression)</param>
         /// <param name="prim">Primitive michelson type</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(object key, string type, string prim)
-            => await PostAsync(new
+        public Task<JToken> PostAsync(object key, string type, string prim)
+            => PostAsync(new
             {
                 key = new Dictionary<string, object> { { type, key } },
                 type = new { prim }
@@ -30,8 +30,8 @@ namespace Netezos.Rpc.Queries.Post
         /// </summary>
         /// <param name="key">Key (micheline michelson expression)</param>
         /// <param name="type">Type of the key (micheline michelson expression)</param>
-        public async Task<JToken> PostAsync(object key, object type)
-            => await PostAsync(new
+        public Task<JToken> PostAsync(object key, object type)
+            => PostAsync(new
             {
                 key,
                 type
@@ -45,8 +45,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="type">Type of the key (micheline michelson expression)</param>
         /// <param name="prim">Primitive michelson type</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(object key, string type, string prim)
-            => await PostAsync<T>(new
+        public Task<T> PostAsync<T>(object key, string type, string prim)
+            => PostAsync<T>(new
             {
                 key = new Dictionary<string, object> { { type, key } },
                 type = new { prim }
@@ -59,8 +59,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="key">Key (micheline michelson expression)</param>
         /// <param name="type">Type of the key (micheline michelson expression)</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(object key, object type)
-            => await PostAsync<T>(new
+        public Task<T> PostAsync<T>(object key, object type)
+            => PostAsync<T>(new
             {
                 key,
                 type

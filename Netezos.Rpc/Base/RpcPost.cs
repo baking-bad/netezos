@@ -17,14 +17,14 @@ namespace Netezos.Rpc
         /// </summary>
         /// <param name="content">Json content to send</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string content) => await Client.PostJson(Query, content);
+        public Task<JToken> PostAsync(string content) => Client.PostJson(Query, content);
 
         /// <summary>
         /// Send a POST request with specified json object content and returns the json object
         /// </summary>
         /// <param name="content">Object to send</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(object content) => await Client.PostJson(Query, content.ToJson());
+        public Task<JToken> PostAsync(object content) => Client.PostJson(Query, content.ToJson());
 
         /// <summary>
         /// Send a POST request with specified json content and returns the json object, deserialized to the specified type
@@ -32,7 +32,7 @@ namespace Netezos.Rpc
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="content">Json content to send</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(string content) => await Client.PostJson<T>(Query, content);
+        public Task<T> PostAsync<T>(string content) => Client.PostJson<T>(Query, content);
 
         /// <summary>
         /// Send a POST request with specified json object content and returns the json object, deserialized to the specified type
@@ -40,7 +40,7 @@ namespace Netezos.Rpc
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="content">Object to send</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(object content) => await Client.PostJson<T>(Query, content.ToJson());
+        public Task<T> PostAsync<T>(object content) => Client.PostJson<T>(Query, content.ToJson());
 
         public override string ToString() => Query;
     }

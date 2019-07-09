@@ -17,8 +17,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="operations">List of operation</param>
         /// <param name="checkSignature">Check signature (optional)</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(List<object> operations, bool? checkSignature = null)
-            => await PostAsync(new
+        public Task<JToken> PostAsync(List<object> operations, bool? checkSignature = null)
+            => PostAsync(new
             {
                 operations,
                 check_signature = checkSignature
@@ -31,8 +31,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="operations">List of operation</param>
         /// <param name="checkSignature">Check signature (optional)</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(List<object> operations, bool? checkSignature = null)
-            => await PostAsync<T>(new
+        public Task<T> PostAsync<T>(List<object> operations, bool? checkSignature = null)
+            => PostAsync<T>(new
             {
                 operations,
                 check_signature = checkSignature

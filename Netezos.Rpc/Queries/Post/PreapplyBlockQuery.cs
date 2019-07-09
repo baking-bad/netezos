@@ -22,8 +22,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="operations">List of operations</param>
         /// <param name="seedNonceHash">Seed nonce hash (optional)</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string protocol, int priority, string powNonce, string signature, List<List<object>> operations, string seedNonceHash = null)
-            => await PostAsync(new
+        public Task<JToken> PostAsync(string protocol, int priority, string powNonce, string signature, List<List<object>> operations, string seedNonceHash = null)
+            => PostAsync(new
             {
                 protocol_data = new
                 {
@@ -48,9 +48,9 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="sort">Sort (optional)</param>
         /// <param name="seedNonceHash">Seed nonce hash (optional)</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string protocol, int priority, string powNonce, string signature,
+        public Task<JToken> PostAsync(string protocol, int priority, string powNonce, string signature,
             List<List<object>> operations, DateTime timestamp, bool sort = false, string seedNonceHash = null)
-                => await Client.PostJson(
+                => Client.PostJson(
                     $"{Query}?sort={sort}&timestamp={timestamp.ToEpoch()}",
                     new
                     {
@@ -76,8 +76,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="operations">List of operations</param>
         /// <param name="seedNonceHash">Seed nonce hash (optional)</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(string protocol, int priority, string powNonce, string signature, List<List<object>> operations, string seedNonceHash = null)
-            => await PostAsync<T>(new
+        public Task<T> PostAsync<T>(string protocol, int priority, string powNonce, string signature, List<List<object>> operations, string seedNonceHash = null)
+            => PostAsync<T>(new
             {
                 protocol_data = new
                 {
@@ -103,9 +103,9 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="sort">Sort (optional)</param>
         /// <param name="seedNonceHash">Seed nonce hash (optional)</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(string protocol, int priority, string powNonce, string signature,
+        public Task<T> PostAsync<T>(string protocol, int priority, string powNonce, string signature,
             List<List<object>> operations, DateTime timestamp, bool sort = false, string seedNonceHash = null)
-                => await Client.PostJson<T>(
+                => Client.PostJson<T>(
                     $"{Query}?sort={sort}&timestamp={timestamp.ToEpoch()}",
                     new
                     {

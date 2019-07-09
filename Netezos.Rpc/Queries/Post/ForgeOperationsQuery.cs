@@ -17,8 +17,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="branch">Branch</param>
         /// <param name="contents">List of operation contents</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string branch, List<object> contents)
-            => await PostAsync(new
+        public Task<JToken> PostAsync(string branch, List<object> contents)
+            => PostAsync(new
             {
                 branch,
                 contents
@@ -31,8 +31,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="contents">List of operation contents</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(string branch, List<object> contents)
-            => await PostAsync<T>(new
+        public Task<T> PostAsync<T>(string branch, List<object> contents)
+            => PostAsync<T>(new
             {
                 branch,
                 contents

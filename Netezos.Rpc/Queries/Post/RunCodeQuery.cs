@@ -21,8 +21,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="payer">Payer (optional)</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
-            => await PostAsync(new
+        public Task<JToken> PostAsync(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
+            => PostAsync(new
             {
                 script,
                 storage,
@@ -45,8 +45,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="payer">Payer (optional)</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
-            => await PostAsync<T>(new
+        public Task<T> PostAsync<T>(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
+            => PostAsync<T>(new
             {
                 script,
                 storage,

@@ -25,9 +25,9 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="context">Context hash (Base58Check-encoded)</param>
         /// <param name="protocolData">Protocol data hexadecimal string</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(int level, int proto, string predecessor, DateTime timestamp,
+        public Task<JToken> PostAsync(int level, int proto, string predecessor, DateTime timestamp,
             int validationPass, string operationsHash, List<string> fitness, string context, string protocolData)
-                => await PostAsync(new
+                => PostAsync(new
                 {
                     level,
                     proto,
@@ -54,9 +54,9 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="protocolData">Protocol data hexadecimal string</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(int level, int proto, string predecessor, DateTime timestamp,
+        public Task<T> PostAsync<T>(int level, int proto, string predecessor, DateTime timestamp,
             int validationPass, string operationsHash, List<string> fitness, string context, string protocolData)
-                => await PostAsync<T>(new
+                => PostAsync<T>(new
                 {
                     level,
                     proto,

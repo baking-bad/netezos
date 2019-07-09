@@ -16,8 +16,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="program">Program michelson expression</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(object program, long? gas = null)
-            => await base.PostAsync(new
+        public Task<JToken> PostAsync(object program, long? gas = null)
+            => base.PostAsync(new
             {
                 program,
                 gas = gas?.ToString()
@@ -30,8 +30,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="program">Program michelson expression</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(object program, long? gas = null)
-            => await base.PostAsync<T>(new
+        public Task<T> PostAsync<T>(object program, long? gas = null)
+            => base.PostAsync<T>(new
             {
                 program,
                 gas = gas?.ToString()

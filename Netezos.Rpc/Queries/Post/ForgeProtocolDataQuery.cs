@@ -17,8 +17,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="nonceHash">Nonce hash</param>
         /// <param name="powNonce">Proof of work nonce (optional)</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(int priority, string nonceHash, string powNonce)
-            => await PostAsync(new
+        public Task<JToken> PostAsync(int priority, string nonceHash, string powNonce)
+            => PostAsync(new
             {
                 priority,
                 nonce_hash = nonceHash,
@@ -33,8 +33,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="powNonce">Proof of work nonce (optional)</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(int priority, string nonceHash, string powNonce)
-            => await PostAsync<T>(new
+        public Task<T> PostAsync<T>(int priority, string nonceHash, string powNonce)
+            => PostAsync<T>(new
             {
                 priority,
                 nonce_hash = nonceHash,

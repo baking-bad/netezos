@@ -47,14 +47,14 @@ namespace Netezos.Rpc
         /// Executes the query and returns the json object
         /// </summary>
         /// <returns></returns>
-        public async Task<JToken> GetAsync() => await Client.GetJson(Query);
+        public Task<JToken> GetAsync() => Client.GetJson(Query);
 
         /// <summary>
         /// Executes the query and returns the json object, deserialized to the specified type
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public async Task<T> GetAsync<T>() => await Client.GetJson<T>(Query);
+        public Task<T> GetAsync<T>() => Client.GetJson<T>(Query);
 
         public override string ToString() => Query;
     }

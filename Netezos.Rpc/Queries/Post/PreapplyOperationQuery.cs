@@ -19,8 +19,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="signature">Signature</param>
         /// <param name="contents">List of contents</param>
         /// <returns></returns>
-        public async Task<JToken> PostAsync(string protocol, string signature, string branch, List<object> contents)
-            => await PostAsync(new[]
+        public Task<JToken> PostAsync(string protocol, string signature, string branch, List<object> contents)
+            => PostAsync(new[]
             {
                 new
                 {
@@ -40,8 +40,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="signature">Signature</param>
         /// <param name="contents">List of contents</param>
         /// <returns></returns>
-        public async Task<T> PostAsync<T>(string protocol, string signature, string branch, List<object> contents)
-            => await PostAsync<T>(new[]
+        public Task<T> PostAsync<T>(string protocol, string signature, string branch, List<object> contents)
+            => PostAsync<T>(new[]
             {
                 new
                 {
