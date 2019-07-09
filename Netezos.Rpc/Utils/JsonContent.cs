@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace Netezos.Rpc
 {
-    public class JsonContent : StringContent
+    class JsonContent : StringContent
     {
         public JsonContent(string content) : base(content)
         {

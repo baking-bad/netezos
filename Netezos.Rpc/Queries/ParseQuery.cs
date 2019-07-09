@@ -3,7 +3,7 @@
 namespace Netezos.Rpc.Queries
 {
     /// <summary>
-    /// RPC query to get helpers associated with data parsing
+    /// RPC query to get data parsing helpers associated with a block
     /// </summary>
     public class ParseQuery : RpcQuery
     {

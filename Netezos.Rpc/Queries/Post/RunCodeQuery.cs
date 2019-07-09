@@ -3,20 +3,23 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
+    /// <summary>
+    /// Rpc query to access code running
+    /// </summary>
     public class RunCodeQuery : RpcPost
     {
         internal RunCodeQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Run a piece of code in the current context. Returns the JToken with storage, operations and big map data.
+        /// Runs a piece of code in the current context and returns the storage, operations and big_map data
         /// </summary>
-        /// <param name="script">Script. Micheline michelson expression.</param>
-        /// <param name="storage">Storage. Micheline michelson expression.</param>
-        /// <param name="input">Input. Micheline michelson expression.</param>
+        /// <param name="script">Script (micheline michelson expression)</param>
+        /// <param name="storage">Storage (micheline michelson expression)</param>
+        /// <param name="input">Input(micheline michelson expression)</param>
         /// <param name="amount">Amount</param>
-        /// <param name="source">Source(optional)</param>
-        /// <param name="payer">Payer(optional)</param>
-        /// <param name="gas">Gas limit(optional)</param>
+        /// <param name="source">Source (optional)</param>
+        /// <param name="payer">Payer (optional)</param>
+        /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
         public async Task<JToken> PostAsync(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
             => await PostAsync(new
@@ -31,16 +34,16 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// Run a piece of code in the current context. Returns the JToken with storage, operations and big map data.
+        /// Runs a piece of code in the current context and returns the storage, operations and big_map data
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
-        /// <param name="script">Script. Micheline michelson expression.</param>
-        /// <param name="storage">Storage. Micheline michelson expression.</param>
-        /// <param name="input">Input. Micheline michelson expression.</param>
+        /// <param name="script">Script (micheline michelson expression)</param>
+        /// <param name="storage">Storage (micheline michelson expression)</param>
+        /// <param name="input">Input(micheline michelson expression)</param>
         /// <param name="amount">Amount</param>
-        /// <param name="source">Source(optional)</param>
-        /// <param name="payer">Payer(optional)</param>
-        /// <param name="gas">Gas limit(optional)</param>
+        /// <param name="source">Source (optional)</param>
+        /// <param name="payer">Payer (optional)</param>
+        /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
             => await PostAsync<T>(new

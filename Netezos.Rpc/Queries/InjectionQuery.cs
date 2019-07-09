@@ -3,7 +3,7 @@
 namespace Netezos.Rpc.Queries
 {
     /// <summary>
-    /// RPC query to access injection branch
+    /// RPC query to access injections
     /// </summary>
     public class InjectionQuery : RpcObject
     {

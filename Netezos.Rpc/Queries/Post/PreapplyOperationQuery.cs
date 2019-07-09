@@ -4,15 +4,18 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
+    /// <summary>
+    /// Rpc query to access operations preapplying
+    /// </summary>
     public class PreapplyOperationQuery : RpcPost
     {
         internal PreapplyOperationQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Simulate the validation of an operation. Returns JToken with data about preapplied operation.
+        /// Simulates the validation of an operation and returns the preapplied data
         /// </summary>
-        /// <param name="branch">Hash of the current head</param>
-        /// <param name="protocol">Current protocol hash</param>
+        /// <param name="branch">Branch</param>
+        /// <param name="protocol">Protocol hash</param>
         /// <param name="signature">Signature</param>
         /// <param name="contents">List of contents</param>
         /// <returns></returns>
@@ -27,13 +30,13 @@ namespace Netezos.Rpc.Queries.Post
                     contents
                 }
             });
-        
+
         /// <summary>
-        /// Simulate the validation of an operation. Returns JToken with data about preapplied operation.
+        /// Simulates the validation of an operation and returns the preapplied data
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
-        /// <param name="branch">Hash of the current head</param>
-        /// <param name="protocol">Current protocol hash</param>
+        /// <param name="branch">Branch</param>
+        /// <param name="protocol">Protocol hash</param>
         /// <param name="signature">Signature</param>
         /// <param name="contents">List of contents</param>
         /// <returns></returns>
