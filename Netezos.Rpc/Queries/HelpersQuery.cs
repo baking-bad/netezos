@@ -1,10 +1,7 @@
-﻿using Netezos.Rpc.Queries.Post;
-
-namespace Netezos.Rpc.Queries
+﻿namespace Netezos.Rpc.Queries
 {
-    //TODO fix xml docs
     /// <summary>
-    /// Rpc query to get helpers assotiated with a block
+    /// RPC query to get helpers associated with a block
     /// </summary>
     public class HelpersQuery : RpcQuery
     {
@@ -24,12 +21,12 @@ namespace Netezos.Rpc.Queries
         public ForgeQuery Forge => new ForgeQuery(this, "forge/");
         
         /// <summary>
-        /// Gets the query to the parse
+        /// Gets the query to the parsing
         /// </summary>
         public ParseQuery Parse => new ParseQuery(this, "parse/");   
         
         /// <summary>
-        /// Gets the query to the preapply
+        /// Gets the query to the preapply branch
         /// </summary>
         public PreapplyQuery Preapply => new PreapplyQuery(this, "preapply/");  
         

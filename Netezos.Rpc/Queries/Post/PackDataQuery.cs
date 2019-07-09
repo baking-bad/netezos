@@ -3,16 +3,15 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    //TODO fix xml docs
     public class PackDataQuery : RpcPost
     {
         internal PackDataQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Access the value associated with a key in the big map storage of the contract.
+        /// Computes the serialized version of some data expression using the same algorithm as script instruction PACK
         /// </summary>
-        /// <param name="data">Data</param>
-        /// <param name="type">Type of Key</param>
+        /// <param name="data">Micheline michelson expression</param>
+        /// <param name="type">Type of data. Micheline michelson expression</param>
         /// <param name="gas">Gas limit</param>
         /// <returns></returns>
         public async Task<JToken> PostAsync(object data, object type, long? gas = null)
@@ -24,12 +23,12 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// 
+        /// Computes the serialized version of some data expression using the same algorithm as script instruction PACK
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data"></param>
-        /// <param name="type"></param>
-        /// <param name="gas"></param>
+        /// <typeparam name="T">Type of the object to deserialize to</typeparam>
+        /// <param name="data">Micheline michelson expression</param>
+        /// <param name="type">Type of data. Micheline michelson expression</param>
+        /// <param name="gas">Gas limit</param>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(object data, object type, long? gas = null)
             => await PostAsync<T>(new

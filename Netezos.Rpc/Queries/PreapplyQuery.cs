@@ -3,11 +3,10 @@
 namespace Netezos.Rpc.Queries
 {
     /// <summary>
-    /// Rpc query to get helpers associated with a preapply objects
+    /// RPC query to get helpers associated with a preapply objects
     /// </summary>
     public class PreapplyQuery : RpcQuery
     {
-        //TODO Add options here
         /// <summary>
         /// Gets the query to the block preapply
         /// </summary>

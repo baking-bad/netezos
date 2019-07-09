@@ -2,14 +2,13 @@
 
 namespace Netezos.Rpc.Queries
 {
-    //TODO fix xml docs
     /// <summary>
-    /// Rpc query to access blocks data
+    /// RPC query to access injection branch
     /// </summary>
     public class InjectionQuery : RpcObject
     {
         /// <summary>
-        /// Gets the query to the Block injection
+        /// Gets the query to the block injection
         /// </summary>
         public InjectBlockQuery Block => new InjectBlockQuery(this, "block/");
         

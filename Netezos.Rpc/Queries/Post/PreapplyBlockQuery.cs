@@ -5,21 +5,20 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    //TODO fix xml docs
     public class PreapplyBlockQuery : RpcPost
     {
         internal PreapplyBlockQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Forge a protocol data
+        /// Simulate the validation of a block that would contain the given operations and return the resulting fitness and context hash.
         /// </summary>
-        /// <param name="protocol">Protocol</param>
+        /// <param name="protocol">Hash of current protocol</param>
         /// <param name="priority">Priority</param>
         /// <param name="powNonce">Proof of work nonce</param>
         /// <param name="signature">Signature</param>
-        /// <param name="operations">Operations</param>
-        /// <param name="seedNonceHash">Seed nonce hash</param>
-        /// <returns>Json response</returns>
+        /// <param name="operations">List of operations</param>
+        /// <param name="seedNonceHash">Seed nonce hash(optional)</param>
+        /// <returns></returns>
         public async Task<JToken> PostAsync(string protocol, int priority, string powNonce, string signature, List<List<object>> operations, string seedNonceHash = null)
             => await PostAsync(new
             {
@@ -35,17 +34,17 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// Forge a protocol data
+        /// Simulate the validation of a block with specified timestamp that would contain the given operations and return the resulting fitness and context hash.
         /// </summary>
         /// <param name="protocol">Protocol</param>
         /// <param name="priority">Priority</param>
         /// <param name="powNonce">Proof of work nonce</param>
         /// <param name="signature">Signature</param>
-        /// <param name="operations">Operations</param>
+        /// <param name="operations">List of operations</param>
         /// <param name="timestamp">Timestamp</param>
-        /// <param name="sort">Sort</param>
-        /// <param name="seedNonceHash">Seed nonce hash</param>
-        /// <returns>Json response</returns>
+        /// <param name="sort">Sort(optional)</param>
+        /// <param name="seedNonceHash">Seed nonce hash(optional)</param>
+        /// <returns></returns>
         public async Task<JToken> PostAsync(string protocol, int priority, string powNonce, string signature,
             List<List<object>> operations, DateTime timestamp, bool sort = false, string seedNonceHash = null)
                 => await Client.PostJson(
@@ -64,15 +63,15 @@ namespace Netezos.Rpc.Queries.Post
                     }.ToJson());
 
         /// <summary>
-        /// 
+        /// Simulate the validation of a block that would contain the given operations and return the resulting fitness and context hash.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="protocol"></param>
-        /// <param name="priority"></param>
-        /// <param name="powNonce"></param>
-        /// <param name="signature"></param>
-        /// <param name="operations"></param>
-        /// <param name="seedNonceHash"></param>
+        /// <typeparam name="T">Type of the object to deserialize to</typeparam>
+        /// <param name="protocol">Hash of current protocol</param>
+        /// <param name="priority">Priority</param>
+        /// <param name="powNonce">Proof of work nonce</param>
+        /// <param name="signature">Signature</param>
+        /// <param name="operations">List of operations</param>
+        /// <param name="seedNonceHash">Seed nonce hash(optional)</param>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(string protocol, int priority, string powNonce, string signature, List<List<object>> operations, string seedNonceHash = null)
             => await PostAsync<T>(new
@@ -89,17 +88,17 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// 
+        /// Simulate the validation of a block with specified timestamp that would contain the given operations and return the resulting fitness and context hash.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="protocol"></param>
-        /// <param name="priority"></param>
-        /// <param name="powNonce"></param>
-        /// <param name="signature"></param>
-        /// <param name="operations"></param>
-        /// <param name="timestamp"></param>
-        /// <param name="sort"></param>
-        /// <param name="seedNonceHash"></param>
+        /// <typeparam name="T">Type of the object to deserialize to</typeparam>
+        /// <param name="protocol">Protocol</param>
+        /// <param name="priority">Priority</param>
+        /// <param name="powNonce">Proof of work nonce</param>
+        /// <param name="signature">Signature</param>
+        /// <param name="operations">List of operations</param>
+        /// <param name="timestamp">Timestamp</param>
+        /// <param name="sort">Sort(optional)</param>
+        /// <param name="seedNonceHash">Seed nonce hash(optional)</param>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(string protocol, int priority, string powNonce, string signature,
             List<List<object>> operations, DateTime timestamp, bool sort = false, string seedNonceHash = null)

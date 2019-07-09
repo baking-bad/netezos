@@ -4,16 +4,15 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc.Queries.Post
 {
-    //TODO fix xml docs
-    public class ParseOperationQuery : RpcPost
+    public class ParseOperationsQuery : RpcPost
     {
-        internal ParseOperationQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
+        internal ParseOperationsQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Forge a protocol data
+        /// Parse operations. Returns JToken with operations content.
         /// </summary>
-        /// <param name="operations"></param>
-        /// <param name="checkSignature"></param>
+        /// <param name="operations">List of operation</param>
+        /// <param name="checkSignature">Check signature(optional)</param>
         /// <returns></returns>
         public async Task<JToken> PostAsync(List<object> operations, bool? checkSignature = null)
             => await PostAsync(new
@@ -23,11 +22,11 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// 
+        /// Parse operations. Returns JToken with operations content.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="operations"></param>
-        /// <param name="checkSignature"></param>
+        /// <typeparam name="T">Type of the object to deserialize to</typeparam>
+        /// <param name="operations">List of operation</param>
+        /// <param name="checkSignature">Check signature(optional)</param>
         /// <returns></returns>
         public async Task<T> PostAsync<T>(List<object> operations, bool? checkSignature = null)
             => await PostAsync<T>(new

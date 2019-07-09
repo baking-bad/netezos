@@ -3,19 +3,19 @@
 namespace Netezos.Rpc.Queries
 {
     /// <summary>
-    /// Rpc query to get helpers assotiated with a block
+    /// RPC query to get helpers associated with data parsing
     /// </summary>
     public class ParseQuery : RpcQuery
     {
         /// <summary>
-        /// Gets the query to the baking rights
+        /// Gets the query to the block parsing
         /// </summary>
         public ParseBlockQuery Block => new ParseBlockQuery(this, "block/");
 
         /// <summary>
-        /// Gets the query to the endorsing rights
+        /// Gets the query to the operations parsing
         /// </summary>
-        public ParseOperationQuery Operations => new ParseOperationQuery(this, "operations/");
+        public ParseOperationsQuery Operations => new ParseOperationsQuery(this, "operations/");
 
 
         internal ParseQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
