@@ -57,7 +57,7 @@ namespace Netezos.Rpc
         /// </summary>
         /// <param name="query">Relative path to the RPC method</param>
         /// <returns></returns>
-        public async Task<JToken> GetAsync(string query) => await Client.GetJson(query);
+        public Task<JToken> GetAsync(string query) => Client.GetJson(query);
 
         /// <summary>
         /// Sends request and returns the json object, deserialized to the specified type
@@ -65,7 +65,7 @@ namespace Netezos.Rpc
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="query">Relative path to the RPC method</param>
         /// <returns></returns>
-        public async Task<T> GetAsync<T>(string query) => await Client.GetJson<T>(query);
+        public Task<T> GetAsync<T>(string query) => Client.GetJson<T>(query);
 
         /// <summary>
         /// Releases the unmanaged resourses and disposes of the managed resources used by the <c>TezosRpc</c>
