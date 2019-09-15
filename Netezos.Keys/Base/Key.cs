@@ -20,6 +20,12 @@ namespace Netezos.Keys
         public Key(Mnemonic mnemonic)
         {
         }
+        public Key(Mnemonic mnemonic, string passphrase)
+        {
+        }
+        public Key(Mnemonic mnemonic, string email, string password)
+        {
+        }
         public Key(Mnemonic mnemonic, ECKind curve)
         {
         }
@@ -35,6 +41,7 @@ namespace Netezos.Keys
         #region static
         public static Key FromHex(string hex, ECKind curve) => throw new NotImplementedException();
         public static Key FromBase64(string base64, ECKind curve) => throw new NotImplementedException();
+        public static Key FromBase58(string base58) => throw new NotImplementedException();
         public static Key FromBytes(byte[] bytes, ECKind curve) => throw new NotImplementedException();
         #endregion
     }

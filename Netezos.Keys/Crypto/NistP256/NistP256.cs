@@ -45,5 +45,15 @@ namespace Netezos.Keys.Crypto
             
             return verifier.VerifySignature(keyedHash, new BigInteger(1, r), new BigInteger(1, s));
         }
+
+        public byte[] GetPrivateKey(byte[] seed)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] GetPublicKey(byte[] privateKey)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
