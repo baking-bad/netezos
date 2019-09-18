@@ -10,14 +10,12 @@ namespace Netezos.Keys.Crypto
     {
         public ECKind Kind => ECKind.Ed25519;
 
-
         #region static
         static readonly byte[] _AddressPrefix = { 6, 161, 159 };
         static readonly byte[] _PublicKeyPrefix = { 13, 15, 37, 217 };
         static readonly byte[] _PrivateKeyPrefix = { 43, 246, 78, 7 };
         static readonly byte[] _SignaturePrefix = { 9, 245, 205, 134, 18 };
         
-
         #endregion
 
         public byte[] AddressPrefix => _AddressPrefix;

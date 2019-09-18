@@ -13,10 +13,16 @@ namespace Netezos.Keys.Crypto
     class NistP256 : ICurve
     {
         public ECKind Kind => ECKind.NistP256;
-        public byte[] AddressPrefix { get; }
-        public byte[] PublicKeyPrefix { get; }
-        public byte[] PrivateKeyPrefix { get; }
-        public byte[] SignaturePrefix { get; }
+        
+        static readonly byte[] _AddressPrefix = { 6, 161, 164 };
+        static readonly byte[] _PublicKeyPrefix = { 3, 178, 139, 127 };
+        static readonly byte[] _PrivateKeyPrefix = { 16, 81, 238, 189 };
+        static readonly byte[] _SignaturePrefix = { 54, 240, 44, 52 };
+        
+        public byte[] AddressPrefix => _AddressPrefix;
+        public byte[] PublicKeyPrefix => _PublicKeyPrefix;
+        public byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
+        public byte[] SignaturePrefix => _SignaturePrefix;
 
         public byte[] Sign(byte[] prvKey, byte[] msg)
         {
@@ -56,11 +62,6 @@ namespace Netezos.Keys.Crypto
         }
 
         public byte[] GetPublicKey(byte[] privateKey)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] SigPrefix()
         {
             throw new NotImplementedException();
         }
