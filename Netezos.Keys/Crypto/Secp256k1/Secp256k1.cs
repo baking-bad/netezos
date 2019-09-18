@@ -10,6 +10,10 @@ namespace Netezos.Keys.Crypto
     class Secp256k1 : ICurve
     {
         public ECKind Kind => ECKind.Secp256k1;
+        public byte[] AddressPrefix { get; }
+        public byte[] PublicKeyPrefix { get; }
+        public byte[] PrivateKeyPrefix { get; }
+        public byte[] SignaturePrefix { get; }
 
         public byte[] Sign(byte[] prvKey, byte[] msg)
         {
