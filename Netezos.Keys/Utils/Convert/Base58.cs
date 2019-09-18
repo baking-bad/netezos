@@ -8,8 +8,7 @@ namespace Netezos.Keys
 {
     public static class Base58
     {
-        const int CHECK_SUM_SIZE = 4;
-        const string DIGITS = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+        const string Digits = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
         static string Encode(byte[] data)
         {
@@ -18,14 +17,14 @@ namespace Netezos.Keys
 
         static string EncodePlain(byte[] data)
         {
-            BigInteger bigInteger = ((IEnumerable<byte>) data).Aggregate<byte, BigInteger>((BigInteger) 0, (Func<BigInteger, byte, BigInteger>) ((current, t) => current * (BigInteger) 256 + (BigInteger) t));
+            BigInteger bigInteger = data.Aggregate(0, (Func<BigInteger, byte, BigInteger>) ((current, t) => current * (BigInteger) 256 + (BigInteger) t));
 
             string str = string.Empty;
             while (bigInteger > 0L)
             {
-                int index = (int) (bigInteger % (BigInteger) 58);
-                bigInteger /= (BigInteger) 58;
-                str = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"[index].ToString() + str;
+                int index = (int) (bigInteger % 58);
+                bigInteger /= 58;
+                str = Digits[index] + str;
             }
             for (int index = 0; index < data.Length && data[index] == (byte) 0; ++index)
                 str = "1" + str;
@@ -42,15 +41,15 @@ namespace Netezos.Keys
 
         static byte[] DecodePlain(string data)
         {
-            BigInteger bigInteger = (BigInteger) 0;
+            BigInteger bigInteger = 0;
             for (int index = 0; index < data.Length; ++index)
             {
-                int num = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".IndexOf(data[index]);
+                int num = Digits.IndexOf(data[index]);
                 if (num < 0)
                     throw new FormatException($"Invalid Base58 character `{(object) data[index]}` at position {(object) index}");
-                bigInteger = bigInteger * (BigInteger) 58 + (BigInteger) num;
+                bigInteger = bigInteger * 58 + num;
             }
-            return Enumerable.Repeat<byte>((byte) 0, data.TakeWhile<char>((Func<char, bool>) (c => c == '1')).Count<char>()).Concat<byte>(((IEnumerable<byte>) bigInteger.ToByteArray()).Reverse<byte>().SkipWhile<byte>((Func<byte, bool>) (b => b == (byte) 0))).ToArray<byte>();
+            return Enumerable.Repeat((byte) 0, data.TakeWhile(c => c == '1').Count()).Concat(bigInteger.ToByteArray().Reverse().SkipWhile(b => b == (byte) 0)).ToArray();
         }
 
         static byte[] _AddCheckSum(byte[] data)
@@ -62,8 +61,8 @@ namespace Netezos.Keys
         static byte[] _VerifyAndRemoveCheckSum(byte[] data)
         {
             byte[] data1 = data.GetBytes(0, data.Length - 4);
-            if (!((IEnumerable<byte>) data.GetBytes(data.Length - 4, 4)).SequenceEqual<byte>((IEnumerable<byte>) _GetCheckSum(data1)))
-                return (byte[]) null;
+            if (!data.GetBytes(data.Length - 4, 4).SequenceEqual(_GetCheckSum(data1)))
+                return null;
             return data1;
         }
 
@@ -73,7 +72,7 @@ namespace Netezos.Keys
             byte[] hash1 = shA256.ComputeHash(data);
             byte[] hash2 = shA256.ComputeHash(hash1);
             byte[] numArray = new byte[4];
-            Buffer.BlockCopy((Array) hash2, 0, (Array) numArray, 0, numArray.Length);
+            Buffer.BlockCopy((Array) hash2, 0, numArray, 0, numArray.Length);
             return numArray;
         }
         

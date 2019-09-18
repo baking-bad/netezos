@@ -16,15 +16,11 @@ namespace Netezos.Keys
         {
             PublicKey = bytes;
             
-            Curve = curve == ECKind.Ed25519
-                ? new Ed25519()
-                : curve == ECKind.Secp256k1
-                    ? (ICurve) new Secp256k1()
-                    : new NistP256();
+            Curve = Crypto.Curve.GetCurve(curve);
         }
 
         public byte[] GetBytes() => PublicKey;
-        public string GetAddress() => Base58.Encode(Blake2b.GetDigest(PublicKey, 160), Prefix.tz1);
+        public string GetAddress() => Base58.Encode(Blake2b.GetDigest(PublicKey, 160), Curve.AddressPrefix);
         public bool Verify(byte[] data, byte[] signature) => Curve.Verify(PublicKey, data, signature);
 
         #region static
