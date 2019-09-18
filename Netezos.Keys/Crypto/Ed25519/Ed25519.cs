@@ -9,10 +9,24 @@ namespace Netezos.Keys.Crypto
     public class Ed25519 : ICurve
     {
         public ECKind Kind => ECKind.Ed25519;
+
+
+        #region static
+        static readonly byte[] _AddressPrefix = { 6, 161, 159 };
+        static readonly byte[] _PublicKeyPrefix = { 13, 15, 37, 217 };
+        static readonly byte[] _PrivateKeyPrefix = { 43, 246, 78, 7 };
+        static readonly byte[] _SignaturePrefix = { 9, 245, 205, 134, 18 };
         
-        public const int PublicKeySize = 32;
-        public const int PrivateKeySize = 32;
-        public const int ExtendedPrivateKeySize = 64;
+
+        #endregion
+
+        public byte[] AddressPrefix => _AddressPrefix;
+        public byte[] PublicKeyPrefix => _PublicKeyPrefix;
+        public byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
+        public byte[] SignaturePrefix => _SignaturePrefix;
+
+        const int PublicKeySize = 32;
+        const int PrivateKeySize = 32;
 
         public byte[] Sign(byte[] prvKey, byte[] msg)
         {
@@ -54,6 +68,6 @@ namespace Netezos.Keys.Crypto
             
             return publicKey;
         }
-        
+
     }
 }
