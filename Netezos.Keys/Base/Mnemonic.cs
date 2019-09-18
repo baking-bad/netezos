@@ -7,7 +7,7 @@ namespace Netezos.Keys
 {
     public class Mnemonic
     {
-        private readonly SecureString MnemonicSentence;
+        readonly SecureString MnemonicSentence;
         
         public Mnemonic()
         : this(MnemonicSize.M15)
