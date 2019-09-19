@@ -20,7 +20,7 @@ namespace Netezos.Keys
         }
 
         public byte[] GetBytes() => PublicKey;
-        public string GetAddress() => Base58.Encode(Blake2b.GetDigest(PublicKey, 160), Curve.AddressPrefix);
+        public string GetAddress() => Base58.Convert(Blake2b.GetDigest(PublicKey, 160), Curve.AddressPrefix);
         public bool Verify(byte[] data, byte[] signature) => Curve.Verify(PublicKey, data, signature);
 
         #region static
