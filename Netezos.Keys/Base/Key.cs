@@ -52,7 +52,7 @@ namespace Netezos.Keys
         public bool Verify(byte[] data, byte[] signature) => PubKey.Verify(data, signature);
 
         public bool Verify(string message, string signature) =>
-            PubKey.Verify(Encoding.UTF8.GetBytes(message), Base58.Decode(signature, Curve.SignaturePrefix));
+            PubKey.Verify(Encoding.UTF8.GetBytes(message), Base58.Parse(signature, Curve.SignaturePrefix));
 
         #region static
         public static Key FromHex(string hex, ECKind curve) => throw new NotImplementedException();

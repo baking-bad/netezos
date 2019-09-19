@@ -11,6 +11,16 @@ namespace Netezos.Keys
             Buffer.BlockCopy(data, 0, res, src.Length, data.Length);
             return res;
         }
+        
+        public static byte[] Reverse(this byte[] data)
+        {
+            var res = new byte[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+                res[i] = data[data.Length - 1 - i];
+
+            return res;
+        }
 
         public static byte[] GetBytes(this byte[] src, int start, int length)
         {
