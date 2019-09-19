@@ -46,7 +46,7 @@ namespace Netezos.Keys
                 throw new ArgumentNullException(nameof(hex));
 
             if (hex.Length % 2 > 0)
-                throw new ArgumentException("Invalid hex string", nameof(hex));
+                throw new FormatException("Invalid hex string");
 
             var pos = hex[0] == '0' && hex[1] == 'x' ? 2 : 0;
             byte[] bytes = new byte[(hex.Length - pos) >> 1];
@@ -57,7 +57,7 @@ namespace Netezos.Keys
                 l = HexAscii[hex[pos + 1]];
 
                 if ((h | l) == 255)
-                    throw new ArgumentException("Invalid hex string", nameof(hex));
+                    throw new FormatException("Invalid hex string");
 
                 bytes[i] = (byte)((h << 4) + l);
             }

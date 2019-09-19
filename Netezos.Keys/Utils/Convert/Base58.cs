@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 
@@ -8,102 +6,110 @@ namespace Netezos.Keys
 {
     public static class Base58
     {
-        const string Digits = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
-        static string Encode(byte[] data)
+        const string Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+        static readonly byte[] Base58Ascii = new byte[]
         {
-            return EncodePlain(_AddCheckSum(data));
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 0, 1, 2, 3, 4, 5, 6, 7, 8, 255, 255, 255, 255, 255, 255, 255, 9, 10, 11,
+            12, 13, 14, 15, 16, 255, 17, 18, 19, 20, 21, 255, 22, 23, 24, 25, 26, 27, 28,
+            29, 30, 31, 32, 255, 255, 255, 255, 255, 255, 33, 34, 35, 36, 37, 38, 39, 40,
+            41, 42, 43, 255, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255,
+        };
+
+        static byte[] CheckSum(byte[] data)
+        {
+            using (var shA256 = new SHA256Managed())
+            {
+                var hash1 = shA256.ComputeHash(data);
+                var hash2 = shA256.ComputeHash(hash1);
+                return new[] { hash2[0], hash2[1], hash2[2], hash2[3], };
+            }
         }
 
-        static string EncodePlain(byte[] data)
+        static byte[] VerifyAndRemoveCheckSum(byte[] bytes)
         {
-            BigInteger bigInteger = data.Aggregate(0, (Func<BigInteger, byte, BigInteger>) ((current, t) => current * (BigInteger) 256 + (BigInteger) t));
+            var data = bytes.GetBytes(0, bytes.Length - 4);
 
-            string str = string.Empty;
-            while (bigInteger > 0L)
+            var checkSum = CheckSum(data);
+            if (bytes[bytes.Length - 4] != checkSum[0] ||
+                bytes[bytes.Length - 3] != checkSum[1] ||
+                bytes[bytes.Length - 2] != checkSum[2] ||
+                bytes[bytes.Length - 1] != checkSum[3])
+                throw new FormatException("Checksum is invalid");
+
+            return data;
+        }
+
+        static string EncodePlain(byte[] bytes)
+        {
+            var bigInt = new BigInteger(bytes.Reverse());
+
+            var str = "";
+            while (bigInt > 0)
             {
-                int index = (int) (bigInteger % 58);
-                bigInteger /= 58;
-                str = Digits[index] + str;
+                str = Alphabet[(int)(bigInt % 58)] + str;
+                bigInt /= 58;
             }
-            for (int index = 0; index < data.Length && data[index] == (byte) 0; ++index)
+
+            var i = 0;
+            while (bytes[i++] == 0)
                 str = "1" + str;
+
             return str;
         }
 
-        static byte[] Decode(string data)
+        static byte[] DecodePlain(string base58)
         {
-            byte[] numArray = _VerifyAndRemoveCheckSum(DecodePlain(data));
-            if (numArray == null)
-                throw new FormatException("Base58 checksum is invalid");
-            return numArray;
-        }
-
-        static byte[] DecodePlain(string data)
-        {
-            BigInteger bigInteger = 0;
-            for (int index = 0; index < data.Length; ++index)
+            BigInteger bigInt = 0;
+            for (int i = 0; i < base58.Length; ++i)
             {
-                int num = Digits.IndexOf(data[index]);
-                if (num < 0)
-                    throw new FormatException($"Invalid Base58 character `{(object) data[index]}` at position {(object) index}");
-                bigInteger = bigInteger * 58 + num;
-            }
-            return Enumerable.Repeat((byte) 0, data.TakeWhile(c => c == '1').Count()).Concat(bigInteger.ToByteArray().Reverse().SkipWhile(b => b == (byte) 0)).ToArray();
-        }
-
-        static byte[] _AddCheckSum(byte[] data)
-        {
-            byte[] checkSum = _GetCheckSum(data);
-            return data.Concat(checkSum);
-        }
-
-        static byte[] _VerifyAndRemoveCheckSum(byte[] data)
-        {
-            byte[] data1 = data.GetBytes(0, data.Length - 4);
-            if (!data.GetBytes(data.Length - 4, 4).SequenceEqual(_GetCheckSum(data1)))
-                return null;
-            return data1;
-        }
-
-        static byte[] _GetCheckSum(byte[] data)
-        {
-            SHA256 shA256 = (SHA256) new SHA256Managed();
-            byte[] hash1 = shA256.ComputeHash(data);
-            byte[] hash2 = shA256.ComputeHash(hash1);
-            byte[] numArray = new byte[4];
-            Buffer.BlockCopy((Array) hash2, 0, numArray, 0, numArray.Length);
-            return numArray;
-        }
-        
-        public static byte[] Decode(string encoded, byte[] prefix)
-        {
-            int prefixLen = prefix?.Length ?? 0;
-
-            byte[] msg = Decode(encoded);
-
-            byte[] result = new byte[msg.Length - prefixLen];
-
-            Array.Copy(msg, prefixLen, result, 0, result.Length);
-
-            return result;
-        }
-        
-        public static string Encode(byte[] payload, byte[] prefix)
-        {
-            int prefixLen = prefix?.Length ?? 0;
-
-            byte[] msg = new byte[prefixLen + payload.Length];
-
-            if (prefix != null)
-            {
-                Array.Copy(prefix, 0, msg, 0, prefix.Length);
+                var num = Base58Ascii[base58[i]];
+                if (num == 255) throw new FormatException($"Invalid Base58 string");
+                bigInt = bigInt * 58 + num;
             }
 
-            Array.Copy(payload, 0, msg, prefixLen, payload.Length);
-
-            return Encode(msg);
+            var cnt = -1;
+            while (base58[++cnt] == '1') ;
+            return new byte[cnt].Concat(bigInt.ToByteArray().Reverse());
         }
-        
+
+        public static byte[] Parse(string base58)
+        {
+            return VerifyAndRemoveCheckSum(DecodePlain(base58));
+        }
+
+        public static byte[] Parse(string base58, byte[] prefix)
+        {
+            var bytes = VerifyAndRemoveCheckSum(DecodePlain(base58));
+            return bytes.GetBytes(prefix.Length, bytes.Length - prefix.Length);
+        }
+
+        public static byte[] Parse(string base58, int prefixLength)
+        {
+            var bytes = VerifyAndRemoveCheckSum(DecodePlain(base58));
+            return bytes.GetBytes(prefixLength, bytes.Length - prefixLength);
+        }
+
+        public static string Convert(byte[] bytes)
+        {
+            return EncodePlain(bytes.Concat(CheckSum(bytes)));
+        }
+
+        public static string Convert(byte[] bytes, byte[] prefix)
+        {
+            var data = prefix.Concat(bytes);
+            return EncodePlain(data.Concat(CheckSum(data)));
+        }
     }
 }
