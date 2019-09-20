@@ -53,7 +53,9 @@ namespace Netezos.Keys
 
         static string EncodePlain(byte[] bytes)
         {
-            var bigInt = new BigInteger(bytes.Reverse());
+            var bigInt = new BigInteger((bytes[0] >= 128
+                ? new byte[] { 0 }.Concat(bytes)
+                : bytes).Reverse());
 
             var str = "";
             while (bigInt > 0)
@@ -81,7 +83,9 @@ namespace Netezos.Keys
 
             var cnt = -1;
             while (base58[++cnt] == '1') ;
-            return new byte[cnt].Concat(bigInt.ToByteArray().Reverse());
+
+            var bytes = bigInt.ToByteArray().Reverse();
+            return new byte[cnt].Concat(bytes[0] == 0 ? bytes.GetBytes(1, bytes.Length - 1) : bytes);
         }
 
         public static byte[] Parse(string base58)
