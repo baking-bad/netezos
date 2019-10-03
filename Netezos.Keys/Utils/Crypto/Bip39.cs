@@ -308,9 +308,6 @@ namespace Netezos.Keys.Utils.Crypto
             // salt. Iteration count is set to 4096 and HMAC-SHA512 is
             // used as a pseudo-random function. Desired length of the
             // derived key is 512 bits (= 64 bytes).
-            Console.WriteLine(words);
-            Console.WriteLine("mnemonic" + passphrase);
-            
             
             var pass = Encoding.UTF8.GetBytes(words);
             var salt = Encoding.UTF8.GetBytes("mnemonic" + passphrase);
