@@ -15,9 +15,8 @@ namespace Netezos.Keys
         readonly PubKey PubKey;
 
         public Key() : this(new Mnemonic()) {}
-        public Key(ECKind curve)
-        {
-        }
+
+        public Key(ECKind curve) : this(new Mnemonic(), "", curve) {}
 
         public Key(Mnemonic mnemonic, SecureString passphrase) => throw new NotImplementedException();
 
@@ -26,6 +25,7 @@ namespace Netezos.Keys
             Curve = new Ed25519();
             
             var seed = mnemonic.GetSeed(passphrase);
+            Console.WriteLine($"Seed len {seed.Length}");
             var privateKey = Curve.GetPrivateKey(seed);
             Store = new PlainSecretStore(Curve.GetPrivateKey(seed));
             PubKey = new PubKey(Curve.GetPublicKey(privateKey), Curve.Kind);
@@ -33,8 +33,17 @@ namespace Netezos.Keys
             privateKey.Reset();
         }
         public Key(Mnemonic mnemonic, string email, string password) : this(mnemonic, $"{email}{password}") {}
-        public Key(Mnemonic mnemonic, ECKind curve)
+        public Key(Mnemonic mnemonic, string passphrase, ECKind curve)
         {
+            Curve = Crypto.Curve.GetCurve(curve);
+            
+            var seed = mnemonic.GetSeed(passphrase);
+            Console.WriteLine($"Seed len {seed.Length}");
+            var privateKey = Curve.GetPrivateKey(seed);
+            Store = new PlainSecretStore(Curve.GetPrivateKey(seed));
+            PubKey = new PubKey(Curve.GetPublicKey(privateKey), Curve.Kind);
+            seed.Reset();
+            privateKey.Reset();
         }
 
         public string GetAddress() => PubKey.GetAddress();
