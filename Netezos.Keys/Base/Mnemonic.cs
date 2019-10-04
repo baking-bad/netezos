@@ -24,9 +24,7 @@ namespace Netezos.Keys
 
             byte[] bytes = new byte[entArray[i] / 8];
 
-            new Random().NextBytes(bytes);
-
-            List<string> code = bip39.ToMnemonic(bytes);
+            List<string> code = bip39.ToMnemonic(RNG.GetNonZeroBytes(entArray[i] / 8));
 
             MnemonicSentence = string.Join(" ", code).ToSecureString();
             

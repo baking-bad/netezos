@@ -10,7 +10,7 @@ using Org.BouncyCastle.Math;
 
 namespace Netezos.Keys.Crypto
 {
-    class NistP256 : ICurve
+    public class NistP256 : ICurve
     {
         public ECKind Kind => ECKind.NistP256;
         
@@ -28,6 +28,7 @@ namespace Netezos.Keys.Crypto
         {
             var keyedHash = Blake2b.GetDigest(msg);
             var curve = SecNamedCurves.GetByName("secp256r1");
+            Console.WriteLine($"PrivateKey {Base58.Convert(prvKey, PrivateKeyPrefix)}");
             var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
             var key = new ECPrivateKeyParameters(new BigInteger(prvKey), parameters);
             var signer = new ECDsaSigner(new HMacDsaKCalculator(new Blake2bDigest(256)));
@@ -58,12 +59,20 @@ namespace Netezos.Keys.Crypto
 
         public byte[] GetPrivateKey(byte[] seed)
         {
-            throw new NotImplementedException();
+            return seed;
         }
 
         public byte[] GetPublicKey(byte[] privateKey)
         {
-            throw new NotImplementedException();
+            var curve = SecNamedCurves.GetByName("secp256r1");
+            var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
+            var key = new ECPrivateKeyParameters(new BigInteger(privateKey), parameters);
+            
+            var q = key.Parameters.G.Multiply(key.D);
+            Console.WriteLine($"{key.AlgorithmName}, {q}, {key.PublicKeyParamSet}");
+            var publicParams = new ECPublicKeyParameters(q, parameters);
+            
+            return publicParams.Q.GetEncoded();
         }
     }
 }

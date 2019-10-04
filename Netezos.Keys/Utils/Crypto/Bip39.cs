@@ -297,7 +297,7 @@ namespace Netezos.Keys.Utils.Crypto
         /// </summary>
         public static byte[] ToSeed(string words, string passphrase)
         {
-            if (string.IsNullOrWhiteSpace(passphrase))
+            if (passphrase == null)
             {
                 throw new ArgumentException("A null passphrase is not allowed.", nameof(passphrase));
             }
