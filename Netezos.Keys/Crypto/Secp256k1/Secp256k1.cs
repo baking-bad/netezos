@@ -21,7 +21,7 @@ namespace Netezos.Keys.Crypto
         public byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
         public byte[] SignaturePrefix => _SignaturePrefix;
 
-        public byte[] Sign(byte[] prvKey, byte[] msg)
+        public Signature Sign(byte[] prvKey, byte[] msg)
         {
             var keyedHash = Blake2b.GetDigest(msg);
             var curve = SecNamedCurves.GetByName("secp256k1");
@@ -34,7 +34,7 @@ namespace Netezos.Keys.Crypto
             var r = rs[0].ToByteArrayUnsigned();
             var s = rs[1].ToByteArrayUnsigned();
            
-            return r.Concat(s);
+            return new Signature(r.Concat(s), Kind);
         }
         
         public bool Verify(byte[] pubKey, byte[] msg, byte[] sig)
@@ -55,12 +55,19 @@ namespace Netezos.Keys.Crypto
 
         public byte[] GetPrivateKey(byte[] seed)
         {
-            throw new System.NotImplementedException();
+            return seed;
         }
 
         public byte[] GetPublicKey(byte[] privateKey)
         {
-            throw new System.NotImplementedException();
+            var curve = SecNamedCurves.GetByName("secp256k1");
+            var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
+            var key = new ECPrivateKeyParameters(new BigInteger(privateKey), parameters);
+            
+            var q = key.Parameters.G.Multiply(key.D);
+            var publicParams = new ECPublicKeyParameters(q, parameters);
+
+            return publicParams.Q.GetEncoded(true);
         }
     }
 }
