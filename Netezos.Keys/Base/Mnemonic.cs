@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security;
 using Netezos.Keys.Utils.Crypto;
 
@@ -17,14 +16,7 @@ namespace Netezos.Keys
         {
             Bip39 bip39 = new Bip39();
 
-            var ms = (int) size;
-            var msArray = new[] { 12, 15, 18, 21, 24 };
-            var entArray = new[] { 128, 160, 192, 224, 256 };
-            var i = Array.IndexOf(msArray, ms);
-
-            byte[] bytes = new byte[entArray[i] / 8];
-
-            List<string> code = bip39.ToMnemonic(RNG.GetNonZeroBytes(entArray[i] / 8));
+            List<string> code = bip39.ToMnemonic(RNG.GetNonZeroBytes((int)size*11*32/33 / 8));
 
             MnemonicSentence = string.Join(" ", code).ToSecureString();
             

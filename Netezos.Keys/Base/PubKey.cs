@@ -5,6 +5,7 @@ using System.Text;
 
 using Netezos.Keys.Crypto;
 using Netezos.Keys.Utils.Crypto;
+using Org.BouncyCastle.Utilities.Encoders;
 
 namespace Netezos.Keys
 {
@@ -28,7 +29,7 @@ namespace Netezos.Keys
         #region static
 
         public static PubKey FromHex(string hex, ECKind curve) => new PubKey(Hex.Parse(hex), curve);
-        public static PubKey FromBase64(string base64, ECKind curve) => throw new NotImplementedException();
+        public static PubKey FromBase64(string base64, ECKind curve) => new PubKey(Base64.Decode(base64), curve);
         public static PubKey FromBase58(string base58, ECKind curve) => new PubKey(Base58.Parse(base58, Crypto.Curve.GetCurve(curve).PublicKeyPrefix), curve);
         public static PubKey FromBytes(byte[] bytes, ECKind curve) => new PubKey(bytes, curve);
         #endregion
