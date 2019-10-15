@@ -26,7 +26,7 @@ namespace Netezos.Keys.Crypto
         const int PublicKeySize = 32;
         const int PrivateKeySize = 32;
 
-        public byte[] Sign(byte[] prvKey, byte[] msg)
+        public Signature Sign(byte[] prvKey, byte[] msg)
         {
             var keyedHash = Blake2b.GetDigest(msg);
             var privateKey = new Ed25519PrivateKeyParameters(prvKey, 0);
@@ -34,7 +34,7 @@ namespace Netezos.Keys.Crypto
             signer.Init(true, privateKey);
             signer.BlockUpdate(keyedHash, 0, keyedHash.Length);
             
-            return signer.GenerateSignature();
+            return new Signature(signer.GenerateSignature(), Kind);
         }
         public bool Verify(byte[] pubKey, byte[] msg, byte[] sig)
         {

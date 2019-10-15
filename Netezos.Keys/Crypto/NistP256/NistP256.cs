@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Netezos.Keys.Utils.Crypto;
 using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Crypto.Digests;
@@ -24,11 +22,10 @@ namespace Netezos.Keys.Crypto
         public byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
         public byte[] SignaturePrefix => _SignaturePrefix;
 
-        public byte[] Sign(byte[] prvKey, byte[] msg)
+        public Signature Sign(byte[] prvKey, byte[] msg)
         {
             var keyedHash = Blake2b.GetDigest(msg);
             var curve = SecNamedCurves.GetByName("secp256r1");
-            Console.WriteLine($"PrivateKey {Base58.Convert(prvKey, PrivateKeyPrefix)}");
             var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
             var key = new ECPrivateKeyParameters(new BigInteger(prvKey), parameters);
             var signer = new ECDsaSigner(new HMacDsaKCalculator(new Blake2bDigest(256)));
@@ -38,7 +35,7 @@ namespace Netezos.Keys.Crypto
             var r = rs[0].ToByteArrayUnsigned();
             var s = rs[1].ToByteArrayUnsigned();
            
-            return r.Concat(s);
+            return new Signature(r.Concat(s), Kind);
         }
         
         public bool Verify(byte[] pubKey, byte[] msg, byte[] sig)
@@ -69,10 +66,8 @@ namespace Netezos.Keys.Crypto
             var key = new ECPrivateKeyParameters(new BigInteger(privateKey), parameters);
             
             var q = key.Parameters.G.Multiply(key.D);
-            Console.WriteLine($"{key.AlgorithmName}, {q}, {key.PublicKeyParamSet}");
-            var publicParams = new ECPublicKeyParameters(q, parameters);
-            
-            return publicParams.Q.GetEncoded();
+
+            return q.GetEncoded(true);
         }
     }
 }
