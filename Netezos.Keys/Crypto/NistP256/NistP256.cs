@@ -61,13 +61,15 @@ namespace Netezos.Keys.Crypto
 
         public byte[] GetPublicKey(byte[] privateKey)
         {
-            var curve = SecNamedCurves.GetByName("secp256r1");
+            throw new NotImplementedException();
+            //TODO Figure out why it doesn't work with private key p2sk3PM77YMR99AvD3fSSxeLChMdiQ6kkEzqoPuSwQqhPsh29irGLC
+/*            var curve = SecNamedCurves.GetByName("secp256r1");
             var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
             var key = new ECPrivateKeyParameters(new BigInteger(privateKey), parameters);
             
             var q = key.Parameters.G.Multiply(key.D);
 
-            return q.GetEncoded(true);
+            return q.GetEncoded(true);*/
         }
     }
 }
