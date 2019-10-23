@@ -18,21 +18,21 @@ namespace Netezos.Keys
 
             List<string> code = bip39.ToMnemonic(RNG.GetNonZeroBytes((int)size*11*32/33 / 8));
 
-            MnemonicSentence = string.Join(" ", code).ToSecureString();
+            MnemonicSentence = string.Join(" ", code).Secure();
             
         }
         public Mnemonic(string[] words)
         {
-            MnemonicSentence = string.Join(" ", words).ToSecureString();
+            MnemonicSentence = string.Join(" ", words).Secure();
         }
         public Mnemonic(string words)
         {
-            MnemonicSentence = words.ToSecureString();
+            MnemonicSentence = words.Secure();
         }
 
         public byte[] GetSeed(string passphrase)
         {
-            return Bip39.ToSeed(MnemonicSentence.SecureStringToString(), passphrase).GetBytes(0, 32);
+            return Bip39.ToSeed(MnemonicSentence.Unsecure(), passphrase).GetBytes(0, 32);
         }
 
         public byte[] GetSeed() => GetSeed("");

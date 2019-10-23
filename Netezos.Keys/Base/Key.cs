@@ -17,7 +17,7 @@ namespace Netezos.Keys
 
         public Key(ECKind curve) : this(new Mnemonic(), "", curve) {}
 
-        public Key(Mnemonic mnemonic, SecureString passphrase) : this(mnemonic, passphrase.SecureStringToString()) {}
+        public Key(Mnemonic mnemonic, SecureString passphrase) : this(mnemonic, passphrase.Unsecure()) {}
 
         public Key(Mnemonic mnemonic, string passphrase = "")
         {
