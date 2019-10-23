@@ -23,7 +23,7 @@ namespace Netezos.Keys
         {
             Curve = new Ed25519();
             
-            var seed = mnemonic.GetSeed(passphrase);
+            var seed = mnemonic.GetSeed(passphrase).GetBytes(0, 32);
             var privateKey = Curve.GetPrivateKey(seed);
             Store = new PlainSecretStore(Curve.GetPrivateKey(seed));
             PubKey = new PubKey(Curve.GetPublicKey(privateKey), Curve.Kind);
@@ -34,7 +34,7 @@ namespace Netezos.Keys
         public Key(Mnemonic mnemonic, string passphrase, ECKind curve)
         {
             Curve = Crypto.Curve.GetCurve(curve);
-            var seed = mnemonic.GetSeed(passphrase);
+            var seed = mnemonic.GetSeed(passphrase).GetBytes(0, 32);
             var privateKey = Curve.GetPrivateKey(seed);
             Store = new PlainSecretStore(Curve.GetPrivateKey(seed));
             PubKey = new PubKey(Curve.GetPublicKey(privateKey), Curve.Kind);
@@ -78,21 +78,21 @@ namespace Netezos.Keys
             return FromBytes(bytes, curve);
         }
         public static Key FromBytes(byte[] bytes, ECKind curve) => new Key(bytes, curve);
-        #endregion
 
         static ECKind GetCurveFromPrefix(string prefix)
         {
             switch (prefix)
             {
-            case "edsk":
-                return ECKind.Ed25519;
-            case "spsk":
-                return ECKind.Secp256k1;
-            case "p2sk":
-                return ECKind.NistP256;
-            default:
-                throw new ArgumentException();
+                case "edsk":
+                    return ECKind.Ed25519;
+                case "spsk":
+                    return ECKind.Secp256k1;
+                case "p2sk":
+                    return ECKind.NistP256;
+                default:
+                    throw new ArgumentException();
             }
         }
+        #endregion
     }
 }
