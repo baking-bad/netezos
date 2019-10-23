@@ -34,7 +34,7 @@ namespace Netezos.Keys.Crypto
             signer.Init(true, privateKey);
             signer.BlockUpdate(keyedHash, 0, keyedHash.Length);
             
-            return new Signature(signer.GenerateSignature(), Kind);
+            return new Signature(signer.GenerateSignature(), _SignaturePrefix);
         }
         public bool Verify(byte[] pubKey, byte[] msg, byte[] sig)
         {
