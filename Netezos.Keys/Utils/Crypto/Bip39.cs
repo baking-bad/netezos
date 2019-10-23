@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Netezos.Keys.Utils.Crypto
 {
-    public class Bip39
+    static class Bip39
     {
-        private static readonly List<string> WordList = new List<string>
+        static readonly List<string> WordList = new List<string>
         {
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",
             "accident", "account", "accuse", "achieve", "acid", "acoustic", "acquire", "across", "act", "action",
@@ -196,184 +196,141 @@ namespace Netezos.Keys.Utils.Crypto
             "wrist", "write", "wrong", "yard", "year", "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
         };
 
-        private const string WordListDigest = "cad18e21a5354694610e49b147526db1b2c32f63dc4aff6cb0bc03690f757db1";
-
-
-        public Bip39()
-        {
-            byte[] wordBytes = null;
-            
-            var md = SHA256.Create();
-            md.Initialize();
-
-            foreach (var word in WordList)
-            {
-                wordBytes = Encoding.UTF8.GetBytes(word);
-                md.TransformBlock(wordBytes, 0, wordBytes.Length, wordBytes, 0);
-            }
-
-            if (wordBytes == null)
-            {
-                throw new ArgumentException("input stream was empty");
-            }
-            md.TransformFinalBlock(wordBytes, 0, wordBytes.Length);
-            
-            if (WordList.Count != 2048)
-            {
-                throw new ArgumentException("input stream did not contain 2048 words");
-            }
-
-            // If a wordListDigest is supplied check to make sure it matches.
-            byte[] digest = md.Hash;
-
-            var hexDigest = Hex.Convert(digest);
-
-            if (hexDigest != WordListDigest)
-            {
-                throw new ArgumentException("word list digest mismatch");
-            }
-        }
-
-        /// <summary>
-        /// Convert mnemonic word list to original entropy value.
-        /// </summary>
-        public byte[] ToEntropy(IEnumerable<string> words)
+        public static byte[] ToEntropy(IEnumerable<string> words)
         {
             if (!words.Any())
-            {
-                throw new ArgumentException("Word list is empty.");
-            }
+                throw new ArgumentException("Word list is empty");
 
-            int wordCount = words.Count();
+            var wordsCnt = words.Count();
 
-            if (wordCount % 3 > 0)
-            {
-                throw new ArgumentException("Word list size must be multiple of three words.");
-            }
+            if (wordsCnt % 3 > 0)
+                throw new ArgumentException("Word list size must be a multiple of 3");
 
-            // Look up all the words in the list and construct the
-            // concatenation of the original entropy and the checksum.
-            //
-            int concatLenBits = wordCount * 11;
-            bool[] concatBits = new bool[concatLenBits];
-            int wordindex = 0;
+            var concatBitsCnt = wordsCnt * 11;
+            var concatBits = new byte[concatBitsCnt];
+
+            var wordIndex = 0;
             foreach (string word in words)
             {
-                // Find the words index in the wordlist.
-                int ndx = WordList.BinarySearch(word);
-                if (ndx < 0)
-                    throw new KeyNotFoundException(word);
+                int index = WordList.BinarySearch(word);
 
-                // Set the next 11 bits to the value of the index.
-                for (int ii = 0; ii < 11; ++ii)
-                    concatBits[(wordindex * 11) + ii] = (ndx & (1 << (10 - ii))) != 0;
-                ++wordindex;
+                if (index < 0)
+                    throw new Exception($"Invalid mnemonic word '{word}'");
+
+                concatBits[(wordIndex * 11) + 0] = (byte)(index >> 10 & 1);
+                concatBits[(wordIndex * 11) + 1] = (byte)(index >> 9 & 1);
+                concatBits[(wordIndex * 11) + 2] = (byte)(index >> 8 & 1);
+                concatBits[(wordIndex * 11) + 3] = (byte)(index >> 7 & 1);
+                concatBits[(wordIndex * 11) + 4] = (byte)(index >> 6 & 1);
+                concatBits[(wordIndex * 11) + 5] = (byte)(index >> 5 & 1);
+                concatBits[(wordIndex * 11) + 6] = (byte)(index >> 4 & 1);
+                concatBits[(wordIndex * 11) + 7] = (byte)(index >> 3 & 1);
+                concatBits[(wordIndex * 11) + 8] = (byte)(index >> 2 & 1);
+                concatBits[(wordIndex * 11) + 9] = (byte)(index >> 1 & 1);
+                concatBits[(wordIndex * 11) + 10] = (byte)(index >> 0 & 1);
+
+                ++wordIndex;
             }
 
-            int checksumLengthBits = concatLenBits / 33;
-            int entropyLengthBits = concatLenBits - checksumLengthBits;
+            int checksumBitsCnt = concatBitsCnt / 33;
+            int entropyBitsCnt = concatBitsCnt - checksumBitsCnt;
 
-            // Extract original entropy as bytes.
-            byte[] entropy = new byte[entropyLengthBits / 8];
-            for (int ii = 0; ii < entropy.Length; ++ii)
-            for (int jj = 0; jj < 8; ++jj)
-                if (concatBits[(ii * 8) + jj])
-                    entropy[ii] |= (byte)(1 << (7 - jj));
+            byte[] entropy = new byte[entropyBitsCnt / 8];
+            for (int i = 0; i < entropy.Length; ++i)
+            {
+                entropy[i] = (byte)(
+                    concatBits[(i * 8) + 0] << 7 |
+                    concatBits[(i * 8) + 1] << 6 |
+                    concatBits[(i * 8) + 2] << 5 |
+                    concatBits[(i * 8) + 3] << 4 |
+                    concatBits[(i * 8) + 4] << 3 |
+                    concatBits[(i * 8) + 5] << 2 |
+                    concatBits[(i * 8) + 6] << 1 |
+                    concatBits[(i * 8) + 7] << 0);
+            }
 
-            // Take the digest of the entropy.
-            byte[] hash = SHA256.Create().ComputeHash(entropy);
-            bool[] hashBits = BytesToBits(hash);
+            byte[] hashBits = null;
+            using (var sha256 = SHA256.Create())
+            {
+                var hash = sha256.ComputeHash(entropy);
+                hashBits = BytesToBits(hash);
+            }
 
-            // Check all the checksum bits.
-            for (int i = 0; i < checksumLengthBits; ++i)
-                if (concatBits[entropyLengthBits + i] != hashBits[i])
-                    throw new Exception("Checksum error");
+            for (int i = 0; i < checksumBitsCnt; ++i)
+                if (concatBits[entropyBitsCnt + i] != hashBits[i])
+                    throw new Exception("Invalid checksum");
 
             return entropy;
         }
 
-        /// <summary>
-        /// Convert mnemonic word list to seed.
-        /// </summary>
         public static byte[] ToSeed(string words, string passphrase)
         {
-            if (passphrase == null)
-            {
-                throw new ArgumentException("A null passphrase is not allowed.", nameof(passphrase));
-            }
+            if (string.IsNullOrWhiteSpace(words))
+                throw new ArgumentNullException(nameof(words));
 
-            // To create binary seed from mnemonic, we use PBKDF2 function
-            // with mnemonic sentence (in UTF-8) used as a password and
-            // string "mnemonic" + passphrase (again in UTF-8) used as a
-            // salt. Iteration count is set to 4096 and HMAC-SHA512 is
-            // used as a pseudo-random function. Desired length of the
-            // derived key is 512 bits (= 64 bytes).
-            
+            if (string.IsNullOrWhiteSpace(passphrase))
+                throw new ArgumentNullException(nameof(passphrase));
+
             var pass = Encoding.UTF8.GetBytes(words);
             var salt = Encoding.UTF8.GetBytes("mnemonic" + passphrase);
             return Pbkdf2.ComputeDerivedKey(new HMACSHA512(pass), salt, 2048, 64);
         }
 
-        /// <summary>
-        /// Convert entropy data to mnemonic word list.
-        /// </summary>
-        public List<String> ToMnemonic(byte[] entropy)
+        public static List<string> ToMnemonic(byte[] entropy)
         {
-            if (entropy.Length == 0)
-            {
-                throw new ArgumentException("Entropy is empty.");
-            }
+            if (entropy == null || entropy.Length == 0)
+                throw new ArgumentException("Entropy is empty");
+
             else if (entropy.Length % 4 > 0)
+                throw new ArgumentException("Entropy length is not a multiple of 4");
+
+            byte[] hashBits = null;
+            using (var sha256 = SHA256.Create())
             {
-                throw new ArgumentException("Entropy length not multiple of 32 bits.");
+                var hash = sha256.ComputeHash(entropy);
+                hashBits = BytesToBits(hash);
             }
 
-            // We take initial entropy of ENT bits and compute its
-            // checksum by taking first ENT / 32 bits of its SHA256 hash.
+            var entropyBits = BytesToBits(entropy);
+            var bits = entropyBits.Concat(hashBits, entropyBits.Length / 32);
 
-            byte[] hash = SHA256.Create().ComputeHash(entropy);
-            bool[] hashBits = BytesToBits(hash);
-
-            bool[] entropyBits = BytesToBits(entropy);
-            int checksumLengthBits = entropyBits.Length / 32;
-
-            // We append these bits to the end of the initial entropy. 
-            bool[] concatBits = new bool[entropyBits.Length + checksumLengthBits];
-            Array.Copy(entropyBits, 0, concatBits, 0, entropyBits.Length);
-            Array.Copy(hashBits, 0, concatBits, entropyBits.Length, checksumLengthBits);
-
-            // Next we take these concatenated bits and split them into
-            // groups of 11 bits. Each group encodes number from 0-2047
-            // which is a position in a wordlist.  We convert numbers into
-            // words and use joined words as mnemonic sentence.
-
-            List<string> words = new List<string>();
-
-            int nwords = concatBits.Length / 11;
-
-            for (int i = 0; i < nwords; ++i)
+            var words = new List<string>();
+            var wordsCnt = bits.Length / 11;
+            for (int i = 0; i < wordsCnt; ++i)
             {
-                int index = 0;
-
-                for (int j = 0; j < 11; ++j)
-                {
-                    index <<= 1;
-                    if (concatBits[(i * 11) + j])
-                        index |= 0x1;
-                }
-
-                words.Add(WordList[index]);
+                words.Add(WordList[
+                    bits[(i * 11) + 0] << 10 |
+                    bits[(i * 11) + 1] << 9 |
+                    bits[(i * 11) + 2] << 8 |
+                    bits[(i * 11) + 3] << 7 |
+                    bits[(i * 11) + 4] << 6 |
+                    bits[(i * 11) + 5] << 5 |
+                    bits[(i * 11) + 6] << 4 |
+                    bits[(i * 11) + 7] << 3 |
+                    bits[(i * 11) + 8] << 2 |
+                    bits[(i * 11) + 9] << 1 |
+                    bits[(i * 11) + 10] << 0]);
             }
 
             return words;
         }
 
-        private static bool[] BytesToBits(byte[] data)
+        static byte[] BytesToBits(byte[] data)
         {
-            bool[] bits = new bool[data.Length * 8];
+            var bits = new byte[data.Length * 8];
+
             for (int i = 0; i < data.Length; ++i)
-            for (int j = 0; j < 8; ++j)
-                bits[(i * 8) + j] = (data[i] & (1 << (7 - j))) != 0;
+            {
+                bits[(i * 8) + 0] = (byte)(data[i] >> 7 & 1);
+                bits[(i * 8) + 1] = (byte)(data[i] >> 6 & 1);
+                bits[(i * 8) + 2] = (byte)(data[i] >> 5 & 1);
+                bits[(i * 8) + 3] = (byte)(data[i] >> 4 & 1);
+                bits[(i * 8) + 4] = (byte)(data[i] >> 3 & 1);
+                bits[(i * 8) + 5] = (byte)(data[i] >> 2 & 1);
+                bits[(i * 8) + 6] = (byte)(data[i] >> 1 & 1);
+                bits[(i * 8) + 7] = (byte)(data[i] >> 0 & 1);
+            }
+
             return bits;
         }
     }
