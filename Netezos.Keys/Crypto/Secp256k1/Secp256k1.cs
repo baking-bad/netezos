@@ -34,7 +34,7 @@ namespace Netezos.Keys.Crypto
             var r = rs[0].ToByteArrayUnsigned();
             var s = rs[1].ToByteArrayUnsigned();
            
-            return new Signature(r.Concat(s), Kind);
+            return new Signature(r.Concat(s), _SignaturePrefix);
         }
         
         public bool Verify(byte[] pubKey, byte[] msg, byte[] sig)

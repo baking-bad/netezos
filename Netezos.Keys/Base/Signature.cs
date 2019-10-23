@@ -1,31 +1,26 @@
-﻿using Netezos.Keys.Crypto;
-
-namespace Netezos.Keys
+﻿namespace Netezos.Keys
 {
     public class Signature
     {
-        readonly byte[] Sign;
-        readonly ECKind Curve;
+        readonly byte[] Bytes;
+        readonly byte[] Prefix;
 
-        public Signature(byte[] bytes, ECKind curve)
+        public Signature(byte[] bytes, byte[] prefix)
         {
-            Sign = bytes;
-            Curve = curve;
+            Bytes = bytes;
+            Prefix = prefix;
         }
 
-        public override string ToString()
-        {
-            return Base58.Convert(Sign, Crypto.Curve.GetCurve(Curve).SignaturePrefix);
-        }
+        public byte[] ToBytes() => Bytes;
+
+        public string ToBase58() => Base58.Convert(Bytes, Prefix);
+
+        public string ToHex() => Hex.Convert(Bytes);
+
+        public override string ToString() => ToBase58();
+
+        public static implicit operator byte[](Signature s) => s.ToBytes();
         
-        public static implicit operator byte[](Signature s)
-        {
-            return s.Sign;
-        }
-        
-        public static implicit operator string(Signature s)
-        {
-            return s.ToString();
-        }
+        public static implicit operator string(Signature s) => s.ToBase58();
     }
 }
