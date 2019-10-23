@@ -11,7 +11,15 @@ namespace Netezos.Keys
             Buffer.BlockCopy(data, 0, res, src.Length, data.Length);
             return res;
         }
-        
+
+        public static byte[] Concat(this byte[] src, byte[] data, int count)
+        {
+            byte[] res = new byte[src.Length + count];
+            Buffer.BlockCopy(src, 0, res, 0, src.Length);
+            Buffer.BlockCopy(data, 0, res, src.Length, count);
+            return res;
+        }
+
         public static byte[] Reverse(this byte[] data)
         {
             var res = new byte[data.Length];

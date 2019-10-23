@@ -14,9 +14,7 @@ namespace Netezos.Keys
         
         public Mnemonic(MnemonicSize size)
         {
-            Bip39 bip39 = new Bip39();
-
-            List<string> code = bip39.ToMnemonic(RNG.GetNonZeroBytes((int)size*11*32/33 / 8));
+            List<string> code = Bip39.ToMnemonic(RNG.GetNonZeroBytes((int)size * 11 * 32 / 33 / 8));
 
             MnemonicSentence = string.Join(" ", code).Secure();
             
