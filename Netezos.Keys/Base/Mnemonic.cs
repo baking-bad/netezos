@@ -1,39 +1,30 @@
-﻿using System.Collections.Generic;
-using System.Security;
-using Netezos.Keys.Utils.Crypto;
+﻿using Netezos.Keys.Utils.Crypto;
 
 namespace Netezos.Keys
 {
     public class Mnemonic
     {
-        readonly SecureString MnemonicSentence;
-        
-        public Mnemonic()
-        : this(MnemonicSize.M15)
-        {}
+        readonly string Sentence;
+
+        public Mnemonic() : this(MnemonicSize.M15) { }
         
         public Mnemonic(MnemonicSize size)
         {
-            List<string> code = Bip39.ToMnemonic(RNG.GetNonZeroBytes((int)size * 11 * 32 / 33 / 8));
+            var entropy = RNG.GetNonZeroBytes((int)size * 4 / 3);
+            var words = Bip39.ToMnemonic(entropy);
 
-            MnemonicSentence = string.Join(" ", code).Secure();
-            
-        }
-        public Mnemonic(string[] words)
-        {
-            MnemonicSentence = string.Join(" ", words).Secure();
-        }
-        public Mnemonic(string words)
-        {
-            MnemonicSentence = words.Secure();
+            Sentence = string.Join(" ", words);
         }
 
-        public byte[] GetSeed(string passphrase)
-        {
-            return Bip39.ToSeed(MnemonicSentence.Unsecure(), passphrase).GetBytes(0, 32);
-        }
+        public Mnemonic(string words) => Sentence = words;
 
-        public byte[] GetSeed() => GetSeed("");
+        public Mnemonic(string[] words) => Sentence = string.Join(" ", words);
+
+        public byte[] GetSeed() => Bip39.ToSeed(Sentence, "");
+
+        public byte[] GetSeed(string passphrase) => Bip39.ToSeed(Sentence, passphrase);
+
+        public override string ToString() => Sentence;
     }
 
     public enum MnemonicSize
