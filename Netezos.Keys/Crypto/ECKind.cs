@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Netezos.Keys.Crypto
+﻿namespace Netezos.Keys
 {
     public enum ECKind
     {
