@@ -1,10 +1,11 @@
 ﻿using System;
-using Netezos.Keys.Utils.Crypto;
 using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 using Org.BouncyCastle.Math;
+
+using Netezos.Keys.Utils.Crypto;
 
 namespace Netezos.Keys.Crypto
 {
