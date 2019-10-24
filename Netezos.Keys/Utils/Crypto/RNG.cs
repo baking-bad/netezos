@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace Netezos.Keys.Utils.Crypto
 {
-    public static class RNG
+    static class RNG
     {
         private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Netezos.Keys
 {
-    interface ISecretStore : IDisposable
+    interface ISecretStore
     {
-        byte[] Data { get; }
+        byte[] Secret { get; }
 
         void Lock();
         StoreLocker Unlock();

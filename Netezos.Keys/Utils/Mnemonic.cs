@@ -1,4 +1,6 @@
-﻿using Netezos.Keys.Utils.Crypto;
+﻿using System.Collections.Generic;
+using Netezos.Keys.Utils;
+using Netezos.Keys.Utils.Crypto;
 
 namespace Netezos.Keys
 {
@@ -18,9 +20,9 @@ namespace Netezos.Keys
 
         public Mnemonic(string words) => Sentence = words;
 
-        public Mnemonic(string[] words) => Sentence = string.Join(" ", words);
+        public Mnemonic(IEnumerable<string> words) => Sentence = string.Join(" ", words);
 
-        public byte[] GetSeed() => Bip39.ToSeed(Sentence, "");
+        public byte[] GetSeed() => Bip39.ToSeed(Sentence);
 
         public byte[] GetSeed(string passphrase) => Bip39.ToSeed(Sentence, passphrase);
 

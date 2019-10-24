@@ -49,7 +49,7 @@ namespace Netezos.Keys
             return true;
         }
 
-        public static void Reset(this byte[] data)
+        public static void Flush(this byte[] data)
         {
             for (int i = 0; i < data.Length; i++)
                 data[i] = 0;

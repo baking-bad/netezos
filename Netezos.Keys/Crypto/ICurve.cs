@@ -9,21 +9,12 @@
         byte[] PrivateKeyPrefix { get; }
         byte[] SignaturePrefix { get; }
 
-        Signature Sign(byte[] prvKey, byte[] msg);
-        bool Verify(byte[] pubKey, byte[] msg, byte[] sig);
-        byte[] GetPrivateKey(byte[] seed);
-        byte[] GetPublicKey(byte[] privateKey);
-    }
+        byte[] GetPrivateKey(byte[] bytes);
 
-    internal static class Curve
-    {
-        public static ICurve GetCurve(ECKind curve)
-        {
-            return curve == ECKind.Ed25519 
-                ? new Ed25519() 
-                : curve == ECKind.NistP256 
-                    ? (ICurve) new NistP256() 
-                    : new Secp256k1();
-        }
+        byte[] GetPublicKey(byte[] privateKey);
+
+        Signature Sign(byte[] bytes, byte[] prvKey);
+
+        bool Verify(byte[] bytes, byte[] signature, byte[] pubKey);
     }
 }
