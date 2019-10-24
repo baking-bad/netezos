@@ -31,14 +31,14 @@ namespace Netezos.Keys
 
         public Key() : this(RNG.GetNonZeroBytes(32), ECKind.Ed25519, true) { } //TODO: check key strength
 
-        public Key(ECKind curve) : this(RNG.GetNonZeroBytes(32), curve, true) { } //TODO: check key strength
+        public Key(ECKind kind) : this(RNG.GetNonZeroBytes(32), kind, true) { } //TODO: check key strength
 
-        internal Key(byte[] bytes, ECKind curve, bool flush = false)
+        internal Key(byte[] bytes, ECKind kind, bool flush = false)
         {
             if (bytes.Length < 32)
                 throw new ArgumentException("Invalid private key length", nameof(bytes));
 
-            Curve = Curves.GetCurve(curve);
+            Curve = Curves.GetCurve(kind);
             
             var privateKey = Curve.GetPrivateKey(bytes);
             Store = new PlainSecretStore(privateKey);
@@ -88,14 +88,14 @@ namespace Netezos.Keys
         public override string ToString() => GetBase58();
 
         #region static
-        public static Key FromBytes(byte[] bytes, ECKind curve = ECKind.Ed25519)
-            => new Key(bytes, curve);
+        public static Key FromBytes(byte[] bytes, ECKind kind = ECKind.Ed25519)
+            => new Key(bytes, kind);
 
-        public static Key FromHex(string hex, ECKind curve = ECKind.Ed25519)
-            => new Key(Hex.Parse(hex), curve, true);
+        public static Key FromHex(string hex, ECKind kind = ECKind.Ed25519)
+            => new Key(Hex.Parse(hex), kind, true);
 
-        public static Key FromBase64(string base64, ECKind curve = ECKind.Ed25519)
-            => new Key(Base64.Decode(base64), curve, true);
+        public static Key FromBase64(string base64, ECKind kind = ECKind.Ed25519)
+            => new Key(Base64.Decode(base64), kind, true);
 
         public static Key FromBase58(string base58)
         {
@@ -111,8 +111,8 @@ namespace Netezos.Keys
         public static Key FromMnemonic(Mnemonic mnemonic, string email, string password)
             => new Key(mnemonic.GetSeed($"{email}{password}"), ECKind.Ed25519, true);
 
-        public static Key FromMnemonic(Mnemonic mnemonic, string passphrase, ECKind curve = ECKind.Ed25519)
-            => new Key(mnemonic.GetSeed(passphrase), curve, true);
+        public static Key FromMnemonic(Mnemonic mnemonic, string passphrase, ECKind kind = ECKind.Ed25519)
+            => new Key(mnemonic.GetSeed(passphrase), kind, true);
         #endregion
     }
 }

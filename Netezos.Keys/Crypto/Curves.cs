@@ -4,11 +4,11 @@ namespace Netezos.Keys.Crypto
 {
     static class Curves
     {
-        public static ICurve GetCurve(ECKind curve)
+        public static ICurve GetCurve(ECKind kind)
         {
-            return curve == ECKind.Ed25519
+            return kind == ECKind.Ed25519
                 ? new Ed25519()
-                : curve == ECKind.NistP256
+                : kind == ECKind.NistP256
                     ? (ICurve)new NistP256()
                     : new Secp256k1();
         }

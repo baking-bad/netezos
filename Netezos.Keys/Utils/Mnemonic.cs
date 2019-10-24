@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
 using Netezos.Keys.Utils;
 using Netezos.Keys.Utils.Crypto;
 
@@ -18,7 +20,7 @@ namespace Netezos.Keys
             Sentence = string.Join(" ", words);
         }
 
-        public Mnemonic(string words) => Sentence = words;
+        public Mnemonic(string mnemonic) => Sentence = Regex.Replace(mnemonic, @"[\s,;]+", " ");
 
         public Mnemonic(IEnumerable<string> words) => Sentence = string.Join(" ", words);
 
@@ -27,6 +29,12 @@ namespace Netezos.Keys
         public byte[] GetSeed(string passphrase) => Bip39.ToSeed(Sentence, passphrase);
 
         public override string ToString() => Sentence;
+
+        #region static
+        public static Mnemonic Parse(string mnemonic) => new Mnemonic(mnemonic);
+
+        public static Mnemonic Parse(IEnumerable<string> words) => new Mnemonic(words);
+        #endregion
     }
 
     public enum MnemonicSize

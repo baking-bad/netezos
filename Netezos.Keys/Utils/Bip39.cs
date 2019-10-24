@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+
 using Netezos.Keys.Utils.Crypto;
 
 namespace Netezos.Keys.Utils
