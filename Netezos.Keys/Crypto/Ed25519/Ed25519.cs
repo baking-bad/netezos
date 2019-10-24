@@ -4,7 +4,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 using BcEd25519 = Org.BouncyCastle.Math.EC.Rfc8032.Ed25519;
 
-
 namespace Netezos.Keys.Crypto
 {
     class Ed25519 : ICurve
