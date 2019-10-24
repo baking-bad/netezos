@@ -9,19 +9,38 @@ namespace Netezos.Keys.Crypto
 {
     class Secp256k1 : ICurve
     {
-        public ECKind Kind => ECKind.Secp256k1;
-        
+        #region static
         static readonly byte[] _AddressPrefix = { 6, 161, 161 };
-        static readonly byte[] _PublicKeyPrefix = {3, 254, 226, 86};
-        static readonly byte[] _PrivateKeyPrefix = {17, 162, 224, 201};
-        static readonly byte[] _SignaturePrefix = {13, 115, 101, 19, 63};
-        
+        static readonly byte[] _PublicKeyPrefix = { 3, 254, 226, 86 };
+        static readonly byte[] _PrivateKeyPrefix = { 17, 162, 224, 201 };
+        static readonly byte[] _SignaturePrefix = { 13, 115, 101, 19, 63 };
+        #endregion
+
+        public ECKind Kind => ECKind.Secp256k1;
+
         public byte[] AddressPrefix => _AddressPrefix;
         public byte[] PublicKeyPrefix => _PublicKeyPrefix;
         public byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
         public byte[] SignaturePrefix => _SignaturePrefix;
 
-        public Signature Sign(byte[] prvKey, byte[] msg)
+        public byte[] GetPrivateKey(byte[] bytes)
+        {
+            return bytes.GetBytes(0, 32);
+        }
+
+        public byte[] GetPublicKey(byte[] privateKey)
+        {
+            var curve = SecNamedCurves.GetByName("secp256k1");
+            var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
+            var key = new ECPrivateKeyParameters(new BigInteger(privateKey), parameters);
+
+            var q = key.Parameters.G.Multiply(key.D);
+            var publicParams = new ECPublicKeyParameters(q, parameters);
+
+            return publicParams.Q.GetEncoded(true);
+        }
+
+        public Signature Sign(byte[] msg, byte[] prvKey)
         {
             var keyedHash = Blake2b.GetDigest(msg);
             var curve = SecNamedCurves.GetByName("secp256k1");
@@ -37,7 +56,7 @@ namespace Netezos.Keys.Crypto
             return new Signature(r.Concat(s), _SignaturePrefix);
         }
         
-        public bool Verify(byte[] pubKey, byte[] msg, byte[] sig)
+        public bool Verify(byte[] msg, byte[] sig, byte[] pubKey)
         {
             var r = sig.GetBytes(0, 32);
             var s = sig.GetBytes(32, 32);
@@ -51,23 +70,6 @@ namespace Netezos.Keys.Crypto
             verifier.Init(false, key);
             
             return verifier.VerifySignature(keyedHash, new BigInteger(1, r), new BigInteger(1, s));
-        }
-
-        public byte[] GetPrivateKey(byte[] seed)
-        {
-            return seed;
-        }
-
-        public byte[] GetPublicKey(byte[] privateKey)
-        {
-            var curve = SecNamedCurves.GetByName("secp256k1");
-            var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
-            var key = new ECPrivateKeyParameters(new BigInteger(privateKey), parameters);
-            
-            var q = key.Parameters.G.Multiply(key.D);
-            var publicParams = new ECPublicKeyParameters(q, parameters);
-
-            return publicParams.Q.GetEncoded(true);
         }
     }
 }

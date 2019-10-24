@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Netezos.Keys.Utils.Crypto;
 
-namespace Netezos.Keys.Utils.Crypto
+namespace Netezos.Keys.Utils
 {
     static class Bip39
     {
@@ -263,13 +264,10 @@ namespace Netezos.Keys.Utils.Crypto
             return entropy;
         }
 
-        public static byte[] ToSeed(string words, string passphrase)
+        public static byte[] ToSeed(string words, string passphrase = "")
         {
             if (string.IsNullOrWhiteSpace(words))
                 throw new ArgumentNullException(nameof(words));
-
-            if (string.IsNullOrWhiteSpace(passphrase))
-                throw new ArgumentNullException(nameof(passphrase));
 
             var pass = Encoding.UTF8.GetBytes(words);
             var salt = Encoding.UTF8.GetBytes("mnemonic" + passphrase);

@@ -2,7 +2,7 @@
 
 namespace Netezos.Keys
 {
-    public static class Hex
+    static class Hex
     {
         private static readonly int[] HexAscii = new[]
         {

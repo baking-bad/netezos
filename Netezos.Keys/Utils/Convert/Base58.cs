@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace Netezos.Keys
 {
-    public static class Base58
+    static class Base58
     {
         const string Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
         static readonly byte[] Base58Ascii = new byte[]
