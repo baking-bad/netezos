@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Netezos.Keys
+namespace Netezos.Keys.Utils
 {
-    static class Hex
+    public static class Hex
     {
         private static readonly int[] HexAscii = new[]
         {
