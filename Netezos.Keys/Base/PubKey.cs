@@ -3,7 +3,9 @@ using System.Text;
 using Org.BouncyCastle.Utilities.Encoders;
 
 using Netezos.Keys.Crypto;
+using Netezos.Keys.Utils;
 using Netezos.Keys.Utils.Crypto;
+using Hex = Netezos.Keys.Utils.Hex;
 
 namespace Netezos.Keys
 {

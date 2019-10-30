@@ -1,4 +1,6 @@
-﻿namespace Netezos.Keys
+﻿using Netezos.Keys.Utils;
+
+namespace Netezos.Keys
 {
     public class Signature
     {

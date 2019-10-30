@@ -2,9 +2,9 @@
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace Netezos.Keys
+namespace Netezos.Keys.Utils
 {
-    static class Base58
+    public static class Base58
     {
         const string Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
         static readonly byte[] Base58Ascii = new byte[]
