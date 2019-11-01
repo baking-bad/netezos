@@ -25,19 +25,19 @@ namespace Netezos.Forge
         public Task<byte[]> ForgeOperationAsync(string branch, OperationContent content)
             => ForgeAsync(branch, new List<object> { content });
 
-        public Task<byte[]> ForgeOperationGroupAsync(IEnumerable<ManagerOperationContent> content)
-            => ForgeAsync(content.Cast<object>().ToList());
+        public Task<byte[]> ForgeOperationGroupAsync(IEnumerable<ManagerOperationContent> contents)
+            => ForgeAsync(contents.Cast<object>().ToList());
 
-        public Task<byte[]> ForgeOperationGroupAsync(string branch, IEnumerable<ManagerOperationContent> content)
-            => ForgeAsync(branch, content.Cast<object>().ToList());
+        public Task<byte[]> ForgeOperationGroupAsync(string branch, IEnumerable<ManagerOperationContent> contents)
+            => ForgeAsync(branch, contents.Cast<object>().ToList());
 
-        async Task<byte[]> ForgeAsync(List<object> content)
+        async Task<byte[]> ForgeAsync(List<object> contents)
         {
             var branch = await Rpc.Blocks.Head.Hash.GetAsync<string>();
-            return await ForgeAsync(branch, content);
+            return await ForgeAsync(branch, contents);
         }
 
-        async Task<byte[]> ForgeAsync(string branch, List<object> content)
+        async Task<byte[]> ForgeAsync(string branch, List<object> contents)
         {
             var result = await Rpc
                 .Blocks
@@ -45,7 +45,7 @@ namespace Netezos.Forge
                 .Helpers
                 .Forge
                 .Operations
-                .PostAsync<string>(branch, content);
+                .PostAsync<string>(branch, contents);
 
             return Hex.Parse(result);
         }
