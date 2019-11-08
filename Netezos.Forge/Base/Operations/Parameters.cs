@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Netezos.Forge.Operations
 {
@@ -11,7 +12,7 @@ namespace Netezos.Forge.Operations
         public string Entrypoint { get; }
 
         [JsonProperty("value")]
-        public object Value { get; }
+        public JToken Value { get; }
 
         public Parameters(string entrypoint)
         {
@@ -25,14 +26,14 @@ namespace Netezos.Forge.Operations
             switch (mode)
             {
                 case ParametersMode.Micheline:
-                    Value = JsonConvert.DeserializeObject(value);
+                    Value = JToken.Parse(value);
                     break;
                 default:
                     throw new NotImplementedException($"{mode} parameters mode is not implemented");
             }
         }
 
-        public Parameters(string entrypoint, object value, ParametersMode mode = ParametersMode.Micheline)
+        public Parameters(string entrypoint, JToken value, ParametersMode mode = ParametersMode.Micheline)
         {
             Entrypoint = entrypoint;
             switch (mode)
