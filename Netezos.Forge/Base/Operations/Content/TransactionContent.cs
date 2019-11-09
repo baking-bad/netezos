@@ -18,5 +18,8 @@ namespace Netezos.Forge.Operations
 
         [JsonProperty("parameters")]
         public Parameters Parameters { get; set; }
+
+        public static TransactionContent AutoFill(long amount, string destination, Parameters parameters = null) =>
+            throw new NotImplementedException();
     }
 }

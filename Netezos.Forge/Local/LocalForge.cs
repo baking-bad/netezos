@@ -15,7 +15,24 @@ namespace Netezos.Forge
         private static readonly byte[] BranchPrefix = { 1, 52 };
         public Task<byte[]> ForgeOperationAsync(string branch, OperationContent content)
         {
-            throw new NotImplementedException();
+            var res = string.IsNullOrWhiteSpace(branch) ? "" : Hex.Convert(Base58.Parse(branch, BranchPrefix));
+
+            switch (content.Kind)
+            {
+                case "transaction":
+                    res += ForgeTransaction((TransactionContent) content);
+                    break;
+                case "reveal":
+                    res += ForgeRevelation((RevealContent) content);
+                    break;
+                case "activate_account":
+                    res += ForgeActivation((ActivationContent) content);
+                    break;
+                default:
+                    throw new NotImplementedException($"{content.Kind} is not implemented");
+            }
+            
+            return Task.FromResult(Hex.Parse(res));
         }
 
         public Task<byte[]> ForgeOperationGroupAsync(string branch, IEnumerable<ManagerOperationContent> contents)
@@ -29,6 +46,10 @@ namespace Netezos.Forge
                     case "transaction":
                         res += ForgeTransaction((TransactionContent)operation);
                         break;
+                    case "reveal":
+                        res += ForgeRevelation((RevealContent) operation);
+                        break;
+                        
                     default:
                         throw new NotImplementedException($"{operation.Kind} is not implemented");
                 }
@@ -36,6 +57,28 @@ namespace Netezos.Forge
             
             
             return Task.FromResult(Hex.Parse(res));
+        }
+
+        private string ForgeRevelation(RevealContent operation)
+        {
+            var res = ForgeLong(107);
+            res += ForgeSource(operation.Source);
+            res += ForgeLong(operation.Fee);
+            res += ForgeLong(operation.Counter);
+            res += ForgeLong(operation.GasLimit);
+            res += ForgeLong(operation.StorageLimit);
+            res += ForgePublicKey(operation.PublicKey);
+
+            return res;
+        }
+
+        private string ForgeActivation(ActivationContent operation)
+        {
+            var res = ForgeLong(4);
+            res += ForgeActivationAddress(operation.Address);
+            res += operation.Secret;
+
+            return res;
         }
 
         private string ForgeTransaction(TransactionContent operation)
@@ -64,7 +107,7 @@ namespace Netezos.Forge
         
         
         
-        private string ForgeArray(string value)
+        private static string ForgeArray(string value)
         {
             var bytes = BitConverter.GetBytes(value.Length / 2).Reverse().ToArray();
             return Hex.Convert(bytes) + value;
@@ -93,7 +136,7 @@ namespace Netezos.Forge
             return Hex.Convert(buf.ToArray());
         }
         
-        private string ForgeAddress(string value)
+        private static string ForgeAddress(string value)
         {
             var prefix = value.Substring(0, 3);
 
@@ -119,8 +162,13 @@ namespace Netezos.Forge
 
             return res;
         }
+        
+        private static string ForgeActivationAddress(string value)
+        {
+            return Hex.Convert(Base58.Parse(value)).Substring(6);;
+        }
 
-        private string ForgeSource(string value)
+        private static string ForgeSource(string value)
         {
             var prefix = value.Substring(0, 3);
             
@@ -144,12 +192,12 @@ namespace Netezos.Forge
             return res;
         }
 
-        private string ForgeBool(bool value)
+        private static string ForgeBool(bool value)
         {
             return value ? "FF" : "00";
         }
 
-        private  string ForgePublicKey(string value)
+        private static string ForgePublicKey(string value)
         {
             var prefix = value.Substring(0, 4);
             var res = Hex.Convert(Base58.Parse(value)).Substring(8);
@@ -172,7 +220,7 @@ namespace Netezos.Forge
             return res;
         }
         
-        private string ForgeInt(int value)
+        private static string ForgeInt(int value)
         {
             var binary = Convert.ToString(Math.Abs(value), 2);
 
@@ -204,7 +252,7 @@ namespace Netezos.Forge
             return res;
         }
 
-        private string ForgeEntrypoint(string value)
+        private static string ForgeEntrypoint(string value)
         {
             var res = "";
 
@@ -229,7 +277,7 @@ namespace Netezos.Forge
             return res;
         }
 
-        private string ForgeMicheline(JToken data)
+        private static string ForgeMicheline(JToken data)
         {
             var res = "";
 
@@ -254,119 +302,119 @@ namespace Netezos.Forge
             };
             
             var primTags = new Dictionary<string, string> {
-            {"parameter", "00" },
-            {"storage", "01" },
-            {"code", "02" },
-            {"False", "03" },
-            {"Elt", "04" },
-            {"Left", "05" },
-            {"None", "06" },
-            {"Pair", "07" },
-            {"Right", "08" },
-            {"Some", "09" },
-            {"True", "0A" },
-            {"Unit", "0B" },
-            {"PACK", "0C" },
-            {"UNPACK", "0D" },
-            {"BLAKE2B", "0E" },
-            {"SHA256", "0F" },
-            {"SHA512", "10" },
-            {"ABS", "11" },
-            {"ADD", "12" },
-            {"AMOUNT", "13" },
-            {"AND", "14" },
-            {"BALANCE", "15" },
-            {"CAR", "16" },
-            {"CDR", "17" },
-            {"CHECK_SIGNATURE", "18" },
-            {"COMPARE", "19" },
-            {"CONCAT", "1A" },
-            {"CONS", "1B" },
-            {"CREATE_ACCOUNT", "1C" },
-            {"CREATE_CONTRACT", "1D" },
-            {"IMPLICIT_ACCOUNT", "1E" },
-            {"DIP", "1F" },
-            {"DROP", "20" },
-            {"DUP", "21" },
-            {"EDIV", "22" },
-            {"EMPTY_MAP", "23" },
-            {"EMPTY_SET", "24" },
-            {"EQ", "25" },
-            {"EXEC", "26" },
-            {"FAILWITH", "27" },
-            {"GE", "28" },
-            {"GET", "29" },
-            {"GT", "2A" },
-            {"HASH_KEY", "2B" },
-            {"IF", "2C" },
-            {"IF_CONS", "2D" },
-            {"IF_LEFT", "2E" },
-            {"IF_NONE", "2F" },
-            {"INT", "30" },
-            {"LAMBDA", "31" },
-            {"LE", "32" },
-            {"LEFT", "33" },
-            {"LOOP", "34" },
-            {"LSL", "35" },
-            {"LSR", "36" },
-            {"LT", "37" },
-            {"MAP", "38" },
-            {"MEM", "39" },
-            {"MUL", "3A" },
-            {"NEG", "3B" },
-            {"NEQ", "3C" },
-            {"NIL", "3D" },
-            {"NONE", "3E" },
-            {"NOT", "3F" },
-            {"NOW", "40" },
-            {"OR", "41" },
-            {"PAIR", "42" },
-            {"PUSH", "43" },
-            {"RIGHT", "44" },
-            {"SIZE", "45" },
-            {"SOME", "46" },
-            {"SOURCE", "47" },
-            {"SENDER", "48" },
-            {"SELF", "49" },
-            {"STEPS_TO_QUOTA", "4A" },
-            {"SUB", "4B" },
-            {"SWAP", "4C" },
-            {"TRANSFER_TOKENS", "4D" },
-            {"SET_DELEGATE", "4E" },
-            {"UNIT", "4F" },
-            {"UPDATE", "50" },
-            {"XOR", "51" },
-            {"ITER", "52" },
-            {"LOOP_LEFT", "53" },
-            {"ADDRESS", "54" },
-            {"CONTRACT", "55" },
-            {"ISNAT", "56" },
-            {"CAST", "57" },
-            {"RENAME", "58" },
-            {"bool", "59" },
-            {"contract", "5A" },
-            {"int", "5B" },
-            {"key", "5C" },
-            {"key_hash", "5D" },
-            {"lambda", "5E" },
-            {"list", "5F" },
-            {"map", "60" },
-            {"big_map", "61" },
-            {"nat", "62" },
-            {"option", "63" },
-            {"or", "64" },
-            {"pair", "65" },
-            {"set", "66" },
-            {"signature", "67" },
-            {"string", "68" },
-            {"bytes", "69" },
-            {"mutez", "6A" },
-            {"timestamp", "6B" },
-            {"unit", "6C" },
-            {"operation", "6D" },
-            {"address", "6E" },
-            {"SLICE", "6F" }
-        };
+                {"parameter", "00" },
+                {"storage", "01" },
+                {"code", "02" },
+                {"False", "03" },
+                {"Elt", "04" },
+                {"Left", "05" },
+                {"None", "06" },
+                {"Pair", "07" },
+                {"Right", "08" },
+                {"Some", "09" },
+                {"True", "0A" },
+                {"Unit", "0B" },
+                {"PACK", "0C" },
+                {"UNPACK", "0D" },
+                {"BLAKE2B", "0E" },
+                {"SHA256", "0F" },
+                {"SHA512", "10" },
+                {"ABS", "11" },
+                {"ADD", "12" },
+                {"AMOUNT", "13" },
+                {"AND", "14" },
+                {"BALANCE", "15" },
+                {"CAR", "16" },
+                {"CDR", "17" },
+                {"CHECK_SIGNATURE", "18" },
+                {"COMPARE", "19" },
+                {"CONCAT", "1A" },
+                {"CONS", "1B" },
+                {"CREATE_ACCOUNT", "1C" },
+                {"CREATE_CONTRACT", "1D" },
+                {"IMPLICIT_ACCOUNT", "1E" },
+                {"DIP", "1F" },
+                {"DROP", "20" },
+                {"DUP", "21" },
+                {"EDIV", "22" },
+                {"EMPTY_MAP", "23" },
+                {"EMPTY_SET", "24" },
+                {"EQ", "25" },
+                {"EXEC", "26" },
+                {"FAILWITH", "27" },
+                {"GE", "28" },
+                {"GET", "29" },
+                {"GT", "2A" },
+                {"HASH_KEY", "2B" },
+                {"IF", "2C" },
+                {"IF_CONS", "2D" },
+                {"IF_LEFT", "2E" },
+                {"IF_NONE", "2F" },
+                {"INT", "30" },
+                {"LAMBDA", "31" },
+                {"LE", "32" },
+                {"LEFT", "33" },
+                {"LOOP", "34" },
+                {"LSL", "35" },
+                {"LSR", "36" },
+                {"LT", "37" },
+                {"MAP", "38" },
+                {"MEM", "39" },
+                {"MUL", "3A" },
+                {"NEG", "3B" },
+                {"NEQ", "3C" },
+                {"NIL", "3D" },
+                {"NONE", "3E" },
+                {"NOT", "3F" },
+                {"NOW", "40" },
+                {"OR", "41" },
+                {"PAIR", "42" },
+                {"PUSH", "43" },
+                {"RIGHT", "44" },
+                {"SIZE", "45" },
+                {"SOME", "46" },
+                {"SOURCE", "47" },
+                {"SENDER", "48" },
+                {"SELF", "49" },
+                {"STEPS_TO_QUOTA", "4A" },
+                {"SUB", "4B" },
+                {"SWAP", "4C" },
+                {"TRANSFER_TOKENS", "4D" },
+                {"SET_DELEGATE", "4E" },
+                {"UNIT", "4F" },
+                {"UPDATE", "50" },
+                {"XOR", "51" },
+                {"ITER", "52" },
+                {"LOOP_LEFT", "53" },
+                {"ADDRESS", "54" },
+                {"CONTRACT", "55" },
+                {"ISNAT", "56" },
+                {"CAST", "57" },
+                {"RENAME", "58" },
+                {"bool", "59" },
+                {"contract", "5A" },
+                {"int", "5B" },
+                {"key", "5C" },
+                {"key_hash", "5D" },
+                {"lambda", "5E" },
+                {"list", "5F" },
+                {"map", "60" },
+                {"big_map", "61" },
+                {"nat", "62" },
+                {"option", "63" },
+                {"or", "64" },
+                {"pair", "65" },
+                {"set", "66" },
+                {"signature", "67" },
+                {"string", "68" },
+                {"bytes", "69" },
+                {"mutez", "6A" },
+                {"timestamp", "6B" },
+                {"unit", "6C" },
+                {"operation", "6D" },
+                {"address", "6E" },
+                {"SLICE", "6F" }
+            };
             #endregion
             
 
