@@ -17,16 +17,16 @@ namespace Netezos.Forge
         {
             var res = string.IsNullOrWhiteSpace(branch) ? "" : Hex.Convert(Base58.Parse(branch, BranchPrefix));
 
-            switch (content.Kind)
+            switch (content)
             {
-                case "transaction":
-                    res += ForgeTransaction((TransactionContent) content);
+                case TransactionContent transaction:
+                    res += ForgeTransaction(transaction);
                     break;
-                case "reveal":
-                    res += ForgeRevelation((RevealContent) content);
+                case RevealContent reveal:
+                    res += ForgeRevelation(reveal);
                     break;
-                case "activate_account":
-                    res += ForgeActivation((ActivationContent) content);
+                case ActivationContent activation:
+                    res += ForgeActivation(activation);
                     break;
                 default:
                     throw new NotImplementedException($"{content.Kind} is not implemented");
@@ -41,15 +41,14 @@ namespace Netezos.Forge
 
             foreach (var operation in contents)
             {
-                switch (operation.Kind)
+                switch (operation)
                 {
-                    case "transaction":
-                        res += ForgeTransaction((TransactionContent)operation);
+                    case TransactionContent transaction:
+                        res += ForgeTransaction(transaction);
                         break;
-                    case "reveal":
-                        res += ForgeRevelation((RevealContent) operation);
+                    case RevealContent reveal:
+                        res += ForgeRevelation(reveal);
                         break;
-                        
                     default:
                         throw new NotImplementedException($"{operation.Kind} is not implemented");
                 }
