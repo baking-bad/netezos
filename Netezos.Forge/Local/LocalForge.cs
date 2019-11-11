@@ -12,93 +12,82 @@ namespace Netezos.Forge
 {
     public class LocalForge : IForge
     {
-        private static readonly byte[] BranchPrefix = { 1, 52 };
+        static readonly byte[] BranchPrefix = { 1, 52 };
         public Task<byte[]> ForgeOperationAsync(string branch, OperationContent content)
         {
-            var res = string.IsNullOrWhiteSpace(branch) ? "" : Hex.Convert(Base58.Parse(branch, BranchPrefix));
-
-            switch (content)
-            {
-                case TransactionContent transaction:
-                    res += ForgeTransaction(transaction);
-                    break;
-                case RevealContent reveal:
-                    res += ForgeRevelation(reveal);
-                    break;
-                case ActivationContent activation:
-                    res += ForgeActivation(activation);
-                    break;
-                default:
-                    throw new NotImplementedException($"{content.Kind} is not implemented");
-            }
+            var res = string.IsNullOrWhiteSpace(branch) ? new byte[]{} : Base58.Parse(branch, BranchPrefix);
             
-            return Task.FromResult(Hex.Parse(res));
+            return Task.FromResult(res.Concat(ForgeOperation(content)));
         }
 
         public Task<byte[]> ForgeOperationGroupAsync(string branch, IEnumerable<ManagerOperationContent> contents)
         {
-            var res = string.IsNullOrWhiteSpace(branch) ? "" : Hex.Convert(Base58.Parse(branch, BranchPrefix));
+            var res = string.IsNullOrWhiteSpace(branch) ? new byte[]{} : Base58.Parse(branch, BranchPrefix);
 
             foreach (var operation in contents)
             {
-                switch (operation)
-                {
-                    case TransactionContent transaction:
-                        res += ForgeTransaction(transaction);
-                        break;
-                    case RevealContent reveal:
-                        res += ForgeRevelation(reveal);
-                        break;
-                    default:
-                        throw new NotImplementedException($"{operation.Kind} is not implemented");
-                }
+                res = res.Concat(ForgeOperation(operation));
             }
             
-            
-            return Task.FromResult(Hex.Parse(res));
+            return Task.FromResult(res);
         }
 
-        private string ForgeRevelation(RevealContent operation)
+        byte[] ForgeOperation(OperationContent content)
+        {
+            switch (content)
+            {
+                case TransactionContent transaction:
+                    return ForgeTransaction(transaction);
+                case RevealContent reveal:
+                    return ForgeRevelation(reveal);
+                case ActivationContent activation:
+                    return ForgeActivation(activation);
+                default:
+                    throw new NotImplementedException($"{content.Kind} is not implemented");
+            }
+        }
+
+        static byte[] ForgeRevelation(RevealContent operation)
         {
             var res = ForgeLong(107);
-            res += ForgeSource(operation.Source);
-            res += ForgeLong(operation.Fee);
-            res += ForgeLong(operation.Counter);
-            res += ForgeLong(operation.GasLimit);
-            res += ForgeLong(operation.StorageLimit);
-            res += ForgePublicKey(operation.PublicKey);
+            res = res.Concat(ForgeSource(operation.Source));
+            res = res.Concat(ForgeLong(operation.Fee));
+            res = res.Concat(ForgeLong(operation.Counter));
+            res = res.Concat(ForgeLong(operation.GasLimit));
+            res = res.Concat(ForgeLong(operation.StorageLimit));
+            res = res.Concat(ForgePublicKey(operation.PublicKey));
 
             return res;
         }
 
-        private string ForgeActivation(ActivationContent operation)
+        static byte[] ForgeActivation(ActivationContent operation)
         {
             var res = ForgeLong(4);
-            res += ForgeActivationAddress(operation.Address);
-            res += operation.Secret;
+            res = res.Concat(ForgeActivationAddress(operation.Address));
+            res = res.Concat(Hex.Parse(operation.Secret));
 
             return res;
         }
 
-        private string ForgeTransaction(TransactionContent operation)
+        static byte[] ForgeTransaction(TransactionContent operation)
         {
             var res = ForgeLong(108);
-            res += ForgeSource(operation.Source);
-            res += ForgeLong(operation.Fee);
-            res += ForgeLong(operation.Counter);
-            res += ForgeLong(operation.GasLimit);
-            res += ForgeLong(operation.StorageLimit);
-            res += ForgeLong(operation.Amount);
-            res += ForgeAddress(operation.Destination);
+            res = res.Concat(ForgeSource(operation.Source));
+            res = res.Concat(ForgeLong(operation.Fee));
+            res = res.Concat(ForgeLong(operation.Counter));
+            res = res.Concat(ForgeLong(operation.GasLimit));
+            res = res.Concat(ForgeLong(operation.StorageLimit));
+            res = res.Concat(ForgeLong(operation.Amount));
+            res = res.Concat(ForgeAddress(operation.Destination));
 
             if (operation.Parameters != null)
             {
-                res += ForgeBool(true);
-                res += ForgeEntrypoint(operation.Parameters.Entrypoint);
-                res += ForgeArray(ForgeMicheline(operation.Parameters.Value));
+                res = res.Concat(ForgeBool(true));
+                res = res.Concat(ForgeEntrypoint(operation.Parameters.Entrypoint));
+                res = res.Concat(Hex.Parse(ForgeArray(ForgeMicheline(operation.Parameters.Value))));
             }
             else
-                res += ForgeBool(false);
+                res = res.Concat(ForgeBool(false));
 
             return res;
         }
@@ -106,12 +95,12 @@ namespace Netezos.Forge
         
         
         
-        private static string ForgeArray(string value)
+        static string ForgeArray(string value)
         {
             var bytes = BitConverter.GetBytes(value.Length / 2).Reverse().ToArray();
             return Hex.Convert(bytes) + value;
         }
-        private string ForgeLong(long value)
+        static byte[] ForgeLong(long value)
         {
             if (value < 0)
                 throw new ArgumentException("Value cannot be negative", nameof(value));
@@ -132,28 +121,29 @@ namespace Netezos.Forge
                 buf.Add(b);
             }
 
-            return Hex.Convert(buf.ToArray());
+            return buf.ToArray();
         }
         
-        private static string ForgeAddress(string value)
+        static byte[] ForgeAddress(string value)
         {
             var prefix = value.Substring(0, 3);
 
-            var res = Hex.Convert(Base58.Parse(value)).Substring(6);
+            var res = Base58.Parse(value);
+            res = res.GetBytes(3, res.Length - 3);
 
             switch (prefix)
             {
                 case "tz1":
-                    res = "0000" + res;
+                    res = new byte[]{0, 0}.Concat(res);
                     break;
                 case "tz2":
-                    res = "0001" + res;
+                    res = new byte[]{0, 1}.Concat(res);
                     break;
                 case "tz3":
-                    res = "0002" + res;
+                    res = new byte[]{0, 2}.Concat(res);
                     break;
                 case "KT1":
-                    res = "01" + res + "00";
+                    res = new byte[]{1}.Concat(res).Concat(new byte[]{0});
                     break;
                 default:
                     throw new ArgumentException($"Value address exception. Invalid prefix {prefix}");
@@ -162,27 +152,29 @@ namespace Netezos.Forge
             return res;
         }
         
-        private static string ForgeActivationAddress(string value)
+        static byte[] ForgeActivationAddress(string value)
         {
-            return Hex.Convert(Base58.Parse(value)).Substring(6);;
+            var res = Base58.Parse(value);
+            return res.GetBytes(3, res.Length - 3);
         }
 
-        private static string ForgeSource(string value)
+        static byte[] ForgeSource(string value)
         {
             var prefix = value.Substring(0, 3);
             
-            var res = Hex.Convert(Base58.Parse(value)).Substring(6);
+            var res = Base58.Parse(value);
+            res = res.GetBytes(3, res.Length - 3);
 
             switch (prefix)
             {
                 case "tz1":
-                    res = "00" + res;
+                    res = new byte[]{0}.Concat(res);
                     break;
                 case "tz2":
-                    res = "01" + res;
+                    res = new byte[]{1}.Concat(res);
                     break;
                 case "tz3":
-                    res = "02" + res;
+                    res = new byte[]{2}.Concat(res);
                     break;
                 default:
                     throw new ArgumentException($"Value address exception. Invalid prefix {prefix}");
@@ -191,26 +183,27 @@ namespace Netezos.Forge
             return res;
         }
 
-        private static string ForgeBool(bool value)
+        static byte[] ForgeBool(bool value)
         {
-            return value ? "FF" : "00";
+            return value ? new byte[]{255} : new byte[]{0};
         }
 
-        private static string ForgePublicKey(string value)
+        static byte[] ForgePublicKey(string value)
         {
             var prefix = value.Substring(0, 4);
-            var res = Hex.Convert(Base58.Parse(value)).Substring(8);
+            var res = Base58.Parse(value);
+            res = res.GetBytes(4, res.Length - 4);
 
             switch (prefix)
             {
                 case "edpk":
-                    res = "00" + res;
+                    res = new byte[]{0}.Concat(res);
                     break;
                 case "sppk":
-                    res = "01" + res;
+                    res = new byte[]{1}.Concat(res);
                     break;
                 case "p2pk":
-                    res = "02" + res;
+                    res = new byte[]{2}.Concat(res);
                     break;
                 default:
                     throw new ArgumentException($"Value address exception. Invalid prefix {prefix}");
@@ -219,7 +212,7 @@ namespace Netezos.Forge
             return res;
         }
         
-        private static string ForgeInt(int value)
+        static byte[] ForgeInt(int value)
         {
             var binary = Convert.ToString(Math.Abs(value), 2);
 
@@ -240,22 +233,22 @@ namespace Netezos.Forge
 
             septets[0] = (value >= 0 ? "0" : "1") + septets[0];
 
-            var res = "";
+            var res = new byte[]{};
 
-            for (int i = 0; i < septets.Count; i++)
+            for (var i = 0; i < septets.Count; i++)
             {
-                string prefix = i == septets.Count - 1 ? "0" : "1";
-                res += Convert.ToByte(prefix + septets[i], 2).ToString("X2");
+                var prefix = i == septets.Count - 1 ? "0" : "1";
+                res = res.Concat(new []{Convert.ToByte(prefix + septets[i], 2)});
             }
 
             return res;
         }
 
-        private static string ForgeEntrypoint(string value)
+        static byte[] ForgeEntrypoint(string value)
         {
-            var res = "";
+            var res = new byte[]{};
 
-            var entrypointTags = new Dictionary<string, int>
+            var entrypointTags = new Dictionary<string, byte>
             {
                 {"default", 0},
                 {"root", 1},
@@ -265,18 +258,18 @@ namespace Netezos.Forge
             };
             if (entrypointTags.ContainsKey(value))
             {
-                res += entrypointTags[value].ToString("X2");
+                res = res.Concat(new []{entrypointTags[value]});
             }
             else
             {
-                res += "ff";
-                res += ForgeArray(Hex.Convert(Encoding.Default.GetBytes(value)));
+                res  = res.Concat(new byte[]{255});
+                res = res.Concat(Hex.Parse(ForgeArray(value)));
             }
 
             return res;
         }
 
-        private static string ForgeMicheline(JToken data)
+        static string ForgeMicheline(JToken data)
         {
             var res = "";
 
