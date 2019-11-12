@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -84,7 +86,8 @@ namespace Netezos.Forge
             {
                 res = res.Concat(ForgeBool(true));
                 res = res.Concat(ForgeEntrypoint(operation.Parameters.Entrypoint));
-                res = res.Concat(Hex.Parse(ForgeArray(ForgeMicheline(operation.Parameters.Value))));
+                Console.WriteLine($"Res with entrypoint {Hex.Convert(res)}");
+                res = res.Concat(ForgeArray(ForgeMicheline(operation.Parameters.Value).ToArray()));
             }
             else
                 res = res.Concat(ForgeBool(false));
@@ -95,10 +98,10 @@ namespace Netezos.Forge
         
         
         
-        static string ForgeArray(string value)
+        static byte[] ForgeArray(byte[] value)
         {
-            var bytes = BitConverter.GetBytes(value.Length / 2).Reverse().ToArray();
-            return Hex.Convert(bytes) + value;
+            var bytes = BitConverter.GetBytes(value.Length).Reverse().ToArray();
+            return bytes.Concat(value);
         }
         static byte[] ForgeLong(long value)
         {
@@ -263,194 +266,213 @@ namespace Netezos.Forge
             else
             {
                 res  = res.Concat(new byte[]{255});
-                res = res.Concat(Hex.Parse(ForgeArray(value)));
+                res = res.Concat(ForgeArray(Encoding.UTF8.GetBytes(value)));
             }
 
             return res;
         }
 
-        static string ForgeMicheline(JToken data)
+        static IEnumerable<byte> ForgeMicheline(JToken data)
         {
-            var res = "";
+            var res = new List<byte>();
 
             #region Tags
-            var lenTags = new Dictionary<bool, string>[] {
-                new Dictionary<bool, string> {
-                    { false, "03" },
-                    { true, "04" }
+            var lenTags = new Dictionary<bool, byte>[] {
+                new Dictionary<bool, byte> {
+                    { false, 3 },
+                    { true, 4 }
                 },
-                new Dictionary<bool, string> {
-                    { false, "05" },
-                    { true, "06" }
+                new Dictionary<bool, byte> {
+                    { false, 5 },
+                    { true, 6 }
                 },
-                new Dictionary<bool, string> {
-                    { false, "07" },
-                    { true, "08" }
+                new Dictionary<bool, byte> {
+                    { false, 7 },
+                    { true, 8 }
                 },
-                new Dictionary<bool, string> {
-                    { false, "09" },
-                    { true, "09" }
+                new Dictionary<bool, byte> {
+                    { false, 9 },
+                    { true, 9 }
                 }
             };
             
-            var primTags = new Dictionary<string, string> {
-                {"parameter", "00" },
-                {"storage", "01" },
-                {"code", "02" },
-                {"False", "03" },
-                {"Elt", "04" },
-                {"Left", "05" },
-                {"None", "06" },
-                {"Pair", "07" },
-                {"Right", "08" },
-                {"Some", "09" },
-                {"True", "0A" },
-                {"Unit", "0B" },
-                {"PACK", "0C" },
-                {"UNPACK", "0D" },
-                {"BLAKE2B", "0E" },
-                {"SHA256", "0F" },
-                {"SHA512", "10" },
-                {"ABS", "11" },
-                {"ADD", "12" },
-                {"AMOUNT", "13" },
-                {"AND", "14" },
-                {"BALANCE", "15" },
-                {"CAR", "16" },
-                {"CDR", "17" },
-                {"CHECK_SIGNATURE", "18" },
-                {"COMPARE", "19" },
-                {"CONCAT", "1A" },
-                {"CONS", "1B" },
-                {"CREATE_ACCOUNT", "1C" },
-                {"CREATE_CONTRACT", "1D" },
-                {"IMPLICIT_ACCOUNT", "1E" },
-                {"DIP", "1F" },
-                {"DROP", "20" },
-                {"DUP", "21" },
-                {"EDIV", "22" },
-                {"EMPTY_MAP", "23" },
-                {"EMPTY_SET", "24" },
-                {"EQ", "25" },
-                {"EXEC", "26" },
-                {"FAILWITH", "27" },
-                {"GE", "28" },
-                {"GET", "29" },
-                {"GT", "2A" },
-                {"HASH_KEY", "2B" },
-                {"IF", "2C" },
-                {"IF_CONS", "2D" },
-                {"IF_LEFT", "2E" },
-                {"IF_NONE", "2F" },
-                {"INT", "30" },
-                {"LAMBDA", "31" },
-                {"LE", "32" },
-                {"LEFT", "33" },
-                {"LOOP", "34" },
-                {"LSL", "35" },
-                {"LSR", "36" },
-                {"LT", "37" },
-                {"MAP", "38" },
-                {"MEM", "39" },
-                {"MUL", "3A" },
-                {"NEG", "3B" },
-                {"NEQ", "3C" },
-                {"NIL", "3D" },
-                {"NONE", "3E" },
-                {"NOT", "3F" },
-                {"NOW", "40" },
-                {"OR", "41" },
-                {"PAIR", "42" },
-                {"PUSH", "43" },
-                {"RIGHT", "44" },
-                {"SIZE", "45" },
-                {"SOME", "46" },
-                {"SOURCE", "47" },
-                {"SENDER", "48" },
-                {"SELF", "49" },
-                {"STEPS_TO_QUOTA", "4A" },
-                {"SUB", "4B" },
-                {"SWAP", "4C" },
-                {"TRANSFER_TOKENS", "4D" },
-                {"SET_DELEGATE", "4E" },
-                {"UNIT", "4F" },
-                {"UPDATE", "50" },
-                {"XOR", "51" },
-                {"ITER", "52" },
-                {"LOOP_LEFT", "53" },
-                {"ADDRESS", "54" },
-                {"CONTRACT", "55" },
-                {"ISNAT", "56" },
-                {"CAST", "57" },
-                {"RENAME", "58" },
-                {"bool", "59" },
-                {"contract", "5A" },
-                {"int", "5B" },
-                {"key", "5C" },
-                {"key_hash", "5D" },
-                {"lambda", "5E" },
-                {"list", "5F" },
-                {"map", "60" },
-                {"big_map", "61" },
-                {"nat", "62" },
-                {"option", "63" },
-                {"or", "64" },
-                {"pair", "65" },
-                {"set", "66" },
-                {"signature", "67" },
-                {"string", "68" },
-                {"bytes", "69" },
-                {"mutez", "6A" },
-                {"timestamp", "6B" },
-                {"unit", "6C" },
-                {"operation", "6D" },
-                {"address", "6E" },
-                {"SLICE", "6F" }
+            var primTags = new Dictionary<string, byte> {
+                {"parameter", 0x00 },
+                {"storage", 0x01 },
+                {"code", 0x02 },
+                {"False", 0x03 },
+                {"Elt", 0x04 },
+                {"Left", 0x05 },
+                {"None", 0x06 },
+                {"Pair", 0x07 },
+                {"Right", 0x08 },
+                {"Some", 0x09 },
+                {"True", 0x0A },
+                {"Unit", 0x0B },
+                {"PACK", 0x0C },
+                {"UNPACK", 0x0D },
+                {"BLAKE2B", 0x0E },
+                {"SHA256", 0x0F },
+                {"SHA512", 0x10 },
+                {"ABS", 0x11 },
+                {"ADD", 0x12 },
+                {"AMOUNT", 0x13 },
+                {"AND", 0x14 },
+                {"BALANCE", 0x15 },
+                {"CAR", 0x16 },
+                {"CDR", 0x17 },
+                {"CHECK_SIGNATURE", 0x18 },
+                {"COMPARE", 0x19 },
+                {"CONCAT", 0x1A },
+                {"CONS", 0x1B },
+                {"CREATE_ACCOUNT", 0x1C },
+                {"CREATE_CONTRACT", 0x1D },
+                {"IMPLICIT_ACCOUNT", 0x1E },
+                {"DIP", 0x1F },
+                {"DROP", 0x20 },
+                {"DUP", 0x21 },
+                {"EDIV", 0x22 },
+                {"EMPTY_MAP", 0x23 },
+                {"EMPTY_SET", 0x24 },
+                {"EQ", 0x25 },
+                {"EXEC", 0x26 },
+                {"FAILWITH", 0x27 },
+                {"GE", 0x28 },
+                {"GET", 0x29 },
+                {"GT", 0x2A },
+                {"HASH_KEY", 0x2B },
+                {"IF", 0x2C },
+                {"IF_CONS", 0x2D },
+                {"IF_LEFT", 0x2E },
+                {"IF_NONE", 0x2F },
+                {"INT", 0x30 },
+                {"LAMBDA", 0x31 },
+                {"LE", 0x32 },
+                {"LEFT", 0x33 },
+                {"LOOP", 0x34 },
+                {"LSL", 0x35 },
+                {"LSR", 0x36 },
+                {"LT", 0x37 },
+                {"MAP", 0x38 },
+                {"MEM", 0x39 },
+                {"MUL", 0x3A },
+                {"NEG", 0x3B },
+                {"NEQ", 0x3C },
+                {"NIL", 0x3D },
+                {"NONE", 0x3E },
+                {"NOT", 0x3F },
+                {"NOW", 0x40 },
+                {"OR", 0x41 },
+                {"PAIR", 0x42 },
+                {"PUSH", 0x43 },
+                {"RIGHT", 0x44 },
+                {"SIZE", 0x45 },
+                {"SOME", 0x46 },
+                {"SOURCE", 0x47 },
+                {"SENDER", 0x48 },
+                {"SELF", 0x49 },
+                {"STEPS_TO_QUOTA", 0x4A },
+                {"SUB", 0x4B },
+                {"SWAP", 0x4C },
+                {"TRANSFER_TOKENS", 0x4D },
+                {"SET_DELEGATE", 0x4E },
+                {"UNIT", 0x4F },
+                {"UPDATE", 0x50 },
+                {"XOR", 0x51 },
+                {"ITER", 0x52 },
+                {"LOOP_LEFT", 0x53 },
+                {"ADDRESS", 0x54 },
+                {"CONTRACT", 0x55 },
+                {"ISNAT", 0x56 },
+                {"CAST", 0x57 },
+                {"RENAME", 0x58 },
+                {"bool", 0x59 },
+                {"contract", 0x5A },
+                {"int", 0x5B },
+                {"key", 0x5C },
+                {"key_hash", 0x5D },
+                {"lambda", 0x5E },
+                {"list", 0x5F },
+                {"map", 0x60 },
+                {"big_map", 0x61 },
+                {"nat", 0x62 },
+                {"option", 0x63 },
+                {"or", 0x64 },
+                {"pair", 0x65 },
+                {"set", 0x66 },
+                {"signature", 0x67 },
+                {"string", 0x68 },
+                {"bytes", 0x69 },
+                {"mutez", 0x6A },
+                {"timestamp", 0x6B },
+                {"unit", 0x6C },
+                {"operation", 0x6D },
+                {"address", 0x6E },
+                {"SLICE", 0x6F },
+                {"DIG", 0x70 },
+                {"DUG", 0x71 },
+                {"EMPTY_BIG_MAP", 0x72 },
+                {"APPLY", 0x73 },
+                {"chain_id", 0x74 },
+                {"CHAIN_ID", 0x75 },
             };
             #endregion
             
-
-
             switch (data)
             {
                 case JArray _:
-                    res += "02";
-                    res += ForgeArray(string.Concat(data.Select(ForgeMicheline)));
+                    res.Add(0x02);
+                    res.AddRange(ForgeArray(data.Select(ForgeMicheline).SelectMany(x => x).ToArray()).ToList());
                     break;
                 case JObject _ when data["prim"] != null:
                 {
                     var argsLen = data["args"]?.Count() ?? 0;
                     var annotsLen = data["annots"]?.Count() ?? 0;
 
-                    res += lenTags[argsLen][annotsLen > 0];
-                    res += primTags[data["prim"].ToString()];
+                    res.Add(lenTags[argsLen][annotsLen > 0]);
+                    res.Add(primTags[data["prim"].ToString()]);
+//                    Console.WriteLine(Hex.Convert(res.ToArray()));
 
                     if (argsLen > 0)
                     {
-                        var args = string.Concat(data["args"].Select(ForgeMicheline));
+                        var args = data["args"].Select(ForgeMicheline).SelectMany(x => x);
                         if (argsLen < 3)
-                            res += args;
+                        {
+                            res.AddRange(args.ToList());
+//                            Console.WriteLine(Hex.Convert(res.ToArray()));
+                        }
                         else
-                            res += ForgeArray(args);
+                        {
+                            res.AddRange(ForgeArray(args.ToArray()));
+//                            Console.WriteLine(Hex.Convert(res.ToArray()));
+                        }
                     }
 
                     if (annotsLen > 0)
-                        res += ForgeArray(string.Join(" ", data["annots"]));
+                    {
+                        res.AddRange(ForgeArray(Encoding.UTF8.GetBytes(string.Join(" ", data["annots"]))));
+//                        Console.WriteLine(Hex.Convert(res.ToArray()));
+                    }
+
                     else if (argsLen == 3)
-                        res += new string('0', 8);
+                        res.AddRange(new List<byte>{0,0,0,0}); /* new string('0', 8);*/
+
                     break;
                 }
                 case JObject _ when data["bytes"] != null:
-                    res += "0A";
-                    res += ForgeArray(data["bytes"].ToString());
+                    res.Add(0x0A);
+                    res.AddRange(ForgeArray(Hex.Parse(data["bytes"].Value<string>())));
+//                    Console.WriteLine(Hex.Convert(res.ToArray()));
                     break;
                 case JObject _ when data["int"] != null:
-                    res += "00";
-                    res += ForgeInt(data["int"].Value<int>());
+                    res.Add(0x00);
+                    res.AddRange(ForgeInt(data["int"].Value<int>()));
+//                    Console.WriteLine(Hex.Convert(res.ToArray()));
                     break;
                 case JObject _ when data["string"] != null:
-                    res += "01";
-                    res += ForgeArray(Hex.Convert(Encoding.Default.GetBytes(data["string"].Value<string>())));
+                    res.Add(0x01);
+                    res.AddRange(ForgeArray(Encoding.UTF8.GetBytes(data["string"].Value<string>())));
+//                    Console.WriteLine(Hex.Convert(res.ToArray()));
                     break;
                 case JObject _:
                     throw new ArgumentException($"Michelson forge error");
