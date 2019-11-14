@@ -86,7 +86,7 @@ namespace Netezos.Forge
             {
                 res = res.Concat(ForgeBool(true));
                 res = res.Concat(ForgeEntrypoint(operation.Parameters.Entrypoint));
-                Console.WriteLine($"Res with entrypoint {Hex.Convert(res)}");
+//                Console.WriteLine($"Res with entrypoint {Hex.Convert(res)}");
                 res = res.Concat(ForgeArray(ForgeMicheline(operation.Parameters.Value).ToArray()));
             }
             else
@@ -101,6 +101,7 @@ namespace Netezos.Forge
         static byte[] ForgeArray(byte[] value)
         {
             var bytes = BitConverter.GetBytes(value.Length).Reverse().ToArray();
+//            Console.WriteLine($"Array bytes len {Hex.Convert(bytes)}");
             return bytes.Concat(value);
         }
         static byte[] ForgeLong(long value)
@@ -423,6 +424,7 @@ namespace Netezos.Forge
                 case JArray _:
                     res.Add(0x02);
                     res.AddRange(ForgeArray(data.Select(ForgeMicheline).SelectMany(x => x).ToArray()).ToList());
+//                    Console.WriteLine($"JArray {Hex.Convert(res.ToArray())}");
                     break;
                 case JObject _ when data["prim"] != null:
                 {
@@ -431,7 +433,7 @@ namespace Netezos.Forge
 
                     res.Add(lenTags[argsLen][annotsLen > 0]);
                     res.Add(primTags[data["prim"].ToString()]);
-//                    Console.WriteLine(Hex.Convert(res.ToArray()));
+//                    Console.WriteLine($"Args {Hex.Convert(res.ToArray())}");
 
                     if (argsLen > 0)
                     {
@@ -439,40 +441,41 @@ namespace Netezos.Forge
                         if (argsLen < 3)
                         {
                             res.AddRange(args.ToList());
-//                            Console.WriteLine(Hex.Convert(res.ToArray()));
+//                            Console.WriteLine($"argsLen > 0 {Hex.Convert(res.ToArray())}");
                         }
                         else
                         {
                             res.AddRange(ForgeArray(args.ToArray()));
-//                            Console.WriteLine(Hex.Convert(res.ToArray()));
+//                            Console.WriteLine($"argsLen <= 0 {Hex.Convert(res.ToArray())}");
                         }
                     }
 
                     if (annotsLen > 0)
                     {
                         res.AddRange(ForgeArray(Encoding.UTF8.GetBytes(string.Join(" ", data["annots"]))));
-//                        Console.WriteLine(Hex.Convert(res.ToArray()));
+//                        Console.WriteLine($"annotsLen > 0 {Hex.Convert(res.ToArray())}");
                     }
 
                     else if (argsLen == 3)
                         res.AddRange(new List<byte>{0,0,0,0}); /* new string('0', 8);*/
+//                    Console.WriteLine($"argsLen == 3 {Hex.Convert(res.ToArray())}");
 
                     break;
                 }
                 case JObject _ when data["bytes"] != null:
                     res.Add(0x0A);
                     res.AddRange(ForgeArray(Hex.Parse(data["bytes"].Value<string>())));
-//                    Console.WriteLine(Hex.Convert(res.ToArray()));
+//                    Console.WriteLine($"Bytes {Hex.Convert(res.ToArray())}");
                     break;
                 case JObject _ when data["int"] != null:
                     res.Add(0x00);
                     res.AddRange(ForgeInt(data["int"].Value<int>()));
-//                    Console.WriteLine(Hex.Convert(res.ToArray()));
+//                    Console.WriteLine($"int {Hex.Convert(res.ToArray())}");
                     break;
                 case JObject _ when data["string"] != null:
                     res.Add(0x01);
                     res.AddRange(ForgeArray(Encoding.UTF8.GetBytes(data["string"].Value<string>())));
-//                    Console.WriteLine(Hex.Convert(res.ToArray()));
+//                    Console.WriteLine($"String {data["string"].Value<string>()} {Hex.Convert(res.ToArray())}");
                     break;
                 case JObject _:
                     throw new ArgumentException($"Michelson forge error");
