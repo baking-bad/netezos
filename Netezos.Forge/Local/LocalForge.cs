@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +13,24 @@ namespace Netezos.Forge
     public class LocalForge : IForge
     {
         static readonly byte[] BranchPrefix = { 1, 52 };
+        static readonly byte[] ProposalPrefix = { 2, 170 };
+        static readonly byte[] SigPrefix = { 4, 130, 43 };
+        static readonly byte[] OperationPrefix = { 29, 159, 109 };
+        static readonly byte[] ContextPrefix = { 79, 179 };
+        
+        public static Dictionary<string, long> OperationTags = new Dictionary<string, long> {
+            {"endorsement", 0 },
+            {"proposal", 5 },
+            {"ballot", 6 },
+            {"seed_nonce_revelation", 1 },
+            {"double_endorsement_evidence", 2 },
+            {"double_baking_evidence", 3 },
+            {"activate_account", 4 },
+            {"reveal", 107 },
+            {"transaction", 108 },
+            {"origination", 109 },
+            {"delegation", 110 }
+        };
         public Task<byte[]> ForgeOperationAsync(string branch, OperationContent content)
         {
             var res = string.IsNullOrWhiteSpace(branch) ? new byte[]{} : Base58.Parse(branch, BranchPrefix);
@@ -34,7 +50,7 @@ namespace Netezos.Forge
             return Task.FromResult(res);
         }
 
-        byte[] ForgeOperation(OperationContent content)
+        static byte[] ForgeOperation(OperationContent content)
         {
             switch (content)
             {
@@ -44,6 +60,22 @@ namespace Netezos.Forge
                     return ForgeRevelation(reveal);
                 case ActivationContent activation:
                     return ForgeActivation(activation);
+                case OriginationContent origination:
+                    return ForgeOrigination(origination);
+                case DelegationContent delegation:
+                    return ForgeDelegation(delegation);
+                case EndorsementContent endorsement:
+                    return ForgeEndorsement(endorsement);
+                case SeedNonceRevelationContent seed:
+                    return ForgeSeedNonceRevelaion(seed);
+                case ProposalsContent proposals:
+                    return ForgeProposals(proposals);
+                case BallotContent ballot:
+                    return ForgeBallot(ballot);
+                case DoubleEndorsementEvidenceContent doubleEndorsementEvidence:
+                    return ForgeDoubleEndorsementEvidence(doubleEndorsementEvidence);
+                case DoubleBakingEvidenceContent doubleBakingEvidence:
+                    return ForgeDoubleBakingEvidence(doubleBakingEvidence);
                 default:
                     throw new NotImplementedException($"{content.Kind} is not implemented");
             }
@@ -51,7 +83,7 @@ namespace Netezos.Forge
 
         static byte[] ForgeRevelation(RevealContent operation)
         {
-            var res = ForgeLong(107);
+            var res = ForgeLong(OperationTags[operation.Kind]);
             res = res.Concat(ForgeSource(operation.Source));
             res = res.Concat(ForgeLong(operation.Fee));
             res = res.Concat(ForgeLong(operation.Counter));
@@ -64,7 +96,7 @@ namespace Netezos.Forge
 
         static byte[] ForgeActivation(ActivationContent operation)
         {
-            var res = ForgeLong(4);
+            var res = ForgeLong(OperationTags[operation.Kind]);
             res = res.Concat(ForgeActivationAddress(operation.Address));
             res = res.Concat(Hex.Parse(operation.Secret));
 
@@ -73,7 +105,7 @@ namespace Netezos.Forge
 
         static byte[] ForgeTransaction(TransactionContent operation)
         {
-            var res = ForgeLong(108);
+            var res = ForgeLong(OperationTags[operation.Kind]);
             res = res.Concat(ForgeSource(operation.Source));
             res = res.Concat(ForgeLong(operation.Fee));
             res = res.Concat(ForgeLong(operation.Counter));
@@ -94,10 +126,154 @@ namespace Netezos.Forge
 
             return res;
         }
-        
-        
-        
-        
+
+        static byte[] ForgeOrigination(OriginationContent operation)
+        {
+            var res = ForgeLong(OperationTags[operation.Kind]);
+            res = res.Concat(ForgeSource(operation.Source));
+            res = res.Concat(ForgeLong(operation.Fee));
+            res = res.Concat(ForgeLong(operation.Counter));
+            res = res.Concat(ForgeLong(operation.GasLimit));
+            res = res.Concat(ForgeLong(operation.StorageLimit));
+            res = res.Concat(ForgeLong(operation.Balance));
+
+            if (string.IsNullOrWhiteSpace(operation.Delegate))
+            {
+                res = res.Concat(ForgeBool(true));
+                res = res.Concat(ForgeSource(operation.Delegate));
+            }
+            else
+            {
+                res = res.Concat(ForgeBool(false));
+            }
+
+            res = res.Concat(ForgeScript(operation.Script));
+            
+            return res;
+        }
+
+        static byte[] ForgeDelegation(DelegationContent operation)
+        {
+            var res = ForgeLong(OperationTags[operation.Kind]);
+            res = res.Concat(ForgeSource(operation.Source));
+            res = res.Concat(ForgeLong(operation.Fee));
+            res = res.Concat(ForgeLong(operation.Counter));
+            res = res.Concat(ForgeLong(operation.GasLimit));
+            res = res.Concat(ForgeLong(operation.StorageLimit));
+            
+            if (string.IsNullOrWhiteSpace(operation.Delegate))
+            {
+                res = res.Concat(ForgeBool(true));
+                res = res.Concat(ForgeSource(operation.Delegate));
+            }
+            else
+            {
+                res = res.Concat(ForgeBool(false));
+            }
+
+            return res;
+        }
+
+        static byte[] ForgeEndorsement(EndorsementContent operation)
+        {
+            var res = ForgeLong(OperationTags[operation.Kind]);
+            res = res.Concat(ForgeInt(operation.Level));
+
+            return res;
+        }
+
+        static byte[] ForgeSeedNonceRevelaion(SeedNonceRevelationContent operation)
+        {
+            var res = ForgeLong(OperationTags[operation.Kind]);
+            res = res.Concat(ForgeInt(operation.Level));
+            res = res.Concat(Hex.Parse(operation.Nonce));
+
+            return res;
+        }
+
+        static byte[] ForgeProposals(ProposalsContent operation)
+        {
+            var res = ForgeLong(OperationTags[operation.Kind]);
+            res = res.Concat(ForgeSource(operation.Source));
+            res = res.Concat(ForgeLong(operation.Period));
+            
+            foreach (var proposal in operation.Proposals)
+            {
+                res = res.Concat(Base58.Parse(proposal, ProposalPrefix));
+            }
+
+            return res;
+        }
+
+        static byte[] ForgeBallot(BallotContent operation)
+        {
+            var res = ForgeLong(OperationTags[operation.Kind]);
+            res = res.Concat(ForgeSource(operation.Source));
+            res = res.Concat(ForgeLong(operation.Period));
+            res = res.Concat(Base58.Parse(operation.Proposal, ProposalPrefix));
+            res = res.Concat(new[] {(byte) operation.Ballot});
+            
+            return res;
+        }
+
+        static byte[] ForgeDoubleEndorsementEvidence(DoubleEndorsementEvidenceContent operation)
+        {
+            var res = ForgeLong(OperationTags[operation.Kind]);
+            
+            res = res.Concat(Base58.Parse(operation.Op1.Branch, BranchPrefix));
+            res = res.Concat(ForgeLong(OperationTags[operation.Op1.Operations.Kind]));
+            res = res.Concat(ForgeInt(operation.Op1.Operations.Level));
+            res = res.Concat(Base58.Parse(operation.Op1.Signature, SigPrefix));
+            
+            res = res.Concat(Base58.Parse(operation.Op2.Branch, BranchPrefix));
+            res = res.Concat(ForgeLong(OperationTags[operation.Op2.Operations.Kind]));
+            res = res.Concat(ForgeInt(operation.Op2.Operations.Level));
+            res = res.Concat(Base58.Parse(operation.Op2.Signature, SigPrefix));
+            
+            return res;
+        }
+
+        static byte[] ForgeDoubleBakingEvidence(DoubleBakingEvidenceContent operation)
+        {
+            var res = ForgeLong(OperationTags[operation.Kind]);
+
+            var firstHeader = operation.BlockHeader1;
+            res = res.Concat(ForgeInt(firstHeader.Level));
+            res = res.Concat(ForgeInt(firstHeader.Proto));
+            res = res.Concat(Base58.Parse(firstHeader.Predecessor, BranchPrefix));
+            res = res.Concat(Base58.Parse(firstHeader.Predecessor, BranchPrefix));
+            res = res.Concat(Encoding.UTF8.GetBytes(firstHeader.Timestamp));
+            res = res.Concat(ForgeInt(firstHeader.ValidationPass));
+            res = res.Concat(Base58.Parse(firstHeader.OperationsHash, OperationPrefix));
+            res = firstHeader.Fitness.Aggregate(res, (current, fit) => current.Concat(Hex.Parse(fit)));
+            res = res.Concat(Base58.Parse(firstHeader.Context, ContextPrefix));
+            res = res.Concat(ForgeInt(firstHeader.Priority));
+            res = res.Concat(Hex.Parse(firstHeader.ProofOfWorkNonce));
+            res = res.Concat(Base58.Parse(firstHeader.Signature, SigPrefix));
+
+            var secondHeader = operation.BlockHeader1;
+            res = res.Concat(ForgeInt(secondHeader.Level));
+            res = res.Concat(ForgeInt(secondHeader.Proto));
+            res = res.Concat(Base58.Parse(secondHeader.Predecessor, BranchPrefix));
+            res = res.Concat(Base58.Parse(secondHeader.Predecessor, BranchPrefix));
+            res = res.Concat(Encoding.UTF8.GetBytes(secondHeader.Timestamp));
+            res = res.Concat(ForgeInt(secondHeader.ValidationPass));
+            res = res.Concat(Base58.Parse(secondHeader.OperationsHash, OperationPrefix));
+            res = secondHeader.Fitness.Aggregate(res, (current, fit) => current.Concat(Hex.Parse(fit)));
+            res = res.Concat(Base58.Parse(secondHeader.Context, ContextPrefix));
+            res = res.Concat(ForgeInt(secondHeader.Priority));
+            res = res.Concat(Hex.Parse(secondHeader.ProofOfWorkNonce));
+            res = res.Concat(Base58.Parse(secondHeader.Signature, SigPrefix));
+
+            return res;
+        }
+
+        static byte[] ForgeScript(Script script)
+        {
+            var code = ForgeMicheline(script.Code).ToArray();
+            return code.Concat(ForgeMicheline(script.Storage).ToArray());
+        }
+
         static byte[] ForgeArray(byte[] value)
         {
             var bytes = BitConverter.GetBytes(value.Length).Reverse().ToArray();
