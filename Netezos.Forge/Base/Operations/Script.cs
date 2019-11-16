@@ -7,12 +7,12 @@ namespace Netezos.Forge.Operations
     public class Script
     {
         [JsonProperty("code")]
-        public JToken Code { get; }
+        public JToken Code { get; set; }
 
         [JsonProperty("storage")]
-        public JToken Storage { get; }
+        public JToken Storage { get; set; }
 
-        public Script(JToken code, JToken storage, ScriptMode mode = ScriptMode.Micheline)
+/*        public Script(JToken code, JToken storage, ScriptMode mode = ScriptMode.Micheline)
         {
             switch (mode)
             {
@@ -30,13 +30,13 @@ namespace Netezos.Forge.Operations
             switch (mode)
             {
                 case ScriptMode.Micheline:
-                    Code = JToken.Parse(code);
-                    Storage = JToken.Parse(storage);
+                    Code = JArray.Parse(code);
+                    Storage = JObject.Parse(storage);
                     break;
                 default:
                     throw new NotImplementedException($"{mode} parameters mode is not implemented");
             }
-        }
+        }*/
     }
 
     public enum ScriptMode

@@ -137,7 +137,7 @@ namespace Netezos.Forge
             res = res.Concat(ForgeLong(operation.StorageLimit));
             res = res.Concat(ForgeLong(operation.Balance));
 
-            if (string.IsNullOrWhiteSpace(operation.Delegate))
+            if (!string.IsNullOrWhiteSpace(operation.Delegate))
             {
                 res = res.Concat(ForgeBool(true));
                 res = res.Concat(ForgeSource(operation.Delegate));
