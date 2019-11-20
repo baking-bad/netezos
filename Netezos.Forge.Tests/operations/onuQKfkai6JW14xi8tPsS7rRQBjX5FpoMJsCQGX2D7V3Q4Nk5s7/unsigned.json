@@ -1,0 +1,11 @@
+﻿{
+  "branch": "BM1YcpP4NDbKFtw2EfH5t4fJJELgn3rrnKxxZsAtPdaSYMZe5Dp",
+  "contents": [{
+    "kind": "ballot",
+    "source": "tz1UGDXghfW4Z7UhobBkfQTayMrVssCgsGGQ",
+    "period": 19,
+    "proposal": "PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU",
+    "ballot": "yay"
+  }
+  ]
+}

@@ -1,0 +1,33 @@
+﻿{
+  "branch": "BMChPpzXSq7beWJQgrv6VcjexgQ1Q2LJsa135qo3rvzkEZLcm1K",
+  "contents": [{
+    "kind": "double_baking_evidence",
+    "bh1": {
+      "level": 671732,
+      "proto": 5,
+      "predecessor": "BMUMkLvbHfLCRpQ8gs2o8ds8ViyNFv4jVC2cZfd9xkhRYjofzBB",
+      "timestamp": "2019-10-30T02:36:57Z",
+      "validation_pass": 4,
+      "operations_hash": "LLoa8pBdeFQqqNXaY8gEqJiszWMhN9t1QwhBVGRaAKfPf9HboS7Mo",
+      "fitness": ["01", "0000000000003ff4"],
+      "context": "CoVKugCtBgDvmYP1R73Yw4huXghtZSLXkfzdctvFLU2bEDXqexbR",
+      "priority": 1,
+      "proof_of_work_nonce": "00bc030300027531",
+      "signature": "sigibxc9MH3tNdiMT6LAEhbH11aREv34eHiyQFF1cnBu7YsHXRzGj9JB2ys5fgsRDkiJcJPXCfx1G2kVVFpogEdXe5tZoQhW"
+    },
+    "bh2": {
+      "level": 671732,
+      "proto": 5,
+      "predecessor": "BMUMkLvbHfLCRpQ8gs2o8ds8ViyNFv4jVC2cZfd9xkhRYjofzBB",
+      "timestamp": "2019-10-30T02:36:52Z",
+      "validation_pass": 4,
+      "operations_hash": "LLoaiqFM8FMEsPBvcDh6rF6wXH88dTGVQ1SQqBjHp6R8EhTki52T4",
+      "fitness": ["01", "0000000000003ff4"],
+      "context": "CoWCXmo4y4GGLijFoJ5f8pj75hmxhyZWWGgdeG7WWiRXrmK9gTfi",
+      "priority": 1,
+      "proof_of_work_nonce": "a7d357bb0c8e0e00",
+      "signature": "sigscjExjrUHrYgeaT1WWKZxYuPSTNfB7cgBkuRhqxWXzYfjrHs8qi9gerqU5w9ia2tiSnb9agkdPrSPpu7rPa6suP9omtNT"
+    }
+  }
+  ]
+}
