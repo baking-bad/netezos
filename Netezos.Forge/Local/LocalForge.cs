@@ -220,20 +220,9 @@ namespace Netezos.Forge
         static byte[] ForgeDoubleEndorsementEvidence(DoubleEndorsementEvidenceContent operation)
         {
             var res = ForgeNat(OperationTags[operation.Kind]);
-            
-            var op1 = new byte[] { };
-            op1 = op1.Concat(Base58.Parse(operation.Op1.Branch, BranchPrefix));
-            op1 = op1.Concat(ForgeNat(OperationTags[operation.Op1.Operations.Kind]));
-            op1 = op1.Concat(ForgeInt32(operation.Op1.Operations.Level));
-            op1 = op1.Concat(Base58.Parse(operation.Op1.Signature, SigPrefix));
-            res = res.Concat(ForgeArray(op1));
-            
-            var op2 = new byte[] { };
-            op2 = op2.Concat(Base58.Parse(operation.Op2.Branch, BranchPrefix));
-            op2 = op2.Concat(ForgeNat(OperationTags[operation.Op2.Operations.Kind]));
-            op2 = op2.Concat(ForgeInt32(operation.Op2.Operations.Level));
-            op2 = op2.Concat(Base58.Parse(operation.Op2.Signature, SigPrefix));
-            res = res.Concat(ForgeArray(op2));
+
+            res = res.Concat(ForgeEndorsementOperation(operation.Op1));
+            res = res.Concat(ForgeEndorsementOperation(operation.Op2));
             
             return res;
         }
@@ -242,52 +231,46 @@ namespace Netezos.Forge
         {
             var res = ForgeNat(OperationTags[operation.Kind]);
 
-            var firstHeader = operation.BlockHeader1;
+            res = res.Concat(ForgeBlockHeader(operation.BlockHeader1));
+            res = res.Concat(ForgeBlockHeader(operation.BlockHeader2));
+
+            return res;
+        }
+
+        static byte[] ForgeEndorsementOperation(DoubleEndorsementOperationContent op)
+        {
+            var op1 = new byte[] { };
+            op1 = op1.Concat(Base58.Parse(op.Branch, BranchPrefix));
+            op1 = op1.Concat(ForgeNat(OperationTags[op.Operations.Kind]));
+            op1 = op1.Concat(ForgeInt32(op.Operations.Level));
+            op1 = op1.Concat(Base58.Parse(op.Signature, SigPrefix));
+            return ForgeArray(op1);
+        }
+
+        static byte[] ForgeBlockHeader(BlockHeader header)
+        {
             var bh1 = new byte[] { };
-            bh1 = bh1.Concat(ForgeInt32(firstHeader.Level));
-            bh1 = bh1.Concat(ForgeInt32(firstHeader.Proto, 1));
-            bh1 = bh1.Concat(Base58.Parse(firstHeader.Predecessor, BranchPrefix));
-            var timestamp1 = (int)firstHeader.Timestamp.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            bh1 = bh1.Concat(ForgeInt32(header.Level));
+            bh1 = bh1.Concat(ForgeInt32(header.Proto, 1));
+            bh1 = bh1.Concat(Base58.Parse(header.Predecessor, BranchPrefix));
+            var timestamp1 = (int)header.Timestamp.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             bh1 = bh1.Concat(ForgeLong(timestamp1));
-            bh1 = bh1.Concat(ForgeInt32(firstHeader.ValidationPass, 1));
-            bh1 = bh1.Concat(Base58.Parse(firstHeader.OperationsHash, OperationPrefix));
+            bh1 = bh1.Concat(ForgeInt32(header.ValidationPass, 1));
+            bh1 = bh1.Concat(Base58.Parse(header.OperationsHash, OperationPrefix));
             var fit1 = new byte[] { };
-            foreach (var f in firstHeader.Fitness)
+            foreach (var f in header.Fitness)
             {
                 fit1 = fit1.Concat(ForgeArray(Hex.Parse(f)));
             }
             bh1 = bh1.Concat(ForgeArray(fit1));
-            bh1 = bh1.Concat(Base58.Parse(firstHeader.Context, ContextPrefix));
-            bh1 = bh1.Concat(ForgeInt32(firstHeader.Priority, 2));
-            bh1 = bh1.Concat(Hex.Parse(firstHeader.ProofOfWorkNonce));
-            bh1 = bh1.Concat(ForgeSign(firstHeader.Signature));
+            bh1 = bh1.Concat(Base58.Parse(header.Context, ContextPrefix));
+            bh1 = bh1.Concat(ForgeInt32(header.Priority, 2));
+            bh1 = bh1.Concat(Hex.Parse(header.ProofOfWorkNonce));
+            bh1 = bh1.Concat(ForgeSign(header.Signature));
 
-            res = res.Concat(ForgeArray(bh1));
-
-            var secondHeader = operation.BlockHeader2;
-            var bh2 = new byte[] { };
-            bh2 = bh2.Concat(ForgeInt32(secondHeader.Level));
-            bh2 = bh2.Concat(ForgeInt32(secondHeader.Proto, 1));
-            bh2 = bh2.Concat(Base58.Parse(secondHeader.Predecessor, BranchPrefix));
-            var timestamp2 = (int)secondHeader.Timestamp.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            bh2 = bh2.Concat(ForgeLong(timestamp2));
-            bh2 = bh2.Concat(ForgeInt32(secondHeader.ValidationPass, 1));
-            bh2 = bh2.Concat(Base58.Parse(secondHeader.OperationsHash, OperationPrefix));
-            var fit2 = new byte[] { };
-            foreach (var f in secondHeader.Fitness)
-            {
-                fit2 = fit2.Concat(ForgeArray(Hex.Parse(f)));
-            }
-            bh2 = bh2.Concat(ForgeArray(fit2));
-            bh2 = bh2.Concat(Base58.Parse(secondHeader.Context, ContextPrefix));
-            bh2 = bh2.Concat(ForgeInt32(secondHeader.Priority, 2));
-            bh2 = bh2.Concat(Hex.Parse(secondHeader.ProofOfWorkNonce));
-            bh2 = bh2.Concat(ForgeSign(secondHeader.Signature));
-            
-            res = res.Concat(ForgeArray(bh2));
-
-            return res;
+            return ForgeArray(bh1);
         }
+        
 
         static byte[] ForgeScript(Script script)
         {
