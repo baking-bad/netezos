@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Netezos.Forge.Operations
@@ -16,7 +17,7 @@ namespace Netezos.Forge.Operations
         
         //TODO Think about it
         [JsonProperty("timestamp")]
-        public string Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
         
         [JsonProperty("validation_pass")]
         public int ValidationPass { get; set; }
@@ -39,7 +40,7 @@ namespace Netezos.Forge.Operations
         [JsonProperty("signature")]
         public string Signature { get; set; }
 
-        public BlockHeader(int level, int proto, string predecessor, string timestamp, int validationPass, string operationsHash, List<string> fitness, string context, int priority, string proofOfWorkNonce, string signature)
+        public BlockHeader(int level, int proto, string predecessor, DateTime timestamp, int validationPass, string operationsHash, List<string> fitness, string context, int priority, string proofOfWorkNonce, string signature)
         {
             Level = level;
             Proto = proto;
