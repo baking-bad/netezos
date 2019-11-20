@@ -23,6 +23,9 @@ namespace Netezos.Rpc.Queries.Post
                 branch,
                 contents
             });
+        
+        public Task<JToken> PostAsync(string contents)
+            => base.PostAsync(contents);
 
         /// <summary>
         /// Forges an operation and returns operation bytes which can be signed

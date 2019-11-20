@@ -9,12 +9,12 @@ namespace Netezos.Forge.Operations
     public class Parameters
     {
         [JsonProperty("entrypoint")]
-        public string Entrypoint { get; }
+        public string Entrypoint { get; set; }
 
         [JsonProperty("value")]
-        public JToken Value { get; }
+        public JToken Value { get; set; }
 
-        public Parameters(string entrypoint)
+/*        public Parameters(string entrypoint)
         {
             Entrypoint = entrypoint;
             Value = null;
@@ -44,7 +44,7 @@ namespace Netezos.Forge.Operations
                 default:
                     throw new NotImplementedException($"{mode} parameters mode is not implemented");
             }
-        }
+        }*/
     }
 
     public enum ParametersMode
