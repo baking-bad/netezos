@@ -20,7 +20,7 @@ namespace Netezos.Forge
         
         public static Dictionary<string, long> OperationTags = new Dictionary<string, long> {
             {"endorsement", 0 },
-            {"proposal", 5 },
+            {"proposals", 5 },
             {"ballot", 6 },
             {"seed_nonce_revelation", 1 },
             {"double_endorsement_evidence", 2 },
@@ -161,7 +161,7 @@ namespace Netezos.Forge
             res = res.Concat(ForgeLong(operation.GasLimit));
             res = res.Concat(ForgeLong(operation.StorageLimit));
             
-            if (string.IsNullOrWhiteSpace(operation.Delegate))
+            if (!string.IsNullOrWhiteSpace(operation.Delegate))
             {
                 res = res.Concat(ForgeBool(true));
                 res = res.Concat(ForgeSource(operation.Delegate));
@@ -177,7 +177,7 @@ namespace Netezos.Forge
         static byte[] ForgeEndorsement(EndorsementContent operation)
         {
             var res = ForgeLong(OperationTags[operation.Kind]);
-            res = res.Concat(ForgeInt(operation.Level));
+            res = res.Concat(ForgeInt32(operation.Level));
 
             return res;
         }
@@ -185,7 +185,7 @@ namespace Netezos.Forge
         static byte[] ForgeSeedNonceRevelaion(SeedNonceRevelationContent operation)
         {
             var res = ForgeLong(OperationTags[operation.Kind]);
-            res = res.Concat(ForgeInt(operation.Level));
+            res = res.Concat(ForgeInt32(operation.Level));
             res = res.Concat(Hex.Parse(operation.Nonce));
 
             return res;
@@ -195,21 +195,22 @@ namespace Netezos.Forge
         {
             var res = ForgeLong(OperationTags[operation.Kind]);
             res = res.Concat(ForgeSource(operation.Source));
-            res = res.Concat(ForgeLong(operation.Period));
-            
+            res = res.Concat(ForgeInt32(operation.Period));
+
+            var array = new byte[]{};
             foreach (var proposal in operation.Proposals)
             {
-                res = res.Concat(Base58.Parse(proposal, ProposalPrefix));
+                array = array.Concat(Base58.Parse(proposal, ProposalPrefix));
             }
-
-            return res;
+            
+            return res.Concat(ForgeArray(array));
         }
 
         static byte[] ForgeBallot(BallotContent operation)
         {
             var res = ForgeLong(OperationTags[operation.Kind]);
             res = res.Concat(ForgeSource(operation.Source));
-            res = res.Concat(ForgeLong(operation.Period));
+            res = res.Concat(ForgeInt32(operation.Period));
             res = res.Concat(Base58.Parse(operation.Proposal, ProposalPrefix));
             res = res.Concat(new[] {(byte) operation.Ballot});
             
@@ -270,15 +271,20 @@ namespace Netezos.Forge
 
         static byte[] ForgeScript(Script script)
         {
-            var code = ForgeMicheline(script.Code).ToArray();
-            return code.Concat(ForgeMicheline(script.Storage).ToArray());
+            var code = ForgeArray(ForgeMicheline(script.Code).ToArray());
+            return code.Concat(ForgeArray(ForgeMicheline(script.Storage).ToArray()));
         }
 
-        static byte[] ForgeArray(byte[] value)
+        static byte[] ForgeArray(byte[] value, int len = 4)
         {
-            var bytes = BitConverter.GetBytes(value.Length).Reverse().ToArray();
+            var bytes = BitConverter.GetBytes(value.Length).GetBytes(0, len).Reverse().ToArray();
 //            Console.WriteLine($"Array bytes len {Hex.Convert(bytes)}");
             return bytes.Concat(value);
+        }
+
+        static byte[] ForgeInt32(int value)
+        {
+            return BitConverter.GetBytes(value).Reverse().ToArray();
         }
         static byte[] ForgeLong(long value)
         {
@@ -443,7 +449,7 @@ namespace Netezos.Forge
             else
             {
                 res  = res.Concat(new byte[]{255});
-                res = res.Concat(ForgeArray(Encoding.UTF8.GetBytes(value)));
+                res = res.Concat(ForgeArray(Encoding.UTF8.GetBytes(value), 1));
             }
 
             return res;
