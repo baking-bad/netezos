@@ -4,7 +4,7 @@ using System.IO;
 using NBitcoin;
 using Netezos.Keys;
 
-namespace Netezos.Signer
+namespace Netezos.Ledger
 {
     public static class Utils
     {
