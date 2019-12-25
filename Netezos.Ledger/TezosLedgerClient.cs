@@ -9,7 +9,7 @@ using NBitcoin;
 using Netezos.Keys;
 using PubKey = Netezos.Keys.PubKey;
 
-namespace Netezos.Signer
+namespace Netezos.Ledger
 {
     public class TezosLedgerClient : LedgerClientBase
     {
