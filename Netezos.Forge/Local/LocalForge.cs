@@ -17,20 +17,20 @@ namespace Netezos.Forge
         static readonly byte[] SigPrefix = { 4, 130, 43 };
         static readonly byte[] OperationPrefix = { 29, 159, 109 };
         static readonly byte[] ContextPrefix = { 79, 179 };
-        
-        public static Dictionary<string, long> OperationTags = new Dictionary<string, long> {
-            {"endorsement", 0 },
-            {"proposals", 5 },
-            {"ballot", 6 },
-            {"seed_nonce_revelation", 1 },
-            {"double_endorsement_evidence", 2 },
-            {"double_baking_evidence", 3 },
-            {"activate_account", 4 },
-            {"reveal", 107 },
-            {"transaction", 108 },
-            {"origination", 109 },
-            {"delegation", 110 }
+        static readonly Dictionary<string, long> OperationTags = new Dictionary<string, long> {
+            { "endorsement", 0 },
+            { "proposals", 5 },
+            { "ballot", 6 },
+            { "seed_nonce_revelation", 1 },
+            { "double_endorsement_evidence", 2 },
+            { "double_baking_evidence", 3 },
+            { "activate_account", 4 },
+            { "reveal", 107 },
+            { "transaction", 108 },
+            { "origination", 109 },
+            { "delegation", 110 }
         };
+
         public Task<byte[]> ForgeOperationAsync(string branch, OperationContent content)
         {
             var res = string.IsNullOrWhiteSpace(branch) ? new byte[]{} : Base58.Parse(branch, BranchPrefix);
@@ -270,7 +270,6 @@ namespace Netezos.Forge
 
             return ForgeArray(bh1);
         }
-        
 
         static byte[] ForgeScript(Script script)
         {
@@ -294,6 +293,7 @@ namespace Netezos.Forge
         {
             return BitConverter.GetBytes(value).GetBytes(0, len).Reverse().ToArray();
         }
+
         static byte[] ForgeNat(long value)
         {
             if (value < 0)

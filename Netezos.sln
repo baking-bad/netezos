@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netezos.Rpc", "Netezos.Rpc\Netezos.Rpc.csproj", "{CB35442B-55FE-427E-8E73-E1C8EEDF2F1D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netezos.Signer", "Netezos.Wallet\Netezos.Signer.csproj", "{62A45E8D-6F4E-4BCA-9936-DA4400F5277C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netezos.Signer", "Netezos.Signer\Netezos.Signer.csproj", "{62A45E8D-6F4E-4BCA-9936-DA4400F5277C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netezos.Keys", "Netezos.Keys\Netezos.Keys.csproj", "{59A5C452-E403-4725-A14F-C78CB351B05A}"
 EndProject
