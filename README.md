@@ -1,13 +1,16 @@
 # Netezos
 [![Made With](https://img.shields.io/badge/made%20with-C%23-success.svg?)](https://docs.microsoft.com/en-gb/dotnet/csharp/language-reference/)
 [![License: MIT](https://img.shields.io/github/license/baking-bad/netezos.svg)](https://opensource.org/licenses/MIT)
-[![NuGet](https://img.shields.io/nuget/v/Netezos.Rpc.svg)](https://www.nuget.org/packages/Netezos.Rpc/)
+
 
 .Net Standard 2.0 libraries pack for working with Tezos.
 
-## Installation
-
-`PM> Install-Package Netezos.Rpc`
+| Package | Nuget | Description |
+| ------- | ----- | ----------- |
+| Netezos.Rpc | [![NuGet](https://img.shields.io/nuget/v/Netezos.Rpc.svg)](https://www.nuget.org/packages/Netezos.Rpc/) | Tezos RPC wrapper |
+| Netezos.Forge| [![NuGet](https://img.shields.io/nuget/v/Netezos.Forge.svg)](https://www.nuget.org/packages/Netezos.Forge/) | Forge operations locally or via RPC |
+| Netezos.Keys| [![NuGet](https://img.shields.io/nuget/v/Netezos.Keys.svg)](https://www.nuget.org/packages/Netezos.Keys/) | Generate or parse keys, sign data, verify signature |
+| Netezos.Ledger| [![NuGet](https://img.shields.io/nuget/v/Netezos.Ledger.svg)](https://www.nuget.org/packages/Netezos.Ledger/) | Interact with Tezos Ledger App |
 
 ## Netezos.Rpc
 Netezos.Rpc provides an access to the Tezos node via RPC API. There is the main class `TezosRpc` which you need to build queries, supported by the Tezos RPC API.
