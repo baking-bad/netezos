@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+
+    <PackageId>Netezos.Ledger</PackageId>
+    <PackageTags>tezos ledger hardware signing</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/baking-bad/netezos</PackageProjectUrl>
+
+    <RepositoryUrl>https://github.com/baking-bad/netezos</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <Authors>dmirgaleev</Authors>
+    <Product>Netezos.Ledger</Product>
+    <Description>.Net Standard 2.0 library for interacting with Ledger device and working with Tezos Ledger App</Description>
+    <Version>0.9.0</Version>
+    <Copyright>Copyright © Baking Bad 2019</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
