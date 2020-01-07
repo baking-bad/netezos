@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="LedgerWallet" Version="2.0.0.5" />
-    <PackageReference Include="Netezos.Keys" Version="0.9.1" />
+    <PackageReference Include="Netezos.Keys" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

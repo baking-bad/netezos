@@ -17,10 +17,13 @@ namespace Netezos.Keys.Crypto
         {
             switch (prefix)
             {
+                case "edpk":
                 case "edsk":
                     return new Ed25519();
+                case "sppk":
                 case "spsk":
                     return new Secp256k1();
+                case "p2pk":
                 case "p2sk":
                     return new NistP256();
                 default:
