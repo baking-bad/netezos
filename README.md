@@ -92,3 +92,8 @@ In addition, you can simply pass a valid JSON string.
 var protoData = await rpc.Blocks.Head.Helpers.Forge.ProtocolData
     .PostAsync(@"{""priority"": 0, ""nonce_hash"": ""nceUHEe..."", ""proof_of_work_nonce"":  ""00000...""}");
 ```
+
+## Examples
+
+- [Examples of Netezos usage](https://medium.com/tezoscommons/examples-of-netezos-usage-b6c24be3ce8a)
+- [Forge an operation locally and sign it using Ledger](https://medium.com/tezoscommons/netezos-forge-an-operation-locally-and-sign-it-using-ledger-e972b1ca0c7f)
