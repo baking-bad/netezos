@@ -94,7 +94,7 @@ namespace Netezos.Keys
         public static PubKey FromBase58(string base58)
         {
             var curve = Curves.GetCurve(base58.Substring(0, 4));
-            var bytes = Base58.Parse(base58, curve.PrivateKeyPrefix);
+            var bytes = Base58.Parse(base58, curve.PublicKeyPrefix);
 
             return new PubKey(bytes, curve.Kind, true);
         }

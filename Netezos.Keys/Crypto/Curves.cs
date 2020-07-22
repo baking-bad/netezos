@@ -19,12 +19,24 @@ namespace Netezos.Keys.Crypto
             {
                 case "edpk":
                 case "edsk":
+                case "edpk":
+                case "tz1":
+                case "edesk":
+                case "edsig":
                     return new Ed25519();
                 case "sppk":
                 case "spsk":
+                case "sppk":
+                case "tz2":
+                case "spesk":
+                case "spsig":
                     return new Secp256k1();
                 case "p2pk":
                 case "p2sk":
+                case "p2pk":
+                case "tz3":
+                case "p2esk":
+                case "p2sig":
                     return new NistP256();
                 default:
                     throw new ArgumentException("Invalid prefix");

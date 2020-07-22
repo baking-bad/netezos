@@ -50,6 +50,25 @@ namespace Netezos.Forge.Utils
 
             return data;
         }
+        
+        static bool TryVerifyAndRemoveCheckSum(byte[] bytes, out byte[] res)
+        {
+            res = null;
+            if (bytes.Length < 4)
+                return false;
+            
+            var data = bytes.GetBytes(0, bytes.Length - 4);
+
+            var checkSum = CheckSum(data);
+            if (bytes[bytes.Length - 4] != checkSum[0] ||
+                bytes[bytes.Length - 3] != checkSum[1] ||
+                bytes[bytes.Length - 2] != checkSum[2] ||
+                bytes[bytes.Length - 1] != checkSum[3])
+                return false;
+
+            res = data;
+            return true;
+        }
 
         static string EncodePlain(byte[] bytes)
         {
@@ -87,10 +106,47 @@ namespace Netezos.Forge.Utils
             var bytes = bigInt.ToByteArray().Reverse();
             return new byte[cnt].Concat(bytes[0] == 0 ? bytes.GetBytes(1, bytes.Length - 1) : bytes);
         }
+        
+        static bool TryDecodePlain(string base58, out byte[] res)
+        {
+            BigInteger bigInt = 0;
+            res = null;
+
+            foreach (var t in base58)
+            {
+
+                if (Base58Ascii.Length < t)
+                {
+                    return false;
+                }
+                
+                var num = Base58Ascii[t];
+                if (num == 255)
+                    return false;
+                
+                bigInt = bigInt * 58 + num;
+            }
+
+            var cnt = -1;
+            while (base58[++cnt] == '1') { }
+
+            var bytes = bigInt.ToByteArray().Reverse();
+            res = new byte[cnt].Concat(bytes[0] == 0 ? bytes.GetBytes(1, bytes.Length - 1) : bytes);
+            return true;
+        }
 
         public static byte[] Parse(string base58)
         {
             return VerifyAndRemoveCheckSum(DecodePlain(base58));
+        }
+        
+        public static bool TryParse(string base58, out byte[] bytes)
+        {                
+            bytes = null;
+            if (string.IsNullOrWhiteSpace(base58) || base58.Contains(" "))
+                return false;
+
+            return TryDecodePlain(base58, out var data) && TryVerifyAndRemoveCheckSum(data, out bytes);
         }
 
         public static byte[] Parse(string base58, byte[] prefix)
