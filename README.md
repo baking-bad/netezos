@@ -18,7 +18,7 @@ Netezos.Rpc provides an access to the Tezos node via RPC API. There is the main 
 Let's create an instance of the `TezosRpc` class, build a simple query and execute it by calling `GetAsync()` method.
 
 ```cs
-using (var rpc = new TezosRpc("https://mainnet.tezrpc.me"))
+using (var rpc = new TezosRpc("https://mainnet-tezos.giganode.io/"))
 {
     // get the head block
     var head = await rpc.Blocks.Head.GetAsync();
@@ -95,5 +95,5 @@ var protoData = await rpc.Blocks.Head.Helpers.Forge.ProtocolData
 
 ## Examples
 
-- [Examples of Netezos usage](https://medium.com/tezoscommons/examples-of-netezos-usage-b6c24be3ce8a)
-- [Forge an operation locally and sign it using Ledger](https://medium.com/tezoscommons/netezos-forge-an-operation-locally-and-sign-it-using-ledger-e972b1ca0c7f)
+- [Examples of Netezos usage](https://baking-bad.org/blog/2019/11/14/tezos-c-sdk-examples-of-netezos-usage/)
+- [Forge an operation locally and sign it using Ledger](https://baking-bad.org/blog/2019/12/30/tezos-c-sdk-netezos-forge-an-operation-locally-and-sign-it-using-ledger-wallet/)
