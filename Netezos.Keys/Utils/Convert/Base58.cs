@@ -51,6 +51,25 @@ namespace Netezos.Keys.Utils
             return data;
         }
 
+        static bool TryVerifyAndRemoveCheckSum(byte[] bytes, out byte[] res)
+        {
+            res = null;
+            if (bytes.Length < 4)
+                return false;
+            
+            var data = bytes.GetBytes(0, bytes.Length - 4);
+
+            var checkSum = CheckSum(data);
+            if (bytes[bytes.Length - 4] != checkSum[0] ||
+                bytes[bytes.Length - 3] != checkSum[1] ||
+                bytes[bytes.Length - 2] != checkSum[2] ||
+                bytes[bytes.Length - 1] != checkSum[3])
+                return false;
+
+            res = data;
+            return true;
+        }
+
         static string EncodePlain(byte[] bytes)
         {
             var bigInt = new BigInteger((bytes[0] >= 128
@@ -76,6 +95,9 @@ namespace Netezos.Keys.Utils
             BigInteger bigInt = 0;
             for (int i = 0; i < base58.Length; ++i)
             {
+                if (base58[i] >= Base58Ascii.Length)
+                    throw new FormatException($"Invalid Base58 string");
+
                 var num = Base58Ascii[base58[i]];
                 if (num == 255) throw new FormatException($"Invalid Base58 string");
                 bigInt = bigInt * 58 + num;
@@ -86,6 +108,29 @@ namespace Netezos.Keys.Utils
 
             var bytes = bigInt.ToByteArray().Reverse();
             return new byte[cnt].Concat(bytes[0] == 0 ? bytes.GetBytes(1, bytes.Length - 1) : bytes);
+        }
+
+        static bool TryDecodePlain(string base58, out byte[] res)
+        {
+            BigInteger bigInt = 0;
+            res = null;
+
+            for (int i = 0; i < base58.Length; ++i)
+            {
+                if (base58[i] >= Base58Ascii.Length)
+                    return false;
+
+                var num = Base58Ascii[base58[i]];
+                if (num == 255) return false;
+                bigInt = bigInt * 58 + num;
+            }
+
+            var cnt = -1;
+            while (base58[++cnt] == '1') ;
+
+            var bytes = bigInt.ToByteArray().Reverse();
+            res = new byte[cnt].Concat(bytes[0] == 0 ? bytes.GetBytes(1, bytes.Length - 1) : bytes);
+            return true;
         }
 
         public static byte[] Parse(string base58)
@@ -103,6 +148,16 @@ namespace Netezos.Keys.Utils
         {
             var bytes = VerifyAndRemoveCheckSum(DecodePlain(base58));
             return bytes.GetBytes(prefixLength, bytes.Length - prefixLength);
+        }
+
+        public static bool TryParse(string base58, out byte[] bytes)
+        {
+            bytes = null;
+
+            if (string.IsNullOrEmpty(base58))
+                return false;
+
+            return TryDecodePlain(base58, out var data) && TryVerifyAndRemoveCheckSum(data, out bytes);
         }
 
         public static string Convert(byte[] bytes)
