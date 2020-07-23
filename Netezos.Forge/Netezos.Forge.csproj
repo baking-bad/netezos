@@ -14,7 +14,7 @@
     <Authors>Groxan</Authors>
     <Product>Netezos.Forge</Product>
     <Description>.Net Standard 2.0 library for local or remote (RPC) forging of Tezos operations into binary data for subsequent signing</Description>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Copyright>Copyright © Baking Bad 2019</Copyright>
   </PropertyGroup>
 
