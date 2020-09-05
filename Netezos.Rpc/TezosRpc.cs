@@ -14,7 +14,7 @@ namespace Netezos.Rpc
         /// Gets the query to the blocks
         /// </summary>
         public BlocksQuery Blocks { get; }
-        
+
         /// <summary>
         /// Gets the query to the injection
         /// </summary>
@@ -46,6 +46,21 @@ namespace Netezos.Rpc
         public TezosRpc(string uri, int timeout, Chain chain = Rpc.Chain.Main)
         {
             Client = new RpcClient(uri, timeout);
+            Chain = chain.ToString().ToLower();
+
+            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Inject = new InjectionQuery(Client, $"injection/");
+        }
+
+        /// <summary>
+        /// Creates the instance of TezosRpc where the caller injects
+        /// the RpcClient instance.
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="chain"></param>
+        public TezosRpc(RpcClient client, Chain chain = Rpc.Chain.Main)
+        {
+            Client = client;
             Chain = chain.ToString().ToLower();
 
             Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");

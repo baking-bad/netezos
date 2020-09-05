@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Netezos.Rpc
 {
-    class RpcClient : IDisposable
+    public class RpcClient : IDisposable
     {
         public Uri BaseAddress { get; }
         public TimeSpan RequestTimeout { get; }
@@ -53,6 +53,12 @@ namespace Netezos.Rpc
             RequestTimeout = TimeSpan.FromSeconds(timeoutSec);
         }
 
+        public RpcClient(HttpClient httpClient)
+        {
+            _HttpClient = httpClient;
+            _Expiration = DateTime.MaxValue;
+        }
+
         public async Task<JToken> GetJson(string path)
         {
             using (var stream = await HttpClient.GetStreamAsync(path))
@@ -73,7 +79,7 @@ namespace Netezos.Rpc
                 return serializer.Deserialize<T>(jsonReader);
             }
         }
-                
+
         public async Task<JToken> PostJson(string path, string content)
         {
             var response = await HttpClient.PostAsync(path, new JsonContent(content));
@@ -85,8 +91,8 @@ namespace Netezos.Rpc
             {
                 return JToken.ReadFrom(jsonReader);
             }
-        }  
-        
+        }
+
         public async Task<T> PostJson<T>(string path, string content)
         {
             var response = await HttpClient.PostAsync(path, new JsonContent(content));
