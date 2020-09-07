@@ -5,12 +5,16 @@ using Org.BouncyCastle.Crypto.Signers;
 using Org.BouncyCastle.Math;
 
 using Netezos.Keys.Utils.Crypto;
+using Netezos.Keys.Utils;
 
 namespace Netezos.Keys.Crypto
 {
     class Secp256k1 : ICurve
     {
         #region static
+        static readonly BigInteger _Order = new BigInteger(1, Hex.Parse("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141"));
+        static readonly BigInteger _MaxS = new BigInteger(1, Hex.Parse("7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0"));
+
         static readonly byte[] _AddressPrefix = { 6, 161, 161 };
         static readonly byte[] _PublicKeyPrefix = { 3, 254, 226, 86 };
         static readonly byte[] _PrivateKeyPrefix = { 17, 162, 224, 201 };
@@ -50,6 +54,9 @@ namespace Netezos.Keys.Crypto
             var signer = new ECDsaSigner(new HMacDsaKCalculator(new Blake2bDigest(256)));
             signer.Init(true, parameters: key);
             var rs = signer.GenerateSignature(keyedHash);
+
+            if (rs[1].CompareTo(_MaxS) > 0)
+                rs[1] = _Order.Subtract(rs[1]);
             
             var r = rs[0].ToByteArrayUnsigned();
             var s = rs[1].ToByteArrayUnsigned();

@@ -14,8 +14,8 @@
     <Authors>Groxan</Authors>
     <Product>Netezos.Keys</Product>
     <Description>.Net Standard 2.0 library for data signing, signature verification and working with Tezos keys</Description>
-    <Version>1.0.1</Version>
-    <Copyright>Copyright © Baking Bad 2019</Copyright>
+    <Version>1.0.2</Version>
+    <Copyright>Copyright © Baking Bad 2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
