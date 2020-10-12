@@ -1,12 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Netezos.Micheline
+namespace Netezos.Encoding
 {
     public class MichelineString : IMicheline
     {
-        public MichelineNode Type => MichelineNode.String;
+        [JsonIgnore]
+        public MichelineType Type => MichelineType.String;
 
         [JsonPropertyName("string")]
         public string Value { get; set; }
+
+        public MichelineString(string value) => Value = value;
     }
 }

@@ -1,4 +1,4 @@
-﻿using Netezos.Utils;
+﻿using Netezos.Encoding;
 
 namespace Netezos.Keys
 {

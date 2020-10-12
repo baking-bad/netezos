@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Netezos.Utils
+namespace Netezos.Encoding
 {
     public static class Hex
     {

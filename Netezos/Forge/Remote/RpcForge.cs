@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Netezos.Rpc;
+using Netezos.Encoding;
 using Netezos.Forge.Operations;
-using Netezos.Utils;
+using Netezos.Rpc;
 
 namespace Netezos.Forge
 {

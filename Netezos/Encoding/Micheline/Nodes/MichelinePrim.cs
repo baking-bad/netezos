@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Netezos.Micheline
+namespace Netezos.Encoding
 {
     public class MichelinePrim : IMicheline
     {
-        public MichelineNode Type => MichelineNode.Prim;
+        [JsonIgnore]
+        public MichelineType Type => MichelineType.Prim;
 
         [JsonPropertyName("prim")]
         public PrimType Prim { get; set; }
@@ -14,6 +15,6 @@ namespace Netezos.Micheline
         public List<IMicheline> Args { get; set; }
 
         [JsonPropertyName("annots")]
-        public List<string> Annots { get; set; }
+        public List<IAnnotation> Annots { get; set; }
     }
 }

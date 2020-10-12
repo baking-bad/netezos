@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Netezos.Utils;
 
-namespace Netezos.Micheline.Serialization
+namespace Netezos.Encoding.Serialization
 {
     public class MichelineConverter : JsonConverter<IMicheline>
     {
@@ -25,17 +25,17 @@ namespace Netezos.Micheline.Serialization
             if (reader.ValueTextEquals("string"))
             {
                 reader.Read();
-                res = new MichelineString { Value = reader.GetString() };
+                res = new MichelineString(reader.GetString());
             }
             else if (reader.ValueTextEquals("int"))
             {
                 reader.Read();
-                res = new MichelineInt { Value = int.Parse(reader.GetString()) };
+                res = new MichelineInt(int.Parse(reader.GetString()));
             }
             else
             {
                 reader.Read();
-                res = new MichelineBytes { Value = Hex.Parse(reader.GetString()) };
+                res = new MichelineBytes(Hex.Parse(reader.GetString()));
             }
 
             reader.Read();
@@ -44,7 +44,28 @@ namespace Netezos.Micheline.Serialization
 
         public override void Write(Utf8JsonWriter writer, IMicheline value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            if (value is MichelineInt i)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("int", i.Value.ToString());
+                writer.WriteEndObject();
+            }
+            else if (value is MichelineString s)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("string", s.Value);
+                writer.WriteEndObject();
+            }
+            else if (value is MichelineBytes b)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("bytes", Hex.Convert(b.Value));
+                writer.WriteEndObject();
+            }
+            else
+            {
+                JsonSerializer.Serialize(writer, value, value.GetType(), options);
+            }
         }
     }
 }

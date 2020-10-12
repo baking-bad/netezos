@@ -270,8 +270,8 @@ namespace Netezos.Keys
             if (string.IsNullOrWhiteSpace(words))
                 throw new ArgumentNullException(nameof(words));
 
-            var pass = Encoding.UTF8.GetBytes(words);
-            var salt = Encoding.UTF8.GetBytes("mnemonic" + passphrase);
+            var pass = System.Text.Encoding.UTF8.GetBytes(words);
+            var salt = System.Text.Encoding.UTF8.GetBytes("mnemonic" + passphrase);
             return Pbkdf2.ComputeDerivedKey(new HMACSHA512(pass), salt, 2048, 64);
         }
 

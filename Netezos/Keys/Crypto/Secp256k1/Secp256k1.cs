@@ -4,6 +4,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 using Org.BouncyCastle.Math;
 
+using Netezos.Encoding;
 using Netezos.Utils;
 
 namespace Netezos.Keys.Crypto

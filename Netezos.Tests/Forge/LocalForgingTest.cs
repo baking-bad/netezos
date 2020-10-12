@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Netezos.Encoding;
 using Netezos.Forge;
 using Netezos.Forge.Operations;
-using Netezos.Micheline.Serialization;
 using Netezos.Utils;
 using Xunit;
 using Dynamic.Json;
@@ -25,8 +25,7 @@ namespace Netezos.Tests.Forge
                 MaxDepth = 1024,
                 NumberHandling = JsonNumberHandling.AllowReadingFromString
             };
-            options.Converters.Add(new MichelineConverter());
-            options.Converters.Add(new PrimTypeConverter());
+            options.Converters.AddMicheline();
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
 
             var basePath = @"../../../Forge/operations";

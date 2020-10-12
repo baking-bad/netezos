@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Netezos.Forge.Operations;
-using Netezos.Micheline;
+using Netezos.Encoding;
 using Netezos.Utils;
 
 namespace Netezos.Forge
@@ -459,7 +459,7 @@ namespace Netezos.Forge
             else
             {
                 res  = res.Concat(new byte[]{255});
-                res = res.Concat(ForgeArray(Encoding.UTF8.GetBytes(value), 1));
+                res = res.Concat(ForgeArray(System.Text.Encoding.UTF8.GetBytes(value), 1));
             }
 
             return res;
@@ -519,7 +519,7 @@ namespace Netezos.Forge
 
                     if (annotsCnt > 0)
                     {
-                        res.AddRange(ForgeArray(Encoding.UTF8.GetBytes(string.Join(" ", prim.Annots))));
+                        res.AddRange(ForgeArray(System.Text.Encoding.UTF8.GetBytes(string.Join(" ", prim.Annots))));
                     }
 
                     else if (argsCnt == 3)
@@ -541,7 +541,7 @@ namespace Netezos.Forge
 
                 case MichelineString str:
                     res.Add(0x01);
-                    res.AddRange(ForgeArray(Encoding.UTF8.GetBytes(str.Value)));
+                    res.AddRange(ForgeArray(System.Text.Encoding.UTF8.GetBytes(str.Value)));
                     break;
             }
 

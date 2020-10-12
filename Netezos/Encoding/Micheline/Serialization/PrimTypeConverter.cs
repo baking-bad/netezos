@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Netezos.Micheline.Serialization
+namespace Netezos.Encoding.Serialization
 {
     public class PrimTypeConverter : JsonConverter<PrimType>
     {
@@ -135,7 +135,7 @@ namespace Netezos.Micheline.Serialization
 
         public override void Write(Utf8JsonWriter writer, PrimType value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            writer.WriteStringValue(Enum.GetName(typeof(PrimType), value));
         }
     }
 }

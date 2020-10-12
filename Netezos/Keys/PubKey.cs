@@ -2,9 +2,10 @@
 using System.Text;
 using Org.BouncyCastle.Utilities.Encoders;
 
+using Netezos.Encoding;
 using Netezos.Keys.Crypto;
 using Netezos.Utils;
-using Hex = Netezos.Utils.Hex;
+using Hex = Netezos.Encoding.Hex;
 
 namespace Netezos.Keys
 {
@@ -71,7 +72,7 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                var messageBytes = Encoding.UTF8.GetBytes(message);
+                var messageBytes = System.Text.Encoding.UTF8.GetBytes(message);
                 var signatureBytes = Base58.Parse(signature, Curve.SignaturePrefix);
 
                 return Curve.Verify(messageBytes, signatureBytes, Store.Secret);

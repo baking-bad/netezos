@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace Netezos.Utils
+namespace Netezos.Encoding
 {
     public static class Base58
     {

@@ -1,4 +1,4 @@
-﻿namespace Netezos.Micheline
+﻿namespace Netezos.Encoding
 {
     public enum PrimType : byte
     {

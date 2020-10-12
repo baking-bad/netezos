@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Netezos.Micheline;
+using Netezos.Encoding;
 
 namespace Netezos.Forge.Operations
 {
