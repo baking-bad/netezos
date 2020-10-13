@@ -23,8 +23,8 @@ namespace Netezos.Rpc.Queries.Post
                 branch,
                 contents
             });
-        
-        public Task<JToken> PostAsync(string contents)
+
+        public override Task<JToken> PostAsync(string contents)
             => base.PostAsync(contents);
 
         /// <summary>
