@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace Netezos.Rpc.Tests
 
         public TestBlocks()
         {
-            Rpc = new TezosRpc("https://mainnet-tezos.giganode.io/");
+            Rpc = new TezosRpc(new Uri("https://mainnet-tezos.giganode.io/"));
         }
 
         [Fact]

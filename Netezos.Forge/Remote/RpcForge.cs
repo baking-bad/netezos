@@ -14,8 +14,14 @@ namespace Netezos.Forge
     {
         readonly TezosRpc Rpc;
 
+        [Obsolete("Use RpcForge(Uri, TimeSpan, Chain) instead.")]
         public RpcForge(string uri, int timeout = 30_000, Chain chain = Chain.Main)
             => Rpc = new TezosRpc(uri, timeout, chain);
+
+        public RpcForge(Uri baseUri, TimeSpan requestTimeout, Chain chain)
+        {
+            Rpc = new TezosRpc(baseUri, requestTimeout, chain);
+        }
 
         public void Dispose() => Rpc.Dispose();
 

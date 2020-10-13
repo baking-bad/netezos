@@ -11,11 +11,20 @@ namespace Netezos.Rpc
 {
     class RpcClient : IDisposable
     {
-        public Uri BaseAddress { get; }
+        public static readonly TimeSpan HTTP_CLIENT_LIFETIME = TimeSpan.FromHours(2);
+
+        [Obsolete("Use HttpClient.BaseAddress instead.")]
+        public Uri BaseAddress => _BaseUri;
+
         public TimeSpan RequestTimeout { get; }
 
-        DateTime _Expiration;
-        HttpClient _HttpClient;
+        private HttpMessageHandler _Handler { get; }
+
+        private Uri _BaseUri { get; }
+
+        private DateTime _HttpClientCreated { get; set; }
+
+        private HttpClient _HttpClient { get; set; }
 
         protected HttpClient HttpClient
         {
@@ -23,17 +32,13 @@ namespace Netezos.Rpc
             {
                 lock (this)
                 {
-                    if (DateTime.UtcNow > _Expiration)
+                    DateTime now = DateTime.UtcNow;
+                    TimeSpan lifetime = now.Subtract(_HttpClientCreated);
+                    if (lifetime > HTTP_CLIENT_LIFETIME)
                     {
-                        _HttpClient?.Dispose();
-                        _HttpClient = new HttpClient();
-
-                        _HttpClient.BaseAddress = BaseAddress;
-                        _HttpClient.DefaultRequestHeaders.Accept.Add(
-                            new MediaTypeWithQualityHeaderValue("application/json"));
-                        _HttpClient.Timeout = RequestTimeout;
-
-                        _Expiration = DateTime.UtcNow.AddMinutes(120);
+                        _HttpClient.Dispose();
+                        _HttpClient = CreateHttpClient(_Handler, _BaseUri, RequestTimeout);
+                        _HttpClientCreated = now.Add(HTTP_CLIENT_LIFETIME);
                     }
                 }
 
@@ -41,16 +46,31 @@ namespace Netezos.Rpc
             }
         }
 
+        [Obsolete("Use typed RpcClient(Uri, TimeSpan) instead.")]
         public RpcClient(string baseUri, int timeoutSec = 10)
+            : this(new Uri(baseUri), TimeSpan.FromSeconds(timeoutSec))
         {
-            if (string.IsNullOrEmpty(baseUri))
+        }
+
+        public RpcClient(Uri baseUri, TimeSpan requestTimeout)
+            : this(new HttpClientHandler(), baseUri, requestTimeout)
+        {
+        }
+
+        public RpcClient(HttpMessageHandler handler, Uri baseUri, TimeSpan requestTimeout)
+        {
+            if (handler is null)
+                throw new ArgumentNullException(nameof(handler));
+
+            if (baseUri is null)
                 throw new ArgumentNullException(nameof(baseUri));
 
-            if (!Uri.IsWellFormedUriString(baseUri, UriKind.Absolute))
-                throw new ArgumentException("Invalid URI");
+            RequestTimeout = requestTimeout;
+            _Handler = handler;
+            _BaseUri = baseUri;
 
-            BaseAddress = new Uri($"{baseUri.TrimEnd('/')}/");
-            RequestTimeout = TimeSpan.FromSeconds(timeoutSec);
+            _HttpClient = CreateHttpClient(_Handler, _BaseUri, RequestTimeout);
+            _HttpClientCreated = DateTime.UtcNow;
         }
 
         public async Task<JToken> GetJson(string path)
@@ -103,7 +123,21 @@ namespace Netezos.Rpc
 
         public void Dispose()
         {
-            _HttpClient?.Dispose();
+            _HttpClient.Dispose();
+        }
+
+        private static HttpClient CreateHttpClient(HttpMessageHandler handler, Uri baseUri, TimeSpan requestTimeout)
+        {
+            HttpClient client = new HttpClient(handler)
+            {
+                BaseAddress = baseUri,
+                Timeout = requestTimeout,
+            };
+
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            return client;
         }
 
         private async Task EnsureResponceSuccessfull(HttpResponseMessage response)

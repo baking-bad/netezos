@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Netezos.Rpc.Queries;
@@ -10,45 +11,82 @@ namespace Netezos.Rpc
     /// </summary>
     public class TezosRpc : IDisposable
     {
+        public static readonly TimeSpan DEFAULT_REQUEST_TIMEOUT = TimeSpan.FromSeconds(10);
+        public static readonly Chain DEFAULT_CHAIN = Rpc.Chain.Main;
+
         /// <summary>
         /// Gets the query to the blocks
         /// </summary>
         public BlocksQuery Blocks { get; }
-        
+
         /// <summary>
         /// Gets the query to the injection
         /// </summary>
         public InjectionQuery Inject { get; }
 
-        private string Chain { get; }
         private RpcClient Client { get; }
 
-        /// <summary>
-        /// Creates the instanse of TezosRpc
-        /// </summary>
-        /// <param name="uri">Base URI of the node</param>
-        /// <param name="chain">Chain to work with</param>
-        public TezosRpc(string uri, Chain chain = Rpc.Chain.Main)
+        [Obsolete("Use typed TezosRpc(Uri) instead.")]
+        public TezosRpc(string baseUri)
+            : this(new Uri(baseUri))
         {
-            Client = new RpcClient(uri);
-            Chain = chain.ToString().ToLower();
+        }
 
-            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
-            Inject = new InjectionQuery(Client, $"injection/");
+        [Obsolete("Use typed TezosRpc(Uri, Chain) instead.")]
+        public TezosRpc(string baseUri, Chain chain = Rpc.Chain.Main)
+            : this(new Uri(baseUri), chain)
+        {
+        }
+
+        [Obsolete("Use typed TezosRpc(Uri, TimeSpan, Chain) instead.")]
+        public TezosRpc(string baseUri, int requestTimeout, Chain chain = Rpc.Chain.Main)
+            : this(new Uri(baseUri), TimeSpan.FromSeconds(requestTimeout), chain)
+        {
         }
 
         /// <summary>
-        /// Creates the instanse of TezosRpc
+        /// Create a TezosRpc instance using a URI endpoint.
         /// </summary>
-        /// <param name="uri">Base URI of the node</param>
-        /// <param name="timeout">Timeout in seconds for the requests</param>
-        /// <param name="chain">Chain to work with</param>
-        public TezosRpc(string uri, int timeout, Chain chain = Rpc.Chain.Main)
+        /// <param name="baseUri">Base URI of node</param>
+        public TezosRpc(Uri baseUri)
+            : this(baseUri, DEFAULT_CHAIN)
         {
-            Client = new RpcClient(uri, timeout);
-            Chain = chain.ToString().ToLower();
+        }
 
-            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+        /// <summary>
+        /// Create a TezosRpc instance using a URI endpoint and a Chain.
+        /// </summary>
+        /// <param name="baseUri">Base URI of node</param>
+        /// <param name="chain">Chain to work with</param>
+        public TezosRpc(Uri baseUri, Chain chain)
+            : this(baseUri, DEFAULT_REQUEST_TIMEOUT, chain)
+        {
+        }
+
+        /// <summary>
+        /// Create a TezosRpc instance using a URI endpoint, a Chain, and a request timeout.
+        /// </summary>
+        /// <param name="baseUri">Base URI of node</param>
+        /// <param name="requestTimeout">Request timeout</param>
+        /// <param name="chain">Chain to work with</param>
+        public TezosRpc(Uri baseUri, TimeSpan requestTimeout, Chain chain)
+            : this(new HttpClientHandler(), baseUri, requestTimeout, chain)
+        {
+        }
+
+        /// <summary>
+        /// Create a TezosRpc instance.
+        /// </summary>
+        /// <param name="handler">HTTP message handler</param>
+        /// <param name="baseUri">Base URI of node</param>
+        /// <param name="requestTimeout">Request timeout</param>
+        /// <param name="chain">Chain to work with</param>
+        public TezosRpc(HttpMessageHandler handler, Uri baseUri, TimeSpan requestTimeout, Chain chain)
+        {
+            Client = new RpcClient(handler, baseUri, requestTimeout);
+
+            string chainPart = chain.ToString().ToLower();
+            Blocks = new BlocksQuery(Client, $"chains/{chainPart}/blocks/");
             Inject = new InjectionQuery(Client, $"injection/");
         }
 
