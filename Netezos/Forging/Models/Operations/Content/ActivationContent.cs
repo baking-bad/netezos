@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Netezos.Forge.Operations
+namespace Netezos.Forging.Models
 {
     public class ActivationContent : OperationContent
     {

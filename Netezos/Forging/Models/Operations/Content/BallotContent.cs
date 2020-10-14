@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Netezos.Forge.Operations
+namespace Netezos.Forging.Models
 {
     public class BallotContent : OperationContent
     {
@@ -17,13 +17,13 @@ namespace Netezos.Forge.Operations
         public string Proposal { get; set; }
 
         [JsonPropertyName("ballot")]
-        public Ballots Ballot { get; set; }
+        public Ballot Ballot { get; set; }
+    }
 
-        public enum Ballots
-        {
-            Yay = 0,
-            Nay = 1,
-            Pass = 2
-        }
+    public enum Ballot
+    {
+        Yay  = 0,
+        Nay  = 1,
+        Pass = 2
     }
 }

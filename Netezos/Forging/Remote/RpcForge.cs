@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Netezos.Encoding;
-using Netezos.Forge.Operations;
+using Netezos.Forging.Models;
 using Netezos.Rpc;
 
-namespace Netezos.Forge
+namespace Netezos.Forging
 {
-    public class RpcForge : IForge, IDisposable
+    public class RpcForge : IForge
     {
         readonly TezosRpc Rpc;
-
-        public RpcForge(string uri, int timeout = 30, Chain chain = Chain.Main)
-            => Rpc = new TezosRpc(uri, timeout, chain);
-
-        public void Dispose() => Rpc.Dispose();
+        
+        public RpcForge(TezosRpc rpc) => Rpc = rpc;
 
         public Task<byte[]> ForgeOperationAsync(OperationContent content)
             => ForgeAsync(new List<object> { content });

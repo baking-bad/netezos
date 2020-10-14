@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Netezos.Forge.Operations
+namespace Netezos.Forging.Models
 {
     public class ProposalsContent : OperationContent
     {

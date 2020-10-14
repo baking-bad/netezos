@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Netezos.Forge.Operations;
+using Netezos.Forging.Models;
 
-namespace Netezos.Forge
+namespace Netezos.Forging
 {
     public interface IForge
     {

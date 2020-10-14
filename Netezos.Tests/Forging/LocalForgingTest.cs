@@ -6,13 +6,13 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Netezos.Encoding;
-using Netezos.Forge;
-using Netezos.Forge.Operations;
+using Netezos.Forging;
+using Netezos.Forging.Models;
 using Netezos.Utils;
 using Xunit;
 using Dynamic.Json;
 
-namespace Netezos.Tests.Forge
+namespace Netezos.Tests.Forging
 {
     public class LocalForgingTest
     {
@@ -28,7 +28,7 @@ namespace Netezos.Tests.Forge
             options.Converters.AddMicheline();
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
 
-            var basePath = @"../../../Forge/operations";
+            var basePath = @"../../../Forging/operations";
             var directories = Directory.GetDirectories(basePath);
             foreach (var directory in directories)
             {
@@ -60,15 +60,15 @@ namespace Netezos.Tests.Forge
                             "transaction" => (TransactionContent)json.contents[0],
                             "delegation" =>(DelegationContent)json.contents[0],
                             "activate_account" => (ActivationContent)json.contents[0],
-                            "double_baking_evidence" => (DoubleBakingEvidenceContent)json.contents[0],
+                            "double_baking_evidence" => (DoubleBakingContent)json.contents[0],
                             "endorsement" => (EndorsementContent)json.contents[0],
                             "seed_nonce_revelation" => (SeedNonceRevelationContent)json.contents[0],
                             "proposals" => (ProposalsContent)json.contents[0],
                             "ballot" => (BallotContent)json.contents[0],
-                            "double_endorsement_evidence" => (DoubleEndorsementEvidenceContent)json.contents[0],
+                            "double_endorsement_evidence" => (DoubleEndorsementContent)json.contents[0],
                             _ => throw new ArgumentException("Unknown type")
                         };
-                        
+
                         var opByte = File.ReadAllText($"{directory}/forged.hex");
                         var localByte = await localForge.ForgeOperationAsync(json.branch, c);
                         Assert.True(opByte == Hex.Convert(localByte), $"{directory}");
