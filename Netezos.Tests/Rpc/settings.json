@@ -1,0 +1,7 @@
+{
+  "baseUrl": "https://mainnet-tezos.giganode.io/",
+  "timeout": 60,
+  "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
+  "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",
+  "legacyLevel": 200000
+}
