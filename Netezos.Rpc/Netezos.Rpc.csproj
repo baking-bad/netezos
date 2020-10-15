@@ -14,7 +14,7 @@
     <Authors>Groxan</Authors>
     <Product>Netezos.Rpc</Product>
     <Description>.Net Standard 2.0 library for working with Tezos RPC API</Description>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Copyright>Copyright © Baking Bad 2019</Copyright>
   </PropertyGroup>
 
