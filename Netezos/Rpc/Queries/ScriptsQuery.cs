@@ -4,7 +4,6 @@ namespace Netezos.Rpc.Queries
 {
     public class ScriptsQuery : RpcQuery
     {
-
         /// <summary>
         /// Gets the query to the pack data
         /// </summary>

@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Netezos\Netezos.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Rpc\settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
