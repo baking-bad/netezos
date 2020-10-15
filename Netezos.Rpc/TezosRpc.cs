@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Netezos.Rpc.Queries;
@@ -53,6 +54,20 @@ namespace Netezos.Rpc
         }
 
         /// <summary>
+        /// Creates the instanse of TezosRpc
+        /// </summary>
+        /// <param name="client">HttpClient instanse that will be used for sending RPC requests.</param>
+        /// <param name="chain">Chain to work with</param>
+        public TezosRpc(HttpClient client, Chain chain = Rpc.Chain.Main)
+        {
+            Client = new RpcClient(client);
+            Chain = chain.ToString().ToLower();
+
+            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Inject = new InjectionQuery(Client, $"injection/");
+        }
+
+        /// <summary>
         /// Sends request and returns the json object
         /// </summary>
         /// <param name="query">Relative path to the RPC method</param>
@@ -70,9 +85,6 @@ namespace Netezos.Rpc
         /// <summary>
         /// Releases the unmanaged resourses and disposes of the managed resources used by the <c>TezosRpc</c>
         /// </summary>
-        public void Dispose()
-        {
-            Client?.Dispose();
-        }
+        public void Dispose() => Client?.Dispose();
     }
 }

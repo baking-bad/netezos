@@ -53,6 +53,12 @@ namespace Netezos.Rpc
             RequestTimeout = TimeSpan.FromSeconds(timeoutSec);
         }
 
+        public RpcClient(HttpClient client)
+        {
+            _HttpClient = client ?? throw new ArgumentNullException(nameof(client));
+            _Expiration = DateTime.MaxValue;
+        }
+
         public async Task<JToken> GetJson(string path)
         {
             using (var stream = await HttpClient.GetStreamAsync(path))
@@ -112,7 +118,7 @@ namespace Netezos.Rpc
             {
                 var message = response.Content.Headers.ContentLength > 0
                     ? await response.Content.ReadAsStringAsync()
-                    : String.Empty;
+                    : string.Empty;
 
                 switch (response.StatusCode)
                 {
