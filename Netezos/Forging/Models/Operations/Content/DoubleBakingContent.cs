@@ -48,6 +48,9 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("proof_of_work_nonce")]
         public string ProofOfWorkNonce { get; set; }
 
+        [JsonPropertyName("seed_nonce_hash")]
+        public string SeedNonceHash { get; set; }
+
         [JsonPropertyName("signature")]
         public string Signature { get; set; }
     }

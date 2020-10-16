@@ -165,7 +165,8 @@ namespace Netezos.Forging
                 Base58.Parse(header.Context, 2),
                 ForgeInt32(header.Priority, 2),
                 Hex.Parse(header.ProofOfWorkNonce),
-                new byte[] { 0 }.Concat(Base58.Parse(header.Signature, 3)));
+                ForgeSeedNonce(header.SeedNonceHash),
+                Base58.Parse(header.Signature, 3));
         }
 
         static byte[] ForgeInlinedEndorsement(InlinedEndorsement op)
@@ -175,6 +176,13 @@ namespace Netezos.Forging
                 ForgeMicheNat((int)OperationTag.Endorsement),
                 ForgeInt32(op.Operations.Level),
                 Base58.Parse(op.Signature, 3));
+        }
+
+        static byte[] ForgeSeedNonce(string nonce)
+        {
+            return nonce == null ? ForgeBool(false) : Concat(
+                ForgeBool(true),
+                Base58.Parse(nonce, 3));
         }
 
         static byte[] ForgeDelegate(string delegat)
