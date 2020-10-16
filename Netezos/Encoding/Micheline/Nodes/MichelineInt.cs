@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Netezos.Encoding
 {
@@ -8,8 +9,8 @@ namespace Netezos.Encoding
         public MichelineType Type => MichelineType.Int;
 
         [JsonPropertyName("int")]
-        public int Value { get; set; }
+        public BigInteger Value { get; set; }
 
-        public MichelineInt(int value) => Value = value;
+        public MichelineInt(BigInteger value) => Value = value;
     }
 }

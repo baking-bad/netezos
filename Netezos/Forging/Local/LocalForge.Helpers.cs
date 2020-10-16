@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Netezos.Encoding;
 
 namespace Netezos.Forging
@@ -137,28 +138,12 @@ namespace Netezos.Forging
             return res.ToArray();
         }
 
-        static byte[] ForgeMicheInt(int value)
+        static byte[] ForgeMicheInt(BigInteger value)
         {
-            var abs = Math.Abs(value);
-            var res = new List<byte>(9);
-            res.Add((byte)(value < 0 ? (abs & 0x3F | 0x40) : (abs & 0x3F)));
-            abs >>= 6;
+            var abs = BigInteger.Abs(value);
+            var res = new List<byte>();
 
-            while (abs > 0)
-            {
-                res[res.Count - 1] |= 0x80;
-                res.Add((byte)(abs & 0x7F));
-                abs >>= 7;
-            }
-
-            return res.ToArray();
-        }
-
-        static byte[] ForgeMicheInt(long value)
-        {
-            var abs = Math.Abs(value);
-            var res = new List<byte>(9);
-            res.Add((byte)(value < 0 ? (abs & 0x3F | 0x40) : (abs & 0x3F)));
+            res.Add((byte)(value.Sign < 0 ? (abs & 0x3F | 0x40) : (abs & 0x3F)));
             abs >>= 6;
 
             while (abs > 0)

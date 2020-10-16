@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Netezos.Utils;
 
 namespace Netezos.Encoding.Serialization
 {
@@ -30,7 +30,7 @@ namespace Netezos.Encoding.Serialization
             else if (reader.ValueTextEquals("int"))
             {
                 reader.Read();
-                res = new MichelineInt(int.Parse(reader.GetString()));
+                res = new MichelineInt(BigInteger.Parse(reader.GetString()));
             }
             else
             {
