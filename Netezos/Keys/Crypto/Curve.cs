@@ -1,19 +1,35 @@
 ﻿using System;
 
-namespace Netezos.Keys.Crypto
+namespace Netezos.Keys
 {
-    static class Curves
+    abstract class Curve
     {
-        public static ICurve GetCurve(ECKind kind)
+        public abstract ECKind Kind { get; }
+
+        public abstract byte[] AddressPrefix { get; }
+        public abstract byte[] PublicKeyPrefix { get; }
+        public abstract byte[] PrivateKeyPrefix { get; }
+        public abstract byte[] SignaturePrefix { get; }
+
+        public abstract byte[] GeneratePrivateKey();
+
+        public abstract byte[] GetPublicKey(byte[] privateKey);
+
+        public abstract Signature Sign(byte[] bytes, byte[] prvKey);
+
+        public abstract bool Verify(byte[] bytes, byte[] signature, byte[] pubKey);
+
+        #region static
+        public static Curve FromKind(ECKind kind)
         {
             return kind == ECKind.Ed25519
                 ? new Ed25519()
                 : kind == ECKind.NistP256
-                    ? (ICurve)new NistP256()
+                    ? (Curve)new NistP256()
                     : new Secp256k1();
         }
 
-        public static ICurve GetCurve(string prefix)
+        public static Curve FromPrefix(string prefix)
         {
             switch (prefix)
             {
@@ -39,5 +55,6 @@ namespace Netezos.Keys.Crypto
                     throw new ArgumentException("Invalid prefix");
             }
         }
+        #endregion
     }
 }

@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Text;
-using Org.BouncyCastle.Utilities.Encoders;
-
 using Netezos.Encoding;
-using Netezos.Keys.Crypto;
-using Netezos.Utils;
-using Hex = Netezos.Encoding.Hex;
 
 namespace Netezos.Keys
 {
@@ -19,7 +13,7 @@ namespace Netezos.Keys
                 {
                     using (Store.Unlock())
                     {
-                        _PubKey = new PubKey(Curve.GetPublicKey(Store.Secret), Curve.Kind, true);
+                        _PubKey = new PubKey(Curve.GetPublicKey(Store.Data), Curve.Kind, true);
                     }
                 }
 
@@ -28,24 +22,26 @@ namespace Netezos.Keys
         }
         PubKey _PubKey;
 
-        readonly ICurve Curve;
+        readonly Curve Curve;
         readonly ISecretStore Store;
 
-        public Key() : this(RNG.GetNonZeroBytes(32), ECKind.Ed25519, true) { } //TODO: check key strength
+        public Key() : this(ECKind.Ed25519) { }
 
-        public Key(ECKind kind) : this(RNG.GetNonZeroBytes(32), kind, true) { } //TODO: check key strength
+        public Key(ECKind kind)
+        {
+            Curve = Curve.FromKind(kind);
+            var bytes = Curve.GeneratePrivateKey();
+            Store = new PlainSecretStore(bytes);
+            bytes.Flush();
+        }
 
         internal Key(byte[] bytes, ECKind kind, bool flush = false)
         {
-            if (bytes.Length < 32)
+            if (bytes?.Length != 32)
                 throw new ArgumentException("Invalid private key length", nameof(bytes));
 
-            Curve = Curves.GetCurve(kind);
-            
-            var privateKey = Curve.GetPrivateKey(bytes);
-            Store = new PlainSecretStore(privateKey);
-
-            privateKey.Flush();
+            Curve = Curve.FromKind(kind);
+            Store = new PlainSecretStore(bytes);
             if (flush) bytes.Flush();
         }
 
@@ -53,8 +49,8 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                var bytes = new byte[Store.Secret.Length];
-                Buffer.BlockCopy(Store.Secret, 0, bytes, 0, Store.Secret.Length);
+                var bytes = new byte[Store.Data.Length];
+                Buffer.BlockCopy(Store.Data, 0, bytes, 0, Store.Data.Length);
                 return bytes;
             }
         }
@@ -63,7 +59,7 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                return Base58.Convert(Store.Secret, Curve.PrivateKeyPrefix);
+                return Base58.Convert(Store.Data, Curve.PrivateKeyPrefix);
             }
         }
 
@@ -71,7 +67,7 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                return Curve.Sign(bytes, Store.Secret);
+                return Curve.Sign(bytes, Store.Data);
             }
         }
 
@@ -79,7 +75,7 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                return Curve.Sign(System.Text.Encoding.UTF8.GetBytes(message), Store.Secret);
+                return Curve.Sign(System.Text.Encoding.UTF8.GetBytes(message), Store.Data);
             }
         }
 
@@ -97,24 +93,38 @@ namespace Netezos.Keys
             => new Key(Hex.Parse(hex), kind, true);
 
         public static Key FromBase64(string base64, ECKind kind = ECKind.Ed25519)
-            => new Key(Base64.Decode(base64), kind, true);
+            => new Key(Base64.Parse(base64), kind, true);
 
         public static Key FromBase58(string base58)
         {
-            var curve = Curves.GetCurve(base58.Substring(0, 4));
+            var curve = Curve.FromPrefix(base58.Substring(0, 4));
             var bytes = Base58.Parse(base58, curve.PrivateKeyPrefix);
-
             return new Key(bytes, curve.Kind, true);
         }
 
         public static Key FromMnemonic(Mnemonic mnemonic)
-            => new Key(mnemonic.GetSeed(), ECKind.Ed25519, true);
+        {
+            var seed = mnemonic.GetSeed();
+            var key = new Key(seed.GetBytes(0, 32), ECKind.Ed25519, true);
+            seed.Flush();
+            return key;
+        }
 
         public static Key FromMnemonic(Mnemonic mnemonic, string email, string password)
-            => new Key(mnemonic.GetSeed($"{email}{password}"), ECKind.Ed25519, true);
+        {
+            var seed = mnemonic.GetSeed($"{email}{password}");
+            var key = new Key(seed.GetBytes(0, 32), ECKind.Ed25519, true);
+            seed.Flush();
+            return key;
+        }
 
         public static Key FromMnemonic(Mnemonic mnemonic, string passphrase, ECKind kind = ECKind.Ed25519)
-            => new Key(mnemonic.GetSeed(passphrase), kind, true);
+        {
+            var seed = mnemonic.GetSeed(passphrase);
+            var key = new Key(seed.GetBytes(0, 32), ECKind.Ed25519, true);
+            seed.Flush();
+            return key;
+        }
         #endregion
     }
 }

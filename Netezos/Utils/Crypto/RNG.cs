@@ -5,7 +5,12 @@ namespace Netezos.Utils
 {
     public static class RNG
     {
-        private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
+        static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
+
+        public static void WriteBytes(byte[] dest)
+        {
+            Rng.GetBytes(dest);
+        }
 
         public static byte[] GetBytes(int length)
         {
@@ -13,6 +18,7 @@ namespace Netezos.Utils
             Rng.GetBytes(buf);
             return buf;
         }
+
         public static byte[] GetNonZeroBytes(int length)
         {
             var buf = new byte[length];

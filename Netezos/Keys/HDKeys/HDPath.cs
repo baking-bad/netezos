@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Netezos.Keys.HDKeys
 {
-    class ExtPubKey
+    class HDPath
     {
+        //TODO: implement hierarchical deterministic keys
     }
 }

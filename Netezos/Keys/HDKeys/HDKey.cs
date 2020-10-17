@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Netezos.Keys.HDKeys
 {
-    class KeyPath
+    class HDKey
     {
+        //TODO: implement hierarchical deterministic keys
     }
 }

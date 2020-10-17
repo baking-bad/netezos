@@ -1,12 +1,11 @@
-﻿using System;
-using Netezos.Utils;
-using Org.BouncyCastle.Crypto.Parameters;
+﻿using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 using BcEd25519 = Org.BouncyCastle.Math.EC.Rfc8032.Ed25519;
+using Netezos.Utils;
 
-namespace Netezos.Keys.Crypto
+namespace Netezos.Keys
 {
-    class Ed25519 : ICurve
+    class Ed25519 : Curve
     {
         #region static
         static readonly byte[] _AddressPrefix = { 6, 161, 159 };
@@ -15,23 +14,19 @@ namespace Netezos.Keys.Crypto
         static readonly byte[] _SignaturePrefix = { 9, 245, 205, 134, 18 };
         #endregion
 
-        public ECKind Kind => ECKind.Ed25519;
+        public override ECKind Kind => ECKind.Ed25519;
 
-        public byte[] AddressPrefix => _AddressPrefix;
-        public byte[] PublicKeyPrefix => _PublicKeyPrefix;
-        public byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
-        public byte[] SignaturePrefix => _SignaturePrefix;
+        public override byte[] AddressPrefix => _AddressPrefix;
+        public override byte[] PublicKeyPrefix => _PublicKeyPrefix;
+        public override byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
+        public override byte[] SignaturePrefix => _SignaturePrefix;
 
-        public byte[] GetPrivateKey(byte[] bytes)
+        public override byte[] GeneratePrivateKey()
         {
-            var result = new byte[64];
-            Buffer.BlockCopy(bytes, 0, result, 0, 32);
-            BcEd25519.GeneratePublicKey(result, 0, result, 32);
-
-            return result;
+            return RNG.GetBytes(32);
         }
 
-        public byte[] GetPublicKey(byte[] privateKey)
+        public override byte[] GetPublicKey(byte[] privateKey)
         {
             var publicKey = new byte[32];
             BcEd25519.GeneratePublicKey(privateKey, 0, publicKey, 0);
@@ -39,7 +34,7 @@ namespace Netezos.Keys.Crypto
             return publicKey;
         }
 
-        public Signature Sign(byte[] msg, byte[] prvKey)
+        public override Signature Sign(byte[] msg, byte[] prvKey)
         {
             var digest = Blake2b.GetDigest(msg);
             var privateKey = new Ed25519PrivateKeyParameters(prvKey, 0);
@@ -47,19 +42,19 @@ namespace Netezos.Keys.Crypto
 
             signer.Init(true, privateKey);
             signer.BlockUpdate(digest, 0, digest.Length);
-            
+
             return new Signature(signer.GenerateSignature(), _SignaturePrefix);
         }
 
-        public bool Verify(byte[] msg, byte[] sig, byte[] pubKey)
+        public override bool Verify(byte[] msg, byte[] sig, byte[] pubKey)
         {
-            var keyedHash = Blake2b.GetDigest(msg);
+            var digest = Blake2b.GetDigest(msg);
             var publicKey = new Ed25519PublicKeyParameters(pubKey, 0);
             var verifier = new Ed25519Signer();
 
             verifier.Init(false, publicKey);
-            verifier.BlockUpdate(keyedHash, 0, keyedHash.Length);
-            
+            verifier.BlockUpdate(digest, 0, digest.Length);
+
             return verifier.VerifySignature(sig);
         }
     }

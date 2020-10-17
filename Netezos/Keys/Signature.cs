@@ -21,8 +21,8 @@ namespace Netezos.Keys
 
         public override string ToString() => ToBase58();
 
-        public static implicit operator byte[](Signature s) => s.ToBytes();
+        public static implicit operator byte[] (Signature s) => s.ToBytes();
         
-        public static implicit operator string(Signature s) => s.ToBase58();
+        public static implicit operator string (Signature s) => s.ToBase58();
     }
 }

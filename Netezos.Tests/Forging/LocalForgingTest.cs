@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Netezos.Encoding;
 using Netezos.Forging;
 using Netezos.Forging.Models;
-using Netezos.Utils;
 using Xunit;
 using Dynamic.Json;
 

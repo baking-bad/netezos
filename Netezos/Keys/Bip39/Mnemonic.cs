@@ -14,7 +14,7 @@ namespace Netezos.Keys
         public Mnemonic(MnemonicSize size)
         {
             var entropy = RNG.GetNonZeroBytes((int)size * 4 / 3);
-            var words = Bip39.ToMnemonic(entropy);
+            var words = Bip39.GetMnemonic(entropy);
 
             Sentence = string.Join(" ", words);
         }
@@ -23,9 +23,9 @@ namespace Netezos.Keys
 
         public Mnemonic(IEnumerable<string> words) => Sentence = string.Join(" ", words);
 
-        public byte[] GetSeed() => Bip39.ToSeed(Sentence);
+        public byte[] GetSeed() => Bip39.GetSeed(Sentence);
 
-        public byte[] GetSeed(string passphrase) => Bip39.ToSeed(Sentence, passphrase);
+        public byte[] GetSeed(string passphrase) => Bip39.GetSeed(Sentence, passphrase);
 
         public override string ToString() => Sentence;
 

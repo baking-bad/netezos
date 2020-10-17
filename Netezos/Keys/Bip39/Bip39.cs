@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-
 using Netezos.Utils;
 
 namespace Netezos.Keys
@@ -198,8 +196,11 @@ namespace Netezos.Keys
             "wrist", "write", "wrong", "yard", "year", "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
         };
 
-        public static byte[] ToEntropy(IEnumerable<string> words)
+        public static byte[] GetEntropy(IEnumerable<string> words)
         {
+            if (words == null)
+                throw new ArgumentNullException(nameof(words));
+
             if (!words.Any())
                 throw new ArgumentException("Word list is empty");
 
@@ -217,7 +218,7 @@ namespace Netezos.Keys
                 int index = WordList.BinarySearch(word);
 
                 if (index < 0)
-                    throw new Exception($"Invalid mnemonic word '{word}'");
+                    throw new ArgumentException($"Invalid mnemonic word '{word}'");
 
                 concatBits[(wordIndex * 11) + 0] = (byte)(index >> 10 & 1);
                 concatBits[(wordIndex * 11) + 1] = (byte)(index >> 9 & 1);
@@ -265,7 +266,7 @@ namespace Netezos.Keys
             return entropy;
         }
 
-        public static byte[] ToSeed(string words, string passphrase = "")
+        public static byte[] GetSeed(string words, string passphrase = "")
         {
             if (string.IsNullOrWhiteSpace(words))
                 throw new ArgumentNullException(nameof(words));
@@ -275,7 +276,7 @@ namespace Netezos.Keys
             return Pbkdf2.ComputeDerivedKey(new HMACSHA512(pass), salt, 2048, 64);
         }
 
-        public static List<string> ToMnemonic(byte[] entropy)
+        public static List<string> GetMnemonic(byte[] entropy)
         {
             if (entropy == null || entropy.Length == 0)
                 throw new ArgumentException("Entropy is empty");

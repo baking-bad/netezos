@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Netezos.Keys
+﻿namespace Netezos.Keys
 {
     interface ISecretStore
     {
-        byte[] Secret { get; }
+        byte[] Data { get; }
 
         void Lock();
         StoreLocker Unlock();
