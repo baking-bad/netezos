@@ -11,9 +11,9 @@ namespace Netezos.Tests.Keys
         [Fact]
         public void TestKey()
         {
-            var key = new Key();
-
-            Assert.NotNull(key);
+            var key1 = new Key(ECKind.Ed25519);
+            var key2 = new Key(ECKind.NistP256);
+            var key3 = new Key(ECKind.Secp256k1);
         }
     }
 }
