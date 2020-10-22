@@ -43,11 +43,14 @@ namespace Netezos.Encoding
 
         public static byte[] Parse(string hex)
         {
-            if (String.IsNullOrEmpty(hex))
+            if (hex == null)
                 throw new ArgumentNullException(nameof(hex));
 
             if (hex.Length % 2 > 0)
                 throw new FormatException("Invalid hex string");
+
+            if (hex.Length == 0)
+                return Array.Empty<byte>();
 
             var pos = hex[0] == '0' && hex[1] == 'x' ? 2 : 0;
             byte[] bytes = new byte[(hex.Length - pos) >> 1];
@@ -70,11 +73,17 @@ namespace Netezos.Encoding
         {
             bytes = null;
 
-            if (String.IsNullOrEmpty(hex))
+            if (hex == null)
                 return false;
 
             if (hex.Length % 2 > 0)
                 return false;
+
+            if (hex.Length == 0)
+            {
+                bytes = Array.Empty<byte>();
+                return true;
+            }
 
             var pos = hex[0] == '0' && hex[1] == 'x' ? 2 : 0;
             bytes = new byte[(hex.Length - pos) >> 1];
