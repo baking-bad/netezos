@@ -4,6 +4,18 @@ namespace Netezos
 {
     static class BytesExtension
     {
+        public static byte[] Align(this byte[] src, int length)
+        {
+            if (src.Length < length)
+            {
+                var res = new byte[length];
+                Buffer.BlockCopy(src, 0, res, length - src.Length, src.Length);
+                return res;
+            }
+
+            return src;
+        }
+
         public static byte[] Concat(this byte[] src, byte[] data)
         {
             byte[] res = new byte[src.Length + data.Length];

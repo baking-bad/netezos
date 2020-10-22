@@ -38,7 +38,7 @@ namespace Netezos.Keys
         {
             var curve = SecNamedCurves.GetByName("secp256k1");
             var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
-            var key = new ECPrivateKeyParameters(new BigInteger(privateKey), parameters);
+            var key = new ECPrivateKeyParameters(new BigInteger(1, privateKey), parameters);
 
             var q = key.Parameters.G.Multiply(key.D);
             return q.GetEncoded(true);
@@ -48,7 +48,7 @@ namespace Netezos.Keys
         {
             var curve = SecNamedCurves.GetByName("secp256k1");
             var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
-            var privateKey = new ECPrivateKeyParameters(new BigInteger(prvKey), parameters);
+            var privateKey = new ECPrivateKeyParameters(new BigInteger(1, prvKey), parameters);
             var signer = new ECDsaSigner(new HMacDsaKCalculator(new Blake2bDigest(256)));
 
             signer.Init(true, privateKey);
@@ -57,8 +57,8 @@ namespace Netezos.Keys
             if (rs[1].CompareTo(curve.N.Divide(BigInteger.Two)) > 0)
                 rs[1] = curve.N.Subtract(rs[1]);
 
-            var r = rs[0].ToByteArrayUnsigned();
-            var s = rs[1].ToByteArrayUnsigned();
+            var r = rs[0].ToByteArrayUnsigned().Align(32);
+            var s = rs[1].ToByteArrayUnsigned().Align(32);
 
             return new Signature(r.Concat(s), _SignaturePrefix);
         }
