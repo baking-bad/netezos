@@ -1,0 +1,87 @@
+[
+  {
+    "raw": {
+      "entrypoint": "default",
+      "value": {
+        "prim": "Right",
+        "args": [
+          {
+            "prim": "Right",
+            "args": [
+              {
+                "prim": "Right",
+                "args": [
+                  {
+                    "prim": "Right",
+                    "args": [
+                      {
+                        "prim": "Left",
+                        "args": [
+                          {
+                            "prim": "Right",
+                            "args": [
+                              {
+                                "prim": "Right",
+                                "args": [
+                                  {
+                                    "prim": "Left",
+                                    "args": [
+                                      {
+                                        "prim": "Pair",
+                                        "args": [
+                                          { "bytes": "00009472982d7f6b096bc57d6da95e0b8ec8ee37e72f" },
+                                          {
+                                            "prim": "Pair",
+                                            "args": [
+                                              { "bytes": "0000bf97f5f1dbfd6ada0cf986d0a812f1bf0a572abc" },
+                                              { "int": "10000" }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "human": {
+      "entrypoint": "transfer",
+      "value": {
+        "from": "tz1ZAwyfujwED4yUhQAtc1eqm4gW5u2Xiw77",
+        "to": "tz1d75oB6T4zUMexzkr5WscGktZ1Nss1JrT7",
+        "value": "10000"
+      }
+    }
+  },
+  {
+    "raw": {
+      "entrypoint": "getBalance",
+      "value": {
+        "prim": "Pair",
+        "args": [
+          { "string": "tz1WXK2yWvAhaFdXEjsXuHenfgfDr9mqWiBw" },
+          { "string": "KT1NhtHwHD5cqabfSdwg1Fowud5f175eShwx" }
+        ]
+      }
+    },
+    "human": {
+      "entrypoint": "getBalance",
+      "value": {
+        "owner": "tz1WXK2yWvAhaFdXEjsXuHenfgfDr9mqWiBw",
+        "contract": "KT1NhtHwHD5cqabfSdwg1Fowud5f175eShwx"
+      }
+    }
+  }
+]

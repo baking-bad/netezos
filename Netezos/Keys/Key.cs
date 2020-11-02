@@ -75,7 +75,7 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                return Curve.Sign(System.Text.Encoding.UTF8.GetBytes(message), Store.Data);
+                return Curve.Sign(Utf8.Parse(message), Store.Data);
             }
         }
 
@@ -121,7 +121,7 @@ namespace Netezos.Keys
         public static Key FromMnemonic(Mnemonic mnemonic, string passphrase, ECKind kind = ECKind.Ed25519)
         {
             var seed = mnemonic.GetSeed(passphrase);
-            var key = new Key(seed.GetBytes(0, 32), ECKind.Ed25519, true);
+            var key = new Key(seed.GetBytes(0, 32), kind, true);
             seed.Flush();
             return key;
         }

@@ -46,7 +46,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeString(string value, int len = 4)
         {
-            return ForgeInt32(value.Length, len).Concat(System.Text.Encoding.UTF8.GetBytes(value));
+            return ForgeInt32(value.Length, len).Concat(Utf8.Parse(value));
         }
 
         static byte[] ForgePublicKey(string value)

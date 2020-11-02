@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using Netezos.Encoding;
 using Netezos.Utils;
 
 namespace Netezos.Keys
@@ -271,8 +272,8 @@ namespace Netezos.Keys
             if (string.IsNullOrWhiteSpace(words))
                 throw new ArgumentNullException(nameof(words));
 
-            var pass = System.Text.Encoding.UTF8.GetBytes(words);
-            var salt = System.Text.Encoding.UTF8.GetBytes("mnemonic" + passphrase);
+            var pass = Utf8.Parse(words);
+            var salt = Utf8.Parse("mnemonic" + passphrase);
             return Pbkdf2.ComputeDerivedKey(new HMACSHA512(pass), salt, 2048, 64);
         }
 
