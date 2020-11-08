@@ -8,8 +8,10 @@ namespace Netezos.Contracts
 {
     public class Contract
     {
+        public ParameterSchema Parameter { get; }
+        public StorageSchema Storage { get; }
+
         public Dictionary<string, Schema> Entrypoints { get; }
-        public Schema Storage { get; }
         public Tzip Standards { get; }
 
         public Contract(IMicheline micheline)
@@ -17,25 +19,22 @@ namespace Netezos.Contracts
             if (!(micheline is MichelineArray array) || array.Count != 3)
                 throw new FormatException("Invalid micheline");
 
-            #region entrypoints
-            var parameters = array.FirstOrDefault(x => (x as MichelinePrim)?.Prim == PrimType.parameter) as MichelinePrim
+            var parameter = array.FirstOrDefault(x => (x as MichelinePrim)?.Prim == PrimType.parameter) as MichelinePrim
                 ?? throw new FormatException("Invalid micheline parameters");
 
-            var defaultSchema = Schema.Create(parameters.Args[0] as MichelinePrim);
-            Entrypoints = new Dictionary<string, Schema> { { "default", defaultSchema } };
-
-            var annot = parameters.Annots?.FirstOrDefault(x => x.Type == AnnotationType.Field);
-            if (annot != null && annot.Value.Length > 0)
-                Entrypoints[annot.Value] = defaultSchema;
-
-            ExtractEntrypoints(defaultSchema);
-            #endregion
-
-            #region storage
             var storage = array.FirstOrDefault(x => (x as MichelinePrim)?.Prim == PrimType.storage) as MichelinePrim
                 ?? throw new FormatException("Invalid micheline storage");
 
-            Storage = Schema.Create(storage.Args[0] as MichelinePrim);
+            Parameter = new ParameterSchema(parameter);
+            Storage = new StorageSchema(storage);
+
+            #region entrypoints
+            Entrypoints = new Dictionary<string, Schema> { { "default", Parameter.Schema } };
+
+            if (Parameter.Field?.Length > 0)
+                Entrypoints[Parameter.Field] = Parameter.Schema;
+
+            ExtractEntrypoints(Parameter.Schema);
             #endregion
 
             //TODO: check for implemented standards
