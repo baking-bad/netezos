@@ -32,6 +32,16 @@ namespace Netezos.Tests.Keys
         }
 
         [Fact]
+        public void TestBIP32Key()
+        {
+        }
+
+        [Fact]
+        public void TestSLIP10Key()
+        {
+        }
+
+        [Fact]
         public void TestSecp256k1()
         {
             foreach (var sample in DJson.Read(@"..\..\..\Keys\Samples\secp256k1.json"))
