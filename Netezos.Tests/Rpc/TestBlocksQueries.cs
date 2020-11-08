@@ -8,7 +8,7 @@ namespace Netezos.Tests.Rpc
     public class TestBlocksQueries
     {
         readonly TezosRpc Rpc;
-
+        
         public TestBlocksQueries()
         {
             var settings = DJson.Read("Rpc/settings.json");
@@ -18,85 +18,102 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestBlockHash()
         {
-            string hash = await Rpc.Blocks.Head.Hash.GetAsync();
+            var query =  Rpc.Blocks.Head.Hash;
+            Assert.Equal($"chains/main/blocks/head/hash/", query.ToString());
 
-            Assert.NotNull(hash);
-            Assert.True(hash.Length == 51);
+            var res = await query.GetAsync();
+            Assert.True(res.ToString().Length == 51);
+            Assert.True(res is DJsonValue);
         }
 
         [Fact]
         public async Task TestBlockHeader()
         {
-            var header = await Rpc.Blocks.Head.Header.GetAsync();
+            var query = Rpc.Blocks.Head.Header;
+            Assert.Equal($"chains/main/blocks/head/header/", query.ToString());
 
-            Assert.NotNull(header);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]
         public async Task TestBlockHeaderProtocolData()
         {
-            var protocolData = await Rpc.Blocks.Head.Header.ProtocolData.GetAsync();
+            var query = Rpc.Blocks.Head.Header.ProtocolData;
+            Assert.Equal($"chains/main/blocks/head/header/protocol_data/", query.ToString());
 
-            Assert.NotNull(protocolData);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]
         public async Task TestBlockHeaderProtocolDataRaw()
         {
-            var pdRaw = await Rpc.Blocks.Head.Header.ProtocolData.Raw.GetAsync();
+            var query =  Rpc.Blocks.Head.Header.ProtocolData.Raw;
+            Assert.Equal($"chains/main/blocks/head/header/protocol_data/raw/", query.ToString());
 
-            Assert.NotNull(pdRaw);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
         }
 
         [Fact]
         public async Task TestBlockHeaderShell()
         {
-            var headerShell = await Rpc.Blocks.Head.Header.Shell.GetAsync();
+            var query = Rpc.Blocks.Head.Header.Shell;
+            Assert.Equal($"chains/main/blocks/head/header/shell/", query.ToString());
 
-            Assert.NotNull(headerShell);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]
         public async Task TestBlockHeaderRaw()
         {
-            var headerRaw = await Rpc.Blocks.Head.Header.Raw.GetAsync();
+            var query = Rpc.Blocks.Head.Header.Raw;
+            Assert.Equal($"chains/main/blocks/head/header/raw/", query.ToString());
 
-            Assert.NotNull(headerRaw);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
         }
 
         [Fact]
         public async Task TestBlockMetadata()
         {
-            var metaData = await Rpc.Blocks.Head.Metadata.GetAsync();
+            var query = Rpc.Blocks.Head.Metadata;
+            Assert.Equal($"chains/main/blocks/head/metadata/", query.ToString());
 
-            Assert.NotNull(metaData);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]
         public async Task TestBlockLiveBlocks()
         {
-            var liveBlocks = await Rpc.Blocks.Head.LiveBlocks.GetAsync();
+            var query = Rpc.Blocks.Head.LiveBlocks;
+            Assert.Equal($"chains/main/blocks/head/live_blocks/", query.ToString());
 
-            Assert.NotNull(liveBlocks);
-            Assert.True(liveBlocks.Count >= 0);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
         }
 
         [Fact]
         public async Task TestBlockOperationHashaes()
         {
-            var OperationHashes = await Rpc.Blocks.Head.OperationsHashes.GetAsync();
+            var query = Rpc.Blocks.Head.OperationsHashes;
+            Assert.Equal($"chains/main/blocks/head/operation_hashes/", query.ToString());
 
-            Assert.NotNull(OperationHashes);
-            Assert.True(OperationHashes.Count >= 0);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
         }
 
         [Fact]
         public async Task TestBlockOperations()
         {
-            var operation = await Rpc.Blocks.Head.Operations.GetAsync();
+            var query = Rpc.Blocks.Head.Operations;
+            Assert.Equal($"chains/main/blocks/head/operations/", query.ToString());
 
-            Assert.NotNull(operation);
-            Assert.True(operation.Count >= 0);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
         }
     }
 }
