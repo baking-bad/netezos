@@ -18,25 +18,31 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestHelpersBakingRights()
         {
-            var BakingRights = await Rpc.Blocks.Head.Helpers.BakingRights.GetAsync();
+            var query = Rpc.Blocks.Head.Helpers.BakingRights;
+            Assert.Equal($"chains/main/blocks/head/helpers/baking_rights/", query.ToString());
 
-            Assert.NotNull(BakingRights);
-            Assert.True(BakingRights.Count >= 0);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
         }
 
         [Fact]
         public async Task TestHelpersEndorsingRights()
         {
-            var endorsingRights = await Rpc.Blocks.Head.Helpers.EndorsingRights.GetAsync();
+            var query = Rpc.Blocks.Head.Helpers.EndorsingRights;
+            Assert.Equal($"chains/main/blocks/head/helpers/endorsing_rights/", query.ToString());
 
-            Assert.NotNull(endorsingRights);
-            Assert.True(endorsingRights.Count >= 0);
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
         }
 
         [Fact]
         public async Task TestHelpersForgeBlockHeader()
         {
-            //Add Rpc.Blocks.Head.Helpers.Forge.BlockHeader
+            /*var query = Rpc.Blocks.Head.Helpers.Forge.BlockHeader;
+            Assert.Equal($"chains/main/blocks/head/helpers/forge_block_header/", query.ToString());
+
+            var res = await query.PostAsync();
+            Assert.True(res is DJsonObject);*/
         }
 
         [Fact]
