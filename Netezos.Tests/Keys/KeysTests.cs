@@ -7,14 +7,20 @@ using System.Text.Json;
 using Xunit;
 using System.Linq;
 using Netezos.Encoding;
+using Dynamic.Json;
+using Netezos.Rpc;
 
 namespace Netezos.Tests.Keys
 {
+  
     public class KeysTests
     {
-        string publicKeyHashesPath = @"C:\Users\lesha\OneDrive\Рабочий стол\Baking Bad\keys\public_key_hashs";
-        string secretKeysPath = @"C:\Users\lesha\OneDrive\Рабочий стол\Baking Bad\keys\secret_keys";
-        string publicKeysPath = @"C:\Users\lesha\OneDrive\Рабочий стол\Baking Bad\keys\public_keys";
+        string publicKeyHashesPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), 
+                "Keys/public_key_hashes.json");
+        string secretKeysPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(),
+                "Keys/secret_key.json");
+        string publicKeysPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(),
+                "Keys/public_keys.json");
 
         [Fact]
         public void TestKey()
@@ -60,11 +66,12 @@ namespace Netezos.Tests.Keys
         [Fact]
         public async Task TestSignature()
         {
-            var signaturePath = @"C:\Users\lesha\OneDrive\Рабочий стол\Baking Bad\signature.txt";
-            var addressSign = await File.ReadAllTextAsync(signaturePath);
-            var signatureList = JsonSerializer.Deserialize<List<SignatureKeys>>(addressSign);
+           // var signaturePath = @"signature.txt";
+            var signature = DJson.Read("Keys/signature.json");
+           // var addressSign = await File.ReadAllTextAsync(signaturePath);
+            //var signatureList = JsonSerializer.Deserialize<List<SignatureKeys>>(addressSign);
 
-            foreach (var item in signatureList)
+            foreach (var item in signature)
             {
                 Console.WriteLine(item.Value);
                 var key = Key.FromBase58(item.Value);
