@@ -7,21 +7,13 @@ using System.Text.Json;
 using Xunit;
 using System.Linq;
 using Netezos.Encoding;
-using Dynamic.Json;
-using Netezos.Rpc;
+
 
 namespace Netezos.Tests.Keys
 {
-  
+
     public class KeysTests
     {
-        string publicKeyHashesPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), 
-                "Keys/public_key_hashes.json");
-        string secretKeysPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(),
-                "Keys/secret_key.json");
-        string publicKeysPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(),
-                "Keys/public_keys.json");
-
         [Fact]
         public void TestKey()
         {
@@ -33,10 +25,10 @@ namespace Netezos.Tests.Keys
         [Fact]
         public async Task TestPublicKeyHashes()
         {
-            var addressPkH = await File.ReadAllTextAsync(publicKeyHashesPath);
-            var addressSkP = await File.ReadAllTextAsync(secretKeysPath);
-            var publicKeyHashesList = JsonSerializer.Deserialize<List<GeneratedKeys>>(addressPkH);
-            var secretKeysList = JsonSerializer.Deserialize<List<GeneratedKeys>>(addressSkP);
+            var publicKeyHashes = await File.ReadAllTextAsync("Keys/public_key_hashes.json");
+            var secretKey = await File.ReadAllTextAsync("Keys/secret_keys.json");
+            var publicKeyHashesList = JsonSerializer.Deserialize<List<GeneratedKeys>>(publicKeyHashes);
+            var secretKeysList = JsonSerializer.Deserialize<List<GeneratedKeys>>(secretKey);
 
             foreach (var item in publicKeyHashesList)
             {
@@ -49,10 +41,10 @@ namespace Netezos.Tests.Keys
         [Fact]
         public async Task TestPublicKeys()
         {
-            var addressPk = await File.ReadAllTextAsync(publicKeysPath);
-            var addressSkP = await File.ReadAllTextAsync(secretKeysPath);
-            var publicKeysList = JsonSerializer.Deserialize<List<GeneratedKeys>>(addressPk);
-            var secretKeysList = JsonSerializer.Deserialize<List<GeneratedKeys>>(addressSkP);
+            var publicKeys = await File.ReadAllTextAsync("Keys/public_keys.json");
+            var secretKey = await File.ReadAllTextAsync("Keys/secret_keys.json");
+            var publicKeysList = JsonSerializer.Deserialize<List<GeneratedKeys>>(publicKeys);
+            var secretKeysList = JsonSerializer.Deserialize<List<GeneratedKeys>>(secretKey);
 
             foreach (var item in publicKeysList)
             {
@@ -66,12 +58,10 @@ namespace Netezos.Tests.Keys
         [Fact]
         public async Task TestSignature()
         {
-           // var signaturePath = @"signature.txt";
-            var signature = DJson.Read("Keys/signature.json");
-           // var addressSign = await File.ReadAllTextAsync(signaturePath);
-            //var signatureList = JsonSerializer.Deserialize<List<SignatureKeys>>(addressSign);
 
-            foreach (var item in signature)
+            var signature = await File.ReadAllBytesAsync("Keys/signature.json");
+            var signatureList = JsonSerializer.Deserialize<List<SignatureKeys>>(signature);
+            foreach (var item in signatureList)
             {
                 Console.WriteLine(item.Value);
                 var key = Key.FromBase58(item.Value);
