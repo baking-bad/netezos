@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Security.Cryptography;
 
 namespace Netezos.Keys
 {
@@ -10,7 +9,10 @@ namespace Netezos.Keys
 
         public override byte[] GenerateMasterKey(Curve curve, byte[] seed)
         {
-            throw new NotImplementedException();
+            using (HMACSHA512 hmacSha512 = new HMACSHA512(curve.SeedKey))
+            {
+                return hmacSha512.ComputeHash(seed);
+            }
         }
 
         public override byte[] GetChildPrivateKey(Curve curve, byte[] extKey, uint index)

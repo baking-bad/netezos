@@ -12,6 +12,7 @@ namespace Netezos.Keys
         static readonly byte[] _PublicKeyPrefix = { 13, 15, 37, 217 };
         static readonly byte[] _PrivateKeyPrefix = { 13, 15, 58, 7 };
         static readonly byte[] _SignaturePrefix = { 9, 245, 205, 134, 18 };
+        static readonly byte[] _SeedKey = { 101, 100, 50, 53, 53, 49, 57, 32, 115, 101, 101, 100 }; // "ed25519 seed"
         #endregion
 
         public override ECKind Kind => ECKind.Ed25519;
@@ -20,6 +21,7 @@ namespace Netezos.Keys
         public override byte[] PublicKeyPrefix => _PublicKeyPrefix;
         public override byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
         public override byte[] SignaturePrefix => _SignaturePrefix;
+        public override byte[] SeedKey => _SeedKey;
 
         public override byte[] GeneratePrivateKey()
         {

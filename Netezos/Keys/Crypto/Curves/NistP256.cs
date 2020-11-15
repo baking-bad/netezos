@@ -14,6 +14,7 @@ namespace Netezos.Keys
         static readonly byte[] _PublicKeyPrefix = { 3, 178, 139, 127 };
         static readonly byte[] _PrivateKeyPrefix = { 16, 81, 238, 189 };
         static readonly byte[] _SignaturePrefix = { 54, 240, 44, 52 };
+        static readonly byte[] _SeedKey = { 78, 105, 115, 116, 50, 53, 54, 112, 49, 32, 115, 101, 101, 100 }; // "Nist256p1 seed"
         #endregion
 
         public override ECKind Kind => ECKind.NistP256;
@@ -22,6 +23,7 @@ namespace Netezos.Keys
         public override byte[] PublicKeyPrefix => _PublicKeyPrefix;
         public override byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
         public override byte[] SignaturePrefix => _SignaturePrefix;
+        public override byte[] SeedKey => _SeedKey;
 
         public override byte[] GeneratePrivateKey()
         {
