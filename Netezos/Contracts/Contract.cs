@@ -8,11 +8,9 @@ namespace Netezos.Contracts
 {
     public class Contract
     {
+        public Dictionary<string, Schema> Entrypoints { get; }
         public ParameterSchema Parameter { get; }
         public StorageSchema Storage { get; }
-
-        public Dictionary<string, Schema> Entrypoints { get; }
-        public Tzip Standards { get; }
 
         public Contract(IMicheline micheline)
         {
@@ -28,17 +26,12 @@ namespace Netezos.Contracts
             Parameter = new ParameterSchema(parameter);
             Storage = new StorageSchema(storage);
 
-            #region entrypoints
             Entrypoints = new Dictionary<string, Schema> { { "default", Parameter.Schema } };
 
             if (Parameter.Field?.Length > 0)
                 Entrypoints[Parameter.Field] = Parameter.Schema;
 
             ExtractEntrypoints(Parameter.Schema);
-            #endregion
-
-            //TODO: check for implemented standards
-            Standards = Tzip.None;
         }
 
         public (string, IMicheline) NormalizeParameters(string entrypoint, IMicheline value)
