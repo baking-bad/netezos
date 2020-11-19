@@ -38,11 +38,8 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestHelpersForgeBlockHeader()
         {
-            /*var query = Rpc.Blocks.Head.Helpers.Forge.BlockHeader;
-            Assert.Equal($"chains/main/blocks/head/helpers/forge_block_header/", query.ToString());
-
-            var res = await query.PostAsync();
-            Assert.True(res is DJsonObject);*/
+            //Add Rpc.Blocks.Head.Helpers.Forge.BlockHeader;
+            
         }
 
         [Fact]
