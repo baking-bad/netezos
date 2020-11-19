@@ -267,12 +267,12 @@ namespace Netezos.Tests.Rpc
 
         [Fact]
         public async Task TestContextSeed()
-        {/*
+        {
             var query = Rpc.Blocks.Head.Context.Seed;
             Assert.Equal($"chains/main/blocks/head/context/seed/", query.ToString());
 
-            var res = await query.PostAsync();
-            Assert.True(res is DJsonObject);*/
+            var res = await query.PostAsync(query);
+            Assert.True(res is DJsonValue);
         }
     }
 }
