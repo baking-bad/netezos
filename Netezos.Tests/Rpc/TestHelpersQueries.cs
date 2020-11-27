@@ -2,17 +2,24 @@
 using Dynamic.Json;
 using Netezos.Rpc;
 using Xunit;
+using System.Collections.Generic;
+using System;
 
 namespace Netezos.Tests.Rpc
 {
     public class TestHelpersQueries
     {
         readonly TezosRpc Rpc;
+        readonly string TestDelegate;
+        readonly string PublicKey;
+
 
         public TestHelpersQueries()
         {
             var settings = DJson.Read("Rpc/settings.json");
             Rpc = new TezosRpc(settings.BaseUrl);
+            TestDelegate = settings.TestDelegate;
+            PublicKey = settings.PublicKey;
         }
 
         [Fact]
@@ -38,80 +45,126 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestHelpersForgeBlockHeader()
         {
-            //Add Rpc.Blocks.Head.Helpers.Forge.BlockHeader;
-            
+            var query = Rpc.Blocks.Head.Helpers.Forge.BlockHeader;
+            Assert.Equal("chains/main/blocks/head/helpers/forge_block_header/", 
+                query.ToString());
+
         }
 
         [Fact]
         public async Task TestHelpersForgeProtocolData()
         {
-            //Add Rpc.Blocks.Head.Helpers.Forge.ProtocolData
+            var query = Rpc.Blocks.Head.Helpers.Forge.ProtocolData;
+            Assert.Equal("chains/main/blocks/head/helpers/forge/protocol_data/",
+                query.ToString());
+
         }
 
         [Fact]
         public async Task TestHelpersForgeOperations()
         {
-            //Add Rpc.Blocks.Head.Helpers.Forge.Operations
+            var query = Rpc.Blocks.Head.Helpers.Forge.Operations;
+            Assert.Equal("chains/main/blocks/head/helpers/forge/operations/",
+                query.ToString());
+
+            var branch = await Rpc.Blocks.Head.Hash.GetAsync<string>();
+            var content = new List<object>
+            {
+                new
+                {
+                    kind = "activate_account",
+                    pkh = "tz1SMAJFAuXyTJ9MttBsLdQQ4idwFAvofi65",
+                    secret = "161b264d37a2b5f4103939de53a57b3dee284d38",
+                }
+            };
+
+            var res = await query.PostAsync(branch, content);
+            Assert.True(res is DJsonValue);
+
         }
 
         [Fact]
         public async Task TestHelpersParseBlock()
         {
-            //Add Rpc.Blocks.Head.Helpers.Parse.Block
+            var query = Rpc.Blocks.Head.Helpers.Parse.Block;
+            Assert.Equal("chains/main/blocks/head/helpers/parse/block/",
+                query.ToString());
+
         }
 
         [Fact]
         public async Task TestHelpersParseOperations()
         {
-            //Add Rpc.Blocks.Head.Helpers.Parse.Operations
+            var query = Rpc.Blocks.Head.Helpers.Parse.Operations;
+            Assert.Equal("chains/main/blocks/head/helpers/parse/operations/",
+                query.ToString());
+
         }
+
 
         [Fact]
         public async Task TestHelpersPreapplyBlock()
         {
-            //Add Rpc.Blocks.Head.Helpers.Preapply.Block
+            var query = Rpc.Blocks.Head.Helpers.Preapply.Block;
+            Assert.Equal("chains/main/blocks/head/helpers/preapply/block",
+                query.ToString());
+
         }
 
         [Fact]
         public async Task TestHelpersPreapplyOperations()
         {
-            //Add Rpc.Blocks.Head.Helpers.Preapply.Operations
+            var query = Rpc.Blocks.Head.Helpers.Preapply.Operations;
+            Assert.Equal("chains/main/blocks/head/helpers/preapply/operations",
+                query.ToString());
         }
 
         [Fact]
         public async Task TestHelpersScriptsPackData()
         {
-            //Add Rpc.Blocks.Head.Helpers.Scripts.PackData
+            var query = Rpc.Blocks.Head.Helpers.Scripts.PackData;
+            Assert.Equal("chains/main/blocks/head/helpers/scripts/pack_data/",
+                query.ToString());
         }
 
         [Fact]
         public async Task TestHelpersScriptsRunCode()
         {
-            //Add Rpc.Blocks.Head.Helpers.Scripts.RunCode
+            var query = Rpc.Blocks.Head.Helpers.Scripts.RunCode;
+            Assert.Equal("chains/main/blocks/head/helpers/scripts/run_code/",
+                query.ToString());
         }
 
         [Fact]
         public async Task TestHelpersScriptsRunOperation()
         {
-            //Add Rpc.Blocks.Head.Helpers.Scripts.RunOperation
+            var query = Rpc.Blocks.Head.Helpers.Scripts.RunOperation;
+            Assert.Equal("chains/main/blocks/head/helpers/scripts/run_operation/",
+                query.ToString());
         }
 
         [Fact]
         public async Task TestHelpersScriptsTraceCode()
         {
-            //Add Rpc.Blocks.Head.Helpers.Scripts.TraceCode
+            var query = Rpc.Blocks.Head.Helpers.Scripts.TraceCode;
+            Assert.Equal("chains/main/blocks/head/helpers/scripts/trace_code/",
+                query.ToString());
         }
 
         [Fact]
         public async Task TestHelpersScriptsTypeCheckCode()
         {
-            //Add Rpc.Blocks.Head.Helpers.Scripts.TypeCheckCode
+            var query = Rpc.Blocks.Head.Helpers.Scripts.TypeCheckCode;
+            Assert.Equal("chains/main/blocks/head/helpers/scripts/typecheck_code/",
+                query.ToString());
         }
 
         [Fact]
         public async Task TestHelpersScriptsTypeCheckData()
         {
-            //Add Rpc.Blocks.Head.Helpers.Scripts.TypeCheckData
+            var query = Rpc.Blocks.Head.Helpers.Scripts.TypeCheckData;
+            Assert.Equal("chains/main/blocks/head/helpers/scripts/typecheck_data/",
+                query.ToString());
         }
     }
 }
