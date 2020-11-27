@@ -160,7 +160,12 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
-            //Also test GetAsync(DelegateStatus.Active) and GetAsync(DelegateStatus.Inactive)
+
+            var deleegateActiveRes = await query.GetAsync(DelegateStatus.Active);
+            Assert.True(deleegateActiveRes is DJsonArray);
+
+            var delegateInactiveRes = await query.GetAsync(DelegateStatus.Inactive);
+            Assert.True(delegateInactiveRes is DJsonArray);
         }
 
         [Fact]
