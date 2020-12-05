@@ -1,26 +1,21 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Dynamic.Json;
 using Netezos.Rpc;
 using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestContextQueries
+    public class TestContextQueries : IClassFixture<SettingsFixture>
     {
         readonly TezosRpc Rpc;
         readonly string TestContract;
         readonly string TestDelegate;
-        readonly int? LegacyLevel;
 
-        public TestContextQueries()
+        public TestContextQueries(SettingsFixture settings)
         {
-            var settings = DJson.Read("Rpc/settings.json");
-
-            Rpc = new TezosRpc(settings.BaseUrl);
+            Rpc = settings.Rpc;
             TestContract = settings.TestContract;
             TestDelegate = settings.TestDelegate;
-            LegacyLevel = settings.LegacyLevel;
         }
 
         [Fact]
@@ -74,16 +69,13 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextContractDelegatable()
+        public void TestContextContractDelegatable()
         {
-            if (LegacyLevel != null)
-            {
-                var query = Rpc.Blocks[Convert.ToInt32(LegacyLevel)].Context.Contracts[TestContract].Delegatable;
-                Assert.Equal($"chains/main/blocks/{LegacyLevel}/context/contracts/{TestContract}/delegatable/", query.ToString());
+            //var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Delegatable;
+            //Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/delegatable/", query.ToString());
 
-                var res = await query.GetAsync();
-                Assert.True(res is DJsonValue);
-            }
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -97,16 +89,13 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextContractManager()
+        public void TestContextContractManager()
         {
-            if (LegacyLevel != null)
-            {
-                var query = Rpc.Blocks[Convert.ToInt32(LegacyLevel)].Context.Contracts[TestDelegate].Manager;
-                Assert.Equal($"chains/main/blocks/{LegacyLevel}/context/contracts/{TestDelegate}/manager/", query.ToString());
+            //var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].Manager;
+            //Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/manager/", query.ToString());
 
-                var res = await query.GetAsync();
-                Assert.True(res is DJsonValue);
-            }
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -130,16 +119,13 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextContractSpendable()
+        public void TestContextContractSpendable()
         {
-            if (LegacyLevel != null)
-            {
-                var query = Rpc.Blocks[Convert.ToInt32(LegacyLevel)].Context.Contracts[TestDelegate].Spendable;
-                Assert.Equal($"chains/main/blocks/{LegacyLevel}/context/contracts/{TestDelegate}/spendable/", query.ToString());
+            //var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].Spendable;
+            //Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/spendable/", query.ToString());
 
-                var res = await query.GetAsync();
-                Assert.True(res is DJsonValue);
-            }
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -261,10 +247,8 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestContextNonces()
         {
-            var head = await Rpc.Blocks.Head.Header.GetAsync();
-            int level = head.level;
-            var query = Rpc.Blocks.Head.Context.Nonces[level];
-            Assert.Equal($"chains/main/blocks/head/context/nonces/{level}/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Nonces[1234]; // specific block level is required
+            Assert.Equal($"chains/main/blocks/head/context/nonces/{1234}/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
@@ -273,7 +257,7 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestContextSeed()
         {
-            var query = Rpc.Blocks.Head.Context.Seed;
+            var query = Rpc.Blocks.Head.Context.Seed; // this is a POST request
             Assert.Equal($"chains/main/blocks/head/context/seed/", query.ToString());
 
             var res = await query.PostAsync(query);

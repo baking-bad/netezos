@@ -1,34 +1,23 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Dynamic.Json;
 using Netezos.Rpc;
 using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestRawContextQueries
+    public class TestRawContextQueries : IClassFixture<SettingsFixture>
     {
         readonly TezosRpc Rpc;
         readonly string TestContract;
         readonly string TestDelegate;
-        readonly string InactiveDelegate;
-        readonly int? LegacyLevel;
-        readonly int index;
-        readonly int RollsIndex;
-        readonly int cycle;
+        readonly string TestInactive;
 
-        public TestRawContextQueries()
+        public TestRawContextQueries(SettingsFixture settings)
         {
-            var settings = DJson.Read("Rpc/settings.json");
-
-            Rpc = new TezosRpc(settings.BaseUrl, settings.timeout);
+            Rpc = settings.Rpc;
             TestContract = settings.TestContract;
             TestDelegate = settings.TestDelegate;
-            InactiveDelegate = settings.InactiveDelegate;
-            LegacyLevel = settings.LegacyLevel;
-            index = settings.index;
-            RollsIndex = settings.RollsIndex;
-            cycle = settings.cycle;
+            TestInactive = settings.TestInactive;
         }
 
         [Fact]
@@ -50,14 +39,11 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
 
-            var delegat = (string)res[0];
+            var query2 = Rpc.Blocks.Head.Context.Raw.ActiveDelegates[res[0]];
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/active_delegates_with_rolls/{res[0]}/", query2.ToString());
 
-            var subQuery = Rpc.Blocks.Head.Context.Raw.ActiveDelegates[delegat];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/active_delegates_with_rolls/{delegat}/",
-                subQuery.ToString());
-
-            var subRes = await subQuery.GetAsync();
-            Assert.True(subRes is DJsonValue);
+            var res2 = await query2.GetAsync();
+            Assert.True(res2 is DJsonValue);
         }
 
         [Fact]
@@ -94,30 +80,27 @@ namespace Netezos.Tests.Rpc
         public async Task TestRawContextContractBalance()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].Balance;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/balance/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/balance/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
 
         [Fact]
-        public async Task TestRawContextContractBigMap()
+        public void TestRawContextContractBigMap()
         {
-            var query = Rpc.Blocks[Convert.ToInt32(LegacyLevel)].Context.Raw.Contracts[TestContract].BigMap;
-            Assert.Equal($"chains/main/blocks/{LegacyLevel}/context/raw/json/contracts/index/{TestContract}/big_map/",
-                query.ToString());
+            var query = Rpc.Blocks[123].Context.Raw.Contracts[TestContract].BigMap; // specific level is required
+            Assert.Equal($"chains/main/blocks/123/context/raw/json/contracts/index/{TestContract}/big_map/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonArray);
         }
 
         [Fact]
         public async Task TestRawContextContractCode()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestContract].Code;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestContract}/code/", 
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestContract}/code/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
@@ -127,8 +110,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestRawContextContractChange()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].Change;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/change/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/change/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -138,31 +120,27 @@ namespace Netezos.Tests.Rpc
         public async Task TestRawContextContractCounter()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].Counter;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/counter/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/counter/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
 
         [Fact]
-        public async Task TestRawContextContractDelegatable()
+        public void TestRawContextContractDelegatable()
         {
-            string Contract = "KT1WJ1tKARGLmEhrUyLyTUjXdBfaEQQjyvkZ";
-            var query = Rpc.Blocks[Convert.ToInt32(LegacyLevel)].Context.Raw.Contracts[Contract].Delegatable;
-            Assert.Equal($"chains/main/blocks/{LegacyLevel}/context/raw/json/contracts/index/{Contract}/delegatable/", 
-                query.ToString());
+            //var query = Rpc.Blocks.Head.Context.Raw.Contracts[addr].Delegatable;
+            //Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{addr}/delegatable/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]
         public async Task TestRawContextContractDelegate()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].Delegate;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/delegate/", 
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/delegate/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -172,8 +150,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestRawContextContractDelegateDesactivation()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].DelegateDesactivation;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/delegate_desactivation/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/delegate_desactivation/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -182,10 +159,8 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestRawContextContractInactiveDelegate()
         {
-            var query = Rpc.Blocks.Head.Context.Raw.Contracts[InactiveDelegate].InactiveDelegate;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{InactiveDelegate}/inactive_delegate/",
-                query.ToString());
-
+            var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestInactive].InactiveDelegate;
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestInactive}/inactive_delegate/", query.ToString());
 
            var res = await query.GetAsync();
            Assert.True(res is DJsonValue);
@@ -195,8 +170,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestRawContextContractDelegated()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].Delegated;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/delegated/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/delegated/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
@@ -236,31 +210,27 @@ namespace Netezos.Tests.Rpc
         public async Task TestRawContextContractRollList()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].RollList;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/roll_list/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/roll_list/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
 
         [Fact]
-        public async Task TestRawContextContractSpendable()
+        public void TestRawContextContractSpendable()
         {
-            var Contract = "KT1WJ1tKARGLmEhrUyLyTUjXdBfaEQQjyvkZ";
-            var query = Rpc.Blocks[Convert.ToInt32(LegacyLevel)].Context.Raw.Contracts[Contract].Spendable;
-            Assert.Equal($"chains/main/blocks/{LegacyLevel}/context/raw/json/contracts/index/{Contract}/spendable/",
-                query.ToString());
+            //var query = Rpc.Blocks.Head.Context.Raw.Contracts[addr].Spendable;
+            //Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{addr}/spendable/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]
         public async Task TestRawContextContractStorage()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestContract].Storage;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestContract}/storage/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestContract}/storage/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
@@ -270,8 +240,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestRawContextContractUsedBytes()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestContract].UsedBytes;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestContract}/used_bytes/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestContract}/used_bytes/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -288,53 +257,53 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestRawContextCycle()
+        public void TestRawContextCycle()
         {
-            var query = Rpc.Blocks.Head.Context.Raw.Cycles[cycle];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/{cycle}/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Raw.Cycles[123]; // specific cycle is required
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/123/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonObject);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonObject);
         }
 
         [Fact]
-        public async Task TestRawContextCycleLastRoll()
+        public void TestRawContextCycleLastRoll()
         {
-            var query = Rpc.Blocks.Head.Context.Raw.Cycles[cycle].LastRoll;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/{cycle}/last_roll/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Raw.Cycles[123].LastRoll; // specific cycle is required
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/123/last_roll/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonArray);
         }
 
         [Fact]
-        public async Task TestRawContextCycleNonces()
+        public void TestRawContextCycleNonces()
         {
-            var query = Rpc.Blocks.Head.Context.Raw.Cycles[cycle].Nonces;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/{cycle}/nonces/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Raw.Cycles[123].Nonces; // specific cycle is required
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/123/nonces/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonArray);
         }
 
         [Fact]
-        public async Task TestRawContextRandomSeed()
+        public void TestRawContextRandomSeed()
         {
-            var query = Rpc.Blocks.Head.Context.Raw.Cycles[cycle].RandomSeed;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/{cycle}/random_seed/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Raw.Cycles[123].RandomSeed; // specific cycle is required
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/123/random_seed/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]
-        public async Task TestRawContextRollSnapshot()
+        public void TestRawContextRollSnapshot()
         {
-            var query = Rpc.Blocks.Head.Context.Raw.Cycles[cycle].RollSnapshot;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/{cycle}/roll_snapshot/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Raw.Cycles[123].RollSnapshot; // specific cycle is required
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/cycle/123/roll_snapshot/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -346,49 +315,44 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
 
-            var subQuery = Rpc.Blocks.Head.Context.Raw.Delegates[TestDelegate];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates/{TestDelegate}/", subQuery.ToString());
+            var query2 = Rpc.Blocks.Head.Context.Raw.Delegates[TestDelegate];
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates/{TestDelegate}/", query2.ToString());
 
-            var subRes = await subQuery.GetAsync();
-            Assert.True(subRes is DJsonValue);
+            var res2 = await query2.GetAsync();
+            Assert.True(res2 is DJsonValue);
         }
 
         [Fact]
         public async Task TestRawContextDelegatesWithFrozenBalance()
         {
             var query = Rpc.Blocks.Head.Context.Raw.DelegatesWithFrozenBalance;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
 
-            var cycle = (string)res[0];
-            var cycleQuery = Rpc.Blocks.Head.Context.Raw.DelegatesWithFrozenBalance[Convert.ToInt32(cycle)];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/{cycle}/",
-                cycleQuery.ToString());
+            var cycleQuery = Rpc.Blocks.Head.Context.Raw.DelegatesWithFrozenBalance[res[0]];
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/{res[0]}/", cycleQuery.ToString());
 
             var cycleRes = await cycleQuery.GetAsync();
             Assert.True(cycleRes is DJsonArray);
 
-            var delegat = (string)cycleRes[0];
-            var delegatQuery = Rpc.Blocks.Head.Context.Raw.DelegatesWithFrozenBalance[Convert.ToInt32(cycle)][delegat];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/{cycle}/{delegat}/", 
-                delegatQuery.ToString());
+            var delegateQuery = Rpc.Blocks.Head.Context.Raw.DelegatesWithFrozenBalance[res[0]][cycleRes[0]];
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/{res[0]}/{cycleRes[0]}/", delegateQuery.ToString());
 
-            var delegatRes = await delegatQuery.GetAsync();
-            Assert.True(delegatRes is DJsonValue);
+            var delegateRes = await delegateQuery.GetAsync();
+            Assert.True(delegateRes is DJsonValue);
 
         }
 
         [Fact]
-        public async Task TestRawContextLastBlockPriority()
+        public void TestRawContextLastBlockPriority()
         {
-            var query = Rpc.Blocks[Convert.ToInt32(LegacyLevel)].Context.Raw.LastBlockPriority;
-            Assert.Equal($"chains/main/blocks/{LegacyLevel}/context/raw/json/last_block_priority/", query.ToString());
+            //var query = Rpc.Blocks.Head.Context.Raw.LastBlockPriority;
+            //Assert.Equal($"chains/main/blocks/head/context/raw/json/last_block_priority/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -450,34 +414,29 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
 
-            var indexRes = await Rpc.Blocks.Head.Context.Raw.Rolls.OwnerCurrent[RollsIndex].GetAsync();
-            Assert.True(indexRes is DJsonValue);
-
         }
 
         [Fact]
         public async Task TestRawContextRollsOwnerSnapshot()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Rolls.OwnerSnapshot;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/rolls/owner/snapshot/",
-                query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/rolls/owner/snapshot/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
         }
 
         [Fact]
-        public async Task TestRawContextRollsOwnerSnapshotCycleIndex()
+        public void TestRawContextRollsOwnerSnapshotCycleIndex()
         {
-            var query = Rpc.Blocks.Head.Context.Raw.Rolls.OwnerSnapshot[cycle][index];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/rolls/owner/snapshot/{cycle}/{index}/",
-                query.ToString());
+            var query = Rpc.Blocks.Head.Context.Raw.Rolls.OwnerSnapshot[123][12]; // specific cycle and index are required
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/rolls/owner/snapshot/123/12/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonArray);
         }
 
-            [Fact]
+        [Fact]
         public async Task TestRawContextVotes()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Votes;
@@ -508,13 +467,13 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestRawContextVotesCurrentQuorum()
+        public void TestRawContextVotesCurrentQuorum()
         {
-            var query = Rpc.Blocks[Convert.ToInt32(LegacyLevel)].Context.Raw.Votes.CurrentQuorum;
-            Assert.Equal($"chains/main/blocks/{LegacyLevel}/context/raw/json/votes/current_quorum/", query.ToString());
+            var query = Rpc.Blocks[123].Context.Raw.Votes.CurrentQuorum; // specific level is required
+            Assert.Equal($"chains/main/blocks/123/context/raw/json/votes/current_quorum/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]

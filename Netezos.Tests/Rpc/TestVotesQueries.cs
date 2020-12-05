@@ -1,21 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Dynamic.Json;
 using Netezos.Rpc;
 using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestVotesQueries
+    public class TestVotesQueries : IClassFixture<SettingsFixture>
     {
         readonly TezosRpc Rpc;
-        readonly int? LegacyLevel;
 
-        public TestVotesQueries()
+        public TestVotesQueries(SettingsFixture settings)
         {
-            var settings = DJson.Read("Rpc/settings.json");
-            Rpc = new TezosRpc(settings.BaseUrl);
-            LegacyLevel = settings.LegacyLevel;
+            Rpc = settings.Rpc;
         }
 
         [Fact]
@@ -49,13 +45,13 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestVotesCurrentProposal()
+        public void TestVotesCurrentProposal()
         {
-            var query = Rpc.Blocks[1200000].Votes.CurrentProposals;
-            Assert.Equal($"chains/main/blocks/1200000/votes/current_proposal/", query.ToString());
+            var query = Rpc.Blocks[123].Votes.CurrentProposals; // specific level is required
+            Assert.Equal($"chains/main/blocks/123/votes/current_proposal/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            //var res = await query.GetAsync();
+            //Assert.True(res is DJsonValue);
         }
 
         [Fact]

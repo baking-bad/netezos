@@ -1,12 +1,6 @@
 {
-    "baseUrl": "https://mainnet-tezos.giganode.io/",
-    "timeout": 60,
-    "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
-    "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",
-    "inactiveDelegate": "tz1bR8MFMyWSa428KRQcdShZFu9C4gEA4iFd",
-    "public_key": "p2pk65wfU8noaZcC7y1Qji9Nca222em4hicip7oBcSaM8iQS3tSBGym",
-    "legacyLevel": 200000,
-    "index": 513000,
-    "cycle": 298,
-    "rollsIndex": 113
+  "node": "https://mainnet-tezos.giganode.io/",
+  "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
+  "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",
+  "testInactive": "tz1bR8MFMyWSa428KRQcdShZFu9C4gEA4iFd"
 }

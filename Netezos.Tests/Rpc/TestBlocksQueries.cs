@@ -5,14 +5,13 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestBlocksQueries
+    public class TestBlocksQueries : IClassFixture<SettingsFixture>
     {
         readonly TezosRpc Rpc;
-        
-        public TestBlocksQueries()
+
+        public TestBlocksQueries(SettingsFixture settings)
         {
-            var settings = DJson.Read("Rpc/settings.json");
-            Rpc = new TezosRpc(settings.BaseUrl);
+            Rpc = settings.Rpc;
         }
 
         [Fact]
@@ -22,7 +21,6 @@ namespace Netezos.Tests.Rpc
             Assert.Equal($"chains/main/blocks/head/hash/", query.ToString());
 
             var res = await query.GetAsync();
-            Assert.True(res.ToString().Length == 51);
             Assert.True(res is DJsonValue);
         }
 

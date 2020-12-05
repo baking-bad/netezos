@@ -59,7 +59,7 @@ namespace Netezos.Rpc
             }
         }
 
-        public RpcClient(string baseUri, int timeoutSec = 50)
+        public RpcClient(string baseUri, int timeoutSec = 30)
         {
             if (string.IsNullOrEmpty(baseUri))
                 throw new ArgumentNullException(nameof(baseUri));
