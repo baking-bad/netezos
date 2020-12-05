@@ -1,0 +1,6 @@
+{
+  "node": "https://mainnet-tezos.giganode.io/",
+  "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
+  "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",
+  "testInactive": "tz1bR8MFMyWSa428KRQcdShZFu9C4gEA4iFd"
+}

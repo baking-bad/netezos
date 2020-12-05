@@ -1,4 +1,6 @@
-﻿namespace Netezos.Rpc.Queries
+﻿using System;
+
+namespace Netezos.Rpc.Queries
 {
     /// <summary>
     /// Rpc query to access contract data
@@ -33,6 +35,7 @@
         /// <summary>
         /// Gets the query to the flag, indicating if the contract delegate can be changed
         /// </summary>
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public RpcObject Delegatable => new RpcObject(this, "delegatable/");
 
         /// <summary>
@@ -82,6 +85,7 @@
         /// <summary>
         /// Gets the query to the flag, indocating if the contract tokens can be spent by the manager
         /// </summary>
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public RpcObject Spendable => new RpcObject(this, "spendable/");
 
         /// <summary>

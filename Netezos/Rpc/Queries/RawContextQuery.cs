@@ -1,4 +1,6 @@
-﻿namespace Netezos.Rpc.Queries
+﻿using System;
+
+namespace Netezos.Rpc.Queries
 {
     public class RawContextQuery : DeepRpcObject
     {
@@ -23,6 +25,7 @@
         public DeepRpcDictionary<int, RpcDictionary<string, RpcObject>> DelegatesWithFrozenBalance
             => new DeepRpcDictionary<int, RpcDictionary<string, RpcObject>>(this, "delegates_with_frozen_balance/");
 
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public RpcObject LastBlockPriority
             => new RpcObject(this, "last_block_priority/");
 
