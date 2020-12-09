@@ -3,6 +3,9 @@
 <a href="https://www.nuget.org/packages/Netezos/"><img src="https://img.shields.io/nuget/dt/Netezos.svg" /></a>
 [![License: MIT](https://img.shields.io/github/license/baking-bad/netezos.svg)](https://opensource.org/licenses/MIT)
 
+
+> The first version of the library has been moved to the `v1` branch for historical purposes.
+
 Netezos is a cross-platform Tezos SDK for .NET developers, simplifying the access and interaction with the [Tezos](https://tezos.com/) blockchain.
 
 The following features have been implemented so far:
@@ -14,8 +17,6 @@ The following features have been implemented so far:
 | Netezos.Keys| Working with keys, signing, verifying signature, etc. | Ready to use. HD keys: in progress... |
 | Netezos.Ledger| Interaction with Tezos Ledger App | Ready to use (beta) |
 | Netezos.Rpc | Tezos RPC wrapper | Ready to use |
-
-> The first version of the library has been moved to the `v1` branch for historical purposes.
 
 ### Contribution
 
@@ -44,7 +45,7 @@ var key = new Key();
 var key = Key.FromBase58("edsk4ZkGeBwDyFVjZLL2neV5FUeWNN4NJntFNWmWyEBNbRwa2u3jh1");
 
 // use this address to receive some tez
-var address = key.Address; // tz1SauKgPRsTSuQRWzJA262QR8cKdw1d9pyK
+var address = key.PubKey.Address; // tz1SauKgPRsTSuQRWzJA262QR8cKdw1d9pyK
 ````
 
 ### Get some data from RPC
