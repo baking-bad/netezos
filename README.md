@@ -15,12 +15,14 @@ The following features have been implemented so far:
 | Netezos.Contracts | Interaction with Tezos smart contracts | In progress |
 | Netezos.Forge| Forging (encoding) operation bytes | Ready to use |
 | Netezos.Keys| Working with keys, signing, verifying signature, etc. | Ready to use. HD keys: in progress... |
-| Netezos.Ledger| Interaction with Tezos Ledger App | Ready to use (beta) |
+| Netezos.Ledger| Interaction with Tezos Ledger App | Ready to use (separate package) |
 | Netezos.Rpc | Tezos RPC wrapper | Ready to use |
 
 ### Contribution
 
-Netezos is an open development project so any contribution is highly appreciated, starting from documentation improvements, writing examples of usage, etc. and ending with adding new features (as long as these features do not break existing API or are only intended for one person and for very specific use case). Do not hesitate to open issues and pull requests.
+Netezos is an open development project so any contribution is highly appreciated, starting from documentation improvements, writing examples of usage, etc. and ending with adding new features (as long as these features do not break existing API or are only intended for one person and for very specific use case).
+
+Do not hesitate to use [GitHub issue tracker](https://github.com/baking-bad/netezos/issues) to report bugs or request features.
 
 ### Support
 
@@ -96,7 +98,7 @@ var bytes = await new LocalForge().ForgeOperationGroupAsync(head, content);
 
 ````cs
 // sign the operation bytes
-byte[] signature = key2.SignOperation(bytes);
+byte[] signature = key.SignOperation(bytes);
 
 // inject the operation and get its id (operation hash)
 var result = await rpc.Inject.Operation.PostAsync(bytes.Concat(signature));
