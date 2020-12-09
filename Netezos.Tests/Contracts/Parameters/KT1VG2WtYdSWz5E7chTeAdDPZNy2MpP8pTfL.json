@@ -1,0 +1,65 @@
+[
+  {
+    "raw": {
+      "entrypoint": "default",
+      "value": {
+        "prim": "Left",
+        "args": [
+          {
+            "prim": "Left",
+            "args": [
+              {
+                "prim": "Pair",
+                "args": [
+                  { "string": "tz1NtyYYfMne4HJ763ShzaSKexv6t2cP3GUJ" },
+                  {
+                    "prim": "Pair",
+                    "args": [
+                      {
+                        "prim": "Pair",
+                        "args": [
+                          { "bytes": "db30a83473247ef9c36960c8f809b88bebf31511ee758425e70dfc9644b77c1e" },
+                          { "int": "1604202602" }
+                        ]
+                      },
+                      { "int": "0" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "human": {
+      "entrypoint": "initiate",
+      "value": {
+        "participant": "tz1NtyYYfMne4HJ763ShzaSKexv6t2cP3GUJ",
+        "settings": {
+          "hashed_secret": "db30a83473247ef9c36960c8f809b88bebf31511ee758425e70dfc9644b77c1e",
+          "refund_time": "2020-11-01T03:50:02Z",
+          "payoff": "0"
+        }
+      }
+    }
+  },
+  {
+    "raw": {
+      "entrypoint": "default",
+      "value": {
+        "prim": "Right",
+        "args": [
+          {
+            "prim": "Left",
+            "args": [ { "bytes": "f55dc9bef3a53b9099a525e97e1bd353b4947da35af87724c7f23d4a8c26867c" } ]
+          }
+        ]
+      }
+    },
+    "human": {
+      "entrypoint": "redeem",
+      "value": "f55dc9bef3a53b9099a525e97e1bd353b4947da35af87724c7f23d4a8c26867c"
+    }
+  }
+]
