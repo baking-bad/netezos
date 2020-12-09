@@ -79,6 +79,19 @@ namespace Netezos.Keys
             }
         }
 
+        /// <summary>
+        /// Prepends forged operation bytes with 0x03 and signs the result
+        /// </summary>
+        /// <param name="bytes">Forged operation bytes</param>
+        /// <returns></returns>
+        public Signature SignOperation(byte[] bytes)
+        {
+            using (Store.Unlock())
+            {
+                return Curve.Sign(new byte[] { 3 }.Concat(bytes), Store.Data);
+            }
+        }
+
         public bool Verify(byte[] data, byte[] signature) => PubKey.Verify(data, signature);
 
         public bool Verify(string message, string signature) => PubKey.Verify(message, signature);

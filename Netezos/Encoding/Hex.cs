@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Netezos.Encoding
 {
@@ -38,7 +39,24 @@ namespace Netezos.Encoding
                 chars[j++] = (char)(l + (l > 9 ? 87 : 48));
             }
 
-            return new String(chars);
+            return new string(chars);
+        }
+
+        public static string Convert(IEnumerable<byte> bytes)
+        {
+            var chars = new char[bytes.Count() << 1];
+            var pos = 0;
+
+            foreach (var b in bytes)
+            {
+                var l = b & 15;
+                var h = b >> 4;
+
+                chars[pos++] = (char)(h + (h > 9 ? 87 : 48));
+                chars[pos++] = (char)(l + (l > 9 ? 87 : 48));
+            }
+
+            return new string(chars);
         }
 
         public static byte[] Parse(string hex)
