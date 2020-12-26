@@ -24,7 +24,6 @@ namespace Netezos.Tests.Forging
                 MaxDepth = 1024,
                 NumberHandling = JsonNumberHandling.AllowReadingFromString
             };
-            options.Converters.AddMicheline();
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
 
             var basePath = @"../../../Forging/operations";

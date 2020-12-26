@@ -128,6 +128,29 @@ namespace Netezos.Encoding.Serialization
                 case "APPLY": return PrimType.APPLY;
                 case "chain_id": return PrimType.chain_id;
                 case "CHAIN_ID": return PrimType.CHAIN_ID;
+                case "LEVEL": return PrimType.LEVEL;
+                case "SELF_ADDRESS": return PrimType.SELF_ADDRESS;
+                case "never": return PrimType.never;
+                case "NEVER": return PrimType.NEVER;
+                case "UNPAIR": return PrimType.UNPAIR;
+                case "VOTING_POWER": return PrimType.VOTING_POWER;
+                case "TOTAL_VOTING_POWER": return PrimType.TOTAL_VOTING_POWER;
+                case "KECCAK": return PrimType.KECCAK;
+                case "SHA3": return PrimType.SHA3;
+                case "PAIRING_CHECK": return PrimType.PAIRING_CHECK;
+                case "bls12_381_g1": return PrimType.bls12_381_g1;
+                case "bls12_381_g2": return PrimType.bls12_381_g2;
+                case "bls12_381_fr": return PrimType.bls12_381_fr;
+                case "sapling_state": return PrimType.sapling_state;
+                case "sapling_transaction": return PrimType.sapling_transaction;
+                case "SAPLING_EMPTY_STATE": return PrimType.SAPLING_EMPTY_STATE;
+                case "SAPLING_VERIFY_UPDATE": return PrimType.SAPLING_VERIFY_UPDATE;
+                case "ticket": return PrimType.ticket;
+                case "TICKET": return PrimType.TICKET;
+                case "READ_TICKET": return PrimType.READ_TICKET;
+                case "SPLIT_TICKET": return PrimType.SPLIT_TICKET;
+                case "JOIN_TICKETS": return PrimType.JOIN_TICKETS;
+                case "GET_AND_UPDATE": return PrimType.GET_AND_UPDATE;
                 default:
                     throw new FormatException("Unknown prim type");
             }
