@@ -76,7 +76,7 @@ var content = new ManagerOperationContent[]
     {
         Source = address,
         Counter = ++counter,
-        PublicKey = key2.PubKey.GetBase58(),
+        PublicKey = key.PubKey.GetBase58(),
         GasLimit = 1500,
         Fee = 1000 // 0.001 tez
     },
