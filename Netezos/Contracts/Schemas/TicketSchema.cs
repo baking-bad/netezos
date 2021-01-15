@@ -16,6 +16,12 @@ namespace Netezos.Contracts
             if (micheline.Args?.Count != 1 || !(micheline.Args[0] is MichelinePrim type))
                 throw new FormatException($"Invalid {Prim} schema format");
 
+            if (type.Annots == null)
+                type.Annots = new List<IAnnotation>(1);
+
+            if (type.Annots.Count == 0)
+                type.Annots.Add(new FieldAnnotation("data"));
+
             var data = new MichelinePrim
             {
                 Prim = PrimType.pair,
@@ -23,7 +29,8 @@ namespace Netezos.Contracts
                 {
                     new MichelinePrim
                     {
-                        Prim = PrimType.address
+                        Prim = PrimType.address,
+                        Annots = new List<IAnnotation>(1) { new FieldAnnotation("address") }
                     },
                     new MichelinePrim
                     {
@@ -33,7 +40,8 @@ namespace Netezos.Contracts
                             type,
                             new MichelinePrim
                             {
-                                Prim = PrimType.nat
+                                Prim = PrimType.nat,
+                                Annots = new List<IAnnotation>(1) { new FieldAnnotation("amount") }
                             }
                         }
                     }
