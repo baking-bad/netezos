@@ -31,7 +31,7 @@ namespace Netezos.Contracts
             if (Key is IFlat)
             {
                 writer.WriteStartObject();
-                writer.WritePropertyName(Prim.ToString());
+                writer.WritePropertyName(Key.Prim.ToString());
                 Value.WriteValue(writer);
                 writer.WriteEndObject();
             }

@@ -14,6 +14,9 @@ namespace Netezos.Contracts
             switch (micheline.Prim)
             {
                 case PrimType.address: return new AddressSchema(micheline);
+                case PrimType.bls12_381_fr: return new Bls12381FrSchema(micheline);
+                case PrimType.bls12_381_g1: return new Bls12381G1Schema(micheline);
+                case PrimType.bls12_381_g2: return new Bls12381G2Schema(micheline);
                 case PrimType.big_map: return new BigMapSchema(micheline);
                 case PrimType.@bool: return new BoolSchema(micheline);
                 case PrimType.bytes: return new BytesSchema(micheline);
@@ -27,12 +30,16 @@ namespace Netezos.Contracts
                 case PrimType.map: return new MapSchema(micheline);
                 case PrimType.mutez: return new MutezSchema(micheline);
                 case PrimType.nat: return new NatSchema(micheline);
+                case PrimType.never: return new NeverSchema(micheline);
                 case PrimType.option: return new OptionSchema(micheline);
                 case PrimType.or: return new OrSchema(micheline);
                 case PrimType.pair: return new PairSchema(micheline);
+                case PrimType.sapling_state: return new SaplingStateSchema(micheline);
+                case PrimType.sapling_transaction: return new SaplingTransactionSchema(micheline);
                 case PrimType.set: return new SetSchema(micheline);
                 case PrimType.signature: return new SignatureSchema(micheline);
                 case PrimType.@string: return new StringSchema(micheline);
+                case PrimType.ticket: return new TicketSchema(micheline);
                 case PrimType.timestamp: return new TimestampSchema(micheline);
                 case PrimType.unit: return new UnitSchema(micheline);
                 default:

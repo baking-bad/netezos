@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -17,6 +18,26 @@ namespace Netezos.Contracts
 
         public PairSchema(MichelinePrim micheline, bool nested = false) : base(micheline)
         {
+            #region deoptimize
+            if (micheline.Args?.Count > 2)
+            {
+                micheline = new MichelinePrim
+                {
+                    Prim = micheline.Prim,
+                    Annots = micheline.Annots,
+                    Args = new List<IMicheline>(2)
+                    {
+                        micheline.Args[0],
+                        new MichelinePrim
+                        {
+                            Prim = PrimType.pair,
+                            Args = micheline.Args.Skip(1).ToList()
+                        }
+                    }
+                };
+            }
+            #endregion
+
             if (micheline.Args?.Count != 2
                 || !(micheline.Args[0] is MichelinePrim left)
                 || !(micheline.Args[1] is MichelinePrim right))
@@ -82,6 +103,34 @@ namespace Netezos.Contracts
 
         internal override void WriteProperty(Utf8JsonWriter writer, IMicheline value)
         {
+            #region deoptimize
+            if (value is MichelineArray array)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = PrimType.Pair,
+                    Args = array
+                };
+            }
+            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args.Count > 2)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = p.Prim,
+                    Annots = p.Annots,
+                    Args = new List<IMicheline>(2)
+                    {
+                        p.Args[0],
+                        new MichelinePrim
+                        {
+                            Prim = PrimType.Pair,
+                            Args = p.Args.Skip(1).ToList()
+                        }
+                    }
+                };
+            }
+            #endregion
+
             if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
                 throw FormatException(value);
 
@@ -144,6 +193,34 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
+            #region deoptimize
+            if (value is MichelineArray array)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = PrimType.Pair,
+                    Args = array
+                };
+            }
+            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args.Count > 2)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = p.Prim,
+                    Annots = p.Annots,
+                    Args = new List<IMicheline>(2)
+                    {
+                        p.Args[0],
+                        new MichelinePrim
+                        {
+                            Prim = PrimType.Pair,
+                            Args = p.Args.Skip(1).ToList()
+                        }
+                    }
+                };
+            }
+            #endregion
+
             if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
                 throw FormatException(value);
 
