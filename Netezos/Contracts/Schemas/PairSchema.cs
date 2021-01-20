@@ -58,17 +58,18 @@ namespace Netezos.Contracts
             else
             {
                 Kind = PairKind.Object;
-                var fields = new HashSet<string>();
-                foreach (var child in Children())
+                var fields = new Dictionary<string, int>();
+                var children = Children();
+                foreach (var child in children)
                 {
                     var name = child.Name;
-                    if (fields.Contains(name))
-                    {
-                        Kind = PairKind.Tuple;
-                        break;
-                    }
-                    fields.Add(name);
+                    if (fields.ContainsKey(name))
+                        child._Suffix = ++fields[name];
+                    else
+                        fields.Add(name, 0);
                 }
+                foreach (var kv in fields.Where(x => x.Value > 0))
+                    children.First(x => x.Name == kv.Key)._Suffix = 0;
             }
         }
 
@@ -83,16 +84,6 @@ namespace Netezos.Contracts
                 Right.WriteProperty(writer);
 
                 writer.WriteEndObject();
-            }
-            else if (Kind == PairKind.Tuple)
-            {
-                writer.WritePropertyName(Name);
-                writer.WriteStartArray();
-
-                Left.WriteValue(writer);
-                Right.WriteValue(writer);
-
-                writer.WriteEndArray();
             }
             else
             {
@@ -147,16 +138,6 @@ namespace Netezos.Contracts
 
                 writer.WriteEndObject();
             }
-            else if (Kind == PairKind.Tuple)
-            {
-                writer.WritePropertyName(Name);
-                writer.WriteStartArray();
-
-                Left.WriteValue(writer, pair.Args[0]);
-                Right.WriteValue(writer, pair.Args[1]);
-
-                writer.WriteEndArray();
-            }
             else
             {
                 Left.WriteProperty(writer, pair.Args[0]);
@@ -174,15 +155,6 @@ namespace Netezos.Contracts
                 Right.WriteProperty(writer);
 
                 writer.WriteEndObject();
-            }
-            else if (Kind == PairKind.Tuple)
-            {
-                writer.WriteStartArray();
-
-                Left.WriteValue(writer);
-                Right.WriteValue(writer);
-
-                writer.WriteEndArray();
             }
             else
             {
@@ -236,15 +208,6 @@ namespace Netezos.Contracts
 
                 writer.WriteEndObject();
             }
-            else if (Kind == PairKind.Tuple)
-            {
-                writer.WriteStartArray();
-
-                Left.WriteValue(writer, pair.Args[0]);
-                Right.WriteValue(writer, pair.Args[1]);
-
-                writer.WriteEndArray();
-            }
             else
             {
                 Left.WriteValue(writer, pair.Args[0]);
@@ -279,7 +242,6 @@ namespace Netezos.Contracts
     public enum PairKind
     {
         Nested,
-        Object,
-        Tuple
+        Object
     }
 }

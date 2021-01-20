@@ -8,9 +8,10 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.map;
 
-        public override string Name => Field ?? Type
+        public override string Name => (Field ?? Type
             ?? Value.Field ?? Value.Type
-            ?? Prim.ToString();
+            ?? Prim.ToString())
+            + Suffix;
 
         public Schema Key { get; }
         public Schema Value { get; }

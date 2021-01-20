@@ -53,7 +53,10 @@ namespace Netezos.Contracts
         public string Field { get; }
         public string Type { get; }
 
-        public virtual string Name => Field ?? Type ?? Prim.ToString();
+        internal int _Suffix { get; set; } = -1;
+        internal string Suffix => _Suffix > -1 ? $"_{_Suffix}" : string.Empty;
+
+        public virtual string Name => (Field ?? Type ?? Prim.ToString()) + Suffix;
 
         protected Schema(MichelinePrim micheline)
         {
