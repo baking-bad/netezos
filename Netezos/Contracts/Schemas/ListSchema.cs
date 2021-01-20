@@ -13,6 +13,8 @@ namespace Netezos.Contracts
             ?? Prim.ToString())
             + Suffix;
 
+        public override string Signature => $"list:{Item.Signature}";
+
         public Schema Item { get; }
 
         public ListSchema(MichelinePrim micheline) : base(micheline)

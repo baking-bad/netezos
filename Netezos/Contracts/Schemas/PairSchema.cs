@@ -12,6 +12,8 @@ namespace Netezos.Contracts
 
         public override string Name => Field ?? Type;
 
+        public override string Signature => "object";
+
         public Schema Left { get; }
         public Schema Right { get; }
         public PairKind Kind { get; }
@@ -77,7 +79,7 @@ namespace Netezos.Contracts
         {
             if (Kind == PairKind.Object)
             {
-                writer.WritePropertyName(Name);
+                writer.WritePropertyName($"{Name}:{Signature}");
                 writer.WriteStartObject();
 
                 Left.WriteProperty(writer);

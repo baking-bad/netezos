@@ -49,7 +49,7 @@ namespace Netezos.Contracts
         #endregion
 
         public abstract PrimType Prim { get; }
-        
+
         public string Field { get; }
         public string Type { get; }
 
@@ -57,6 +57,7 @@ namespace Netezos.Contracts
         internal string Suffix => _Suffix > -1 ? $"_{_Suffix}" : string.Empty;
 
         public virtual string Name => (Field ?? Type ?? Prim.ToString()) + Suffix;
+        public virtual string Signature => Prim.ToString();
 
         protected Schema(MichelinePrim micheline)
         {
@@ -72,7 +73,10 @@ namespace Netezos.Contracts
             using (var mem = new MemoryStream())
             using (var writer = new Utf8JsonWriter(mem, options))
             {
+                writer.WriteStartObject();
+                writer.WritePropertyName($"schema:{Signature}");
                 WriteValue(writer);
+                writer.WriteEndObject();
                 writer.Flush();
 
                 return Utf8.Convert(mem.ToArray());
@@ -93,19 +97,19 @@ namespace Netezos.Contracts
 
         internal virtual void WriteProperty(Utf8JsonWriter writer)
         {
-            writer.WritePropertyName(Name);
+            writer.WritePropertyName($"{Name}:{Signature}");
             WriteValue(writer);
+        }
+
+        internal virtual void WriteValue(Utf8JsonWriter writer)
+        {
+            writer.WriteStringValue(Prim.ToString());
         }
 
         internal virtual void WriteProperty(Utf8JsonWriter writer, IMicheline value)
         {
             writer.WritePropertyName(Name);
             WriteValue(writer, value);
-        }
-
-        internal virtual void WriteValue(Utf8JsonWriter writer)
-        {
-            writer.WriteStringValue(Prim.ToString());
         }
 
         internal virtual void WriteValue(Utf8JsonWriter writer, IMicheline value)

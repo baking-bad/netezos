@@ -13,6 +13,9 @@ namespace Netezos.Contracts
             ?? Prim.ToString())
             + Suffix;
 
+        public override string Signature =>
+            $"{(Key is IFlat ? "map_flat" : "map")}:{Key.Signature}:{Value.Signature}";
+
         public Schema Key { get; }
         public Schema Value { get; }
 

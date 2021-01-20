@@ -8,6 +8,8 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.parameter;
 
+        public override string Signature => Schema.Signature;
+
         public Schema Schema { get; }
 
         public ParameterSchema(MichelinePrim micheline) : base(micheline)
