@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -9,9 +10,10 @@ namespace Netezos.Contracts
 
         public SaplingStateSchema(MichelinePrim micheline) : base(micheline) { }
 
+        internal override void WriteProperty(Utf8JsonWriter writer, IMicheline value)
+            => throw new NotImplementedException("Sapling state is not implemented yet");
+
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
-        {
-            throw new System.NotImplementedException();
-        }
+            => throw new NotImplementedException("Sapling state is not implemented yet");
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Numerics;
+using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -20,7 +21,7 @@ namespace Netezos.Contracts
                 return micheInt.Value.ToString();
 
             if (value is MichelineBytes micheBytes)
-                return Hex.Convert(micheBytes.Value);
+                return new BigInteger(micheBytes.Value).ToString();
 
             throw FormatException(value);
         }

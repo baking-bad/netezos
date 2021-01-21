@@ -17,7 +17,7 @@ namespace Netezos.Contracts
         public string Flatten(IMicheline value)
         {
             if (value is MichelineInt micheInt)
-                return micheInt.Value.ToString();
+                return Hex.Convert(micheInt.Value.ToByteArray());
 
             if (value is MichelineBytes micheBytes)
                 return Hex.Convert(micheBytes.Value);

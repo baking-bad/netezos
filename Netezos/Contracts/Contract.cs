@@ -58,10 +58,10 @@ namespace Netezos.Contracts
             return (resultEntypoint, resultValue);
         }
 
-        public string HumanizeParameters(string entrypoint, IMicheline value, JsonWriterOptions options = default)
+        public (string entrypoint, string value) HumanizeParameters(string entrypoint, IMicheline value, JsonWriterOptions options = default)
         {
             var (normEntrypoint, normValue) = NormalizeParameters(entrypoint, value);
-            return Entrypoints[normEntrypoint].Humanize(normValue, options);
+            return (normEntrypoint, Entrypoints[normEntrypoint].Humanize(normValue, options));
         }
 
         public string HumanizeStorage(IMicheline value, JsonWriterOptions options = default)

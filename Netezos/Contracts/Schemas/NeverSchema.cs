@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -10,9 +11,9 @@ namespace Netezos.Contracts
         public NeverSchema(MichelinePrim micheline) : base(micheline) { }
         
         internal override void WriteProperty(Utf8JsonWriter writer, IMicheline value)
-            => throw new System.InvalidOperationException($"Value of type {Prim} is not allowed");
+            => throw new InvalidOperationException($"Value of type {Prim} is not allowed");
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
-            => throw new System.InvalidOperationException($"Value of type {Prim} is not allowed");
+            => throw new InvalidOperationException($"Value of type {Prim} is not allowed");
     }
 }
