@@ -5,10 +5,6 @@ namespace Netezos.Contracts
 {
     public sealed class ChainIdSchema : Schema, IFlat
     {
-        #region static
-        static readonly byte[] NetPrefix = new byte[] { 87, 82, 0 };
-        #endregion
-
         public override PrimType Prim => PrimType.chain_id;
 
         public ChainIdSchema(MichelinePrim micheline) : base(micheline) { }
@@ -29,7 +25,7 @@ namespace Netezos.Contracts
                 if (micheBytes.Value.Length != 4)
                     return Hex.Convert(micheBytes.Value);
 
-                return Base58.Convert(micheBytes.Value, NetPrefix);
+                return Base58.Convert(micheBytes.Value, Prefix.Net);
             }
             else
             {

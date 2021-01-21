@@ -5,13 +5,6 @@ namespace Netezos.Contracts
 {
     public sealed class AddressSchema : Schema, IFlat
     {
-        #region static
-        static readonly byte[] Tz1Prefix = new byte[] { 6, 161, 159 };
-        static readonly byte[] Tz2Prefix = new byte[] { 6, 161, 161 };
-        static readonly byte[] Tz3Prefix = new byte[] { 6, 161, 164 };
-        static readonly byte[] KT1Prefix = new byte[] { 2, 90, 121 };
-        #endregion
-
         public override PrimType Prim => PrimType.address;
 
         public AddressSchema(MichelinePrim micheline) : base(micheline) { }
@@ -33,13 +26,13 @@ namespace Netezos.Contracts
                     return Hex.Convert(micheBytes.Value);
 
                 var prefix = micheBytes.Value[0] == 0 && micheBytes.Value[1] == 0
-                    ? Tz1Prefix
+                    ? Prefix.tz1
                     : micheBytes.Value[0] == 0 && micheBytes.Value[1] == 1
-                        ? Tz2Prefix
+                        ? Prefix.tz2
                         : micheBytes.Value[0] == 0 && micheBytes.Value[1] == 2
-                            ? Tz3Prefix
+                            ? Prefix.tz3
                             : micheBytes.Value[0] == 1 && micheBytes.Value[21] == 0
-                                ? KT1Prefix
+                                ? Prefix.KT1
                                 : null;
 
                 if (prefix == null)

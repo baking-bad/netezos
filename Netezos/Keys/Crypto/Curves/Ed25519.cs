@@ -7,19 +7,12 @@ namespace Netezos.Keys
 {
     class Ed25519 : Curve
     {
-        #region static
-        static readonly byte[] _AddressPrefix = { 6, 161, 159 };
-        static readonly byte[] _PublicKeyPrefix = { 13, 15, 37, 217 };
-        static readonly byte[] _PrivateKeyPrefix = { 13, 15, 58, 7 };
-        static readonly byte[] _SignaturePrefix = { 9, 245, 205, 134, 18 };
-        #endregion
-
         public override ECKind Kind => ECKind.Ed25519;
 
-        public override byte[] AddressPrefix => _AddressPrefix;
-        public override byte[] PublicKeyPrefix => _PublicKeyPrefix;
-        public override byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
-        public override byte[] SignaturePrefix => _SignaturePrefix;
+        public override byte[] AddressPrefix => Prefix.tz1;
+        public override byte[] PublicKeyPrefix => Prefix.edpk;
+        public override byte[] PrivateKeyPrefix => Prefix.edsk;
+        public override byte[] SignaturePrefix => Prefix.edsig;
 
         public override byte[] GeneratePrivateKey()
         {
@@ -43,7 +36,7 @@ namespace Netezos.Keys
             signer.Init(true, privateKey);
             signer.BlockUpdate(digest, 0, digest.Length);
 
-            return new Signature(signer.GenerateSignature(), _SignaturePrefix);
+            return new Signature(signer.GenerateSignature(), SignaturePrefix);
         }
 
         public override bool Verify(byte[] msg, byte[] sig, byte[] pubKey)
