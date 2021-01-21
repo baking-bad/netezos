@@ -5,13 +5,6 @@ namespace Netezos.Contracts
 {
     public sealed class AddressSchema : Schema, IFlat
     {
-        #region static
-        static readonly byte[] Tz1Prefix = new byte[] { 6, 161, 159 };
-        static readonly byte[] Tz2Prefix = new byte[] { 6, 161, 161 };
-        static readonly byte[] Tz3Prefix = new byte[] { 6, 161, 164 };
-        static readonly byte[] KT1Prefix = new byte[] { 2, 90, 121 };
-        #endregion
-
         public override PrimType Prim => PrimType.address;
 
         public AddressSchema(MichelinePrim micheline) : base(micheline) { }
@@ -32,18 +25,29 @@ namespace Netezos.Contracts
                 if (micheBytes.Value.Length < 22)
                     return Hex.Convert(micheBytes.Value);
 
-                var prefix = micheBytes.Value[0] == 0 && micheBytes.Value[1] == 0
-                    ? Tz1Prefix
-                    : micheBytes.Value[0] == 0 && micheBytes.Value[1] == 1
-                        ? Tz2Prefix
-                        : micheBytes.Value[0] == 0 && micheBytes.Value[1] == 2
-                            ? Tz3Prefix
-                            : micheBytes.Value[0] == 1 && micheBytes.Value[21] == 0
-                                ? KT1Prefix
-                                : null;
-
-                if (prefix == null)
+                byte[] prefix;
+                if (micheBytes.Value[0] == 0)
+                {
+                    if (micheBytes.Value[1] == 0)
+                        prefix = Prefix.tz1;
+                    else if (micheBytes.Value[1] == 1)
+                        prefix = Prefix.tz2;
+                    else if (micheBytes.Value[1] == 2)
+                        prefix = Prefix.tz3;
+                    else
+                        return Hex.Convert(micheBytes.Value);
+                }
+                else if (micheBytes.Value[0] == 1)
+                {
+                    if (micheBytes.Value[21] == 0)
+                        prefix = Prefix.KT1;
+                    else
+                        return Hex.Convert(micheBytes.Value);
+                }
+                else
+                {
                     return Hex.Convert(micheBytes.Value);
+                }
 
                 var bytes = micheBytes.Value[0] == 0
                     ? micheBytes.Value.GetBytes(2, 20)

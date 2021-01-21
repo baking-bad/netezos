@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -11,12 +12,34 @@ namespace Netezos.Contracts
 
         public override string Name => Field ?? Type;
 
+        public override string Signature => "object";
+
         public Schema Left { get; }
         public Schema Right { get; }
         public PairKind Kind { get; }
 
         public PairSchema(MichelinePrim micheline, bool nested = false) : base(micheline)
         {
+            #region deoptimize
+            if (micheline.Args?.Count > 2)
+            {
+                micheline = new MichelinePrim
+                {
+                    Prim = micheline.Prim,
+                    Annots = micheline.Annots,
+                    Args = new List<IMicheline>(2)
+                    {
+                        micheline.Args[0],
+                        new MichelinePrim
+                        {
+                            Prim = PrimType.pair,
+                            Args = micheline.Args.Skip(1).ToList()
+                        }
+                    }
+                };
+            }
+            #endregion
+
             if (micheline.Args?.Count != 2
                 || !(micheline.Args[0] is MichelinePrim left)
                 || !(micheline.Args[1] is MichelinePrim right))
@@ -37,17 +60,18 @@ namespace Netezos.Contracts
             else
             {
                 Kind = PairKind.Object;
-                var fields = new HashSet<string>();
-                foreach (var child in Children())
+                var fields = new Dictionary<string, int>();
+                var children = Children();
+                foreach (var child in children)
                 {
                     var name = child.Name;
-                    if (fields.Contains(name))
-                    {
-                        Kind = PairKind.Tuple;
-                        break;
-                    }
-                    fields.Add(name);
+                    if (fields.ContainsKey(name))
+                        child._Suffix = ++fields[name];
+                    else
+                        fields.Add(name, 0);
                 }
+                foreach (var kv in fields.Where(x => x.Value > 0))
+                    children.First(x => x.Name == kv.Key)._Suffix = 0;
             }
         }
 
@@ -55,23 +79,13 @@ namespace Netezos.Contracts
         {
             if (Kind == PairKind.Object)
             {
-                writer.WritePropertyName(Name);
+                writer.WritePropertyName($"{Name}:{Signature}");
                 writer.WriteStartObject();
 
                 Left.WriteProperty(writer);
                 Right.WriteProperty(writer);
 
                 writer.WriteEndObject();
-            }
-            else if (Kind == PairKind.Tuple)
-            {
-                writer.WritePropertyName(Name);
-                writer.WriteStartArray();
-
-                Left.WriteValue(writer);
-                Right.WriteValue(writer);
-
-                writer.WriteEndArray();
             }
             else
             {
@@ -82,6 +96,34 @@ namespace Netezos.Contracts
 
         internal override void WriteProperty(Utf8JsonWriter writer, IMicheline value)
         {
+            #region deoptimize
+            if (value is MichelineArray array)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = PrimType.Pair,
+                    Args = array
+                };
+            }
+            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args.Count > 2)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = p.Prim,
+                    Annots = p.Annots,
+                    Args = new List<IMicheline>(2)
+                    {
+                        p.Args[0],
+                        new MichelinePrim
+                        {
+                            Prim = PrimType.Pair,
+                            Args = p.Args.Skip(1).ToList()
+                        }
+                    }
+                };
+            }
+            #endregion
+
             if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
                 throw FormatException(value);
 
@@ -97,16 +139,6 @@ namespace Netezos.Contracts
                 Right.WriteProperty(writer, pair.Args[1]);
 
                 writer.WriteEndObject();
-            }
-            else if (Kind == PairKind.Tuple)
-            {
-                writer.WritePropertyName(Name);
-                writer.WriteStartArray();
-
-                Left.WriteValue(writer, pair.Args[0]);
-                Right.WriteValue(writer, pair.Args[1]);
-
-                writer.WriteEndArray();
             }
             else
             {
@@ -126,15 +158,6 @@ namespace Netezos.Contracts
 
                 writer.WriteEndObject();
             }
-            else if (Kind == PairKind.Tuple)
-            {
-                writer.WriteStartArray();
-
-                Left.WriteValue(writer);
-                Right.WriteValue(writer);
-
-                writer.WriteEndArray();
-            }
             else
             {
                 Left.WriteValue(writer);
@@ -144,6 +167,34 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
+            #region deoptimize
+            if (value is MichelineArray array)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = PrimType.Pair,
+                    Args = array
+                };
+            }
+            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args.Count > 2)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = p.Prim,
+                    Annots = p.Annots,
+                    Args = new List<IMicheline>(2)
+                    {
+                        p.Args[0],
+                        new MichelinePrim
+                        {
+                            Prim = PrimType.Pair,
+                            Args = p.Args.Skip(1).ToList()
+                        }
+                    }
+                };
+            }
+            #endregion
+
             if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
                 throw FormatException(value);
 
@@ -158,15 +209,6 @@ namespace Netezos.Contracts
                 Right.WriteProperty(writer, pair.Args[1]);
 
                 writer.WriteEndObject();
-            }
-            else if (Kind == PairKind.Tuple)
-            {
-                writer.WriteStartArray();
-
-                Left.WriteValue(writer, pair.Args[0]);
-                Right.WriteValue(writer, pair.Args[1]);
-
-                writer.WriteEndArray();
             }
             else
             {
@@ -202,7 +244,6 @@ namespace Netezos.Contracts
     public enum PairKind
     {
         Nested,
-        Object,
-        Tuple
+        Object
     }
 }

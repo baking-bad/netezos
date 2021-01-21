@@ -194,7 +194,7 @@ namespace Netezos.Forging
                     {
                         res.AddRange(ForgeString(string.Join(" ", prim.Annots)));
                     }
-                    else if (argsCnt == 3)
+                    else if (argsCnt >= 3)
                     {
                         res.AddRange(new List<byte> { 0, 0, 0, 0 });
                     }

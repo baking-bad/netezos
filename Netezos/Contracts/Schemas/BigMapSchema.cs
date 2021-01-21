@@ -8,9 +8,13 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.big_map;
 
-        public override string Name => Field ?? Type
+        public override string Name => (Field ?? Type
             ?? Value.Field ?? Value.Type
-            ?? Prim.ToString();
+            ?? Prim.ToString())
+            + Suffix;
+
+        public override string Signature =>
+            $"{(Key is IFlat ? "big_map_flat" : "big_map")}:{Key.Signature}:{Value.Signature}";
 
         public Schema Key { get; }
         public Schema Value { get; }

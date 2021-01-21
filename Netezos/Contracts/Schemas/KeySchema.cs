@@ -5,12 +5,6 @@ namespace Netezos.Contracts
 {
     public sealed class KeySchema : Schema, IFlat
     {
-        #region static
-        static readonly byte[] EdpkPrefix = new byte[] { 13, 15, 37, 217 };
-        static readonly byte[] SppkPrefix = new byte[] { 3, 254, 226, 86 };
-        static readonly byte[] P2pkPrefix = new byte[] { 3, 178, 139, 127 };
-        #endregion
-
         public override PrimType Prim => PrimType.key;
 
         public KeySchema(MichelinePrim micheline) : base(micheline) { }
@@ -29,11 +23,11 @@ namespace Netezos.Contracts
             else if (value is MichelineBytes micheBytes)
             {
                 var prefix = micheBytes.Value[0] == 0 && micheBytes.Value.Length == 33
-                    ? EdpkPrefix
+                    ? Prefix.edpk
                     : micheBytes.Value[0] == 1 && micheBytes.Value.Length == 34
-                        ? SppkPrefix
+                        ? Prefix.sppk
                         : micheBytes.Value[0] == 2 && micheBytes.Value.Length == 34
-                            ? P2pkPrefix
+                            ? Prefix.p2pk
                             : null;
 
                 if (prefix == null)

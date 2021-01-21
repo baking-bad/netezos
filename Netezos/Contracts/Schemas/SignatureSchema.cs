@@ -5,10 +5,6 @@ namespace Netezos.Contracts
 {
     public sealed class SignatureSchema : Schema, IFlat
     {
-        #region static
-        static readonly byte[] SigPrefix = new byte[] { 4, 130, 043 };
-        #endregion
-
         public override PrimType Prim => PrimType.signature;
 
         public SignatureSchema(MichelinePrim micheline) : base(micheline) { }
@@ -29,7 +25,7 @@ namespace Netezos.Contracts
                 if (micheBytes.Value.Length != 64)
                     return Hex.Convert(micheBytes.Value);
 
-                return Base58.Convert(micheBytes.Value, SigPrefix);
+                return Base58.Convert(micheBytes.Value, Prefix.sig);
             }
             else
             {

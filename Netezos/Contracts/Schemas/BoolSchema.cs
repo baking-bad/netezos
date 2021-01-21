@@ -3,7 +3,7 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class BoolSchema : Schema
+    public sealed class BoolSchema : Schema, IFlat
     {
         public override PrimType Prim => PrimType.@bool;
 
@@ -11,15 +11,16 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
+            writer.WriteStringValue(Flatten(value));
+        }
+
+        public string Flatten(IMicheline value)
+        {
             if (value is MichelinePrim michePrim
                 && (michePrim.Prim == PrimType.True || michePrim.Prim == PrimType.False))
-            {
-                writer.WriteBooleanValue(michePrim.Prim == PrimType.True);
-            }
-            else
-            {
-                throw FormatException(value);
-            }
+                return (michePrim.Prim == PrimType.True).ToString();
+
+            throw FormatException(value);
         }
     }
 }

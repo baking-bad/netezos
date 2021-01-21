@@ -9,19 +9,12 @@ namespace Netezos.Keys
 {
     class NistP256 : Curve
     {
-        #region static
-        static readonly byte[] _AddressPrefix = { 6, 161, 164 };
-        static readonly byte[] _PublicKeyPrefix = { 3, 178, 139, 127 };
-        static readonly byte[] _PrivateKeyPrefix = { 16, 81, 238, 189 };
-        static readonly byte[] _SignaturePrefix = { 54, 240, 44, 52 };
-        #endregion
-
         public override ECKind Kind => ECKind.NistP256;
 
-        public override byte[] AddressPrefix => _AddressPrefix;
-        public override byte[] PublicKeyPrefix => _PublicKeyPrefix;
-        public override byte[] PrivateKeyPrefix => _PrivateKeyPrefix;
-        public override byte[] SignaturePrefix => _SignaturePrefix;
+        public override byte[] AddressPrefix => Prefix.tz3;
+        public override byte[] PublicKeyPrefix => Prefix.p2pk;
+        public override byte[] PrivateKeyPrefix => Prefix.p2sk;
+        public override byte[] SignaturePrefix => Prefix.p2sig;
 
         public override byte[] GeneratePrivateKey()
         {
@@ -60,7 +53,7 @@ namespace Netezos.Keys
             var r = rs[0].ToByteArrayUnsigned().Align(32);
             var s = rs[1].ToByteArrayUnsigned().Align(32);
 
-            return new Signature(r.Concat(s), _SignaturePrefix);
+            return new Signature(r.Concat(s), SignaturePrefix);
         }
 
         public override bool Verify(byte[] msg, byte[] sig, byte[] pubKey)

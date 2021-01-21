@@ -29,7 +29,7 @@ namespace Netezos.Contracts
 
             foreach (var (path, child) in Children())
             {
-                writer.WritePropertyName($"or_{path}");
+                writer.WritePropertyName($"{path}:{child.Signature}");
                 child.WriteValue(writer);
             }
 
@@ -67,13 +67,13 @@ namespace Netezos.Contracts
                 {
                     currentSchema = currentOr.Left;
                     currentValue = prim.Args[0];
-                    currentPath += "0";
+                    currentPath += "L";
                 }
                 else if (prim.Prim == PrimType.Right)
                 {
                     currentSchema = currentOr.Right;
                     currentValue = prim.Args[0];
-                    currentPath += "1";
+                    currentPath += "R";
                 }
                 else
                 {
@@ -88,22 +88,22 @@ namespace Netezos.Contracts
         {
             if (Left is OrSchema leftOr)
             {
-                foreach (var child in leftOr.Children(path + "0"))
+                foreach (var child in leftOr.Children(path + "L"))
                     yield return child;
             }
             else
             {
-                yield return (Left.Field ?? Left.Type ?? path + "0", Left);
+                yield return (Left.Field ?? Left.Type ?? path + "L", Left);
             }
 
             if (Right is OrSchema rightOr)
             {
-                foreach (var child in rightOr.Children(path + "1"))
+                foreach (var child in rightOr.Children(path + "R"))
                     yield return child;
             }
             else
             {
-                yield return (Right.Field ?? Right.Type ?? path + "1", Right);
+                yield return (Right.Field ?? Right.Type ?? path + "R", Right);
             }
         }
     }
