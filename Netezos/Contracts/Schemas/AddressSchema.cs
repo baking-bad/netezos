@@ -25,18 +25,29 @@ namespace Netezos.Contracts
                 if (micheBytes.Value.Length < 22)
                     return Hex.Convert(micheBytes.Value);
 
-                var prefix = micheBytes.Value[0] == 0 && micheBytes.Value[1] == 0
-                    ? Prefix.tz1
-                    : micheBytes.Value[0] == 0 && micheBytes.Value[1] == 1
-                        ? Prefix.tz2
-                        : micheBytes.Value[0] == 0 && micheBytes.Value[1] == 2
-                            ? Prefix.tz3
-                            : micheBytes.Value[0] == 1 && micheBytes.Value[21] == 0
-                                ? Prefix.KT1
-                                : null;
-
-                if (prefix == null)
+                byte[] prefix;
+                if (micheBytes.Value[0] == 0)
+                {
+                    if (micheBytes.Value[1] == 0)
+                        prefix = Prefix.tz1;
+                    else if (micheBytes.Value[1] == 1)
+                        prefix = Prefix.tz2;
+                    else if (micheBytes.Value[1] == 2)
+                        prefix = Prefix.tz3;
+                    else
+                        return Hex.Convert(micheBytes.Value);
+                }
+                else if (micheBytes.Value[0] == 1)
+                {
+                    if (micheBytes.Value[21] == 0)
+                        prefix = Prefix.KT1;
+                    else
+                        return Hex.Convert(micheBytes.Value);
+                }
+                else
+                {
                     return Hex.Convert(micheBytes.Value);
+                }
 
                 var bytes = micheBytes.Value[0] == 0
                     ? micheBytes.Value.GetBytes(2, 20)
