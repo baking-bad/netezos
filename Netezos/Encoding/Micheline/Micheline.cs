@@ -16,6 +16,12 @@ namespace Netezos.Encoding
         public static IMicheline FromJson(string json, JsonSerializerOptions options)
             => JsonSerializer.Deserialize<IMicheline>(json, options);
 
+        public static IMicheline FromJson(JsonElement json)
+            => JsonSerializer.Deserialize<IMicheline>(json.GetRawText(), SerializerOptions);
+
+        public static IMicheline FromJson(JsonElement json, JsonSerializerOptions options)
+            => JsonSerializer.Deserialize<IMicheline>(json.GetRawText(), options);
+
         public static IMicheline FromBytes(byte[] bytes)
         {
             using (var mem = new MemoryStream(bytes))

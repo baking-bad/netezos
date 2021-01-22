@@ -34,6 +34,25 @@ namespace Netezos.Contracts
             ExtractEntrypoints(Parameter.Schema);
         }
 
+        public Contract(IMicheline parameter, IMicheline storage)
+        {
+            if ((parameter as MichelinePrim)?.Prim != PrimType.parameter)
+                throw new FormatException("Invalid micheline parameters");
+
+            if ((storage as MichelinePrim)?.Prim != PrimType.storage)
+                throw new FormatException("Invalid micheline storage");
+
+            Parameter = new ParameterSchema(parameter as MichelinePrim);
+            Storage = new StorageSchema(storage as MichelinePrim);
+
+            Entrypoints = new Dictionary<string, Schema> { { "default", Parameter.Schema } };
+
+            if (Parameter.Field?.Length > 0)
+                Entrypoints[Parameter.Field] = Parameter.Schema;
+
+            ExtractEntrypoints(Parameter.Schema);
+        }
+
         public (string, IMicheline) NormalizeParameters(string entrypoint, IMicheline value)
         {
             if (!Entrypoints.TryGetValue(entrypoint, out var schema))
