@@ -9,6 +9,8 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.sapling_transaction;
 
+        public override string Signature => $"sapling_transaction:{MemoSize}";
+
         public BigInteger MemoSize { get; }
 
         public SaplingTransactionSchema(MichelinePrim micheline) : base(micheline)

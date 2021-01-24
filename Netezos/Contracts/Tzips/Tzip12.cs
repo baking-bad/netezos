@@ -6,8 +6,7 @@
         {
             return contract.Entrypoints.TryGetValue("transfer", out var transfer) && CheckTransfer(transfer)
                 && contract.Entrypoints.TryGetValue("balance_of", out var balanceOf) && CheckBalanceOf(balanceOf)
-                && contract.Entrypoints.TryGetValue("update_operators", out var updateOperators) && CheckUpdateOperators(updateOperators)
-                && contract.Entrypoints.TryGetValue("token_metadata_registry", out var metadataRegistry) && CheckMetadataRegistry(metadataRegistry);
+                && contract.Entrypoints.TryGetValue("update_operators", out var updateOperators) && CheckUpdateOperators(updateOperators);
         }
 
         static bool CheckTransfer(Schema schema)
@@ -53,12 +52,6 @@
                         && pair3.Right is PairSchema pair4
                             && pair4.Left is AddressSchema
                             && pair4.Right is NatSchema;
-        }
-
-        static bool CheckMetadataRegistry(Schema schema)
-        {
-            return schema is ContractSchema contract
-                && contract.Parameters is AddressSchema;
         }
     }
 }

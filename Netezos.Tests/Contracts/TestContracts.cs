@@ -24,11 +24,12 @@ namespace Netezos.Tests.Contracts
                     var rawEntrypoint = sample.raw.entrypoint;
                     var rawValue = Micheline.FromJson(sample.raw.value);
 
-                    var humanized = contract.HumanizeParameters((string)rawEntrypoint, (IMicheline)rawValue);
+                    var (normEntrypoint, normValue) = contract.NormalizeParameters((string)rawEntrypoint, (IMicheline)rawValue);
+                    var humanized = contract.HumanizeParameters(normEntrypoint, normValue);
 
                     Assert.Equal(
                         ((string)sample.human.value).Replace("\t", "").Replace("\r", "").Replace("\n", "").Replace(" ", ""),
-                        (humanized.value).Replace("\t", "").Replace("\r", "").Replace("\n", "").Replace(" ", "").Trim('\"'));
+                        humanized.Replace("\t", "").Replace("\r", "").Replace("\n", "").Replace(" ", "").Trim('\"'));
                 }
             }
         }

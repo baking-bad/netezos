@@ -105,7 +105,7 @@ namespace Netezos.Contracts
                     Args = array
                 };
             }
-            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args.Count > 2)
+            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args?.Count > 2)
             {
                 value = new MichelinePrim
                 {
@@ -176,7 +176,7 @@ namespace Netezos.Contracts
                     Args = array
                 };
             }
-            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args.Count > 2)
+            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args?.Count > 2)
             {
                 value = new MichelinePrim
                 {

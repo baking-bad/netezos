@@ -62,7 +62,7 @@ namespace Netezos.Contracts
             var resultValue = value;
 
             while (schema is OrSchema or
-                && value is MichelinePrim prim && (prim.Prim == PrimType.Left || prim.Prim == PrimType.Right))
+                && value is MichelinePrim prim && (prim.Prim == PrimType.Left || prim.Prim == PrimType.Right) && prim.Args?.Count == 1)
             {
                 schema = prim.Prim == PrimType.Left ? or.Left : or.Right;
                 value = prim.Args[0];
@@ -77,10 +77,12 @@ namespace Netezos.Contracts
             return (resultEntypoint, resultValue);
         }
 
-        public (string entrypoint, string value) HumanizeParameters(string entrypoint, IMicheline value, JsonWriterOptions options = default)
+        public string HumanizeParameters(string entrypoint, IMicheline value, JsonWriterOptions options = default)
         {
-            var (normEntrypoint, normValue) = NormalizeParameters(entrypoint, value);
-            return (normEntrypoint, Entrypoints[normEntrypoint].Humanize(normValue, options));
+            if (!Entrypoints.TryGetValue(entrypoint, out var schema))
+                throw new ArgumentException("Entrypoint doesn't exist");
+
+            return schema.Humanize(value, options);
         }
 
         public string HumanizeStorage(IMicheline value, JsonWriterOptions options = default)

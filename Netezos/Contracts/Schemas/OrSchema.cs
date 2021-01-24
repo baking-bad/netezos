@@ -38,9 +38,6 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
-            if (!(value is MichelinePrim prim) || prim.Args?.Count != 1)
-                throw FormatException(value);
-
             var (endSchema, endValue, endPath) = JumpToEnd(this, value);
             var path = endSchema.Field ?? endSchema.Type ?? endPath;
             
