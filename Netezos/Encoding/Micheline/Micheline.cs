@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Netezos.Encoding.Serialization;
 
 namespace Netezos.Encoding
 {
@@ -35,6 +36,9 @@ namespace Netezos.Encoding
                 return Read(bin);
             }
         }
+
+        public static string ToMichelson(this IMicheline micheline)
+            => MichelsonFormatter.MichelineToMichelson(micheline);
 
         public static string ToJson(this IMicheline micheline)
             => JsonSerializer.Serialize(micheline, SerializerOptions);

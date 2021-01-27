@@ -2,7 +2,6 @@
 using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Dynamic.Json;
 
 namespace Netezos.Encoding.Serialization
 {
