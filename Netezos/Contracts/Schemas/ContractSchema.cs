@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -73,6 +74,11 @@ namespace Netezos.Contracts
             {
                 throw FormatException(value);
             }
+        }
+
+        protected override List<IMicheline> GetArgs()
+        {
+            return new List<IMicheline>(1) { Parameters.ToMicheline() };
         }
     }
 }

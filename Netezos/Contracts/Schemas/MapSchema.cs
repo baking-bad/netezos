@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -104,6 +105,11 @@ namespace Netezos.Contracts
             }
 
             writer.WriteEndArray();
+        }
+
+        protected override List<IMicheline> GetArgs()
+        {
+            return new List<IMicheline>(2) { Key.ToMicheline(), Value.ToMicheline() };
         }
     }
 }

@@ -217,6 +217,11 @@ namespace Netezos.Contracts
             }
         }
 
+        protected override List<IMicheline> GetArgs()
+        {
+            return new List<IMicheline>(2) { Left.ToMicheline(), Right.ToMicheline() };
+        }
+
         IEnumerable<Schema> Children()
         {
             if (Left is PairSchema leftPair && Left.Name == null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -42,6 +43,7 @@ namespace Netezos.Contracts
                 case PrimType.ticket: return new TicketSchema(micheline);
                 case PrimType.timestamp: return new TimestampSchema(micheline);
                 case PrimType.unit: return new UnitSchema(micheline);
+                case PrimType.operation: return new OperationSchema(micheline);
                 default:
                     throw new NotImplementedException($"Schema for prim {micheline.Prim} is not implemented");
             }
@@ -92,6 +94,37 @@ namespace Netezos.Contracts
                 writer.Flush();
 
                 return Utf8.Convert(mem.ToArray());
+            }
+        }
+
+        public IMicheline ToMicheline ()
+        {
+            return new MichelinePrim
+            {
+                Prim = Prim,
+                Args = GetArgs(),
+                Annots = GetAnnotations()
+            };
+        }
+
+        protected virtual List<IMicheline> GetArgs()
+        {
+            return null;
+        }
+
+        protected List<IAnnotation> GetAnnotations()
+        {
+            if (Type != null)
+            {
+                return Field != null
+                    ? new List<IAnnotation>(2) { new TypeAnnotation(Type), new FieldAnnotation(Field) }
+                    : new List<IAnnotation>(1) { new TypeAnnotation(Type) };
+            }
+            else
+            {
+                return Field != null
+                    ? new List<IAnnotation>(1) { new FieldAnnotation(Field) }
+                    : null;
             }
         }
 

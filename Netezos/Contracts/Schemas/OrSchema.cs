@@ -27,7 +27,7 @@ namespace Netezos.Contracts
         {
             writer.WriteStartObject();
 
-            foreach (var (path, child) in Children())
+            foreach (var (path, child) in ChildrenPaths())
             {
                 writer.WritePropertyName($"{path}:{child.Signature}");
                 child.WriteValue(writer);
@@ -47,6 +47,11 @@ namespace Netezos.Contracts
             endSchema.WriteValue(writer, endValue);
 
             writer.WriteEndObject();
+        }
+
+        protected override List<IMicheline> GetArgs()
+        {
+            return new List<IMicheline>(2) { Left.ToMicheline(), Right.ToMicheline() };
         }
 
         (Schema, IMicheline, string) JumpToEnd(OrSchema or, IMicheline value, string path = "")
@@ -81,11 +86,34 @@ namespace Netezos.Contracts
             return (currentSchema, currentValue, currentPath);
         }
 
-        IEnumerable<(string, Schema)> Children(string path = "")
+        public IEnumerable<Schema> Children()
         {
             if (Left is OrSchema leftOr)
             {
-                foreach (var child in leftOr.Children(path + "L"))
+                foreach (var child in leftOr.Children())
+                    yield return child;
+            }
+            else
+            {
+                yield return Left;
+            }
+
+            if (Right is OrSchema rightOr)
+            {
+                foreach (var child in rightOr.Children())
+                    yield return child;
+            }
+            else
+            {
+                yield return Right;
+            }
+        }
+
+        IEnumerable<(string, Schema)> ChildrenPaths(string path = "")
+        {
+            if (Left is OrSchema leftOr)
+            {
+                foreach (var child in leftOr.ChildrenPaths(path + "L"))
                     yield return child;
             }
             else
@@ -95,7 +123,7 @@ namespace Netezos.Contracts
 
             if (Right is OrSchema rightOr)
             {
-                foreach (var child in rightOr.Children(path + "R"))
+                foreach (var child in rightOr.ChildrenPaths(path + "R"))
                     yield return child;
             }
             else

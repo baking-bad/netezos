@@ -63,5 +63,11 @@ namespace Netezos.Contracts
 
             Data.WriteValue(writer, prim);
         }
+
+        protected override List<IMicheline> GetArgs()
+        {
+            var type = ((Data as PairSchema).Right as PairSchema).Left;
+            return new List<IMicheline>(1) { type.ToMicheline() };
+        }
     }
 }

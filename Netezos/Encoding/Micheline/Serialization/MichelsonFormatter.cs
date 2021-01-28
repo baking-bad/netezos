@@ -8,56 +8,36 @@ namespace Netezos.Encoding.Serialization
     {
         const int LineSize = 100;
         
-        static readonly HashSet<PrimType> FramedPrims = new HashSet<PrimType>
-        {
-            PrimType.Pair,
-            PrimType.Left,
-            PrimType.Right,
-            PrimType.Some,
-            PrimType.pair,
-            PrimType.or,
-            PrimType.option,
-            PrimType.map,
-            PrimType.big_map,
-            PrimType.list,
-            PrimType.set,
-            PrimType.contract,
-            PrimType.lambda
-        };
-
-        static readonly HashSet<PrimType> AnnotatedPrims = new HashSet<PrimType>
-        {
-            PrimType.key,
-            PrimType.unit,
-            PrimType.signature,
-            PrimType.operation,
-            PrimType.@int,
-            PrimType.nat,
-            PrimType.@string,
-            PrimType.bytes,
-            PrimType.mutez,
-            PrimType.@bool,
-            PrimType.key_hash,
-            PrimType.timestamp,
-            PrimType.address
-        };
-
-        static readonly HashSet<PrimType> IfPrims = new HashSet<PrimType>
-        {
-            PrimType.IF,
-            PrimType.IF_CONS,
-            PrimType.IF_LEFT,
-            PrimType.IF_NONE
-        };
-        
         public static string MichelineToMichelson(IMicheline data, bool inline = false)
         {
-            return FormatNode(data, inline:inline,  isRoot:true);
+            return FormatNode(data, inline:inline,  root:true);
         }
 
         static bool IsFramed(MichelinePrim prim)
         {
-            return FramedPrims.Contains(prim.Prim) || AnnotatedPrims.Contains(prim.Prim) && prim.Annots != null;
+            switch (prim.Prim)
+            {
+                case PrimType.Pair:
+                case PrimType.Left:
+                case PrimType.Right:
+                case PrimType.Some:
+                case PrimType.Elt:
+                case PrimType.pair:
+                case PrimType.or:
+                case PrimType.option:
+                case PrimType.map:
+                case PrimType.big_map:
+                case PrimType.list:
+                case PrimType.set:
+                case PrimType.contract:
+                case PrimType.lambda:
+                case PrimType.sapling_state:
+                case PrimType.sapling_transaction:
+                case PrimType.ticket:
+                    return true;
+                default:
+                    return prim.Annots?.Any(x => x.Type != AnnotationType.Variable) ?? false;
+            }
         }
         
         static bool IsInline(MichelinePrim prim)
@@ -67,21 +47,19 @@ namespace Netezos.Encoding.Serialization
 
         static bool IsScript(MichelineArray node)
         {
-            if (node.Count != 3)
-                return false;
-            
-            return node.Any(x => x is MichelinePrim p && p.Prim == PrimType.parameter)
+            return node.Count == 3
+                && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.parameter)
                 && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.storage)
                 && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.code);
         }
 
-        static string FormatNode(IMicheline node, string indent = "", bool inline = false, bool isRoot = false, bool wrapped = false)
+        static string FormatNode(IMicheline node, string indent = "", bool inline = false, bool root = false, bool wrapped = false)
         {
             switch (node)
             {
                 case MichelineArray array:
                 {
-                    var isScriptRoot = isRoot && IsScript(array);
+                    var isScriptRoot = root && IsScript(array);
                     var seqIndent = isScriptRoot ? indent : $"{indent}{new string(' ', 2)}";
                     var items = array.Select(x => FormatNode(x, seqIndent, inline, wrapped: true)).ToList();
                     if (!items.Any())
@@ -98,7 +76,7 @@ namespace Netezos.Encoding.Serialization
                 case MichelinePrim prim:
                     var expr = $"{prim.Prim}{(prim.Annots != null ? $" {string.Join(" ", prim.Annots)}" : "")}";
                     var args = prim.Args ?? new List<IMicheline>();
-                    if (prim.Prim == PrimType.LAMBDA || IfPrims.Contains(prim.Prim))
+                    if (prim.Prim == PrimType.LAMBDA || (prim.Prim >= PrimType.IF && prim.Prim <= PrimType.IF_NONE))
                     {
                         var argIndent = $"{indent}{new string(' ', 2)}";
                         var items = args.Select(x => FormatNode(x, argIndent, inline)).ToList();
@@ -133,7 +111,7 @@ namespace Netezos.Encoding.Serialization
                         }
                     }
 
-                    if (IsFramed(prim) && !isRoot && !wrapped)
+                    if (IsFramed(prim) && !root && !wrapped)
                         return $"({expr})";
                     else
                         return expr;

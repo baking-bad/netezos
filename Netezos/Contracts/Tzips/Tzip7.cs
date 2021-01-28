@@ -2,7 +2,7 @@
 {
     public static class Tzip7
     {
-        public static bool IsFA12(this Contract contract)
+        public static bool IsFA12(this ContractScript contract)
         {
             return contract.Entrypoints.TryGetValue("transfer", out var transfer) && CheckTransfer(transfer)
                 && contract.Entrypoints.TryGetValue("approve", out var approve) && CheckApprove(approve)
