@@ -24,6 +24,7 @@ namespace Netezos.Encoding.Serialization
             PrimType.contract,
             PrimType.lambda
         };
+
         static readonly HashSet<PrimType> AnnotatedPrims = new HashSet<PrimType>
         {
             PrimType.key,
@@ -40,45 +41,28 @@ namespace Netezos.Encoding.Serialization
             PrimType.timestamp,
             PrimType.address
         };
-        static readonly HashSet<PrimType> IfPrimTypes = new HashSet<PrimType>
+
+        static readonly HashSet<PrimType> IfPrims = new HashSet<PrimType>
         {
             PrimType.IF,
             PrimType.IF_CONS,
             PrimType.IF_LEFT,
             PrimType.IF_NONE
         };
-        static readonly HashSet<string> WrapPrimTypes = new HashSet<string>
-        {
-            "Left",
-            "Right",
-            "Some",
-            "Pair"
-        };
         
-        public static string MichelineToMichelson(IMicheline data, bool inLine = false, bool wrap = false)
+        public static string MichelineToMichelson(IMicheline data, bool inline = false)
         {
-            var res = FormatNode(data, inLine:inLine,  isRoot:true);
-            return wrap && WrapPrimTypes.Any(x => res.StartsWith(x)) ? $"({res})" : res;
+            return FormatNode(data, inline:inline,  isRoot:true);
         }
 
         static bool IsFramed(MichelinePrim prim)
         {
-            if (FramedPrims.Contains(prim.Prim))
-                return true;
-            if (AnnotatedPrims.Contains(prim.Prim))
-                return prim.Annots != null;
-
-            return false;
+            return FramedPrims.Contains(prim.Prim) || AnnotatedPrims.Contains(prim.Prim) && prim.Annots != null;
         }
         
         static bool IsInline(MichelinePrim prim)
         {
             return prim.Prim == PrimType.PUSH;
-        }
-        
-        static bool ForceNewLine(MichelinePrim prim)
-        {
-            return prim.Prim == PrimType.or;
         }
 
         static bool IsScript(MichelineArray node)
@@ -87,11 +71,11 @@ namespace Netezos.Encoding.Serialization
                 return false;
             
             return node.Any(x => x is MichelinePrim p && p.Prim == PrimType.parameter)
-                   && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.storage)
-                   && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.code);
+                && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.storage)
+                && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.code);
         }
 
-        static string FormatNode(IMicheline node, string indent = "", bool inLine = false, bool isRoot = false, bool wrapped = false)
+        static string FormatNode(IMicheline node, string indent = "", bool inline = false, bool isRoot = false, bool wrapped = false)
         {
             switch (node)
             {
@@ -99,13 +83,13 @@ namespace Netezos.Encoding.Serialization
                 {
                     var isScriptRoot = isRoot && IsScript(array);
                     var seqIndent = isScriptRoot ? indent : $"{indent}{new string(' ', 2)}";
-                    var items = array.Select(x => FormatNode(x, seqIndent, inLine, wrapped: true)).ToList();
+                    var items = array.Select(x => FormatNode(x, seqIndent, inline, wrapped: true)).ToList();
                     if (!items.Any())
                         return "{}";
                     
                     var length = indent.Length + items.Sum(x => x.Length) + 4;
                     var space = isScriptRoot ? "" : " ";
-                    var seq = inLine || length < LineSize
+                    var seq = inline || length < LineSize
                         ? string.Join($"{space}; ", items)
                         : string.Join($"{space};\n{seqIndent}", items);
                     
@@ -113,33 +97,33 @@ namespace Netezos.Encoding.Serialization
                 }
                 case MichelinePrim prim:
                     var expr = $"{prim.Prim}{(prim.Annots != null ? $" {string.Join(" ", prim.Annots)}" : "")}";
-                    var args = prim.Args != null && prim.Args.Any() ? prim.Args : new List<IMicheline>();
-                    if (prim.Prim == PrimType.LAMBDA || IfPrimTypes.Contains(prim.Prim))
+                    var args = prim.Args ?? new List<IMicheline>();
+                    if (prim.Prim == PrimType.LAMBDA || IfPrims.Contains(prim.Prim))
                     {
                         var argIndent = $"{indent}{new string(' ', 2)}";
-                        var items = args.Select(x => FormatNode(x, argIndent, inLine)).ToList();
+                        var items = args.Select(x => FormatNode(x, argIndent, inline)).ToList();
                         var lenght = indent.Length + expr.Length + items.Sum(x => x.Length) + items.Count() + 1;
-                        if (inLine || lenght < LineSize)
+                        if (inline || lenght < LineSize)
                             expr = $"{expr} {string.Join(" ", items)}";
                         else
                         {
                             expr = $"{expr}\n{argIndent}{string.Join($"\n{argIndent}", items)}";
                         }
                     }
-                    else if (args.Count() == 1)
+                    else if (args.Count == 1)
                     {
                         var argIndent = $"{indent}{new string(' ', expr.Length + 1)}";
-                        expr = $"{expr} {FormatNode((IMicheline)args[0], argIndent, inLine)}";
+                        expr = $"{expr} {FormatNode(args[0], argIndent, inline)}";
                     }
-                    else if (args.Count() > 1)
+                    else if (args.Count > 1)
                     {
                         var argIndent = $"{indent}{new string(' ', 2)}";
                         var altIndent = $"{indent}{new string(' ', expr.Length + 2)}";
                         foreach (var arg in args)
                         {
-                            var item = FormatNode((IMicheline)arg, argIndent, inLine);
+                            var item = FormatNode(arg, argIndent, inline);
                             var lenght = indent.Length + expr.Length + item.Length + 1;
-                            if ((inLine || IsInline(prim) || lenght < LineSize) && !ForceNewLine(prim))
+                            if (inline || IsInline(prim) || lenght < LineSize)
                             {
                                 argIndent = altIndent;
                                 expr = $"{expr} {item}";
@@ -154,13 +138,13 @@ namespace Netezos.Encoding.Serialization
                     else
                         return expr;
                 case MichelineBytes bytes:
-                    return $"0x{bytes.Value}";
+                    return $"0x{Hex.Convert(bytes.Value)}";
                 case MichelineInt val:
-                    return val.Value.ToString();
+                    return $"{val.Value}";
                 case MichelineString str:
                     return str.Value;
                 default:
-                    throw new ArgumentException($"Unexpected node {node}");
+                    throw new ArgumentException($"Invalid micheline type {node.Type}");
             }
         }
     }
