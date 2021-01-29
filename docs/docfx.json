@@ -6,12 +6,15 @@
           "files": [
             "**.csproj"
           ],
-          "src": "C:\\Projects\\netezos\\Netezos.Ledger"
+          "src": "../Netezos/"
         }
       ],
       "dest": "api",
       "disableGitFeatures": false,
-      "disableDefaultFilter": false
+      "disableDefaultFilter": false,
+      "properties": {
+        "TargetFramework": "netstandard2.0"
+      }
     }
   ],
   "build": {
@@ -24,8 +27,8 @@
       },
       {
         "files": [
-          "articles/**.md",
-          "articles/**/toc.yml",
+          "get-started/**.md",
+          "get-started/**/toc.yml",
           "toc.yml",
           "*.md"
         ]
@@ -34,7 +37,9 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "dotNetTZ_violet.svg",
+          "favicon.ico"
         ]
       }
     ],
@@ -50,16 +55,33 @@
       }
     ],
     "dest": "_site",
-    "globalMetadataFiles": [],
+    "globalMetadataFiles": ["globalMetadata.json"],
     "fileMetadataFiles": [],
     "template": [
-      "default"
+      "default",
+      "templates/material"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "disableGitFeatures": false,
+    "sitemap": {
+      "baseUrl": "https://netezos.com/",
+      "priority": 1,
+      "changefreq": "monthly",
+      "fileOptions": {
+        "**/api/**.yml": {
+          "priority": 0.3,
+          "lastmod": "2001-01-01"
+        },
+        "**/GettingStarted.md": {
+          "baseUrl": "https://dotnet.github.io/docfx/conceptual",
+          "priority": 0.8,
+          "changefreq": "daily"
+        }
+      }
+    }
   }
 }
