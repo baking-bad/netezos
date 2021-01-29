@@ -6,7 +6,7 @@
           "files": [
             "**.csproj"
           ],
-          "src": "C:\\Projects\\netezos\\Netezos"
+          "src": ""
         }
       ],
       "dest": "api",
