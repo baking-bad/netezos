@@ -340,3 +340,5 @@ ASALocalRun/
 healthchecksdb
 /Netezos.Keys/Netezos.Keys.csproj.DotSettings
 /Netezos.Forge/Netezos.Forge.csproj.DotSettings
+
+docs/_site
