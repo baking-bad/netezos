@@ -3,6 +3,7 @@
   "_appFooter": "BB 2020",
   "_appLogoPath": "dotNetTZ_violet.svg",
   "_appLogoFavicon": "favicon.ico",
+  "twitter:title": "OneTwoThree",
   "_disableAffix": true,
   "_gitContribute": {
     "branch": "master"

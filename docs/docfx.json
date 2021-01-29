@@ -56,7 +56,7 @@
     ],
     "dest": "_site",
     "globalMetadataFiles": ["globalMetadata.json"],
-    "fileMetadataFiles": [],
+    "fileMetadataFiles": ["fileMetadata.json"],
     "template": [
       "default",
       "templates/material"

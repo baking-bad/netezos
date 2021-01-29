@@ -1,0 +1,10 @@
+{
+  "priority": {
+    "**.md": 2.5
+  },
+  "keywords": {
+    "api/*": ["API", "Reference"],
+    "**.md": ["Spec", "Conceptual"],
+    "get-started/*": ["Get", "Started"]
+  }
+}
