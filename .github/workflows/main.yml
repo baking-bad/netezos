@@ -28,5 +28,5 @@ jobs:
     - uses: maxheld83/ghpages@master
       name: Publish Documentation on GitHub Pages
       env:
-        BUILD_DIR: _site # docfx's default output directory is _site
+        BUILD_DIR: Netezos/_site # docfx's default output directory is _site
         GH_PAT: ${{ secrets.TOKEN }} # See https://github.com/maxheld83/ghpages
