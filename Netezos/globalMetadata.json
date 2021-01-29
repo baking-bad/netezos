@@ -1,7 +1,14 @@
 {
   "_appTitle": "BB Docs",
   "_appFooter": "BB 2020",
+  "_appLogoPath": "dotNetTZ_violet.svg",
+  "_appLogoFavicon": "favicon.ico",
+  "_disableAffix": true,
   "_gitContribute": {
+    "branch": "master"
+  },
+  "_gitUrlPattern": "github",
+  "newFileRepository": {
     "branch": "master"
   }
 }

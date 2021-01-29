@@ -27,8 +27,8 @@
       },
       {
         "files": [
-          "articles/**.md",
-          "articles/**/toc.yml",
+          "get-started/**.md",
+          "get-started/**/toc.yml",
           "toc.yml",
           "*.md"
         ]
@@ -37,7 +37,9 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "dotNetTZ_violet.svg",
+          "favicon.ico"
         ]
       }
     ],
@@ -64,6 +66,22 @@
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "disableGitFeatures": false,
+    "sitemap": {
+      "baseUrl": "https://netezos.com/",
+      "priority": 1,
+      "changefreq": "monthly",
+      "fileOptions": {
+        "**/api/**.yml": {
+          "priority": 0.3,
+          "lastmod": "2001-01-01"
+        },
+        "**/GettingStarted.md": {
+          "baseUrl": "https://dotnet.github.io/docfx/conceptual",
+          "priority": 0.8,
+          "changefreq": "daily"
+        }
+      }
+    }
   }
 }

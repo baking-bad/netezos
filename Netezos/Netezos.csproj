@@ -29,4 +29,14 @@
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="dotNetTZ.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <None Remove="dotNetTZ_violet.svg" />
+    <Resource Include="dotNetTZ_violet.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>
