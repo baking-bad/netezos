@@ -29,4 +29,4 @@ jobs:
       name: Publish Documentation on GitHub Pages
       env:
         BUILD_DIR: _site # docfx's default output directory is _site
-        GH_PAT: ${{ 075cbcc952849513ff5b543e257e292739643247 }} # See https://github.com/maxheld83/ghpages
+        GH_PAT: ${{ secrets.TOKEN }} # See https://github.com/maxheld83/ghpages
