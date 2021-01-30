@@ -39,7 +39,8 @@
         "files": [
           "images/**",
           "dotNetTZ_violet.svg",
-          "favicon.ico"
+          "favicon.ico",
+          "index.html"
         ]
       }
     ],
