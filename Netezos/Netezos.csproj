@@ -21,22 +21,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="docfx.console" Version="2.56.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Dynamic.Json" Version="1.2.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.8" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="dotNetTZ.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <None Remove="dotNetTZ_violet.svg" />
-    <Resource Include="dotNetTZ_violet.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
+  
 </Project>
