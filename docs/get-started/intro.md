@@ -1,4 +1,3 @@
-<img="images/dotNetTZ_violet.svg"></img>
 ## Getting started
 
 Let's consider the most common use case - sending a transaction.
