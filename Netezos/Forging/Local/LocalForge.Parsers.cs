@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace Netezos.Forging
 {
-    public partial class LocalForge : IOperationForger
+    public partial class LocalForge : IForge
     {
         static bool ParseBool(byte[] bytes)
         {

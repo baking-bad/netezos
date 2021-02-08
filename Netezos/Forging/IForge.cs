@@ -5,7 +5,7 @@ using Netezos.Forging.Models;
 
 namespace Netezos.Forging
 {
-    public interface IOperationForger
+    public interface IForge
     {
         Task<byte[]> ForgeOperationAsync(string branch, OperationContent content);
 

@@ -5,7 +5,7 @@ using Netezos.Forging.Models;
 
 namespace Netezos.Forging
 {
-    public partial class LocalForge : IOperationForger
+    public partial class LocalForge : IForge
     {
         static byte[] ForgeOperation(OperationContent content)
         {
