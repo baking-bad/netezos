@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Netezos.Forging
 {
-    public partial class LocalForge : IForge
+    public partial class LocalForge
     {
         static byte[] Concat(params byte[][] arrays)
         {

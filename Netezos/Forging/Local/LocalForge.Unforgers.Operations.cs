@@ -5,9 +5,10 @@ using Netezos.Forging.Models;
 
 namespace Netezos.Forging
 {
-    public partial class LocalParse : IOperationParser
+    public partial class LocalForge
     {
-        static byte[] ParseOperation(OperationContent content)
+        /*
+        static OperationContent ParseOperation(byte[] bytes)
         {
             switch (content)
             {
@@ -207,5 +208,7 @@ namespace Netezos.Forging
                 ParseArray(ParseMicheline(script.Storage)));
         }
         #endregion
+
+        */
     }
 }

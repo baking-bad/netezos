@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace Netezos.Forging
 {
-    public partial class LocalForge : IForge
+    public partial class LocalForge
     {
         static byte[] ForgeBool(bool value)
         {

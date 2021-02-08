@@ -89,6 +89,18 @@ namespace Netezos.Tests.Forging
 
             LocalForge localForge = new LocalForge();
 
+            //MichelineArray ma = new MichelineArray(2);
+            //MichelineArray ima = new MichelineArray(1);
+            //ima.Add(new MichelineInt(5));
+            //ma.Add(ima);
+            //ma.Add(new MichelineString("We love Tezos!"));
+            //ma.Add(new MichelineString("We love Tezos!"));
+            //ma.Add(new MichelineString("We love Tezos!"));
+            //ma.Add(new MichelineString("We love Tezos!"));
+            //ma.Add(new MichelineInt(15));
+            //byte[] opBytes = LocalForge.ForgeMicheline(ma);
+            //var result = LocalForge.UnforgeMicheline(opBytes);
+
             //OriginationContent content = await localForge.ParseOperationAsync<OriginationContent>(operationBytes);
 
             await Task.FromResult(0);
