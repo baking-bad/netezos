@@ -81,15 +81,15 @@ namespace Netezos.Tests.Forging
         [Fact]
         public async Task CompareUnforgedFromFile()
         {
-            string opHex = @"../../../Forging/operations/ongeyECmEtrDFJbebtL1Frq4HPp369bvcTBZaL6kR4FsF36r72r/forged.hex";
+            //string opHex = @"../../../Forging/operations/ongeyECmEtrDFJbebtL1Frq4HPp369bvcTBZaL6kR4FsF36r72r/forged.hex";
 
-            byte[] localBytes = Hex.Parse(opHex);
+            //byte[] localBytes = Hex.Parse(opHex);
 
-            byte[] operationBytes = localBytes.GetBytes(32, localBytes.Length - 32);
+            //Span<byte> operationBytes = localBytes.GetSpan(32);
 
             LocalForge localForge = new LocalForge();
 
-            //OriginationContent content = await localForge.UnforgeOperationAsync<OriginationContent>(operationBytes);
+            //OriginationContent content = await localForge.ParseOperationAsync<OriginationContent>(operationBytes);
 
             await Task.FromResult(0);
 

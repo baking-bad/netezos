@@ -8,7 +8,7 @@ using Netezos.Rpc;
 
 namespace Netezos.Forging
 {
-    public class RpcForge : IForge
+    public class RpcForge : IOperationForger
     {
         readonly TezosRpc Rpc;
         

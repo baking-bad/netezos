@@ -6,7 +6,7 @@ using Netezos.Forging.Models;
 
 namespace Netezos.Forging
 {
-    public partial class LocalForge : IForge
+    public partial class LocalForge : IOperationForger
     {
         public Task<byte[]> ForgeOperationAsync(string branch, OperationContent content)
         {
@@ -16,10 +16,10 @@ namespace Netezos.Forging
             return Task.FromResult(branchBytes.Concat(contentBytes));
         }
 
-        //public Task<OperationContent> UnforgeOperationAsync<TContent>(byte[] contentBytes)
+        //public Task<OperationContent> ParseOperationAsync<TContent>(byte[] contentBytes)
         //{
         //    var branchBytes = Base58.Parse(branch, 2);
-        //    var contentBytes = ForgeOperation(content);
+        //    var contentBytes = ParseOperationAsync(content);
 
         //    return Task.FromResult(branchBytes.Concat(contentBytes));
         //}
