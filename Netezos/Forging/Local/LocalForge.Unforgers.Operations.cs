@@ -7,205 +7,210 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        /*
-        static OperationContent ParseOperation(byte[] bytes)
+        static OperationContent UnforgeOperation(byte[] bytes)
         {
-            switch (content)
+            using (MichelineReader reader = new MichelineReader(bytes))
             {
-                case EndorsementContent endorsement:
-                    return ParseEndorsement(endorsement);
-                case BallotContent ballot:
-                    return ParseBallot(ballot);
-                case ProposalsContent proposals:
-                    return ParseProposals(proposals);
-                case ActivationContent activation:
-                    return ParseActivation(activation);
-                case DoubleBakingContent doubleBaking:
-                    return ParseDoubleBaking(doubleBaking);
-                case DoubleEndorsementContent doubleEndorsement:
-                    return ParseDoubleEndorsement(doubleEndorsement);
-                case SeedNonceRevelationContent seed:
-                    return ParseSeedNonceRevelaion(seed);
-                case DelegationContent delegation:
-                    return ParseDelegation(delegation);
-                case OriginationContent origination:
-                    return ParseOrigination(origination);
-                case TransactionContent transaction:
-                    return ParseTransaction(transaction);
-                case RevealContent reveal:
-                    return ParseReveal(reveal);
-                default:
-                    throw new ArgumentException($"Invalid operation content kind {content.Kind}");
+                int operation = reader.ReadMichelineNatural();
+
+                switch ((OperationTag)operation)
+                {
+                    case OperationTag.Endorsement:
+                        return UnforgeEndorsement(reader);
+                    case OperationTag.Ballot:
+                        return UnforgeBallot(reader);
+                    case OperationTag.Proposals:
+                        return UnforgeProposals(reader);
+                    //case ActivationContent activation:
+                    //    return ParseActivation(activation);
+                    //case DoubleBakingContent doubleBaking:
+                    //    return ParseDoubleBaking(doubleBaking);
+                    //case DoubleEndorsementContent doubleEndorsement:
+                    //    return ParseDoubleEndorsement(doubleEndorsement);
+                    //case SeedNonceRevelationContent seed:
+                    //    return ParseSeedNonceRevelaion(seed);
+                    //case DelegationContent delegation:
+                    //    return ParseDelegation(delegation);
+                    //case OriginationContent origination:
+                    //    return ParseOrigination(origination);
+                    //case TransactionContent transaction:
+                    //    return ParseTransaction(transaction);
+                    //case RevealContent reveal:
+                    //    return ParseReveal(reveal);
+                    default:
+                        throw new ArgumentException($"Invalid operation: {operation}");
+                }
             }
         }
 
-        static byte[] ParseEndorsement(EndorsementContent operation)
+        static EndorsementContent UnforgeEndorsement(MichelineReader reader)
         {
-            return Concat(
-                ParseMicheNat((int)OperationTag.Endorsement),
-                ParseInt32(operation.Level));
+            return new EndorsementContent
+            {
+                Level = reader.ReadInt32()
+            };
         }
 
-        static byte[] ParseBallot(BallotContent operation)
+        static BallotContent UnforgeBallot(MichelineReader reader)
         {
-            return Concat(
-                ParseMicheNat((int)OperationTag.Ballot),
-                ParseTzAddress(operation.Source),
-                ParseInt32(operation.Period),
-                Base58.Parse(operation.Proposal, 2),
-                new[] { (byte)operation.Ballot });
+            return new BallotContent
+            {
+                Source = reader.ReadTzAddress(),
+                Period = reader.ReadInt32(),
+                Proposal =  Base58.Convert(reader.ReadBytes(Lengths.P.Decoded), Prefix.P),
+                Ballot = (Ballot)reader.ReadByte()
+            };
         }
 
-        static byte[] ParseProposals(ProposalsContent operation)
+        static ProposalsContent UnforgeProposals(MichelineReader reader)
         {
-            return Concat(
-                ParseMicheNat((int)OperationTag.Proposals),
-                ParseTzAddress(operation.Source),
-                ParseInt32(operation.Period),
-                ParseArray(operation.Proposals
-                    .Select(x => Base58.Parse(x, 2))
-                    .SelectMany(x => x)
-                    .ToArray()));
+            return new ProposalsContent
+            {
+                Source = reader.ReadTzAddress(),
+                Period = reader.ReadInt32(),
+                Proposals = reader.ReadEnumerable(Lengths.P.Decoded, bytes => Base58.Convert(bytes, Prefix.P)).ToList()
+            };
         }
 
-        static byte[] ParseActivation(ActivationContent operation)
+        /*
+        static byte[] ForgeActivation(ActivationContent operation)
         {
             return Concat(
-                ParseMicheNat((int)OperationTag.Activation),
-                ParseTz1Address(operation.Address),
-                Hex.Parse(operation.Secret));
+                ForgeMicheNat((int)OperationTag.Activation),
+                ForgeTz1Address(operation.Address),
+                Hex.Forge(operation.Secret));
         }
 
-        static byte[] ParseDoubleBaking(DoubleBakingContent operation)
+        static byte[] ForgeDoubleBaking(DoubleBakingContent operation)
         {
             return Concat(
-                ParseMicheNat((int)OperationTag.DoubleBaking),
-                ParseArray(ParseBlockHeader(operation.BlockHeader1)),
-                ParseArray(ParseBlockHeader(operation.BlockHeader2)));
+                ForgeMicheNat((int)OperationTag.DoubleBaking),
+                ForgeArray(ForgeBlockHeader(operation.BlockHeader1)),
+                ForgeArray(ForgeBlockHeader(operation.BlockHeader2)));
         }
 
-        static byte[] ParseDoubleEndorsement(DoubleEndorsementContent operation)
+        static byte[] ForgeDoubleEndorsement(DoubleEndorsementContent operation)
         {
             return Concat(
-                ParseMicheNat((int)OperationTag.DoubleEndorsement),
-                ParseArray(ParseInlinedEndorsement(operation.Op1)),
-                ParseArray(ParseInlinedEndorsement(operation.Op2)));
+                ForgeMicheNat((int)OperationTag.DoubleEndorsement),
+                ForgeArray(ForgeInlinedEndorsement(operation.Op1)),
+                ForgeArray(ForgeInlinedEndorsement(operation.Op2)));
         }
 
-        static byte[] ParseSeedNonceRevelaion(SeedNonceRevelationContent operation)
+        static byte[] ForgeSeedNonceRevelaion(SeedNonceRevelationContent operation)
         {
             return Concat(
-                ParseMicheNat((int)OperationTag.SeedNonceRevelation),
-                ParseInt32(operation.Level),
-                Hex.Parse(operation.Nonce));
+                ForgeMicheNat((int)OperationTag.SeedNonceRevelation),
+                ForgeInt32(operation.Level),
+                Hex.Forge(operation.Nonce));
         }
 
-        static byte[] ParseDelegation(DelegationContent operation)
+        static byte[] ForgeDelegation(DelegationContent operation)
         {
             return Concat(
-                ParseMicheNat((int)OperationTag.Delegation),
-                ParseTzAddress(operation.Source),
-                ParseMicheNat(operation.Fee),
-                ParseMicheNat(operation.Counter),
-                ParseMicheNat(operation.GasLimit),
-                ParseMicheNat(operation.StorageLimit),
-                ParseDelegate(operation.Delegate));
+                ForgeMicheNat((int)OperationTag.Delegation),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeDelegate(operation.Delegate));
         }
 
-        static byte[] ParseOrigination(OriginationContent operation)
+        static byte[] ForgeOrigination(OriginationContent operation)
         {
             return Concat(
-                ParseMicheNat((int)OperationTag.Origination),
-                ParseTzAddress(operation.Source),
-                ParseMicheNat(operation.Fee),
-                ParseMicheNat(operation.Counter),
-                ParseMicheNat(operation.GasLimit),
-                ParseMicheNat(operation.StorageLimit),
-                ParseMicheNat(operation.Balance),
-                ParseDelegate(operation.Delegate),
-                ParseScript(operation.Script));
+                ForgeMicheNat((int)OperationTag.Origination),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeMicheNat(operation.Balance),
+                ForgeDelegate(operation.Delegate),
+                ForgeScript(operation.Script));
         }
 
-        static byte[] ParseTransaction(TransactionContent operation)
+        static byte[] ForgeTransaction(TransactionContent operation)
         {
             return Concat(
-                ParseMicheNat((int)OperationTag.Transaction),
-                ParseTzAddress(operation.Source),
-                ParseMicheNat(operation.Fee),
-                ParseMicheNat(operation.Counter),
-                ParseMicheNat(operation.GasLimit),
-                ParseMicheNat(operation.StorageLimit),
-                ParseMicheNat(operation.Amount),
-                ParseAddress(operation.Destination),
-                ParseParameters(operation.Parameters));
+                ForgeMicheNat((int)OperationTag.Transaction),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeMicheNat(operation.Amount),
+                ForgeAddress(operation.Destination),
+                ForgeParameters(operation.Parameters));
         }
 
-        static byte[] ParseReveal(RevealContent operation)
+        static byte[] ForgeReveal(RevealContent operation)
         {
             return Concat(
-                ParseMicheNat((int)OperationTag.Reveal),
-                ParseTzAddress(operation.Source),
-                ParseMicheNat(operation.Fee),
-                ParseMicheNat(operation.Counter),
-                ParseMicheNat(operation.GasLimit),
-                ParseMicheNat(operation.StorageLimit),
-                ParsePublicKey(operation.PublicKey));
+                ForgeMicheNat((int)OperationTag.Reveal),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgePublicKey(operation.PublicKey));
         }
 
         #region nested
-        static byte[] ParseBlockHeader(BlockHeader header)
+        static byte[] ForgeBlockHeader(BlockHeader header)
         {
             return Concat(
-                ParseInt32(header.Level),
-                ParseInt32(header.Proto, 1),
+                ForgeInt32(header.Level),
+                ForgeInt32(header.Proto, 1),
                 Base58.Parse(header.Predecessor, 2),
-                ParseInt64(header.Timestamp.ToUnixTime()),
-                ParseInt32(header.ValidationPass, 1),
+                ForgeInt64(header.Timestamp.ToUnixTime()),
+                ForgeInt32(header.ValidationPass, 1),
                 Base58.Parse(header.OperationsHash, 3),
-                ParseArray(header.Fitness.Select(x => ParseArray(Hex.Parse(x))).SelectMany(x => x).ToArray()),
+                ForgeArray(header.Fitness.Select(x => ForgeArray(Hex.Forge(x))).SelectMany(x => x).ToArray()),
                 Base58.Parse(header.Context, 2),
-                ParseInt32(header.Priority, 2),
-                Hex.Parse(header.ProofOfWorkNonce),
-                ParseSeedNonce(header.SeedNonceHash),
+                ForgeInt32(header.Priority, 2),
+                Hex.Forge(header.ProofOfWorkNonce),
+                ForgeSeedNonce(header.SeedNonceHash),
                 Base58.Parse(header.Signature, 3));
         }
 
-        static byte[] ParseInlinedEndorsement(InlinedEndorsement op)
+        static byte[] ForgeInlinedEndorsement(InlinedEndorsement op)
         {
             return Concat(
                 Base58.Parse(op.Branch, 2),
-                ParseMicheNat((int)OperationTag.Endorsement),
-                ParseInt32(op.Operations.Level),
+                ForgeMicheNat((int)OperationTag.Endorsement),
+                ForgeInt32(op.Operations.Level),
                 Base58.Parse(op.Signature, 3));
         }
 
-        static byte[] ParseSeedNonce(string nonce)
+        static byte[] ForgeSeedNonce(string nonce)
         {
-            return nonce == null ? ParseBool(false) : Concat(
-                ParseBool(true),
+            return nonce == null ? ForgeBool(false) : Concat(
+                ForgeBool(true),
                 Base58.Parse(nonce, 3));
         }
 
-        static byte[] ParseDelegate(string delegat)
+        static byte[] ForgeDelegate(string delegat)
         {
-            return delegat == null ? ParseBool(false) : Concat(
-                ParseBool(true),
-                ParseTzAddress(delegat));
+            return delegat == null ? ForgeBool(false) : Concat(
+                ForgeBool(true),
+                ForgeTzAddress(delegat));
         }
 
-        static byte[] ParseParameters(Parameters param)
+        static byte[] ForgeParameters(Parameters param)
         {
-            return param == null ? ParseBool(false) : Concat(
-                ParseBool(true),
-                ParseEntrypoint(param.Entrypoint),
-                ParseArray(ParseMicheline(param.Value).ToArray()));
+            return param == null ? ForgeBool(false) : Concat(
+                ForgeBool(true),
+                ForgeEntrypoint(param.Entrypoint),
+                ForgeArray(ForgeMicheline(param.Value).ToArray()));
         }
 
-        static byte[] ParseScript(Script script)
+        static byte[] ForgeScript(Script script)
         {
             return Concat(
-                ParseArray(ParseMicheline(script.Code)),
-                ParseArray(ParseMicheline(script.Storage)));
+                ForgeArray(ForgeMicheline(script.Code)),
+                ForgeArray(ForgeMicheline(script.Storage)));
         }
         #endregion
 

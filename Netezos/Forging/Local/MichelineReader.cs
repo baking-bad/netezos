@@ -51,32 +51,37 @@ namespace Netezos.Forging
 
             switch (tag)
             {
-                case 0: return ReadInt();
-                case 1: return ReadString();
-                case 2: return ReadArray();
-                case 3: return ReadPrimitive(0, false);
-                case 4: return ReadPrimitive(0, true);
-                case 5: return ReadPrimitive(1, false);
-                case 6: return ReadPrimitive(1, true);
-                case 7: return ReadPrimitive(2, false);
-                case 8: return ReadPrimitive(2, true);
-                case 9: return ReadPrimitive(3, true);
-                case 10: return ReadBytes();
+                case 0: return ReadMichelineInt();
+                case 1: return ReadMichelineString();
+                case 2: return ReadMichelineArray();
+                case 3: return ReadMichelinePrimitive(0, false);
+                case 4: return ReadMichelinePrimitive(0, true);
+                case 5: return ReadMichelinePrimitive(1, false);
+                case 6: return ReadMichelinePrimitive(1, true);
+                case 7: return ReadMichelinePrimitive(2, false);
+                case 8: return ReadMichelinePrimitive(2, true);
+                case 9: return ReadMichelinePrimitive(3, true);
+                case 10: return ReadMichelineBytes();
                 default: throw new InvalidOperationException($"Unknown tag {tag} at position {_reader.BaseStream.Position}");
             }
         }
 
-        public MichelineInt ReadInt()
+        public MichelineInt ReadMichelineInt()
         {
-            return new MichelineInt(ReadMicheInt());
+            return new MichelineInt(ReadMichelineBigInteger());
         }
 
-        public MichelineString ReadString()
+        public MichelineString ReadMichelineString()
         {
-            return new MichelineString(ReadNativeString());
+            return new MichelineString(ReadString());
         }
 
-        public MichelineArray ReadArray()
+        public MichelineBytes ReadMichelineBytes()
+        {
+            return new MichelineBytes(ReadArrayData());
+        }
+
+        public MichelineArray ReadMichelineArray()
         {
             byte[] arrayData = ReadArrayData();
 
@@ -93,7 +98,7 @@ namespace Netezos.Forging
             return res;
         }
 
-        private MichelinePrim ReadPrimitive(int argsLength, bool annotations = false)
+        private MichelinePrim ReadMichelinePrimitive(int argsLength, bool annotations = false)
         {
             PrimType primTag = (PrimType)_reader.ReadByte();
 
@@ -111,7 +116,7 @@ namespace Netezos.Forging
             }
             else if (argsLength == 3)
             {
-                prim.Args = ReadArray();
+                prim.Args = ReadMichelineArray();
             }
             else
             {
@@ -126,7 +131,7 @@ namespace Netezos.Forging
                 {
                     using (MichelineReader valueReader = new MichelineReader(value))
                     {
-                        prim.Annots = valueReader.ReadNativeString()
+                        prim.Annots = valueReader.ReadString()
                             .Split(' ')
                             .Select(a =>
                             {
@@ -162,11 +167,6 @@ namespace Netezos.Forging
             return prim;
         }
 
-        public MichelineBytes ReadBytes()
-        {
-            return new MichelineBytes(ReadArrayData());
-        }
-
         public string ReadPublicKey()
         {
             byte[] prefix;
@@ -196,7 +196,7 @@ namespace Netezos.Forging
             }
         }
 
-        private string ReadTzAddress()
+        public string ReadTzAddress()
         {
             byte[] prefix;
 
@@ -211,16 +211,16 @@ namespace Netezos.Forging
                     throw new ArgumentException($"Invalid source prefix {tzType}");
             }
 
-            return Base58.Convert(_reader.ReadBytes(33), prefix);
+            return Base58.Convert(_reader.ReadBytes(20), prefix);
         }
 
-        private string ReadKtAddress()
+        public string ReadKtAddress()
         {
             _reader.ReadByte(); // Consume padded 0
             return Base58.Convert(_reader.ReadBytes(33), Prefix.KT1);
         }
 
-        public int ReadMicheNat()
+        public int ReadMichelineNatural()
         {
             int value = 0;
 
@@ -242,7 +242,7 @@ namespace Netezos.Forging
             return value;
         }
 
-        public BigInteger ReadMicheInt()
+        public BigInteger ReadMichelineBigInteger()
         {
             int value = 0;
 
@@ -283,28 +283,27 @@ namespace Netezos.Forging
                 case 2: return "do";
                 case 3: return "set_delegate";
                 case 4: return "remove_delegate";
-                case 255: return ReadNativeString();
+                case 255: return ReadString();
                 default: throw new ArgumentException($"Invalid entrypoint prefix {epType}");
             }
         }
 
-        //public string ReadTz1Address(byte[] bytes)
-        //{
-        //    return Base58.Convert(bytes.GetBytes(1, bytes.Length - 1), Prefix.tz1);
-        //}
-
-        private byte[] ReadArrayData()
-        {
-            int arrLen = ReadNativeInt32();
-            return _reader.ReadBytes(arrLen);
-        }
-
-        private bool ReadNativeBool()
+        public bool ReadBool()
         {
             return _reader.ReadByte() == 255;
         }
 
-        private int ReadNativeInt32()
+        public byte ReadByte()
+        {
+            return _reader.ReadByte();
+        }
+
+        public byte[] ReadBytes(int count)
+        {
+            return _reader.ReadBytes(count);
+        }
+
+        public int ReadInt32()
         {
             byte[] bytes = _reader.ReadBytes(4);
 
@@ -318,7 +317,7 @@ namespace Netezos.Forging
             return res;
         }
 
-        private long ReadNativeInt64()
+        public long ReadInt64()
         {
             byte[] bytes = _reader.ReadBytes(8);
 
@@ -335,10 +334,33 @@ namespace Netezos.Forging
             return (uint)i2 | ((long)i1 << 32);
         }
 
-        private string ReadNativeString()
+        public string ReadString()
         {
-            int stringLength = ReadNativeInt32();
+            int stringLength = ReadInt32();
             return Utf8.Convert(_reader.ReadBytes(stringLength));
+        }
+
+        public string ReadTz1Address()
+        {
+            return Base58.Convert(_reader.ReadBytes(23));
+        }
+
+        public IEnumerable<T> ReadEnumerable<T>(int decodedLength, Func<byte[], T> transformer)
+        {
+            int dataLength = ReadInt32();
+
+            int items = dataLength / decodedLength;
+
+            for (int i = 0; i < items; i++)
+            {
+                yield return transformer(ReadBytes(decodedLength));
+            }
+        }
+
+        private byte[] ReadArrayData()
+        {
+            int arrLen = ReadInt32();
+            return _reader.ReadBytes(arrLen);
         }
     }
 }

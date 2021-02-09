@@ -89,6 +89,30 @@ namespace Netezos.Tests.Forging
 
             LocalForge localForge = new LocalForge();
 
+            const string BRANCH = "BLnDza87LjJH4WHp7hkn77ADLoFQNrHX6KojP6dnTf12BpvwS3r";
+
+            BallotContent content = new BallotContent
+            {
+                Period = 19,
+                Source = "tz1UGDXghfW4Z7UhobBkfQTayMrVssCgsGGQ",
+                Proposal = "PsBABY5HQTSkA4297zNHfsZNKtxULfL18y95qb3m53QJiXGmrbU",
+                Ballot = Ballot.Yay
+            };
+
+            //ProposalsContent content = new ProposalsContent
+            //{
+            //    Period = 19,
+            //    Source = "tz1go7f6mEQfT2xX2LuHAqgnRGN6c2zHPf5c",
+            //    Proposals = new List<string>
+            //    {
+            //        "PtCarthavAMoXqbjBPVgDCRd5LgT7qqKWUPXnYii3xCaHRBMfHH",
+            //        "PtEdoTezd3RHSC31mpxxo1npxFjoWWcFgQtxapi51Z8TLu6v6Uq",
+            //    }
+            //};
+
+            byte[] op = await localForge.ForgeOperationAsync(BRANCH, content);
+            (string branch, OperationContent oc) = await localForge.UnforgeOperationAsync(op);
+
             //MichelineArray ma = new MichelineArray(2);
             //MichelineArray ima = new MichelineArray(1);
             //ima.Add(new MichelineInt(5));

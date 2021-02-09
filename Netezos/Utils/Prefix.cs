@@ -3,6 +3,16 @@
     static class Prefix
     {
         /// <summary>
+        /// Black hash prefix
+        /// </summary>
+        public static readonly byte[] B = new byte[] { 1, 52 };
+
+        /// <summary>
+        /// Protocol hash prefix
+        /// </summary>
+        public static readonly byte[] P = new byte[] { 2, 170 };
+
+        /// <summary>
         /// Address prefix for Ed25519
         /// </summary>
         public static readonly byte[] tz1 = new byte[] { 6, 161, 159 };
@@ -76,6 +86,5 @@
         /// Chain id prefix
         /// </summary>
         public static readonly byte[] Net = new byte[] { 87, 82, 0 };
-
     }
 }
