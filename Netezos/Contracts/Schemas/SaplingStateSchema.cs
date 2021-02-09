@@ -22,11 +22,25 @@ namespace Netezos.Contracts
             MemoSize = micheInt.Value;
         }
 
-        internal override void WriteProperty(Utf8JsonWriter writer, IMicheline value)
-            => throw new NotImplementedException("Sapling state is not implemented yet");
-
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
-            => throw new NotImplementedException("Sapling state is not implemented yet");
+        {
+            if (value is MichelineInt micheInt)
+            {
+                writer.WriteStringValue(micheInt.Value.ToString());
+            }
+            else if (value is MichelineArray micheArray)
+            {
+                if (micheArray.Count > 0)
+                    throw new NotImplementedException("At the time of creation there was no any documentation on possible values of sapling_state :(");
+
+                writer.WriteStartArray();
+                writer.WriteEndArray();
+            }
+            else
+            {
+                throw FormatException(value);
+            }
+        }
 
         protected override List<IMicheline> GetArgs()
         {
