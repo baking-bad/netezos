@@ -21,5 +21,18 @@ namespace Netezos.Contracts
 
             throw FormatException(value);
         }
+
+        protected override IMicheline MapValue(object value)
+        {
+            switch (value)
+            {
+                case string str:
+                    return new MichelineString(str);
+                case JsonElement json when json.ValueKind == JsonValueKind.String:
+                    return new MichelineString(json.GetString());
+                default:
+                    throw MapFailedException("invalid value");
+            }
+        }
     }
 }

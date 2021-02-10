@@ -57,5 +57,22 @@ namespace Netezos.Contracts
         {
             return new List<IMicheline>(1) { Some.ToMicheline() };
         }
+
+        protected override IMicheline MapValue(object value)
+        {
+            return value == null || value is JsonElement json && json.ValueKind == JsonValueKind.Null
+                ? new MichelinePrim
+                {
+                    Prim = PrimType.None
+                }
+                : new MichelinePrim
+                {
+                    Prim = PrimType.Some,
+                    Args = new List<IMicheline>(1)
+                    {
+                        Some.MapObject(value, true)
+                    }
+                };
+        }
     }
 }

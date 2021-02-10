@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json;
 using Netezos.Encoding;
@@ -53,6 +54,27 @@ namespace Netezos.Contracts
         protected override List<IMicheline> GetArgs()
         {
             return new List<IMicheline>(1) { Item.ToMicheline() };
+        }
+
+        protected override IMicheline MapValue(object value)
+        {
+            switch (value)
+            {
+                case IEnumerable e:
+                    var arr1 = new MichelineArray();
+                    foreach (var item in e)
+                        arr1.Add(Item.MapObject(item, true));
+                    return arr1;
+
+                case JsonElement json when json.ValueKind == JsonValueKind.Array:
+                    var arr2 = new MichelineArray();
+                    foreach (var item in json.EnumerateArray())
+                        arr2.Add(Item.MapObject(item, true));
+                    return arr2;
+
+                default:
+                    throw MapFailedException("invalid value");
+            }
         }
     }
 }

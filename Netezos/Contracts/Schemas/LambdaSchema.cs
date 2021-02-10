@@ -33,5 +33,22 @@ namespace Netezos.Contracts
         {
             return new List<IMicheline>(2) { In.ToMicheline(), Out.ToMicheline() };
         }
+
+        protected override IMicheline MapValue(object value)
+        {
+            switch (value)
+            {
+                case IMicheline m:
+                    return m;
+                case string s:
+                    // TODO: validation
+                    return Micheline.FromJson(s);
+                case JsonElement json when json.ValueKind == JsonValueKind.String:
+                    // TODO: validation
+                    return Micheline.FromJson(json.GetString());
+                default:
+                    throw MapFailedException("invalid value");
+            }
+        }
     }
 }

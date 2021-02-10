@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -74,6 +75,48 @@ namespace Netezos.Contracts
                     children.First(x => x.Name == kv.Key)._Suffix = 0;
             }
         }
+
+        public override IMicheline MapObject(object obj, bool isValue = false)
+        {
+            if (Kind == PairKind.Object)
+            {
+                if (obj is IEnumerable e)
+                    return MapPair(e.GetEnumerator());
+
+                if (isValue)
+                    return MapPair(obj);
+
+                switch (obj)
+                {
+                    case IEnumerator enumerator:
+                        if (!enumerator.MoveNext())
+                            throw MapFailedException($"enumerable is over");
+                        return MapPair(enumerator.Current);
+                    case JsonElement json:
+                        if (!json.TryGetProperty(Name, out var jsonProp))
+                            throw MapFailedException($"no such property");
+                        return MapPair(jsonProp);
+                    default:
+                        var prop = obj?.GetType()?.GetProperty(Name)
+                            ?? throw MapFailedException($"no such property");
+                        return MapPair(prop.GetValue(obj));
+                }
+            }
+            else
+            {
+                return MapPair(obj);
+            }
+        }
+
+        IMicheline MapPair(object value) => new MichelinePrim
+        {
+            Prim = PrimType.Pair,
+            Args = new List<IMicheline>(2)
+            {
+                Left.MapObject(value),
+                Right.MapObject(value)
+            }
+        };
 
         internal override void WriteProperty(Utf8JsonWriter writer)
         {

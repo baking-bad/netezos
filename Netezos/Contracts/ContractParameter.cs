@@ -26,6 +26,22 @@ namespace Netezos.Contracts
             ExtractEntrypoints(root.Schema);
         }
 
+        public IMicheline BuildParameter(string entrypoint, object value)
+        {
+            if (!Entrypoints.TryGetValue(entrypoint, out var schema))
+                throw new ArgumentException("Entrypoint doesn't exist");
+
+            return schema.MapObject(value, true);
+        }
+
+        public IMicheline BuildParameter(string entrypoint, params object[] values)
+        {
+            if (!Entrypoints.TryGetValue(entrypoint, out var schema))
+                throw new ArgumentException("Entrypoint doesn't exist");
+
+            return schema.MapObject(values, true);
+        }
+
         public string Humanize(string entrypoint, JsonWriterOptions options = default)
         {
             if (!Entrypoints.TryGetValue(entrypoint, out var schema))

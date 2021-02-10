@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -97,7 +98,7 @@ namespace Netezos.Contracts
             }
         }
 
-        public IMicheline ToMicheline ()
+        public IMicheline ToMicheline()
         {
             return new MichelinePrim
             {
@@ -105,6 +106,38 @@ namespace Netezos.Contracts
                 Args = GetArgs(),
                 Annots = GetAnnotations()
             };
+        }
+
+        public virtual IMicheline MapObject(object obj, bool isValue = false)
+        {
+            if (isValue)
+                return MapValue(obj);
+
+            switch (obj)
+            {
+                case IEnumerator enumerator:
+                    if (!enumerator.MoveNext())
+                        throw MapFailedException($"enumerable is over");
+                    return MapValue(enumerator.Current);
+                case IEnumerable enumerable:
+                    var e = enumerable.GetEnumerator();
+                    if (!e.MoveNext())
+                        throw MapFailedException($"enumerable is empty");
+                    return MapValue(e.Current);
+                case JsonElement json:
+                    if (!json.TryGetProperty(Name, out var jsonProp))
+                        throw MapFailedException($"no such property");
+                    return MapValue(jsonProp);
+                default:
+                    var prop = obj?.GetType()?.GetProperty(Name)
+                        ?? throw MapFailedException($"no such property");
+                    return MapValue(prop.GetValue(obj));
+            }
+        }
+
+        protected virtual IMicheline MapValue(object value)
+        {
+            throw new NotImplementedException();
         }
 
         protected virtual List<IMicheline> GetArgs()
@@ -155,6 +188,11 @@ namespace Netezos.Contracts
         {
             var type = (value as MichelinePrim)?.Prim.ToString() ?? value.Type.ToString();
             return new FormatException($"Failed to map {type} into {Prim}");
+        }
+
+        protected FormatException MapFailedException(string message)
+        {
+            return new FormatException($"Failed to map {Name}: {message}");
         }
     }
 

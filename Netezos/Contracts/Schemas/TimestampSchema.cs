@@ -49,5 +49,30 @@ namespace Netezos.Contracts
                 throw FormatException(value);
             }
         }
+
+        protected override IMicheline MapValue(object value)
+        {
+            switch (value)
+            {
+                case DateTime dt:
+                    // TODO: optimization
+                    return new MichelineString(dt.ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                case int i:
+                    return new MichelineInt(new BigInteger(i));
+                case long l:
+                    return new MichelineInt(new BigInteger(l));
+                case string s:
+                    // TODO: validation & optimization
+                    return new MichelineString(s);
+                case JsonElement json when json.ValueKind == JsonValueKind.Number:
+                    // TODO: validation
+                    return new MichelineInt(new BigInteger(json.GetInt64()));
+                case JsonElement json when json.ValueKind == JsonValueKind.String:
+                    // TODO: validation & optimization
+                    return new MichelineString(json.GetString());
+                default:
+                    throw MapFailedException("invalid value");
+            }
+        }
     }
 }

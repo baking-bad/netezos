@@ -69,5 +69,10 @@ namespace Netezos.Contracts
             var type = ((Data as PairSchema).Right as PairSchema).Left;
             return new List<IMicheline>(1) { type.ToMicheline() };
         }
+
+        protected override IMicheline MapValue(object value)
+        {
+            return Data.MapObject(value, true);
+        }
     }
 }

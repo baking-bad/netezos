@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json;
 using Netezos.Encoding;
@@ -114,6 +115,74 @@ namespace Netezos.Contracts
         protected override List<IMicheline> GetArgs()
         {
             return new List<IMicheline>(2) { Key.ToMicheline(), Value.ToMicheline() };
+        }
+
+        protected override IMicheline MapValue(object value)
+        {
+            switch (value)
+            {
+                case IEnumerable e:
+                    var arr1 = new MichelineArray();
+                    foreach (var item in e)
+                    {
+                        var type = item.GetType();
+                        var keyProp = type.GetProperty("Key") ?? type.GetProperty("key")
+                            ?? throw MapFailedException("missed 'key' property");
+                        var valueProp = type.GetProperty("Value") ?? type.GetProperty("value")
+                            ?? throw MapFailedException("missed 'value' property");
+
+                        arr1.Add(new MichelinePrim
+                        {
+                            Prim = PrimType.Elt,
+                            Args = new List<IMicheline>(2)
+                            {
+                                Key.MapObject(keyProp.GetValue(item), true),
+                                Value.MapObject(valueProp.GetValue(item), true)
+                            }
+                        });
+                    }
+                    return arr1;
+
+                case JsonElement json when json.ValueKind == JsonValueKind.Object:
+                    var arr2 = new MichelineArray();
+                    foreach (var item in json.EnumerateObject())
+                    {
+                        arr2.Add(new MichelinePrim
+                        {
+                            Prim = PrimType.Elt,
+                            Args = new List<IMicheline>(2)
+                            {
+                                Key.MapObject(item.Name, true),
+                                Value.MapObject(item.Value, true)
+                            }
+                        });
+                    }
+                    return arr2;
+
+                case JsonElement json when json.ValueKind == JsonValueKind.Array:
+                    var arr3 = new MichelineArray();
+                    foreach (var item in json.EnumerateArray())
+                    {
+                        if (!item.TryGetProperty("key", out var key) && !item.TryGetProperty("Key", out key))
+                            throw MapFailedException("missed 'key' property");
+                        if (!item.TryGetProperty("value", out var val) && !item.TryGetProperty("Value", out val))
+                            throw MapFailedException("missed 'value' property");
+
+                        arr3.Add(new MichelinePrim
+                        {
+                            Prim = PrimType.Elt,
+                            Args = new List<IMicheline>(2)
+                            {
+                                Key.MapObject(key, true),
+                                Value.MapObject(val, true)
+                            }
+                        });
+                    }
+                    return arr3;
+
+                default:
+                    throw MapFailedException("invalid value");
+            }
         }
     }
 }

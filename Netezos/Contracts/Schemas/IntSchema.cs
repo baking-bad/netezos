@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Numerics;
+using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -20,6 +21,30 @@ namespace Netezos.Contracts
                 return micheInt.Value.ToString();
 
             throw FormatException(value);
+        }
+
+        protected override IMicheline MapValue(object value)
+        {
+            switch (value)
+            {
+                case BigInteger b:
+                    return new MichelineInt(b);
+                case int i:
+                    return new MichelineInt(new BigInteger(i));
+                case long l:
+                    return new MichelineInt(new BigInteger(l));
+                case string s:
+                    // TODO: validation
+                    return new MichelineInt(BigInteger.Parse(s));
+                case JsonElement json when json.ValueKind == JsonValueKind.Number:
+                    // TODO: validation
+                    return new MichelineInt(new BigInteger(json.GetInt64()));
+                case JsonElement json when json.ValueKind == JsonValueKind.String:
+                    // TODO: validation
+                    return new MichelineInt(BigInteger.Parse(json.GetString()));
+                default:
+                    throw MapFailedException("invalid value");
+            }
         }
     }
 }

@@ -19,7 +19,12 @@ namespace Netezos.Contracts
             else
             {
                 throw FormatException(value);
-            }                
+            }
+        }
+
+        public override IMicheline MapObject(object value, bool isValue = false)
+        {
+            return new MichelinePrim { Prim = PrimType.Unit };
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -12,24 +13,95 @@ namespace Netezos.Contracts
         public Schema Left { get; }
         public Schema Right { get; }
 
-        public OrSchema(MichelinePrim micheline) : base(micheline)
+        public OrSchema(MichelinePrim micheline, bool nested = false) : base(micheline)
         {
             if (micheline.Args?.Count != 2
                 || !(micheline.Args[0] is MichelinePrim left)
                 || !(micheline.Args[1] is MichelinePrim right))
                 throw new FormatException($"Invalid {Prim} schema format");
 
-            Left = Create(left);
-            Right = Create(right);
+            Left = left.Prim == PrimType.or
+                ? new OrSchema(left, true)
+                : Create(left);
+
+            Right = right.Prim == PrimType.or
+                ? new OrSchema(right, true)
+                : Create(right);
+
+            if (!nested)
+            {
+                var fields = new Dictionary<string, int>();
+                var children = Children();
+                foreach (var child in children.Where(x => x.Name != null))
+                {
+                    var name = child.Name;
+                    if (fields.ContainsKey(name))
+                        child._Suffix = ++fields[name];
+                    else
+                        fields.Add(name, 0);
+                }
+                foreach (var kv in fields.Where(x => x.Value > 0))
+                    children.First(x => x.Name == kv.Key)._Suffix = 0;
+            }
+        }
+
+        protected override IMicheline MapValue(object value)
+        {
+            if (value is JsonElement json && json.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var (path, pathName, child) in ChildrenPaths())
+                {
+                    if (json.TryGetProperty(pathName, out var pathValue))
+                        return MapOr(path, pathValue, child);
+                }
+            }
+            else
+            {
+                var type = value?.GetType()
+                    ?? throw MapFailedException("value cannot be null");
+
+                foreach (var (path, pathName, child) in ChildrenPaths())
+                {
+                    var pathValue = type.GetProperty(pathName)?.GetValue(value);
+                    if (pathValue != null)
+                        return MapOr(path, pathValue, child);
+                }
+            }
+
+            throw MapFailedException("no paths matched");
+        }
+
+        IMicheline MapOr(string path, object value, Schema child)
+        {
+            var res = new MichelinePrim
+            {
+                Prim = path[0] == 'L' ? PrimType.Left : PrimType.Right,
+                Args = new List<IMicheline>(1)
+            };
+
+            var currPath = res;
+            for (int i = 1; i < path.Length; i++)
+            {
+                var or = new MichelinePrim
+                {
+                    Prim = path[i] == 'L' ? PrimType.Left : PrimType.Right,
+                    Args = new List<IMicheline>(1)
+                };
+                currPath.Args.Add(or);
+                currPath = or;
+            }
+            currPath.Args.Add(child.MapObject(value, true));
+
+            return res;
         }
 
         internal override void WriteValue(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
 
-            foreach (var (path, child) in ChildrenPaths())
+            foreach (var (_, pathName, child) in ChildrenPaths())
             {
-                writer.WritePropertyName($"{path}:{child.Signature}");
+                writer.WritePropertyName($"{pathName}:{child.Signature}");
                 child.WriteValue(writer);
             }
 
@@ -39,8 +111,12 @@ namespace Netezos.Contracts
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
             var (endSchema, endValue, endPath) = JumpToEnd(this, value);
-            var path = endSchema.Field ?? endSchema.Type ?? endPath;
-            
+            var path = endSchema.Field != null
+                ? endSchema.Field + endSchema.Suffix
+                : endSchema.Type != null
+                    ? endSchema.Type + endSchema.Suffix
+                    : endPath;
+
             writer.WriteStartObject();
 
             writer.WritePropertyName(path);
@@ -109,7 +185,7 @@ namespace Netezos.Contracts
             }
         }
 
-        IEnumerable<(string, Schema)> ChildrenPaths(string path = "")
+        IEnumerable<(string, string, Schema)> ChildrenPaths(string path = "")
         {
             if (Left is OrSchema leftOr)
             {
@@ -118,7 +194,14 @@ namespace Netezos.Contracts
             }
             else
             {
-                yield return (Left.Field ?? Left.Type ?? path + "L", Left);
+                var curPath = path + "L";
+                var curPathName = Left.Field != null
+                    ? Left.Field + Left.Suffix
+                    : Left.Type != null
+                        ? Left.Type + Left.Suffix
+                        : curPath;
+
+                yield return (curPath, curPathName, Left);
             }
 
             if (Right is OrSchema rightOr)
@@ -128,7 +211,14 @@ namespace Netezos.Contracts
             }
             else
             {
-                yield return (Right.Field ?? Right.Type ?? path + "R", Right);
+                var curPath = path + "R";
+                var curPathName = Right.Field != null
+                    ? Right.Field + Right.Suffix
+                    : Right.Type != null
+                        ? Right.Type + Right.Suffix
+                        : curPath;
+
+                yield return (curPath, curPathName, Right);
             }
         }
     }
