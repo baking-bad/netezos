@@ -40,15 +40,17 @@ namespace Netezos.Forging
             using (MichelineReader reader = new MichelineReader(bytes))
             {
                 string branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
+                IEnumerable<ManagerOperationContent> content = UnforgeManagerOperations(reader).ToList();
 
-                List<ManagerOperationContent> operations = new List<ManagerOperationContent>();
+                return Task.FromResult((branch, content));
+            }
+        }
 
-                while (!reader.EndOfStream)
-                {
-                    operations.Add((ManagerOperationContent)UnforgeOperation(reader));
-                }
-
-                return Task.FromResult((branch, (IEnumerable<ManagerOperationContent>)operations));
+        private static IEnumerable<ManagerOperationContent> UnforgeManagerOperations(MichelineReader reader)
+        {
+            while (!reader.EndOfStream)
+            {
+                yield return (ManagerOperationContent)UnforgeOperation(reader);
             }
         }
     }

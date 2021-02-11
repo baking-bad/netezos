@@ -9,7 +9,7 @@ namespace Netezos.Forging
     {
         static OperationContent UnforgeOperation(MichelineReader reader)
         {
-            int operation = reader.ReadMichelineNat();
+            int operation = (int)reader.ReadUBigInt();
 
             switch ((OperationTag)operation)
             {
@@ -110,10 +110,10 @@ namespace Netezos.Forging
             return new DelegationContent
             {
                 Source = reader.ReadTzAddress(),
-                Fee = reader.ReadMichelineNat(),
-                Counter = reader.ReadMichelineNat(),
-                GasLimit = reader.ReadMichelineNat(),
-                StorageLimit = reader.ReadMichelineNat(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
                 Delegate = UnforgeDelegate(reader)
             };
         }
@@ -123,11 +123,11 @@ namespace Netezos.Forging
             return new OriginationContent
             {
                 Source = reader.ReadTzAddress(),
-                Fee = reader.ReadMichelineNat(),
-                Counter = reader.ReadMichelineNat(),
-                GasLimit = reader.ReadMichelineNat(),
-                StorageLimit = reader.ReadMichelineNat(),
-                Balance = reader.ReadMichelineNat(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Balance = (long)reader.ReadUBigInt(),
                 Delegate = UnforgeDelegate(reader),
                 Script = UnforgeScript(reader)
             };
@@ -135,16 +135,25 @@ namespace Netezos.Forging
 
         static TransactionContent UnforgeTransaction(MichelineReader reader)
         {
+            var source = reader.ReadTzAddress();
+            var fee = (long)reader.ReadUBigInt();
+            var counter = (int)reader.ReadUBigInt();
+            var gasLimit = (int)reader.ReadUBigInt();
+            var storageLimit = (int)reader.ReadUBigInt();
+            var amount = (long)reader.ReadUBigInt();
+            var destination = reader.ReadAddress();
+            var parameters = UnforgeParameters(reader);
+
             return new TransactionContent
             {
-                Source = reader.ReadTzAddress(),
-                Fee = reader.ReadMichelineNat(),
-                Counter = reader.ReadMichelineNat(),
-                GasLimit = reader.ReadMichelineNat(),
-                StorageLimit = reader.ReadMichelineNat(),
-                Amount = reader.ReadMichelineNat(),
-                Destination = reader.ReadAddress(),
-                Parameters = UnforgeParameters(reader)
+                Source = source,
+                Fee = fee,
+                Counter = counter,
+                GasLimit = gasLimit,
+                StorageLimit = storageLimit,
+                Amount = amount,
+                Destination = destination,
+                Parameters = parameters
             };
         }
 
@@ -153,10 +162,10 @@ namespace Netezos.Forging
             return new RevealContent
             {
                 Source = reader.ReadTzAddress(),
-                Fee = reader.ReadMichelineNat(),
-                Counter = reader.ReadMichelineNat(),
-                GasLimit = reader.ReadMichelineNat(),
-                StorageLimit = reader.ReadMichelineNat(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
                 PublicKey = reader.ReadPublicKey()
             };
         }

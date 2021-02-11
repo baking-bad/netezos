@@ -68,7 +68,7 @@ namespace Netezos.Forging
 
         public MichelineInt ReadMichelineInt()
         {
-            return new MichelineInt(ReadMichelineBigInteger());
+            return new MichelineInt(ReadSBigInt());
         }
 
         public MichelineString ReadMichelineString()
@@ -220,9 +220,13 @@ namespace Netezos.Forging
             return address;
         }
 
-        public int ReadMichelineNat()
+        /// <summary>
+        /// Read a Micheline natural.
+        /// </summary>
+        /// <returns>A Micheline natural.</returns>
+        public BigInteger ReadUBigInt()
         {
-            int value = 0;
+            BigInteger value = 0;
 
             List<byte> bytes = new List<byte>();
 
@@ -242,7 +246,11 @@ namespace Netezos.Forging
             return value;
         }
 
-        public BigInteger ReadMichelineBigInteger()
+        /// <summary>
+        /// Read a Micheline integer.
+        /// </summary>
+        /// <returns>A Micheline integer.</returns>
+        public BigInteger ReadSBigInt()
         {
             int value = 0;
 
