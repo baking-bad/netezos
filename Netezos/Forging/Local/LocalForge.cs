@@ -26,15 +26,30 @@ namespace Netezos.Forging
 
         public Task<(string, OperationContent)> UnforgeOperationAsync(byte[] bytes)
         {
-            string branch = Base58.Convert(bytes.GetBytes(0, Lengths.B.Decoded), Prefix.B);
-            OperationContent content = UnforgeOperation(bytes.GetBytes(Lengths.B.Decoded));
+            using (MichelineReader reader = new MichelineReader(bytes))
+            {
+                string branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
+                OperationContent content = UnforgeOperation(reader);
 
-            return Task.FromResult((branch, content));
+                return Task.FromResult((branch, content));
+            }
         }
 
-        public Task<(string, IEnumerable<ManagerOperationContent>)> UnforgeOperationGroupAsync(byte[] content)
+        public Task<(string, IEnumerable<ManagerOperationContent>)> UnforgeOperationGroupAsync(byte[] bytes)
         {
-            throw new System.NotImplementedException();
+            using (MichelineReader reader = new MichelineReader(bytes))
+            {
+                string branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
+
+                List<ManagerOperationContent> operations = new List<ManagerOperationContent>();
+
+                while (!reader.EndOfStream)
+                {
+                    operations.Add((ManagerOperationContent)UnforgeOperation(reader));
+                }
+
+                return Task.FromResult((branch, (IEnumerable<ManagerOperationContent>)operations));
+            }
         }
     }
 }

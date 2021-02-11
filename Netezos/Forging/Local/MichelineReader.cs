@@ -47,7 +47,7 @@ namespace Netezos.Forging
 
         public IMicheline ReadMicheline()
         {
-            byte tag = _reader.ReadByte();
+            byte tag = ReadByte();
 
             switch (tag)
             {
@@ -100,7 +100,7 @@ namespace Netezos.Forging
 
         private MichelinePrim ReadMichelinePrimitive(int argsLength, bool annotations = false)
         {
-            PrimType primTag = (PrimType)_reader.ReadByte();
+            PrimType primTag = (PrimType)ReadByte();
 
             MichelinePrim prim = new MichelinePrim
             {
@@ -109,6 +109,8 @@ namespace Netezos.Forging
 
             if (0 < argsLength && argsLength < 3)
             {
+                prim.Args = new MichelineArray(argsLength);
+
                 for (int i = 0; i < argsLength; i++)
                 {
                     prim.Args.Add(ReadMicheline());
@@ -118,49 +120,46 @@ namespace Netezos.Forging
             {
                 prim.Args = ReadMichelineArray();
             }
-            else
+            else if (argsLength != 0)
             {
                 throw new ArgumentException($"Unexpected args length {argsLength}", nameof(argsLength));
             }
 
             if (annotations)
             {
-                byte[] value = ReadArrayData();
+                string annots = ReadString();
 
-                if (value.Length > 0)
+                if (annots.Length > 0)
                 {
-                    using (MichelineReader valueReader = new MichelineReader(value))
-                    {
-                        prim.Annots = valueReader.ReadString()
-                            .Split(' ')
-                            .Select(a =>
+                    prim.Annots = annots
+                        .Split(' ')
+                        .Select(a =>
+                        {
+                            string annotVal = a.Substring(1);
+
+                            IAnnotation annotation;
+
+                            switch (a[0])
                             {
-                                string annotVal = a.Substring(1);
+                                case FieldAnnotation.Prefix:
+                                    annotation = new FieldAnnotation(annotVal);
+                                    break;
 
-                                IAnnotation annotation;
+                                case TypeAnnotation.Prefix:
+                                    annotation = new TypeAnnotation(annotVal);
+                                    break;
 
-                                switch (a[0])
-                                {
-                                    case FieldAnnotation.Prefix:
-                                        annotation = new FieldAnnotation(annotVal);
-                                        break;
+                                case VariableAnnotation.Prefix:
+                                    annotation = new VariableAnnotation(annotVal);
+                                    break;
 
-                                    case TypeAnnotation.Prefix:
-                                        annotation = new TypeAnnotation(annotVal);
-                                        break;
+                                default:
+                                    throw new InvalidOperationException($"Unknown annotation type: {a[0]}");
+                            }
 
-                                    case VariableAnnotation.Prefix:
-                                        annotation = new VariableAnnotation(annotVal);
-                                        break;
-
-                                    default:
-                                        throw new InvalidOperationException($"Unknown annotation type: {a[0]}");
-                                }
-
-                                return annotation;
-                            })
-                            .ToList();
-                    }
+                            return annotation;
+                        })
+                        .ToList();
                 }
             }
 
@@ -171,7 +170,7 @@ namespace Netezos.Forging
         {
             byte[] prefix;
 
-            byte id = _reader.ReadByte();
+            byte id = ReadByte();
 
             switch (id)
             {
@@ -181,12 +180,12 @@ namespace Netezos.Forging
                 default: throw new ArgumentException($"Invalid public key prefix {id}");
             };
 
-            return Base58.Convert(_reader.ReadBytes(32), prefix);
+            return Base58.Convert(ReadBytes(32), prefix);
         }
 
         public string ReadAddress()
         {
-            byte type = _reader.ReadByte();
+            byte type = ReadByte();
 
             switch (type)
             {
@@ -200,7 +199,7 @@ namespace Netezos.Forging
         {
             byte[] prefix;
 
-            byte tzType = _reader.ReadByte();
+            byte tzType = ReadByte();
 
             switch (tzType)
             {
@@ -211,23 +210,24 @@ namespace Netezos.Forging
                     throw new ArgumentException($"Invalid source prefix {tzType}");
             }
 
-            return Base58.Convert(_reader.ReadBytes(20), prefix);
+            return ReadBase58(20, prefix);
         }
 
         public string ReadKtAddress()
         {
-            _reader.ReadByte(); // Consume padded 0
-            return Base58.Convert(_reader.ReadBytes(33), Prefix.KT1);
+            string address = ReadBase58(Lengths.KT1.Decoded, Prefix.KT1);
+            ReadByte(); // Consume padded 0
+            return address;
         }
 
-        public int ReadMichelineNatural()
+        public int ReadMichelineNat()
         {
             int value = 0;
 
             List<byte> bytes = new List<byte>();
 
             byte b;
-            while (((b = _reader.ReadByte()) & 0x80) != 0)
+            while (((b = ReadByte()) & 0x80) != 0)
             {
                 bytes.Add(b);
             }
@@ -249,7 +249,7 @@ namespace Netezos.Forging
             List<byte> bytes = new List<byte>();
 
             byte b;
-            while (((b = _reader.ReadByte()) & 0x80) != 0)
+            while (((b = ReadByte()) & 0x80) != 0)
             {
                 bytes.Add(b);
             }
@@ -274,7 +274,7 @@ namespace Netezos.Forging
 
         public string ReadEntrypoint()
         {
-            byte epType = _reader.ReadByte();
+            byte epType = ReadByte();
 
             switch (epType)
             {
@@ -290,7 +290,7 @@ namespace Netezos.Forging
 
         public bool ReadBool()
         {
-            return _reader.ReadByte() == 255;
+            return ReadByte() == 255;
         }
 
         public byte ReadByte()
@@ -303,13 +303,33 @@ namespace Netezos.Forging
             return _reader.ReadBytes(count);
         }
 
-        public int ReadInt32()
+        public byte[] ReadBytesToEnd()
         {
-            byte[] bytes = _reader.ReadBytes(4);
+            if (EndOfStream)
+            {
+                return new byte[0];
+            }
+
+            List<byte> bytes = new List<byte>();
+
+            while (!EndOfStream)
+            {
+                bytes.Add(ReadByte());
+            }
+
+            return bytes.ToArray();
+        }
+
+        public int ReadInt32(int len = 4)
+        {
+            if (len < 1 || 4 < len)
+                throw new ArgumentOutOfRangeException($"{nameof(len)} must be between 1 and 4");
+
+            byte[] bytes = ReadBytes(len);
 
             int res = 0;
 
-            for (int i = 0, shift = 24; i < 4; i++, shift -= 8)
+            for (int i = 0, shift = ((len - 1) * 8); i < len; i++, shift -= 8)
             {
                 res |= bytes[i] << shift;
             }
@@ -317,50 +337,103 @@ namespace Netezos.Forging
             return res;
         }
 
-        public long ReadInt64()
+        public long ReadInt64(int len = 8)
         {
-            byte[] bytes = _reader.ReadBytes(8);
+            if (len < 1 || 8 < len)
+                throw new ArgumentOutOfRangeException($"{nameof(len)} must be between 1 and 8");
 
-            var idx = 0;
+            byte[] bytes = ReadBytes(len);
 
-            var i1 = 0;
-            for (int i = 0, shift = 24; i < 4; i++, shift -= 8, idx++)
+            int i1 = 0;
+            int i2 = 0;
+            int idx = 0;
+
+            int highIterations = Math.Max(len - 4, 0);
+            int highShift = Math.Max(((highIterations) - 1) * 8, 0);
+            int lowIterations = len - highIterations;
+            int lowShift = (lowIterations - 1) * 8;
+
+            for (int i = 0, shift = highShift; i < highIterations; i++, shift -= 8, idx++)
                 i1 |= bytes[idx] << shift;
 
-            var i2 = 0;
-            for (int i = 0, shift = 24; i < 4; i++, shift -= 8, idx++)
+            for (int i = 0, shift = lowShift; i < lowIterations; i++, shift -= 8, idx++)
                 i2 |= bytes[idx] << shift;
 
             return (uint)i2 | ((long)i1 << 32);
         }
 
-        public string ReadString()
+        public string ReadString(int len = 4)
         {
-            int stringLength = ReadInt32();
-            return Utf8.Convert(_reader.ReadBytes(stringLength));
+            int stringLength = ReadInt32(len);
+            return Utf8.Convert(ReadBytes(stringLength));
         }
 
         public string ReadTz1Address()
         {
-            return Base58.Convert(_reader.ReadBytes(23));
+            return Base58.Convert(ReadBytes(Lengths.tz1.Decoded), Prefix.tz1);
         }
 
-        public IEnumerable<T> ReadEnumerable<T>(int decodedLength, Func<byte[], T> transformer)
+        public T ReadEnumerableSingle<T>(Func<MichelineReader, T> readData)
         {
-            int dataLength = ReadInt32();
-
-            int items = dataLength / decodedLength;
-
-            for (int i = 0; i < items; i++)
+            if (!EndOfStream)
             {
-                yield return transformer(ReadBytes(decodedLength));
+                int arrLen = ReadInt32();
+
+                byte[] arrData = ReadBytes(arrLen);
+
+                using (MichelineReader reader = new MichelineReader(arrData))
+                {
+                    T result = readData(reader);
+
+                    if (!reader.EndOfStream)
+                    {
+                        throw new InvalidOperationException("Expected end of stream but not reached");
+                    }
+
+                    return result;
+                }
             }
+            return default(T);
+        }
+
+        public IEnumerable<T> ReadEnumerable<T>(Func<MichelineReader, T> readData)
+        {
+            if (!EndOfStream)
+            {
+                int arrLen = ReadInt32();
+
+                byte[] arrData = ReadBytes(arrLen);
+
+                using (MichelineReader reader = new MichelineReader(arrData))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        yield return readData(reader);
+                    }
+                }
+            }
+            yield break;
+        }
+
+        public string ReadHexString()
+        {
+            int stringLength = ReadInt32();
+            return Hex.Convert(ReadBytes(stringLength));
+        }
+
+        public string ReadBase58(int length, byte[] prefix = null)
+        {
+            byte[] b58bytes = ReadBytes(length);
+
+            return prefix == null ?
+                Base58.Convert(b58bytes) :
+                Base58.Convert(b58bytes, prefix);
         }
 
         private byte[] ReadArrayData()
         {
             int arrLen = ReadInt32();
-            return _reader.ReadBytes(arrLen);
+            return ReadBytes(arrLen);
         }
     }
 }

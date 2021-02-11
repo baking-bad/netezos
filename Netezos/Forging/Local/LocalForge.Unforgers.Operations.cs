@@ -7,39 +7,36 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        static OperationContent UnforgeOperation(byte[] bytes)
+        static OperationContent UnforgeOperation(MichelineReader reader)
         {
-            using (MichelineReader reader = new MichelineReader(bytes))
-            {
-                int operation = reader.ReadMichelineNatural();
+            int operation = reader.ReadMichelineNat();
 
-                switch ((OperationTag)operation)
-                {
-                    case OperationTag.Endorsement:
-                        return UnforgeEndorsement(reader);
-                    case OperationTag.Ballot:
-                        return UnforgeBallot(reader);
-                    case OperationTag.Proposals:
-                        return UnforgeProposals(reader);
-                    //case ActivationContent activation:
-                    //    return ParseActivation(activation);
-                    //case DoubleBakingContent doubleBaking:
-                    //    return ParseDoubleBaking(doubleBaking);
-                    //case DoubleEndorsementContent doubleEndorsement:
-                    //    return ParseDoubleEndorsement(doubleEndorsement);
-                    //case SeedNonceRevelationContent seed:
-                    //    return ParseSeedNonceRevelaion(seed);
-                    //case DelegationContent delegation:
-                    //    return ParseDelegation(delegation);
-                    //case OriginationContent origination:
-                    //    return ParseOrigination(origination);
-                    //case TransactionContent transaction:
-                    //    return ParseTransaction(transaction);
-                    //case RevealContent reveal:
-                    //    return ParseReveal(reveal);
-                    default:
-                        throw new ArgumentException($"Invalid operation: {operation}");
-                }
+            switch ((OperationTag)operation)
+            {
+                case OperationTag.Endorsement:
+                    return UnforgeEndorsement(reader);
+                case OperationTag.Ballot:
+                    return UnforgeBallot(reader);
+                case OperationTag.Proposals:
+                    return UnforgeProposals(reader);
+                case OperationTag.Activation:
+                    return UnforgeActivation(reader);
+                case OperationTag.DoubleBaking:
+                    return UnforgeDoubleBaking(reader);
+                case OperationTag.DoubleEndorsement:
+                    return UnforgeDoubleEndorsement(reader);
+                case OperationTag.SeedNonceRevelation:
+                    return UnforgeSeedNonceRevelaion(reader);
+                case OperationTag.Delegation:
+                    return UnforgeDelegation(reader);
+                case OperationTag.Origination:
+                    return UnforgeOrigination(reader);
+                case OperationTag.Transaction:
+                    return UnforgeTransaction(reader);
+                case OperationTag.Reveal:
+                    return UnforgeReveal(reader);
+                default:
+                    throw new ArgumentException($"Invalid operation: {operation}");
             }
         }
 
@@ -57,7 +54,7 @@ namespace Netezos.Forging
             {
                 Source = reader.ReadTzAddress(),
                 Period = reader.ReadInt32(),
-                Proposal =  Base58.Convert(reader.ReadBytes(Lengths.P.Decoded), Prefix.P),
+                Proposal = reader.ReadBase58(Lengths.P.Decoded, Prefix.P),
                 Ballot = (Ballot)reader.ReadByte()
             };
         }
@@ -68,152 +65,186 @@ namespace Netezos.Forging
             {
                 Source = reader.ReadTzAddress(),
                 Period = reader.ReadInt32(),
-                Proposals = reader.ReadEnumerable(Lengths.P.Decoded, bytes => Base58.Convert(bytes, Prefix.P)).ToList()
+                Proposals = reader.ReadEnumerable(r => r.ReadBase58(Lengths.P.Decoded, Prefix.P)).ToList()
             };
         }
 
-        /*
-        static byte[] ForgeActivation(ActivationContent operation)
+        static ActivationContent UnforgeActivation(MichelineReader reader)
         {
-            return Concat(
-                ForgeMicheNat((int)OperationTag.Activation),
-                ForgeTz1Address(operation.Address),
-                Hex.Forge(operation.Secret));
+            return new ActivationContent
+            {
+                Address = reader.ReadTz1Address(),
+                Secret = Hex.Convert(reader.ReadBytesToEnd())
+            };
         }
 
-        static byte[] ForgeDoubleBaking(DoubleBakingContent operation)
+        static DoubleBakingContent UnforgeDoubleBaking(MichelineReader reader)
         {
-            return Concat(
-                ForgeMicheNat((int)OperationTag.DoubleBaking),
-                ForgeArray(ForgeBlockHeader(operation.BlockHeader1)),
-                ForgeArray(ForgeBlockHeader(operation.BlockHeader2)));
+            return new DoubleBakingContent
+            {
+                BlockHeader1 = reader.ReadEnumerableSingle(UnforgeBlockHeader),
+                BlockHeader2 = reader.ReadEnumerableSingle(UnforgeBlockHeader)
+            };
         }
 
-        static byte[] ForgeDoubleEndorsement(DoubleEndorsementContent operation)
+        static DoubleEndorsementContent UnforgeDoubleEndorsement(MichelineReader reader)
         {
-            return Concat(
-                ForgeMicheNat((int)OperationTag.DoubleEndorsement),
-                ForgeArray(ForgeInlinedEndorsement(operation.Op1)),
-                ForgeArray(ForgeInlinedEndorsement(operation.Op2)));
+            return new DoubleEndorsementContent
+            {
+                Op1 = reader.ReadEnumerableSingle(UnforgeInlinedEndorsement),
+                Op2 = reader.ReadEnumerableSingle(UnforgeInlinedEndorsement),
+            };
         }
 
-        static byte[] ForgeSeedNonceRevelaion(SeedNonceRevelationContent operation)
+        static SeedNonceRevelationContent UnforgeSeedNonceRevelaion(MichelineReader reader)
         {
-            return Concat(
-                ForgeMicheNat((int)OperationTag.SeedNonceRevelation),
-                ForgeInt32(operation.Level),
-                Hex.Forge(operation.Nonce));
+            return new SeedNonceRevelationContent
+            {
+                Level = reader.ReadInt32(),
+                Nonce = Hex.Convert(reader.ReadBytes(32))
+            };
         }
 
-        static byte[] ForgeDelegation(DelegationContent operation)
+        static DelegationContent UnforgeDelegation(MichelineReader reader)
         {
-            return Concat(
-                ForgeMicheNat((int)OperationTag.Delegation),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                ForgeDelegate(operation.Delegate));
+            return new DelegationContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = reader.ReadMichelineNat(),
+                Counter = reader.ReadMichelineNat(),
+                GasLimit = reader.ReadMichelineNat(),
+                StorageLimit = reader.ReadMichelineNat(),
+                Delegate = UnforgeDelegate(reader)
+            };
         }
 
-        static byte[] ForgeOrigination(OriginationContent operation)
+        static OriginationContent UnforgeOrigination(MichelineReader reader)
         {
-            return Concat(
-                ForgeMicheNat((int)OperationTag.Origination),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                ForgeMicheNat(operation.Balance),
-                ForgeDelegate(operation.Delegate),
-                ForgeScript(operation.Script));
+            return new OriginationContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = reader.ReadMichelineNat(),
+                Counter = reader.ReadMichelineNat(),
+                GasLimit = reader.ReadMichelineNat(),
+                StorageLimit = reader.ReadMichelineNat(),
+                Balance = reader.ReadMichelineNat(),
+                Delegate = UnforgeDelegate(reader),
+                Script = UnforgeScript(reader)
+            };
         }
 
-        static byte[] ForgeTransaction(TransactionContent operation)
+        static TransactionContent UnforgeTransaction(MichelineReader reader)
         {
-            return Concat(
-                ForgeMicheNat((int)OperationTag.Transaction),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                ForgeMicheNat(operation.Amount),
-                ForgeAddress(operation.Destination),
-                ForgeParameters(operation.Parameters));
+            return new TransactionContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = reader.ReadMichelineNat(),
+                Counter = reader.ReadMichelineNat(),
+                GasLimit = reader.ReadMichelineNat(),
+                StorageLimit = reader.ReadMichelineNat(),
+                Amount = reader.ReadMichelineNat(),
+                Destination = reader.ReadAddress(),
+                Parameters = UnforgeParameters(reader)
+            };
         }
 
-        static byte[] ForgeReveal(RevealContent operation)
+        static RevealContent UnforgeReveal(MichelineReader reader)
         {
-            return Concat(
-                ForgeMicheNat((int)OperationTag.Reveal),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                ForgePublicKey(operation.PublicKey));
+            return new RevealContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = reader.ReadMichelineNat(),
+                Counter = reader.ReadMichelineNat(),
+                GasLimit = reader.ReadMichelineNat(),
+                StorageLimit = reader.ReadMichelineNat(),
+                PublicKey = reader.ReadPublicKey()
+            };
         }
 
         #region nested
-        static byte[] ForgeBlockHeader(BlockHeader header)
+
+        static BlockHeader UnforgeBlockHeader(MichelineReader reader)
         {
-            return Concat(
-                ForgeInt32(header.Level),
-                ForgeInt32(header.Proto, 1),
-                Base58.Parse(header.Predecessor, 2),
-                ForgeInt64(header.Timestamp.ToUnixTime()),
-                ForgeInt32(header.ValidationPass, 1),
-                Base58.Parse(header.OperationsHash, 3),
-                ForgeArray(header.Fitness.Select(x => ForgeArray(Hex.Forge(x))).SelectMany(x => x).ToArray()),
-                Base58.Parse(header.Context, 2),
-                ForgeInt32(header.Priority, 2),
-                Hex.Forge(header.ProofOfWorkNonce),
-                ForgeSeedNonce(header.SeedNonceHash),
-                Base58.Parse(header.Signature, 3));
+            return new BlockHeader
+            {
+                Level = reader.ReadInt32(),
+                Proto = reader.ReadInt32(1),
+                Predecessor = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
+                Timestamp = reader.ReadInt64().FromUnixTime(),
+                ValidationPass = reader.ReadInt32(1),
+                OperationsHash = reader.ReadBase58(Lengths.LLo.Decoded, Prefix.LLo),
+                Fitness = reader.ReadEnumerable(r => r.ReadHexString()).ToList(),
+                Context = reader.ReadBase58(Lengths.Co.Decoded, Prefix.Co),
+                Priority = reader.ReadInt32(2),
+                ProofOfWorkNonce = Hex.Convert(reader.ReadBytes(8)),
+                SeedNonceHash = UnforgeSeedNonce(reader),
+                Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig),
+            };
         }
 
-        static byte[] ForgeInlinedEndorsement(InlinedEndorsement op)
+        static InlinedEndorsement UnforgeInlinedEndorsement(MichelineReader reader)
         {
-            return Concat(
-                Base58.Parse(op.Branch, 2),
-                ForgeMicheNat((int)OperationTag.Endorsement),
-                ForgeInt32(op.Operations.Level),
-                Base58.Parse(op.Signature, 3));
+            return new InlinedEndorsement
+            {
+                Branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
+                Operations = (EndorsementContent)UnforgeOperation(reader),
+                Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig)
+            };
         }
 
-        static byte[] ForgeSeedNonce(string nonce)
+        static string UnforgeSeedNonce(MichelineReader reader)
         {
-            return nonce == null ? ForgeBool(false) : Concat(
-                ForgeBool(true),
-                Base58.Parse(nonce, 3));
+            return UnforgeConditional(reader, () => reader.ReadBase58(Lengths.o.Decoded, Prefix.o)); // TODO: I don't think this is right, but can't find an example.
         }
 
-        static byte[] ForgeDelegate(string delegat)
+        static string UnforgeDelegate(MichelineReader reader)
         {
-            return delegat == null ? ForgeBool(false) : Concat(
-                ForgeBool(true),
-                ForgeTzAddress(delegat));
+            return UnforgeConditional(reader, () => reader.ReadTzAddress());
         }
 
-        static byte[] ForgeParameters(Parameters param)
+        static Parameters UnforgeParameters(MichelineReader reader)
         {
-            return param == null ? ForgeBool(false) : Concat(
-                ForgeBool(true),
-                ForgeEntrypoint(param.Entrypoint),
-                ForgeArray(ForgeMicheline(param.Value).ToArray()));
+            return UnforgeConditional(reader, () =>
+            {
+                return new Parameters
+                {
+                    Entrypoint = UnforgeEntrypoint(reader),
+                    Value = reader.ReadEnumerableSingle(UnforgeMicheline)
+                };
+            });
         }
 
-        static byte[] ForgeScript(Script script)
+        static string UnforgeEntrypoint(MichelineReader reader)
         {
-            return Concat(
-                ForgeArray(ForgeMicheline(script.Code)),
-                ForgeArray(ForgeMicheline(script.Storage)));
+            int ep = reader.ReadInt32(1);
+
+            switch (ep)
+            {
+                case 0: return "default";
+                case 1: return "root";
+                case 2: return "do";
+                case 3: return "set_delegate";
+                case 4: return "remove_delegate";
+                case 255: return reader.ReadString(1);
+                default: throw new ArgumentException($"Unrecognized endpoint type {ep}");
+            }
         }
+
+        static Script UnforgeScript(MichelineReader reader)
+        {
+            return new Script
+            {
+                Code = (MichelineArray)reader.ReadEnumerableSingle(UnforgeMicheline),
+                Storage = reader.ReadEnumerableSingle(UnforgeMicheline)
+            };
+        }
+
+        static T UnforgeConditional<T>(MichelineReader reader, Func<T> tb, Func<T> fb = null)
+            where T : class
+        {
+            return reader.ReadBool() ? tb() : fb?.Invoke();
+        }
+
         #endregion
-
-        */
     }
 }

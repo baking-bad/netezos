@@ -7,16 +7,19 @@ namespace Netezos.Forging
     {
         static IMicheline UnforgeMicheline(byte[] data)
         {
-            IMicheline micheline;
-
             using (MichelineReader mr = new MichelineReader(data))
             {
-                micheline = mr.ReadMicheline();
+                return UnforgeMicheline(data);
+            }
+        }
 
-                if (!mr.EndOfStream)
-                {
-                    throw new ArgumentException($"Did not reach EOS (pos {mr.StreamPosition}/{data.Length})");
-                }
+        static IMicheline UnforgeMicheline(MichelineReader reader)
+        {
+            IMicheline micheline = reader.ReadMicheline();
+
+            if (!reader.EndOfStream)
+            {
+                throw new ArgumentException($"Did not reach EOS (position: {reader.StreamPosition})");
             }
 
             return micheline;
