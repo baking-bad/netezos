@@ -262,5 +262,14 @@
             public const int Encdoed = 15;
             public const int Decoded = 4;
         }
+
+        /// <summary>
+        /// nce
+        /// </summary>
+        public static class nce
+        {
+            public const int Encdoed = 53;
+            public const int Decoded = 32;
+        }
     }
 }

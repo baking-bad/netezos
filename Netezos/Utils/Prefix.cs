@@ -106,5 +106,10 @@
         /// Chain id prefix
         /// </summary>
         public static readonly byte[] Net = new byte[] { 87, 82, 0 };
+
+        /// <summary>
+        /// Seed nonce hash prefix
+        /// </summary>
+        public static readonly byte[] nce = new byte[] { 69, 220, 169 };
     }
 }

@@ -195,7 +195,7 @@ namespace Netezos.Forging
 
         static string UnforgeSeedNonce(MichelineReader reader)
         {
-            return UnforgeConditional(reader, () => reader.ReadBase58(Lengths.o.Decoded, Prefix.o)); // TODO: I don't think this is right, but can't find an example.
+            return UnforgeConditional(reader, () => reader.ReadBase58(Lengths.nce.Decoded, Prefix.nce));
         }
 
         static string UnforgeDelegate(MichelineReader reader)
