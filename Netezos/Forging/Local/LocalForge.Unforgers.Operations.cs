@@ -135,25 +135,16 @@ namespace Netezos.Forging
 
         static TransactionContent UnforgeTransaction(MichelineReader reader)
         {
-            var source = reader.ReadTzAddress();
-            var fee = (long)reader.ReadUBigInt();
-            var counter = (int)reader.ReadUBigInt();
-            var gasLimit = (int)reader.ReadUBigInt();
-            var storageLimit = (int)reader.ReadUBigInt();
-            var amount = (long)reader.ReadUBigInt();
-            var destination = reader.ReadAddress();
-            var parameters = UnforgeParameters(reader);
-
             return new TransactionContent
             {
-                Source = source,
-                Fee = fee,
-                Counter = counter,
-                GasLimit = gasLimit,
-                StorageLimit = storageLimit,
-                Amount = amount,
-                Destination = destination,
-                Parameters = parameters
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Amount = (long)reader.ReadUBigInt(),
+                Destination = reader.ReadAddress(),
+                Parameters = UnforgeParameters(reader)
             };
         }
 

@@ -180,7 +180,7 @@ namespace Netezos.Forging
                 default: throw new ArgumentException($"Invalid public key prefix {id}");
             };
 
-            return Base58.Convert(ReadBytes(32), prefix);
+            return ReadBase58(32, prefix);
         }
 
         public string ReadAddress()
@@ -378,7 +378,7 @@ namespace Netezos.Forging
 
         public string ReadTz1Address()
         {
-            return Base58.Convert(ReadBytes(Lengths.tz1.Decoded), Prefix.tz1);
+            return ReadBase58(Lengths.tz1.Decoded, Prefix.tz1);
         }
 
         public T ReadEnumerableSingle<T>(Func<MichelineReader, T> readData)

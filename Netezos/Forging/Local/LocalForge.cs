@@ -46,7 +46,7 @@ namespace Netezos.Forging
             }
         }
 
-        private static IEnumerable<ManagerOperationContent> UnforgeManagerOperations(MichelineReader reader)
+        static IEnumerable<ManagerOperationContent> UnforgeManagerOperations(MichelineReader reader)
         {
             while (!reader.EndOfStream)
             {
