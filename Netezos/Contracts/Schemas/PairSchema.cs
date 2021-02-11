@@ -287,6 +287,45 @@ namespace Netezos.Contracts
                 yield return Right;
             }
         }
+
+        public override IMicheline Optimize(IMicheline value)
+        {
+            #region deoptimize
+            if (value is MichelineArray array)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = PrimType.Pair,
+                    Args = array
+                };
+            }
+            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args?.Count > 2)
+            {
+                value = new MichelinePrim
+                {
+                    Prim = p.Prim,
+                    Annots = p.Annots,
+                    Args = new List<IMicheline>(2)
+                    {
+                        p.Args[0],
+                        new MichelinePrim
+                        {
+                            Prim = PrimType.Pair,
+                            Args = p.Args.Skip(1).ToList()
+                        }
+                    }
+                };
+            }
+            #endregion
+
+            if (value is MichelinePrim prim)
+            {
+                prim.Args[0] = Left.Optimize(prim.Args[0]);
+                prim.Args[1] = Right.Optimize(prim.Args[1]);
+            }
+
+            return value;
+        }
     }
 
     public enum PairKind

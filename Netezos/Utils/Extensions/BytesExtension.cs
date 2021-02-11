@@ -32,6 +32,11 @@ namespace Netezos
             return res;
         }
 
+        public static void CopyTo(this byte[] src, byte[] dst, int dstOffset)
+        {
+            Buffer.BlockCopy(src, 0, dst, dstOffset, src.Length);
+        }
+
         public static byte[] Reverse(this byte[] data)
         {
             var res = new byte[data.Length];

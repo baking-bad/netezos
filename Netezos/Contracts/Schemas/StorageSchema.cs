@@ -46,5 +46,10 @@ namespace Netezos.Contracts
         {
             return new List<IMicheline>(1) { Schema.ToMicheline() };
         }
+
+        public override IMicheline Optimize(IMicheline value)
+        {
+            return Schema.Optimize(value);
+        }
     }
 }

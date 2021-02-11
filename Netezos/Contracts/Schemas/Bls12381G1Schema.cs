@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -17,9 +16,6 @@ namespace Netezos.Contracts
 
         public string Flatten(IMicheline value)
         {
-            if (value is MichelineInt micheInt)
-                return Hex.Convert(micheInt.Value.ToByteArray());
-
             if (value is MichelineBytes micheBytes)
                 return Hex.Convert(micheBytes.Value);
 
@@ -30,21 +26,16 @@ namespace Netezos.Contracts
         {
             switch (value)
             {
-                case BigInteger b:
-                    return new MichelineInt(b);
-                case int i:
-                    return new MichelineInt(new BigInteger(i));
-                case long l:
-                    return new MichelineInt(new BigInteger(l));
-                case string s:
-                    // TODO: validation
-                    return new MichelineInt(BigInteger.Parse(s));
-                case JsonElement json when json.ValueKind == JsonValueKind.Number:
-                    // TODO: validation
-                    return new MichelineInt(new BigInteger(json.GetInt64()));
+                case byte[] bytes:
+                    return new MichelineBytes(bytes);
+                case string str:
+                    if (!Hex.TryParse(str, out var b1))
+                        throw MapFailedException($"invalid hex string");
+                    return new MichelineBytes(b1);
                 case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    // TODO: validation
-                    return new MichelineInt(BigInteger.Parse(json.GetString()));
+                    if (!Hex.TryParse(json.GetString(), out var b2))
+                        throw MapFailedException($"invalid hex string");
+                    return new MichelineBytes(b2);
                 default:
                     throw MapFailedException("invalid value");
             }

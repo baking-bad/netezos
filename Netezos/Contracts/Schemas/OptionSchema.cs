@@ -74,5 +74,15 @@ namespace Netezos.Contracts
                     }
                 };
         }
+
+        public override IMicheline Optimize(IMicheline value)
+        {
+            if (value is MichelinePrim prim && prim.Prim == PrimType.Some)
+            {
+                prim.Args[0] = Some.Optimize(prim.Args[0]);
+            }
+
+            return value;
+        }
     }
 }

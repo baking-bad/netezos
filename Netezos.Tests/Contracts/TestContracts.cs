@@ -24,8 +24,8 @@ namespace Netezos.Tests.Contracts
                     var rawEntrypoint = sample.raw.entrypoint;
                     var rawValue = Micheline.FromJson(sample.raw.value);
 
-                    var (normEntrypoint, normValue) = contract.NormalizeParameters((string)rawEntrypoint, (IMicheline)rawValue);
-                    var humanized = contract.HumanizeParameters(normEntrypoint, normValue);
+                    var (normEntrypoint, normValue) = contract.NormalizeParameter((string)rawEntrypoint, (IMicheline)rawValue);
+                    var humanized = contract.HumanizeParameter(normEntrypoint, normValue);
 
                     Assert.Equal(
                         ((string)sample.human.value).Replace("\t", "").Replace("\r", "").Replace("\n", "").Replace(" ", ""),

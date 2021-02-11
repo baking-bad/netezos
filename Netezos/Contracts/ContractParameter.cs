@@ -26,7 +26,7 @@ namespace Netezos.Contracts
             ExtractEntrypoints(root.Schema);
         }
 
-        public IMicheline BuildParameter(string entrypoint, object value)
+        public IMicheline Build(string entrypoint, object value)
         {
             if (!Entrypoints.TryGetValue(entrypoint, out var schema))
                 throw new ArgumentException("Entrypoint doesn't exist");
@@ -34,12 +34,38 @@ namespace Netezos.Contracts
             return schema.MapObject(value, true);
         }
 
-        public IMicheline BuildParameter(string entrypoint, params object[] values)
+        public IMicheline Build(string entrypoint, params object[] values)
         {
             if (!Entrypoints.TryGetValue(entrypoint, out var schema))
                 throw new ArgumentException("Entrypoint doesn't exist");
 
             return schema.MapObject(values, true);
+        }
+
+        public IMicheline BuildOptimized(string entrypoint, object value)
+        {
+            if (!Entrypoints.TryGetValue(entrypoint, out var schema))
+                throw new ArgumentException("Entrypoint doesn't exist");
+
+            var res = schema.MapObject(value, true);
+            return schema.Optimize(res);
+        }
+
+        public IMicheline BuildOptimized(string entrypoint, params object[] values)
+        {
+            if (!Entrypoints.TryGetValue(entrypoint, out var schema))
+                throw new ArgumentException("Entrypoint doesn't exist");
+
+            var res = schema.MapObject(values, true);
+            return schema.Optimize(res);
+        }
+
+        public IMicheline Optimize(string entrypoint, IMicheline value, bool immutable = true)
+        {
+            if (!Entrypoints.TryGetValue(entrypoint, out var schema))
+                throw new ArgumentException("Entrypoint doesn't exist");
+
+            return schema.Optimize(immutable ? Micheline.FromBytes(value.ToBytes()) : value);
         }
 
         public string Humanize(string entrypoint, JsonWriterOptions options = default)

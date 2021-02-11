@@ -16,6 +16,11 @@ namespace Netezos.Contracts
             Schema = new StorageSchema(storage as MichelinePrim).Schema;
         }
 
+        public IMicheline Optimize(IMicheline value, bool immutable = true)
+        {
+            return Schema.Optimize(immutable ? Micheline.FromBytes(value.ToBytes()) : value);
+        }
+
         public string Humanize(JsonWriterOptions options = default)
         {
             return Schema.Humanize(options);

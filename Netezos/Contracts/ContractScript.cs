@@ -34,11 +34,29 @@ namespace Netezos.Contracts
             Storage = new ContractStorage(storage);
         }
 
-        public (string, IMicheline) NormalizeParameters(string entrypoint, IMicheline value)
+        public IMicheline BuildParameter(string entrypoint, object value)
+            => Parameter.Build(entrypoint, value);
+
+        public IMicheline BuildParameter(string entrypoint, params object[] values)
+            => Parameter.Build(entrypoint, values);
+
+        public IMicheline BuildOptimizedParameter(string entrypoint, object value)
+            => Parameter.BuildOptimized(entrypoint, value);
+
+        public IMicheline BuildOptimizedParameter(string entrypoint, params object[] values)
+            => Parameter.BuildOptimized(entrypoint, values);
+
+        public IMicheline OptimizeParameter(string entrypoint, IMicheline value, bool immutable = true)
+            => Parameter.Optimize(entrypoint, value, immutable);
+
+        public (string, IMicheline) NormalizeParameter(string entrypoint, IMicheline value)
             => Parameter.Normalize(entrypoint, value);
 
-        public string HumanizeParameters(string entrypoint, IMicheline value, JsonWriterOptions options = default)
+        public string HumanizeParameter(string entrypoint, IMicheline value, JsonWriterOptions options = default)
             => Parameter.Humanize(entrypoint, value, options);
+
+        public IMicheline OptimizeStorage(IMicheline value, bool immutable = true)
+            => Storage.Optimize(value, immutable);
 
         public string HumanizeStorage(IMicheline value, JsonWriterOptions options = default)
             => Storage.Humanize(value, options);

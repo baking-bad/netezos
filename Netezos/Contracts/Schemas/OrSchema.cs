@@ -221,5 +221,19 @@ namespace Netezos.Contracts
                 yield return (curPath, curPathName, Right);
             }
         }
+
+        public override IMicheline Optimize(IMicheline value)
+        {
+            if (value is MichelinePrim prim)
+            {
+                if (prim.Prim == PrimType.Left)
+                    prim.Args[0] = Left.Optimize(prim.Args[0]);
+
+                if (prim.Prim == PrimType.Right)
+                    prim.Args[0] = Right.Optimize(prim.Args[0]);
+            }
+
+            return value;
+        }
     }
 }

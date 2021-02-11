@@ -184,5 +184,20 @@ namespace Netezos.Contracts
                     throw MapFailedException("invalid value");
             }
         }
+
+        public override IMicheline Optimize(IMicheline value)
+        {
+            if (value is MichelineArray micheArray)
+            {
+                foreach (var item in micheArray)
+                {
+                    var elt = item as MichelinePrim;
+                    elt.Args[0] = Key.Optimize(elt.Args[0]);
+                    elt.Args[1] = Value.Optimize(elt.Args[1]);
+                }
+            }
+
+            return value;
+        }
     }
 }

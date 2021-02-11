@@ -108,6 +108,11 @@ namespace Netezos.Contracts
             };
         }
 
+        public virtual IMicheline Optimize(IMicheline value)
+        {
+            return value;
+        }
+
         public virtual IMicheline MapObject(object obj, bool isValue = false)
         {
             if (isValue)

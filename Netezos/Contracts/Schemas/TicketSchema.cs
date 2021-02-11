@@ -74,5 +74,10 @@ namespace Netezos.Contracts
         {
             return Data.MapObject(value, true);
         }
+
+        public override IMicheline Optimize(IMicheline value)
+        {
+            return Data.Optimize(value);
+        }
     }
 }

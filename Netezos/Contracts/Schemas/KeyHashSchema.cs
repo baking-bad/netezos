@@ -62,5 +62,34 @@ namespace Netezos.Contracts
                     throw MapFailedException("invalid value");
             }
         }
+        
+        public override IMicheline Optimize(IMicheline value)
+        {
+            if (value is MichelineString micheStr)
+            {
+                var bytes = Base58.Parse(micheStr.Value, 3);
+                var res = new byte[21];
+
+                switch (micheStr.Value.Substring(0, 3))
+                {
+                    case "tz1":
+                        res[0] = 0;
+                        break;
+                    case "tz2":
+                        res[0] = 1;
+                        break;
+                    case "tz3":
+                        res[0] = 2;
+                        break;
+                    default:
+                        throw FormatException(value);
+                }
+
+                bytes.CopyTo(res, 1);
+                return new MichelineBytes(res);
+            }
+
+            return value;
+        }
     }
 }

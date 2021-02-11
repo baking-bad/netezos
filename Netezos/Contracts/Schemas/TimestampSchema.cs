@@ -74,5 +74,24 @@ namespace Netezos.Contracts
                     throw MapFailedException("invalid value");
             }
         }
+
+        public override IMicheline Optimize(IMicheline value)
+        {
+            if (value is MichelineString micheStr)
+            {
+                if (BigInteger.TryParse(micheStr.Value, out var timestamp))
+                    return new MichelineInt(timestamp);
+
+                if (DateTimeOffset.TryParse(micheStr.Value, out var datetime))
+                {
+                    var seconds = (long)(datetime - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds;
+                    return new MichelineInt(new BigInteger(seconds));
+                }
+
+                throw FormatException(value);
+            }
+
+            return value;
+        }
     }
 }
