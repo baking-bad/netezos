@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Netezos.Encoding;
+using Netezos.Forging.Models;
+using Netezos.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Netezos.Encoding;
-using Netezos.Forging.Models;
 
 namespace Netezos.Forging
 {

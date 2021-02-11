@@ -1,7 +1,8 @@
-﻿using System;
-using System.Linq;
-using Netezos.Encoding;
+﻿using Netezos.Encoding;
 using Netezos.Forging.Models;
+using Netezos.IO;
+using System;
+using System.Linq;
 
 namespace Netezos.Forging
 {

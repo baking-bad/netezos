@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 
-namespace Netezos.Forging
+namespace Netezos.IO
 {
     public class MichelineReader : IDisposable
     {
