@@ -10,5 +10,10 @@ namespace Netezos
         {
             return (int)(datetime - Epoch).TotalSeconds;
         }
+
+        public static DateTime FromUnixTime(long seconds)
+        {
+            return Epoch.AddSeconds(seconds);
+        }
     }
 }

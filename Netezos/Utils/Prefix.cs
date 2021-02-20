@@ -3,6 +3,36 @@
     static class Prefix
     {
         /// <summary>
+        /// Block hash prefix
+        /// </summary>
+        public static readonly byte[] B = new byte[] { 1, 52 };
+
+        /// <summary>
+        /// Operation hash prefix
+        /// </summary>
+        public static readonly byte[] o = new byte[] { 5, 116 };
+
+        /// <summary>
+        /// Operation list hash prefix
+        /// </summary>
+        public static readonly byte[] Lo = new byte[] { 133, 233 };
+
+        /// <summary>
+        /// Operation list list hash prefix
+        /// </summary>
+        public static readonly byte[] LLo = new byte[] { 29, 159, 109 };
+
+        /// <summary>
+        /// Protocol hash prefix
+        /// </summary>
+        public static readonly byte[] P = new byte[] { 2, 170 };
+
+        /// <summary>
+        /// Context hash prefix
+        /// </summary>
+        public static readonly byte[] Co = new byte[] { 79, 199 };
+
+        /// <summary>
         /// Address prefix for Ed25519
         /// </summary>
         public static readonly byte[] tz1 = new byte[] { 6, 161, 159 };
@@ -77,5 +107,9 @@
         /// </summary>
         public static readonly byte[] Net = new byte[] { 87, 82, 0 };
 
+        /// <summary>
+        /// Seed nonce hash prefix
+        /// </summary>
+        public static readonly byte[] nce = new byte[] { 69, 220, 169 };
     }
 }
