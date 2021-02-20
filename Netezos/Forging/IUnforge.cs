@@ -6,8 +6,6 @@ namespace Netezos.Forging
 {
     public interface IUnforge
     {
-        Task<(string, OperationContent)> UnforgeOperationAsync(byte[] content);
-
-        Task<(string, IEnumerable<ManagerOperationContent>)> UnforgeOperationGroupAsync(byte[] content);
+        Task<(string, IEnumerable<OperationContent>)> UnforgeOperationAsync(byte[] content);
     }
 }

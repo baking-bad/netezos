@@ -109,34 +109,17 @@ namespace Netezos.Tests.Forging
                 // Parse the op bytes
                 var opBytes = Hex.Parse(File.ReadAllText($"{directory}/forged.hex"));
 
-                switch ((int)json.contents.count)
-                {
-                    case int n when (n > 1):
-                        // Unforge the manager op bytes
-                        var mops = await localForge.UnforgeOperationGroupAsync(opBytes);
+                // Unforge the op bytes
+                var op = await localForge.UnforgeOperationAsync(opBytes);
 
-                        // Serialize/deserialize each operation for the purpose of conversion to JsonElement for comparison
-                        var deserMops = mops.Item2.Select(toJsonElement);
+                // Serialize/deserialize each operation for the purpose of conversion to JsonElement for comparison
+                var deserOps = op.Item2.Select(toJsonElement);
 
-                        // Assert branch
-                        Assert.Equal(json.branch, mops.Item1);
-                        // Assert equivalent JSON operations
-                        Assert.True(((JsonElement)json.contents).EnumerateArray().SequenceEqual(deserMops, jsonComparer));
-                        break;
-
-                    case int n when (n == 1):
-                        // Unforge the op bytes
-                        var op = await localForge.UnforgeOperationAsync(opBytes);
-
-                        // Assert branch
-                        Assert.Equal(json.branch, op.Item1);
-                        // Assert equivalent JSON operations
-                        Assert.True(jsonComparer.Equals((JsonElement)json.contents[0], toJsonElement(op.Item2)));
-                        break;
-
-                    default:
-                        throw new ArgumentException();
-                }
+                // Assert branch
+                Assert.Equal(json.branch, op.Item1);
+                // Assert equivalent JSON operations
+                Assert.Equal(json.contents.count, op.Item2.Count());
+                Assert.True(((JsonElement)json.contents).EnumerateArray().SequenceEqual(deserOps, jsonComparer));
             }
         }
     }

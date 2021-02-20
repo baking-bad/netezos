@@ -1,6 +1,5 @@
 ﻿using Netezos.Encoding;
 using Netezos.Forging.Models;
-using Netezos.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,33 +24,19 @@ namespace Netezos.Forging
             return Task.FromResult(branchBytes.Concat(contentBytes));
         }
 
-        public Task<(string, OperationContent)> UnforgeOperationAsync(byte[] bytes)
+        public Task<(string, IEnumerable<OperationContent>)> UnforgeOperationAsync(byte[] bytes)
         {
-            using (MichelineReader reader = new MichelineReader(bytes))
+            using (var reader = new ForgedReader(bytes))
             {
-                string branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
-                OperationContent content = UnforgeOperation(reader);
+                var branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
+                var content = new List<OperationContent>();
 
-                return Task.FromResult((branch, content));
-            }
-        }
+                while (!reader.EndOfStream)
+                {
+                    content.Add(UnforgeOperation(reader));
+                }
 
-        public Task<(string, IEnumerable<ManagerOperationContent>)> UnforgeOperationGroupAsync(byte[] bytes)
-        {
-            using (MichelineReader reader = new MichelineReader(bytes))
-            {
-                string branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
-                IEnumerable<ManagerOperationContent> content = UnforgeManagerOperations(reader).ToList();
-
-                return Task.FromResult((branch, content));
-            }
-        }
-
-        static IEnumerable<ManagerOperationContent> UnforgeManagerOperations(MichelineReader reader)
-        {
-            while (!reader.EndOfStream)
-            {
-                yield return (ManagerOperationContent)UnforgeOperation(reader);
+                return Task.FromResult((branch, (IEnumerable<OperationContent>)content));
             }
         }
     }

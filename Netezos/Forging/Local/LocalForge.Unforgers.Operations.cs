@@ -1,6 +1,5 @@
 ﻿using Netezos.Encoding;
 using Netezos.Forging.Models;
-using Netezos.IO;
 using System;
 using System.Linq;
 
@@ -8,9 +7,9 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        static OperationContent UnforgeOperation(MichelineReader reader)
+        static OperationContent UnforgeOperation(ForgedReader reader)
         {
-            int operation = (int)reader.ReadUBigInt();
+            var operation = (int)reader.ReadUBigInt();
 
             switch ((OperationTag)operation)
             {
@@ -41,7 +40,7 @@ namespace Netezos.Forging
             }
         }
 
-        static EndorsementContent UnforgeEndorsement(MichelineReader reader)
+        static EndorsementContent UnforgeEndorsement(ForgedReader reader)
         {
             return new EndorsementContent
             {
@@ -49,7 +48,7 @@ namespace Netezos.Forging
             };
         }
 
-        static BallotContent UnforgeBallot(MichelineReader reader)
+        static BallotContent UnforgeBallot(ForgedReader reader)
         {
             return new BallotContent
             {
@@ -60,7 +59,7 @@ namespace Netezos.Forging
             };
         }
 
-        static ProposalsContent UnforgeProposals(MichelineReader reader)
+        static ProposalsContent UnforgeProposals(ForgedReader reader)
         {
             return new ProposalsContent
             {
@@ -70,16 +69,16 @@ namespace Netezos.Forging
             };
         }
 
-        static ActivationContent UnforgeActivation(MichelineReader reader)
+        static ActivationContent UnforgeActivation(ForgedReader reader)
         {
             return new ActivationContent
             {
                 Address = reader.ReadTz1Address(),
-                Secret = Hex.Convert(reader.ReadBytesToEnd())
+                Secret = Hex.Convert(reader.ReadBytes(20))
             };
         }
 
-        static DoubleBakingContent UnforgeDoubleBaking(MichelineReader reader)
+        static DoubleBakingContent UnforgeDoubleBaking(ForgedReader reader)
         {
             return new DoubleBakingContent
             {
@@ -88,7 +87,7 @@ namespace Netezos.Forging
             };
         }
 
-        static DoubleEndorsementContent UnforgeDoubleEndorsement(MichelineReader reader)
+        static DoubleEndorsementContent UnforgeDoubleEndorsement(ForgedReader reader)
         {
             return new DoubleEndorsementContent
             {
@@ -97,16 +96,16 @@ namespace Netezos.Forging
             };
         }
 
-        static SeedNonceRevelationContent UnforgeSeedNonceRevelaion(MichelineReader reader)
+        static SeedNonceRevelationContent UnforgeSeedNonceRevelaion(ForgedReader reader)
         {
             return new SeedNonceRevelationContent
             {
                 Level = reader.ReadInt32(),
-                Nonce = Hex.Convert(reader.ReadBytes(32))
+                Nonce = Hex.Convert(reader.ReadBytes(Lengths.nce.Decoded))
             };
         }
 
-        static DelegationContent UnforgeDelegation(MichelineReader reader)
+        static DelegationContent UnforgeDelegation(ForgedReader reader)
         {
             return new DelegationContent
             {
@@ -119,7 +118,7 @@ namespace Netezos.Forging
             };
         }
 
-        static OriginationContent UnforgeOrigination(MichelineReader reader)
+        static OriginationContent UnforgeOrigination(ForgedReader reader)
         {
             return new OriginationContent
             {
@@ -134,7 +133,7 @@ namespace Netezos.Forging
             };
         }
 
-        static TransactionContent UnforgeTransaction(MichelineReader reader)
+        static TransactionContent UnforgeTransaction(ForgedReader reader)
         {
             return new TransactionContent
             {
@@ -149,7 +148,7 @@ namespace Netezos.Forging
             };
         }
 
-        static RevealContent UnforgeReveal(MichelineReader reader)
+        static RevealContent UnforgeReveal(ForgedReader reader)
         {
             return new RevealContent
             {
@@ -164,14 +163,14 @@ namespace Netezos.Forging
 
         #region nested
 
-        static BlockHeader UnforgeBlockHeader(MichelineReader reader)
+        static BlockHeader UnforgeBlockHeader(ForgedReader reader)
         {
             return new BlockHeader
             {
                 Level = reader.ReadInt32(),
                 Proto = reader.ReadInt32(1),
                 Predecessor = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
-                Timestamp = reader.ReadInt64().FromUnixTime(),
+                Timestamp = DateTimeExtension.FromUnixTime(reader.ReadInt64()),
                 ValidationPass = reader.ReadInt32(1),
                 OperationsHash = reader.ReadBase58(Lengths.LLo.Decoded, Prefix.LLo),
                 Fitness = reader.ReadEnumerable(r => r.ReadHexString()).ToList(),
@@ -183,7 +182,7 @@ namespace Netezos.Forging
             };
         }
 
-        static InlinedEndorsement UnforgeInlinedEndorsement(MichelineReader reader)
+        static InlinedEndorsement UnforgeInlinedEndorsement(ForgedReader reader)
         {
             return new InlinedEndorsement
             {
@@ -193,17 +192,17 @@ namespace Netezos.Forging
             };
         }
 
-        static string UnforgeSeedNonce(MichelineReader reader)
+        static string UnforgeSeedNonce(ForgedReader reader)
         {
             return UnforgeConditional(reader, () => reader.ReadBase58(Lengths.nce.Decoded, Prefix.nce));
         }
 
-        static string UnforgeDelegate(MichelineReader reader)
+        static string UnforgeDelegate(ForgedReader reader)
         {
             return UnforgeConditional(reader, () => reader.ReadTzAddress());
         }
 
-        static Parameters UnforgeParameters(MichelineReader reader)
+        static Parameters UnforgeParameters(ForgedReader reader)
         {
             return UnforgeConditional(reader, () =>
             {
@@ -215,9 +214,9 @@ namespace Netezos.Forging
             });
         }
 
-        static string UnforgeEntrypoint(MichelineReader reader)
+        static string UnforgeEntrypoint(ForgedReader reader)
         {
-            int ep = reader.ReadInt32(1);
+            var ep = reader.ReadInt32(1);
 
             switch (ep)
             {
@@ -231,7 +230,7 @@ namespace Netezos.Forging
             }
         }
 
-        static Script UnforgeScript(MichelineReader reader)
+        static Script UnforgeScript(ForgedReader reader)
         {
             return new Script
             {
@@ -240,7 +239,7 @@ namespace Netezos.Forging
             };
         }
 
-        static T UnforgeConditional<T>(MichelineReader reader, Func<T> tb, Func<T> fb = null)
+        static T UnforgeConditional<T>(ForgedReader reader, Func<T> tb, Func<T> fb = null)
             where T : class
         {
             return reader.ReadBool() ? tb() : fb?.Invoke();

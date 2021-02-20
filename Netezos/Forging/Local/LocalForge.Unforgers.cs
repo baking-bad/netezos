@@ -1,22 +1,13 @@
 ﻿using Netezos.Encoding;
-using Netezos.IO;
 using System;
 
 namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        static IMicheline UnforgeMicheline(byte[] data)
+        static IMicheline UnforgeMicheline(ForgedReader reader)
         {
-            using (MichelineReader mr = new MichelineReader(data))
-            {
-                return UnforgeMicheline(data);
-            }
-        }
-
-        static IMicheline UnforgeMicheline(MichelineReader reader)
-        {
-            IMicheline micheline = reader.ReadMicheline();
+            var micheline = reader.ReadMicheline();
 
             if (!reader.EndOfStream)
             {

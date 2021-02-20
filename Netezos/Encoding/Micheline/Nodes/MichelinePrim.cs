@@ -18,13 +18,6 @@ namespace Netezos.Encoding
         [JsonPropertyName("annots")]
         public List<IAnnotation> Annots { get; set; }
 
-        public MichelinePrim() { }
-
-        public MichelinePrim(PrimType prim)
-        {
-            Prim = prim;
-        }
-
         public void Write(BinaryWriter writer)
         {
             var argsCount = false;

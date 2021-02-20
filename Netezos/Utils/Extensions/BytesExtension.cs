@@ -42,11 +42,6 @@ namespace Netezos
             return res;
         }
 
-        public static byte[] GetBytes(this byte[] src, int start)
-        {
-            return GetBytes(src, start, src.Length - start);
-        }
-
         public static byte[] GetBytes(this byte[] src, int start, int length)
         {
             var res = new byte[length];
