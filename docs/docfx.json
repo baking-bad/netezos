@@ -1,0 +1,82 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "*.csproj"
+          ],
+          "src": "../Netezos/"
+        }
+      ],
+      "dest": "api",
+      "properties": {
+        "TargetFramework": "netstandard2.0"
+      }
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "toc.yml"
+        ]
+      },
+      {
+        "files": [
+          "api/*.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "docs/*.md",
+          "docs/toc.yml"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "favicon-16x16.png",
+          "favicon-32x32.png",
+          "favicon.ico",
+          "logo.svg",
+          "logo.png",
+          "index.html"
+        ]
+      },
+      {
+        "files": [
+          "images/*"
+        ]
+      }
+    ],
+    "globalMetadata": {
+      "_appTitle": "Netezos",
+      "_appFooter": "Copyright © Baking Bad",
+      "_appLogoPath": "logo.svg",
+      "_enableNewTab": true,
+      "_enableSearch": true,
+      "_gitContribute": { "branch": "master" },
+      "_gitUrlPattern": "github"
+    },
+    "template": [
+      "default",
+      "templates/netezos"
+    ],
+    "markdownEngineName": "markdig",
+    "sitemap": {
+      "baseUrl": "https://netezos.dev/",
+      "changefreq": "monthly",
+      "priority": 0.5,
+      "fileOptions": {
+        "docs/*.md": {
+          "changefreq": "weekly",
+          "priority": 1
+        }
+      }
+    },
+    "dest": "_site"
+  }
+}

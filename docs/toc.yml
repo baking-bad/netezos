@@ -1,0 +1,7 @@
+- name: Documentation
+  href: docs/
+  topicHref: docs/
+  
+- name: API Reference
+  href: api/
+  topicHref: api/
