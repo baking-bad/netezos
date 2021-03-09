@@ -4,6 +4,30 @@
   --card-box-shadow: 0 1px 2px 0 rgba(61, 65, 68, 0.06), 0 1px 3px 1px rgba(61, 65, 68, 0.16);
 }
 
+@font-face {
+    font-family: 'Segoe UI';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: local('Segoe UI Light'), url(/fonts/SegoeUI-Light.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Segoe UI';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Segoe UI'), url(/fonts/SegoeUI.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Segoe UI';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: local('Segoe UI Semibold'), url(/fonts/SegoeUI-SemiBold.woff2) format('woff2');
+}
+
 body {
     font-size: 15px;
 }
@@ -80,6 +104,18 @@ body {
     margin-bottom: 92px;
 }
 
+.article h4 {
+    font-weight: 500;
+}
+
+.article th {
+    font-weight: 500;
+}
+
+#fields, #properties, #methods, #events {
+    font-weight: 500;
+}
+
 .sideaffix {
     margin-top: 20px;
     font-size: 13px;
@@ -87,7 +123,7 @@ body {
 
 .sideaffix > div.contribution > ul > li > a.contribution-link {
     font-weight: 500;
-    padding: 6px 11px;
+    padding: 6px 12px;
 }
 
 .affix ul ul > li > a:before {
@@ -97,7 +133,7 @@ body {
 .affix h5 {
     font-weight: 500;
     font-size: 13px;
-    padding-left: 11px;
+    padding-left: 12px;
 }
 
 .affix ul ul > li > a {

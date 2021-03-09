@@ -38,6 +38,16 @@
     "resource": [
       {
         "files": [
+          "fonts/*"
+        ]
+      },
+      {
+        "files": [
+          "images/*"
+        ]
+      },
+      {
+        "files": [
           "favicon-16x16.png",
           "favicon-32x32.png",
           "favicon.ico",
@@ -45,11 +55,6 @@
           "logo.png",
           "index.html",
           "CNAME"
-        ]
-      },
-      {
-        "files": [
-          "images/*"
         ]
       }
     ],
