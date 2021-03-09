@@ -24,5 +24,5 @@
     <PackageReference Include="Dynamic.Json" Version="1.2.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.8" />
   </ItemGroup>
-  
+
 </Project>
