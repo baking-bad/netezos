@@ -43,7 +43,8 @@
           "favicon.ico",
           "logo.svg",
           "logo.png",
-          "index.html"
+          "index.html",
+          "CNAME"
         ]
       },
       {
