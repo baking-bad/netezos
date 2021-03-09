@@ -1,9 +1,9 @@
 ---
-layout: page
-title: PostgreSQL Types
-description: Some text
+title: Reference Documentation
+description: Reference documentation of Netezos, Tezos SDK for .NET developers.
+keywords: netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk,
 ---
 
-# PLACEHOLDER
-TODO: Add .NET projects to the *src* folder and run `docfx` to generate **REAL** *API Documentation*!
-dsffffffffff
+# Reference documentation
+
+This is an auto-generated reference documentation.

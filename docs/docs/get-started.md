@@ -1,12 +1,18 @@
-## Getting started
+---
+title: Get started
+description: Short guide on how to get started with Netezos, Tezos SDK for .NET developers.
+keywords: netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk,
+---
+
+# Get started
 
 Let's consider the most common use case - sending a transaction.
 
-### Installation
+## Installation
 
 `PM> Install-Package Netezos`
 
-### Create private key
+## Create private key
 
 ````cs
 // generate new key
@@ -19,7 +25,7 @@ var key = Key.FromBase58("edsk4ZkGeBwDyFVjZLL2neV5FUeWNN4NJntFNWmWyEBNbRwa2u3jh1
 var address = key.PubKey.Address; // tz1SauKgPRsTSuQRWzJA262QR8cKdw1d9pyK
 ````
 
-### Get some data from RPC
+## Get some data from RPC
 
 ````cs
 using var rpc = new TezosRpc("https://mainnet-tezos.giganode.io/");
@@ -31,7 +37,7 @@ var head = await rpc.Blocks.Head.Hash.GetAsync<string>();
 var counter = await rpc.Blocks.Head.Context.Contracts[address].Counter.GetAsync<int>();
 ````
 
-### Forge an operation
+## Forge an operation
 
 Since our address has just been created, we need to reveal its public key before sending any operation, so that everyone can validate our signatures.
 Therefore, we need to send actually two operations: a reveal and then a transaction.
@@ -63,7 +69,7 @@ var content = new ManagerOperationContent[]
 var bytes = await new LocalForge().ForgeOperationGroupAsync(head, content);
 ````
 
-### Sign and send
+## Sign and send
 
 ````cs
 // sign the operation bytes
@@ -74,8 +80,3 @@ var result = await rpc.Inject.Operation.PostAsync(bytes.Concat(signature));
 ````
 
 That is it. We have successfully injected our first operation into the Tezos blockchain.
-
-## Useful links
-
-- [Examples of Netezos usage](https://baking-bad.org/blog/2019/11/14/tezos-c-sdk-examples-of-netezos-usage/)
-- [Forge an operation locally and sign it using Ledger](https://baking-bad.org/blog/2019/12/30/tezos-c-sdk-netezos-forge-an-operation-locally-and-sign-it-using-ledger-wallet/)

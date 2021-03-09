@@ -1,7 +1,7 @@
-- name: Get Started
-  href: get-started/
-- name: Api References
+- name: Documentation
+  href: docs/
+  topicHref: docs/
+  
+- name: API Reference
   href: api/
-  title: API TATA
-  description: Some data api
-  homepage: api/index.md
+  topicHref: api/

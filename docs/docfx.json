@@ -4,14 +4,12 @@
       "src": [
         {
           "files": [
-            "**.csproj"
+            "*.csproj"
           ],
           "src": "../Netezos/"
         }
       ],
       "dest": "api",
-      "disableGitFeatures": false,
-      "disableDefaultFilter": false,
       "properties": {
         "TargetFramework": "netstandard2.0"
       }
@@ -21,68 +19,64 @@
     "content": [
       {
         "files": [
-          "api/**.yml",
+          "toc.yml"
+        ]
+      },
+      {
+        "files": [
+          "api/*.yml",
           "api/index.md"
         ]
       },
       {
         "files": [
-          "get-started/**.md",
-          "get-started/**/toc.yml",
-          "toc.yml",
-          "*.md"
+          "docs/*.md",
+          "docs/toc.yml"
         ]
       }
     ],
     "resource": [
       {
         "files": [
-          "images/**",
-          "dotNetTZ_violet.svg",
+          "favicon-16x16.png",
+          "favicon-32x32.png",
           "favicon.ico",
+          "logo.svg",
+          "logo.png",
           "index.html"
         ]
-      }
-    ],
-    "overwrite": [
+      },
       {
         "files": [
-          "apidoc/**.md"
-        ],
-        "exclude": [
-          "obj/**",
-          "_site/**"
+          "images/*"
         ]
       }
     ],
-    "dest": "_site",
-    "globalMetadataFiles": ["globalMetadata.json"],
-    "fileMetadataFiles": ["fileMetadata.json"],
+    "globalMetadata": {
+      "_appTitle": "Netezos",
+      "_appFooter": "Copyright © Baking Bad",
+      "_appLogoPath": "logo.svg",
+      "_enableNewTab": true,
+      "_enableSearch": true,
+      "_gitContribute": { "branch": "master" },
+      "_gitUrlPattern": "github"
+    },
     "template": [
       "default",
-      "templates/material"
+      "templates/netezos"
     ],
-    "postProcessors": [],
     "markdownEngineName": "markdig",
-    "noLangKeyword": false,
-    "keepFileLink": false,
-    "cleanupCacheHistory": false,
-    "disableGitFeatures": false,
     "sitemap": {
-      "baseUrl": "https://netezos.com/",
-      "priority": 1,
+      "baseUrl": "https://netezos.dev/",
       "changefreq": "monthly",
+      "priority": 0.5,
       "fileOptions": {
-        "**/api/**.yml": {
-          "priority": 0.3,
-          "lastmod": "2001-01-01"
-        },
-        "**/GettingStarted.md": {
-          "baseUrl": "https://dotnet.github.io/docfx/conceptual",
-          "priority": 0.8,
-          "changefreq": "daily"
+        "docs/*.md": {
+          "changefreq": "weekly",
+          "priority": 1
         }
       }
-    }
+    },
+    "dest": "_site"
   }
 }
