@@ -6,4 +6,4 @@ keywords: netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain,
 
 # Reference documentation
 
-This is an auto-generated reference documentation.
+This is auto-generated reference documentation.

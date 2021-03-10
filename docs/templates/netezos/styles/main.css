@@ -5,31 +5,48 @@
 }
 
 @font-face {
-    font-family: 'Segoe UI';
+    font-family: 'Nunito Sans';
     font-style: normal;
     font-weight: 300;
     font-display: swap;
-    src: local('Segoe UI Light'), url(/fonts/SegoeUI-Light.woff2) format('woff2');
+    src: url(/fonts/NunitoSans-ExtraLight.woff2) format('woff2');
 }
 
 @font-face {
-    font-family: 'Segoe UI';
+    font-family: 'Nunito Sans';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: local('Segoe UI'), url(/fonts/SegoeUI.woff2) format('woff2');
+    src: url(/fonts/NunitoSans-Regular.woff2) format('woff2');
 }
 
 @font-face {
-    font-family: 'Segoe UI';
+    font-family: 'Nunito Sans';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/fonts/NunitoSans-Italic.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Nunito Sans';
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: local('Segoe UI Semibold'), url(/fonts/SegoeUI-SemiBold.woff2) format('woff2');
+    src: url(/fonts/NunitoSans-Bold.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: bold;
+    font-display: swap;
+    src: url(/fonts/NunitoSans-Bold.woff2) format('woff2');
 }
 
 body {
     font-size: 15px;
+    font-family: 'Segoe UI', 'Nunito Sans', sans-serif;
 }
 
 .navbar {
@@ -43,6 +60,9 @@ body {
     display: flex;
     align-items: center;
     margin-right: 1.5rem;
+}
+
+.navbar-brand svg {
     width: 64px;
 }
 
@@ -140,6 +160,15 @@ body {
     padding: 4px 24px;
 }
 
+.alert {
+    padding: 12px;
+    padding-bottom: 10px;
+}
+
+.alert h5 {
+    font-weight: 500;
+}
+
 h1 {
     font-size: 32px;
     margin-top: 22px;
@@ -235,7 +264,7 @@ pre .hljs {
 }
 
 #anima {
-    max-width: 52rem;
+    max-width: 51rem;
     margin: 0 auto 10rem auto;
     text-align: left;
 }
@@ -261,8 +290,18 @@ pre .hljs {
 }
 
 #actions .btn:hover {
-    box-shadow: 0 0 25px rgba(245,245,245, .25);
+    box-shadow: 0 0 25px rgba(245,245,245, .3);
     text-shadow: 0 0 8px rgba(245,245,245, .75);
+}
+
+#actions .btn.btn-act {
+    background: #f5f5f5;
+    color: #1f1f25;
+    font-weight: 500;
+}
+
+#actions .btn.btn-act:hover {
+    box-shadow: 0 0 25px rgba(245,245,245, .4);
 }
 
 #footer {
@@ -287,7 +326,6 @@ pre .hljs {
 
 @media (max-width: 1600px) {
     #home h1 {
-        letter-spacing: 2px;
         line-height: 1.4;
         font-size: 3rem;
     }
@@ -301,7 +339,7 @@ pre .hljs {
         margin: 0 0 6rem 0;
     }
     #anima {
-        max-width: 50rem;
+        max-width: 48rem;
         margin: 0 auto 7rem auto;
     }
     #actions {

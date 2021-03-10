@@ -52,24 +52,13 @@
                 simplifying interaction with the Tezos blockchain
             </h1>
 
-            <h1 id="anima" class="hidden-xs"></h1>
+            <h1 id="anima" class="hidden-xs">|</h1>
 
             <div id="actions">
-                <a role="button" class="btn btn-lg" href="docs/get-started.html">Get Started</a>
+                <a role="button" class="btn btn-lg btn-act" href="docs/get-started.html">Get Started</a>
                 <a role="button" class="btn btn-lg" href="api/index.html">API Reference</a>
                 <a role="button" class="btn btn-lg" href="https://github.com/baking-bad/netezos" target="_blank">GitHub</a>
             </div>
-
-            <!-- <div>
-                <iframe
-                    src="https://ghbtns.com/github-btn.html?user=baking-bad&repo=netezos&type=star&count=true&size=large"
-                    frameborder="0"
-                    scrolling="0"
-                    width="130"
-                    height="30"
-                    title="Netezos"
-                ></iframe>
-            </div> -->
         </div>
 
         <div id="footer">
@@ -94,7 +83,8 @@
             delay: 75,
         });
         writer
-            .pauseFor(1500)
+            .deleteAll()
+            .pauseFor(1000)
             .typeString('Interact with <span class="highlight">smart contracts</span>...')
             .pauseFor(3000)
             .deleteAll()
