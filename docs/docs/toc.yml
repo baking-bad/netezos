@@ -3,3 +3,6 @@
 
 - name: Tezos RPC
   href: tezos-rpc.md
+
+- name: Smart Contracts
+  href: smart-contracts.md
