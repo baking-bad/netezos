@@ -16,7 +16,7 @@ in the [Tezos Rpc](tezos-rpc.html) section. In our case we use the RPC with the 
 var rpc = new TezosRpc("https://rpc.tzkt.io/edo2net/");
 ```
 
-Also, we need a wallet to contract calls. You can find a more detailed description of working with the `Key` in the [Get started](get-started.html) section. 
+Also, we need a wallet to call contracts. You can find a more detailed description of working with the `Key` in the [Get started](get-started.html) section. 
 You can use the address to get some test tokens with the [Tezos Faucet Bot](https://t.me/tezos_faucet_bot) or even generate a new key.
 
 ```cs
@@ -61,7 +61,7 @@ var cs = new ContractScript(code);
 ```
 
 To build the parameter for your transfer we need to know the entrypoint schema. You can check the parameter schema on the 
-[TzKT contract entrypoint page](https://edo2net.tzkt.io/KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg/entrypoints) or you can get the schema from the `ContractScript`
+[TzKT Explorer](https://edo2net.tzkt.io/KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg/entrypoints) or you can get the schema from the `ContractScript`
 
 ```cs
 var schemaString = cs.Entrypoints["transfer"].Humanize();
@@ -130,7 +130,7 @@ var cs = new ContractScript(code);
 ```
 
 To build the parameter for your transfer we need to know the entrypoint schema. You can check the parameter schema on the 
-[TzKT contract entrypoint page](https://edo2net.tzkt.io/KT1UF15SCkdvqkS6QDA5kJZqov6VGUU6vwFJ/entrypoints) or you can get the schema from the `ContractScript`
+[TzKT Explorer](https://edo2net.tzkt.io/KT1UF15SCkdvqkS6QDA5kJZqov6VGUU6vwFJ/entrypoints) or you can get the schema from the `ContractScript`
 
 ```cs
 var schemaString = cs.Entrypoints["transfer"].Humanize();
