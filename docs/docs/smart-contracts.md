@@ -4,7 +4,7 @@ description: Short guide on how to interact with Tezos smart contracts using Net
 keywords: netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk, smart contracts, NFT, FA2, FA1.2
 ---
 # TL;DR
-A full working code snippet example of calling FA1.2 and FA2 transfers with Netezos SDK can be found at [.NET Fiddle](https://dotnetfiddle.net/8po214).
+A full working code snippet of calling FA1.2 and FA2 transfers with Netezos SDK can be found at [.NET Fiddle](https://dotnetfiddle.net/8po214).
 # Prerequisites
 
 First, we need to create `Key` and `Rpc` objects. You can find a more detailed description of working with `Key` and `Rpc` 
