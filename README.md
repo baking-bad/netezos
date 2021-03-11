@@ -12,11 +12,13 @@ The following features have been implemented so far:
 
 | Namespace | Description | Status |
 | --------- | ----------- | ------ |
-| Netezos.Contracts | Interaction with Tezos smart contracts | In progress |
+| Netezos.Contracts | Interaction with Tezos smart contracts | Ready to use. Dynamic wrapper: in progress... |
 | Netezos.Forge| Forging (encoding) operation bytes | Ready to use |
 | Netezos.Keys| Working with keys, signing, verifying signature, etc. | Ready to use. HD keys: in progress... |
 | Netezos.Ledger| Interaction with Tezos Ledger App | Ready to use (separate package) |
 | Netezos.Rpc | Tezos RPC wrapper | Ready to use |
+
+For full documentation and API Reference, please refer to the [Netezos website](https://netezos.dev/)
 
 ### Contribution
 
