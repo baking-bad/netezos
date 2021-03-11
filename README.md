@@ -18,6 +18,8 @@ The following features have been implemented so far:
 | Netezos.Ledger| Interaction with Tezos Ledger App | Ready to use (separate package) |
 | Netezos.Rpc | Tezos RPC wrapper | Ready to use |
 
+For full documentation and API Reference, please refer to the [Netezos website](https://netezos.dev/)
+
 ### Contribution
 
 Netezos is an open development project so any contribution is highly appreciated, starting from documentation improvements, writing examples of usage, etc. and ending with adding new features (as long as these features do not break existing API or are only intended for one person and for very specific use case).
