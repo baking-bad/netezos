@@ -32,6 +32,42 @@ namespace Netezos.Contracts
             Value = Create(value);
         }
 
+        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        {
+            if (value is MichelineInt)
+                return base.GetTreeView(parent, value, name, schema);
+
+            if (!(value is MichelineArray micheArray))
+                throw FormatException(value);
+
+            var treeView = base.GetTreeView(parent, value, name, schema);
+            treeView.Children = new List<TreeView>(micheArray.Count);
+
+            if (Key is IFlat key)
+            {
+                foreach (var item in micheArray)
+                {
+                    if (!(item is MichelinePrim elt) || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
+                        throw new FormatException($"Invalid map item {(item as MichelinePrim)?.Prim.ToString() ?? item.Type.ToString()}");
+
+                    treeView.Children.Add(Value.GetTreeView(treeView, elt.Args[1], key.Flatten(elt.Args[0])));
+                }
+            }
+            else
+            {
+                foreach (var item in micheArray)
+                {
+                    if (!(item is MichelinePrim elt) || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
+                        throw new FormatException($"Invalid map item {(item as MichelinePrim)?.Prim.ToString() ?? item.Type.ToString()}");
+
+                    var keyStr = Key.Humanize(elt.Args[0], new JsonWriterOptions { Indented = false });
+                    treeView.Children.Add(Value.GetTreeView(treeView, elt.Args[1], keyStr));
+                }
+            }
+
+            return treeView;
+        }
+
         internal override void WriteValue(Utf8JsonWriter writer)
         {
             if (Key is IFlat)

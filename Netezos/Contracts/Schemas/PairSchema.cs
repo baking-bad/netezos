@@ -76,6 +76,17 @@ namespace Netezos.Contracts
             }
         }
 
+        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        {
+            var treeView = base.GetTreeView(parent, value, name, schema);
+
+            treeView.Children = Children(value)
+                .Select(x => x.Item1.GetTreeView(treeView, x.Item2))
+                .ToList();
+
+            return treeView;
+        }
+
         public override IMicheline MapObject(object obj, bool isValue = false)
         {
             if (Kind == PairKind.Object)
@@ -139,33 +150,7 @@ namespace Netezos.Contracts
 
         internal override void WriteProperty(Utf8JsonWriter writer, IMicheline value)
         {
-            #region deoptimize
-            if (value is MichelineArray array)
-            {
-                value = new MichelinePrim
-                {
-                    Prim = PrimType.Pair,
-                    Args = array
-                };
-            }
-            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args?.Count > 2)
-            {
-                value = new MichelinePrim
-                {
-                    Prim = p.Prim,
-                    Annots = p.Annots,
-                    Args = new List<IMicheline>(2)
-                    {
-                        p.Args[0],
-                        new MichelinePrim
-                        {
-                            Prim = PrimType.Pair,
-                            Args = p.Args.Skip(1).ToList()
-                        }
-                    }
-                };
-            }
-            #endregion
+            value = Uncomb(value);
 
             if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
                 throw FormatException(value);
@@ -210,33 +195,7 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
-            #region deoptimize
-            if (value is MichelineArray array)
-            {
-                value = new MichelinePrim
-                {
-                    Prim = PrimType.Pair,
-                    Args = array
-                };
-            }
-            if (value is MichelinePrim p && p.Prim == PrimType.Pair && p.Args?.Count > 2)
-            {
-                value = new MichelinePrim
-                {
-                    Prim = p.Prim,
-                    Annots = p.Annots,
-                    Args = new List<IMicheline>(2)
-                    {
-                        p.Args[0],
-                        new MichelinePrim
-                        {
-                            Prim = PrimType.Pair,
-                            Args = p.Args.Skip(1).ToList()
-                        }
-                    }
-                };
-            }
-            #endregion
+            value = Uncomb(value);
 
             if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
                 throw FormatException(value);
@@ -265,32 +224,8 @@ namespace Netezos.Contracts
             return new List<IMicheline>(2) { Left.ToMicheline(), Right.ToMicheline() };
         }
 
-        IEnumerable<Schema> Children()
+        IMicheline Uncomb(IMicheline value)
         {
-            if (Left is PairSchema leftPair && Left.Name == null)
-            {
-                foreach (var child in leftPair.Children())
-                    yield return child;
-            }
-            else
-            {
-                yield return Left;
-            }
-
-            if (Right is PairSchema rightPair && Right.Name == null)
-            {
-                foreach (var child in rightPair.Children())
-                    yield return child;
-            }
-            else
-            {
-                yield return Right;
-            }
-        }
-
-        public override IMicheline Optimize(IMicheline value)
-        {
-            #region deoptimize
             if (value is MichelineArray array)
             {
                 value = new MichelinePrim
@@ -316,14 +251,71 @@ namespace Netezos.Contracts
                     }
                 };
             }
-            #endregion
+            return value;
+        }
 
+        IEnumerable<Schema> Children()
+        {
+            if (Left is PairSchema leftPair && Left.Name == null)
+            {
+                foreach (var child in leftPair.Children())
+                    yield return child;
+            }
+            else
+            {
+                yield return Left;
+            }
+
+            if (Right is PairSchema rightPair && Right.Name == null)
+            {
+                foreach (var child in rightPair.Children())
+                    yield return child;
+            }
+            else
+            {
+                yield return Right;
+            }
+        }
+
+        IEnumerable<(Schema, IMicheline)> Children(IMicheline value)
+        {
+            value = Uncomb(value);
+
+            if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
+                throw FormatException(value);
+
+            if (pair.Args?.Count != 2)
+                throw new FormatException($"Invalid 'pair' prim args count");
+
+            if (Left is PairSchema leftPair && Left.Name == null)
+            {
+                foreach (var child in leftPair.Children(pair.Args[0]))
+                    yield return child;
+            }
+            else
+            {
+                yield return (Left, pair.Args[0]);
+            }
+
+            if (Right is PairSchema rightPair && Right.Name == null)
+            {
+                foreach (var child in rightPair.Children(pair.Args[1]))
+                    yield return child;
+            }
+            else
+            {
+                yield return (Right, pair.Args[1]);
+            }
+        }
+
+        public override IMicheline Optimize(IMicheline value)
+        {
+            value = Uncomb(value);
             if (value is MichelinePrim prim)
             {
                 prim.Args[0] = Left.Optimize(prim.Args[0]);
                 prim.Args[1] = Right.Optimize(prim.Args[1]);
             }
-
             return value;
         }
     }

@@ -71,6 +71,11 @@ namespace Netezos.Contracts
             }
         }
 
+        public TreeView ToTreeView(IMicheline value)
+        {
+            return GetTreeView(null, value);
+        }
+
         public string Humanize(JsonWriterOptions options = default)
         {
             using (var mem = new MemoryStream())
@@ -187,6 +192,17 @@ namespace Netezos.Contracts
         {
             writer.WriteStartObject();
             writer.WriteEndObject();
+        }
+
+        internal virtual TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        {
+            return new TreeView
+            {
+                Name = name ?? Name,
+                Schema = schema ?? this,
+                Value = value,
+                Parent = parent
+            };
         }
 
         protected FormatException FormatException(IMicheline value)

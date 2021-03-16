@@ -51,6 +51,14 @@ namespace Netezos.Contracts
             Data = Create(data);
         }
 
+        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        {
+            if (!(value is MichelinePrim prim) || prim.Prim != PrimType.Pair)
+                throw FormatException(value);
+
+            return Data.GetTreeView(parent, value, name ?? Name, this);
+        }
+
         internal override void WriteValue(Utf8JsonWriter writer)
         {
             Data.WriteValue(writer);

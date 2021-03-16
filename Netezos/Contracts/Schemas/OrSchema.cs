@@ -45,6 +45,24 @@ namespace Netezos.Contracts
             }
         }
 
+        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        {
+            var (endSchema, endValue, endPath) = JumpToEnd(this, value);
+            var path = endSchema.Field != null
+                ? endSchema.Field + endSchema.Suffix
+                : endSchema.Type != null
+                    ? endSchema.Type + endSchema.Suffix
+                    : endPath;
+
+            var treeView = base.GetTreeView(parent, value, name, schema);
+            treeView.Children = new List<TreeView>
+            {
+                endSchema.GetTreeView(treeView, endValue, path)
+            };
+
+            return treeView;
+        }
+
         protected override IMicheline MapValue(object value)
         {
             if (value is JsonElement json && json.ValueKind == JsonValueKind.Object)

@@ -26,6 +26,29 @@ namespace Netezos.Contracts
             Some = Create(some);
         }
 
+        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        {
+            if (!(value is MichelinePrim prim))
+                throw FormatException(value);
+
+            if (prim.Prim == PrimType.None)
+            {
+                return base.GetTreeView(parent, value, name);
+            }
+            else if (prim.Prim == PrimType.Some)
+            {
+                if (prim.Args?.Count != 1)
+                    throw new FormatException("Invalid 'Some' prim args count");
+
+                return Some.GetTreeView(parent, prim.Args[0], name ?? Name);
+            }
+            else
+            {
+                throw FormatException(value);
+            }
+
+        }
+
         internal override void WriteValue(Utf8JsonWriter writer)
         {
             Some.WriteValue(writer);

@@ -27,6 +27,20 @@ namespace Netezos.Contracts
             Item = Create(item);
         }
 
+        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        {
+            if (!(value is MichelineArray micheArray))
+                throw FormatException(value);
+
+            var treeView = base.GetTreeView(parent, value, name, schema);
+
+            treeView.Children = new List<TreeView>(micheArray.Count);
+            for (int i = 0; i < micheArray.Count; i++)
+                treeView.Children.Add(Item.GetTreeView(treeView, micheArray[i], i.ToString()));
+
+            return treeView;
+        }
+
         internal override void WriteValue(Utf8JsonWriter writer)
         {
             writer.WriteStartArray();
