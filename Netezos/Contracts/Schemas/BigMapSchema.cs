@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json;
 using Netezos.Encoding;
+using Netezos.Forging;
+using Netezos.Utils;
 
 namespace Netezos.Contracts
 {
@@ -234,6 +236,15 @@ namespace Netezos.Contracts
             }
 
             return value;
+        }
+
+        public string GetKeyHash(IMicheline key)
+        {
+            var optimized = Key.Optimize(Micheline.FromBytes(key.ToBytes()));
+            var packed = new byte[] { 5 }.Concat(LocalForge.ForgeMicheline(optimized));
+            var hash = Blake2b.GetDigest(packed);
+
+            return Base58.Convert(hash, Prefix.expr);
         }
     }
 }

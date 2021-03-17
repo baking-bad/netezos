@@ -111,5 +111,10 @@
         /// Seed nonce hash prefix
         /// </summary>
         public static readonly byte[] nce = new byte[] { 69, 220, 169 };
+
+        /// <summary>
+        /// Script expression
+        /// </summary>
+        public static readonly byte[] expr = new byte[] { 13, 44, 64, 27 };
     }
 }

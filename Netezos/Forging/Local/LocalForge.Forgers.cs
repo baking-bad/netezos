@@ -8,12 +8,12 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        static byte[] ForgeBool(bool value)
+        public static byte[] ForgeBool(bool value)
         {
             return value ? new byte[] { 255 } : new byte[] { 0 };
         }
 
-        static byte[] ForgeInt32(int value, int len = 4)
+        public static byte[] ForgeInt32(int value, int len = 4)
         {
             var res = new byte[len];
             for (int i = len - 1; i >= 0; i--, value >>= 8)
@@ -21,7 +21,7 @@ namespace Netezos.Forging
             return res;
         }
 
-        static byte[] ForgeInt64(long value, int len = 8)
+        public static byte[] ForgeInt64(long value, int len = 8)
         {
             var res = new byte[len];
             for (int i = len - 1; i >= 0; i--, value >>= 8)
@@ -29,17 +29,17 @@ namespace Netezos.Forging
             return res;
         }
 
-        static byte[] ForgeArray(byte[] value, int len = 4)
+        public static byte[] ForgeArray(byte[] value, int len = 4)
         {
             return ForgeInt32(value.Length, len).Concat(value);
         }
 
-        static byte[] ForgeString(string value, int len = 4)
+        public static byte[] ForgeString(string value, int len = 4)
         {
             return ForgeInt32(value.Length, len).Concat(Utf8.Parse(value));
         }
 
-        static byte[] ForgePublicKey(string value)
+        public static byte[] ForgePublicKey(string value)
         {
             var prefix = value.Substring(0, 4);
             var res = Base58.Parse(value, 4);
@@ -54,7 +54,7 @@ namespace Netezos.Forging
             }
         }
 
-        static byte[] ForgeAddress(string value)
+        public static byte[] ForgeAddress(string value)
         {
             var prefix = value.Substring(0, 3);
             var res = Base58.Parse(value, 3);
@@ -70,7 +70,7 @@ namespace Netezos.Forging
             }
         }
 
-        static byte[] ForgeTzAddress(string value)
+        public static byte[] ForgeTzAddress(string value)
         {
             var prefix = value.Substring(0, 3);
             var res = Base58.Parse(value, 3);
@@ -85,12 +85,12 @@ namespace Netezos.Forging
             }
         }
 
-        static byte[] ForgeTz1Address(string value)
+        public static byte[] ForgeTz1Address(string value)
         {
             return Base58.Parse(value, 3);
         }
 
-        static byte[] ForgeMicheNat(int value)
+        public static byte[] ForgeMicheNat(int value)
         {
             if (value < 0)
                 throw new ArgumentException("Nat cannot be negative");
@@ -109,7 +109,7 @@ namespace Netezos.Forging
             return res.ToArray();
         }
 
-        static byte[] ForgeMicheNat(long value)
+        public static byte[] ForgeMicheNat(long value)
         {
             if (value < 0)
                 throw new ArgumentException("Nat cannot be negative");
@@ -128,7 +128,7 @@ namespace Netezos.Forging
             return res.ToArray();
         }
 
-        static byte[] ForgeMicheInt(BigInteger value)
+        public static byte[] ForgeMicheInt(BigInteger value)
         {
             var abs = BigInteger.Abs(value);
             var res = new List<byte>();
@@ -146,7 +146,7 @@ namespace Netezos.Forging
             return res.ToArray();
         }
 
-        static byte[] ForgeEntrypoint(string value)
+        public static byte[] ForgeEntrypoint(string value)
         {
             switch (value)
             {
@@ -160,7 +160,7 @@ namespace Netezos.Forging
             }
         }
 
-        static byte[] ForgeMicheline(IMicheline micheline)
+        public static byte[] ForgeMicheline(IMicheline micheline)
         {
             switch (micheline)
             {
