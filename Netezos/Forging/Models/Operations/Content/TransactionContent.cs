@@ -9,6 +9,7 @@ namespace Netezos.Forging.Models
         public override string Kind => "transaction";
 
         [JsonPropertyName("amount")]
+        [JsonConverter(typeof(Int64StringConverter))]
         public long Amount { get; set; }
 
         [JsonPropertyName("destination")]

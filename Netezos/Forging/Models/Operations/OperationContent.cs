@@ -2,6 +2,7 @@
 
 namespace Netezos.Forging.Models
 {
+    [JsonConverter(typeof(OperationContentConverter))]
     public abstract class OperationContent
     {
         [JsonPropertyName("kind")]

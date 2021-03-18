@@ -9,6 +9,7 @@ namespace Netezos.Forging.Models
         public override string Kind => "origination";
 
         [JsonPropertyName("balance")]
+        [JsonConverter(typeof(Int64StringConverter))]
         public long Balance { get; set; }
 
         [JsonPropertyName("delegate")]
