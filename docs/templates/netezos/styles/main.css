@@ -91,6 +91,11 @@ body {
     font-weight: 500;
 }
 
+.toc .level2 > li > a {
+    margin-top: 4px;
+    font-size: 15px;
+}
+
 .toc-filter {
     margin: 0;
 }
@@ -196,6 +201,11 @@ pre {
 
 pre .hljs {
     white-space: pre;
+}
+
+blockquote {
+    padding: 4px 14px;
+    font-size: 15px;
 }
 
 ::-webkit-scrollbar {

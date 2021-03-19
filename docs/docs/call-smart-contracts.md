@@ -1,12 +1,14 @@
 ---
-title: Tezos Smart contracts interaction
+title: Tezos smart contracts interaction
 description: Short guide on how to interact with Tezos smart contracts using Netezos, Tezos SDK for .NET developers.
 keywords: netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk, smart contracts, NFT, FA2, FA1.2
 ---
-# Tezos Smart contracts interaction
+
+# Tezos smart contracts interaction
+
 [Netezos.Contracts](../api/Netezos.Contracts.html) allows to interact with Tezos Smart contracts, build parameters and contract calls.
-## TL;DR
 A full working code snippet of calling FA1.2 and FA2 transfers with Netezos SDK can be found at [.NET Fiddle](https://dotnetfiddle.net/8po214).
+
 ## Prerequisites
 
 First, we need an `Rpc` to interaction. You can find a more detailed description of working with the `Rpc` 

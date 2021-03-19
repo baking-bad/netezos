@@ -5,4 +5,10 @@
   href: tezos-rpc.md
 
 - name: Smart Contracts
-  href: smart-contracts.md
+  items:
+
+    - name: Call smart contracts
+      href: call-smart-contracts.md
+
+    - name: Call "view" entrypoints
+      href: call-view-entrypoints.md
