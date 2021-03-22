@@ -4,6 +4,9 @@
 - name: Tezos RPC
   href: tezos-rpc.md
 
+- name: Tezos Forging & Unforging
+  href: tezos-forging.md
+
 - name: Smart Contracts
   items:
 
