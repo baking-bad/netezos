@@ -8,9 +8,9 @@ keywords: netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain,
 
 Netezos supports functions to convert Tezos operations and their associated data into binary form for injection into the Tezos blockchain&mdash;a process known as **forging**. The reverse is also possible; converting binary forms of injected operations into native types&mdash;a process known as **unforging**.
 
-# Forging
+## Forging
 
-## Forge an operation
+### Forge an operation
 
 Forging an operation requires a block hash, an operation type, and any necessary operation parameters. Let's forge a transaction operation to transfer funds between two accounts.
 
@@ -35,7 +35,7 @@ var forgedBytes = await localForge.ForgeOperationAsync(blockHash, operationArgs)
 
 The variable `forgedBytes` will now contain the block hash, operation, and all of its parameters in binary form.
 
-## Forge an operation group
+### Forge an operation group
 
 It is also possible to forge a group of operations together as a batch. Here is an example of a `reveal` operation followed by `transaction` operation.
 
@@ -72,11 +72,11 @@ var forgedBytes = await localForge.ForgeOperationGroupAsync(blockHash, operation
 
 Likewise, the variable `forgedBytes` will now contain the block hash, batched operations, and all operation parameters in binary form.
 
-# Unforging
+## Unforging
 
 Following from the previous example of forging an operation or operations, we can also unforge the forged bytes from their binary form to native types.
 
-## Unforge single or multiple operation(s)
+### Unforge single or multiple operation(s)
 
 ```cs
 var localForge = new LocalForge();
@@ -90,7 +90,7 @@ var operations = unforgedOperations.Item2; // IEnumerable<OperationContent>
 
 Since the number of operations from forged bytes cannot be known until the unforge process actually occurs, the return type of `UnforgeOperationAsync` is a tuple type of `(string, IEnumerable<OperationContent>)`. The `string` (`unforgedOperations.Item1`) is the block hash, and the `IEnumerable<OperationContent>` (`unforgedOperations.Item2`) is an enumerable of operations that may contain 1 or more operations based on the number of forged operations. 
 
-# Operation types
+## Operation types
 
 Following is a chart of Tezos operations and their operation native type counterparts.
 
