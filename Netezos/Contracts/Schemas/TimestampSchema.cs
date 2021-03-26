@@ -42,6 +42,9 @@ namespace Netezos.Contracts
                 if (DateTimeOffset.TryParse(micheString.Value, out var datetime))
                     return datetime.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
+                if (micheString.Value?.Length == 0)
+                    return new DateTime(1970, 1, 1).ToString("yyyy-MM-ddTHH:mm:ssZ");
+
                 return micheString.Value;
             }
             else
@@ -87,6 +90,9 @@ namespace Netezos.Contracts
                     var seconds = (long)(datetime - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds;
                     return new MichelineInt(new BigInteger(seconds));
                 }
+
+                if (micheStr.Value?.Length == 0)
+                    return new MichelineInt(0);
 
                 throw FormatException(value);
             }
