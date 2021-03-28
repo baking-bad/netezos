@@ -11,7 +11,7 @@ namespace Netezos.Tests.Keys
         [Fact]
         public void TestEd25519()
         {
-            foreach (var sample in DJson.Read(@"..\..\..\Keys\Samples\ed25519.json"))
+            foreach (var sample in DJson.Read(@"../../../Keys/Samples/ed25519.json"))
             {
                 var key = Key.FromBase58(sample.prv);
                 var data = Hex.Parse(sample.data);
@@ -25,7 +25,7 @@ namespace Netezos.Tests.Keys
         [Fact]
         public void TestSecp256k1()
         {
-            foreach (var sample in DJson.Read(@"..\..\..\Keys\Samples\secp256k1.json"))
+            foreach (var sample in DJson.Read(@"../../../Keys/Samples/secp256k1.json"))
             {
                 var key = Key.FromBase58(sample.prv);
                 var data = Hex.Parse(sample.data);
@@ -39,7 +39,7 @@ namespace Netezos.Tests.Keys
         [Fact]
         public void TestNistp256()
         {
-            foreach (var sample in DJson.Read(@"..\..\..\Keys\Samples\nistp256.json"))
+            foreach (var sample in DJson.Read(@"../../../Keys/Samples/nistp256.json"))
             {
                 var key = Key.FromBase58(sample.prv);
                 var data = Hex.Parse(sample.data);

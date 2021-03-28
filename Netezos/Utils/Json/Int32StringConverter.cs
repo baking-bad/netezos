@@ -8,7 +8,9 @@ namespace Netezos.Forging.Models
     {
         public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return reader.GetInt32();
+            return reader.TokenType == JsonTokenType.String
+                ? int.Parse(reader.GetString())
+                : reader.GetInt32();
         }
 
         public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)

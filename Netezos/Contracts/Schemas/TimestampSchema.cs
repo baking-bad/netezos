@@ -20,9 +20,9 @@ namespace Netezos.Contracts
         {
             if (value is MichelineInt micheInt)
             {
-                if (micheInt.Value > 253_402_300_800) // DateTime overflow
+                if (micheInt.Value > 253_402_300_800 || micheInt.Value < -62_135_596_800) // DateTime overflow
                     return micheInt.Value.ToString();
-
+                
                 return new DateTime(1970, 1, 1)
                     .AddSeconds((long)micheInt.Value)
                     .ToString("yyyy-MM-ddTHH:mm:ssZ");
@@ -31,7 +31,7 @@ namespace Netezos.Contracts
             {
                 if (BigInteger.TryParse(micheString.Value, out var seconds))
                 {
-                    if (seconds > 253_402_300_800) // DateTime overflow
+                    if (seconds > 253_402_300_800 || seconds < -62_135_596_800) // DateTime overflow
                         return seconds.ToString();
 
                     return new DateTime(1970, 1, 1)
