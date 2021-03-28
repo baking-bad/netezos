@@ -141,6 +141,52 @@ namespace Netezos.Contracts
             writer.WriteEndArray();
         }
 
+        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            if (Key is IFlat)
+            {
+                writer.WriteString("type", "object");
+
+                writer.WriteStartObject("propertyNames");
+                Key.WriteJsonSchema(writer);
+                writer.WriteEndObject();
+
+                writer.WriteStartObject("additionalProperties");
+                Value.WriteJsonSchema(writer);
+                writer.WriteEndObject();
+            }
+            else
+            {
+                writer.WriteString("type", "array");
+                writer.WriteStartObject("items");
+                {
+                    writer.WriteString("type", "object");
+
+                    writer.WriteStartObject("properties");
+                    {
+                        writer.WriteStartObject("key");
+                        Key.WriteJsonSchema(writer);
+                        writer.WriteEndObject();
+
+                        writer.WriteStartObject("value");
+                        Value.WriteJsonSchema(writer);
+                        writer.WriteEndObject();
+                    }
+                    writer.WriteEndObject();
+
+                    writer.WriteStartArray("required");
+                    writer.WriteStringValue("key");
+                    writer.WriteStringValue("value");
+                    writer.WriteEndArray();
+
+                    writer.WriteBoolean("additionalProperties", false);
+                }
+                writer.WriteEndObject();
+            }
+
+            writer.WriteString("$comment", Prim.ToString());
+        }
+
         protected override List<IMicheline> GetArgs()
         {
             return new List<IMicheline>(2) { Key.ToMicheline(), Value.ToMicheline() };

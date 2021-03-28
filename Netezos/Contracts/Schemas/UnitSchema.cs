@@ -22,6 +22,13 @@ namespace Netezos.Contracts
             }
         }
 
+        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            writer.WriteString("type", "string");
+            writer.WriteString("const", "Unit");
+            writer.WriteString("$comment", Prim.ToString());
+        }
+
         public override IMicheline MapObject(object value, bool isValue = false)
         {
             return new MichelinePrim { Prim = PrimType.Unit };

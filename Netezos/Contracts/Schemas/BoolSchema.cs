@@ -14,6 +14,18 @@ namespace Netezos.Contracts
             writer.WriteStringValue(Flatten(value));
         }
 
+        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            writer.WriteString("type", "string");
+
+            writer.WriteStartArray("enum");
+            writer.WriteStringValue("True");
+            writer.WriteStringValue("False");
+            writer.WriteEndArray();
+
+            writer.WriteString("$comment", Prim.ToString());
+        }
+
         public string Flatten(IMicheline value)
         {
             if (value is MichelinePrim michePrim

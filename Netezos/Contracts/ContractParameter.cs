@@ -84,6 +84,14 @@ namespace Netezos.Contracts
             return schema.Humanize(value, options);
         }
 
+        public string GetJsonSchema(string entrypoint, JsonWriterOptions options = default)
+        {
+            if (!Entrypoints.TryGetValue(entrypoint, out var schema))
+                throw new ArgumentException("Entrypoint doesn't exist");
+
+            return schema.GetJsonSchema(options);
+        }
+
         public (string, IMicheline) Normalize(string entrypoint, IMicheline value)
         {
             if (!Entrypoints.TryGetValue(entrypoint, out var schema))

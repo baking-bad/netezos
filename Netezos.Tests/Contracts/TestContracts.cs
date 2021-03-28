@@ -14,12 +14,12 @@ namespace Netezos.Tests.Contracts
         [Fact]
         public void TestHumanizeParameters()
         {
-            foreach (var address in Directory.GetFiles($@"..\..\..\Contracts\Parameters").Select(x => x.Substring(x.Length - 41, 36)))
+            foreach (var address in Directory.GetFiles($@"../../../Contracts/Parameters").Select(x => x.Substring(x.Length - 41, 36)))
             {
-                var script = DJson.Read($@"..\..\..\Contracts\Scripts\{address}.json");
+                var script = DJson.Read($@"../../../Contracts/Scripts/{address}.json");
                 var contract = new ContractScript(Micheline.FromJson((string)script.code));
 
-                foreach (var sample in DJson.Read($@"..\..\..\Contracts\Parameters\{address}.json"))
+                foreach (var sample in DJson.Read($@"../../../Contracts/Parameters/{address}.json"))
                 {
                     var rawEntrypoint = sample.raw.entrypoint;
                     var rawValue = Micheline.FromJson(sample.raw.value);
