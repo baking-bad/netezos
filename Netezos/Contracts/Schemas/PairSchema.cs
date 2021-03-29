@@ -219,6 +219,28 @@ namespace Netezos.Contracts
             }
         }
 
+        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            writer.WriteString("type", "object");
+
+            writer.WriteStartObject("properties");
+            foreach (var child in Children())
+            {
+                writer.WriteStartObject(child.Name);
+                child.WriteJsonSchema(writer);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndObject();
+
+            writer.WriteStartArray("required");
+            foreach (var child in Children())
+                writer.WriteStringValue(child.Name);
+            writer.WriteEndArray();
+
+            writer.WriteBoolean("additionalProperties", false);
+            writer.WriteString("$comment", Prim.ToString());
+        }
+
         protected override List<IMicheline> GetArgs()
         {
             return new List<IMicheline>(2) { Left.ToMicheline(), Right.ToMicheline() };

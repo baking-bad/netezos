@@ -76,6 +76,23 @@ namespace Netezos.Contracts
             }
         }
 
+        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            writer.WriteStartArray("oneOf");
+            {
+                writer.WriteStartObject();
+                Some.WriteJsonSchema(writer);
+                writer.WriteEndObject();
+
+                writer.WriteStartObject();
+                writer.WriteString("type", "null");
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+
+            writer.WriteString("$comment", Prim.ToString());
+        }
+
         protected override List<IMicheline> GetArgs()
         {
             return new List<IMicheline>(1) { Some.ToMicheline() };

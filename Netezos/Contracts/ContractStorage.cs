@@ -30,5 +30,10 @@ namespace Netezos.Contracts
         {
             return Schema.Humanize(value, options);
         }
+
+        public string GetJsonSchema(JsonWriterOptions options = default)
+        {
+            return Schema.GetJsonSchema(options);
+        }
     }
 }

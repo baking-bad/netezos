@@ -103,6 +103,21 @@ namespace Netezos.Contracts
             }
         }
 
+        public string GetJsonSchema(JsonWriterOptions options = default)
+        {
+            using (var mem = new MemoryStream())
+            using (var writer = new Utf8JsonWriter(mem, options))
+            {
+                writer.WriteStartObject();
+                writer.WriteString("$schema", "http://json-schema.org/draft/2019-09/schema#");
+                WriteJsonSchema(writer);
+                writer.WriteEndObject();
+                writer.Flush();
+
+                return Utf8.Convert(mem.ToArray());
+            }
+        }
+
         public IMicheline ToMicheline()
         {
             return new MichelinePrim
@@ -192,6 +207,12 @@ namespace Netezos.Contracts
         {
             writer.WriteStartObject();
             writer.WriteEndObject();
+        }
+
+        internal virtual void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            writer.WriteString("type", "string");
+            writer.WriteString("$comment", Prim.ToString());
         }
 
         internal virtual TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)

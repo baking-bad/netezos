@@ -42,6 +42,11 @@ namespace Netezos.Contracts
             Schema.WriteValue(writer, value);
         }
 
+        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            Schema.WriteJsonSchema(writer);
+        }
+
         protected override List<IMicheline> GetArgs()
         {
             return new List<IMicheline>(1) { Schema.ToMicheline() };
