@@ -18,6 +18,9 @@ namespace Netezos.Tests.Contracts
             {
                 var script = DJson.Read($@"../../../Contracts/Scripts/{address}.json");
                 var contract = new ContractScript(Micheline.FromJson((string)script.code));
+                var storage = Micheline.FromJson((string)script.storage);
+
+                var storageJson = contract.HumanizeStorage(storage);
 
                 foreach (var sample in DJson.Read($@"../../../Contracts/Parameters/{address}.json"))
                 {

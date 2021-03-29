@@ -11,18 +11,16 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
-            writer.WriteStringValue(Flatten(value));
+            if (!(value is MichelinePrim michePrim)
+                || (michePrim.Prim != PrimType.True && michePrim.Prim != PrimType.False))
+                throw FormatException(value);
+            
+            writer.WriteBooleanValue(michePrim.Prim == PrimType.True);
         }
 
         internal override void WriteJsonSchema(Utf8JsonWriter writer)
         {
-            writer.WriteString("type", "string");
-
-            writer.WriteStartArray("enum");
-            writer.WriteStringValue("True");
-            writer.WriteStringValue("False");
-            writer.WriteEndArray();
-
+            writer.WriteString("type", "boolean");
             writer.WriteString("$comment", Prim.ToString());
         }
 
@@ -30,7 +28,7 @@ namespace Netezos.Contracts
         {
             if (value is MichelinePrim michePrim
                 && (michePrim.Prim == PrimType.True || michePrim.Prim == PrimType.False))
-                return (michePrim.Prim == PrimType.True).ToString();
+                return (michePrim.Prim == PrimType.True).ToString().ToLower();
 
             throw FormatException(value);
         }
@@ -45,9 +43,6 @@ namespace Netezos.Contracts
                     return new MichelinePrim { Prim = PrimType.True };
                 case JsonElement json when json.ValueKind == JsonValueKind.False:
                     return new MichelinePrim { Prim = PrimType.False };
-                case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    // TODO: validation
-                    return new MichelinePrim { Prim = json.ValueEquals("True") ? PrimType.True : PrimType.False };
                 default:
                     throw MapFailedException("invalid value");
             }
