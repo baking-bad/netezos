@@ -24,8 +24,8 @@ namespace Netezos.Contracts
 
         internal override void WriteJsonSchema(Utf8JsonWriter writer)
         {
-            writer.WriteString("type", "string");
-            writer.WriteString("const", "Unit");
+            writer.WriteString("type", "object");
+            writer.WriteBoolean("additionalProperties", false);
             writer.WriteString("$comment", Prim.ToString());
         }
 

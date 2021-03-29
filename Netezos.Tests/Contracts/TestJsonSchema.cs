@@ -25,7 +25,7 @@ namespace Netezos.Tests.Contracts
                     var jsonSchemaSrc = contract.Parameter.GetJsonSchema((string)sample.human.entrypoint);
                     var jsonSchema = await JsonSchema.FromJsonAsync(jsonSchemaSrc);
 
-                    if (jsonSchema.Type != JsonObjectType.Object)
+                    if (jsonSchema.Type == JsonObjectType.String)
                         continue;  // Newtonsoft does not handle that
 
                     var errors = jsonSchema.Validate((string)sample.human.value);
