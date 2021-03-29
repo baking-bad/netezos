@@ -13,7 +13,7 @@ namespace Netezos.Rpc
         #region static
         internal delegate T Creator<T>(RpcQuery baseQuery, string append);
 
-        internal static Creator<T> GetCreator<T>() where T : RpcObject
+        internal static Creator<T> GetCreator<T>() where T : RpcQuery
         {
             var ctor = typeof(T).GetConstructor(
                    BindingFlags.NonPublic | BindingFlags.Instance,

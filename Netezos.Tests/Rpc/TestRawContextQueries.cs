@@ -47,6 +47,34 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestRawContextBigMaps()
+        {
+            var query = Rpc.Blocks.Head.Context.Raw.BigMaps;
+            Assert.Equal("chains/main/blocks/head/context/raw/json/big_maps/index/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+
+            var query2 = Rpc.Blocks.Head.Context.Raw.BigMaps[res[0]];
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/big_maps/index/{res[0]}/", query2.ToString());
+
+            var res2 = await query2.GetAsync();
+            Assert.True(res2 is DJsonObject);
+
+            var query3 = Rpc.Blocks.Head.Context.Raw.BigMaps[(int)res[0]].Contents;
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/big_maps/index/{res[0]}/contents/", query3.ToString());
+
+            var res3 = await query3.GetAsync();
+            Assert.True(res3 is DJsonArray);
+
+            var query4 = Rpc.Blocks.Head.Context.Raw.BigMaps[(int)res[0]].Contents[res3[0]];
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/big_maps/index/{res[0]}/contents/{res3[0]}/", query4.ToString());
+
+            var res4 = await query4.GetAsync();
+            Assert.True(res4 is DJsonObject);
+        }
+
+        [Fact]
         public async Task TestRawContextCommitments()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Commitments;

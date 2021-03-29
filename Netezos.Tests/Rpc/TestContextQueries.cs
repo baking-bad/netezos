@@ -19,6 +19,16 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextBigMaps()
+        {
+            var query = Rpc.Blocks.Head.Context.BigMaps[31]["exprvTLSAygwBtv1BTN39CQ5eTtnLoqNrGAREJAffhX2WQcMwaA5fA"];
+            Assert.Equal("chains/main/blocks/head/context/big_maps/31/exprvTLSAygwBtv1BTN39CQ5eTtnLoqNrGAREJAffhX2WQcMwaA5fA/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
         public async Task TestContextConstants()
         {
             var query = Rpc.Blocks.Head.Context.Constants;

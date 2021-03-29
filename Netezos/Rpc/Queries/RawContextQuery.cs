@@ -7,6 +7,9 @@ namespace Netezos.Rpc.Queries
         public DeepRpcDictionary<string, RpcObject> ActiveDelegates
             => new DeepRpcDictionary<string, RpcObject>(this, "active_delegates_with_rolls/");
 
+        public RpcArray<RawBigMapQuery> BigMaps
+            => new RpcArray<RawBigMapQuery>(this, "big_maps/index/");
+
         public DeepRpcDictionary<string, RpcObject> Commitments
             => new DeepRpcDictionary<string, RpcObject>(this, "commitments/");
 
