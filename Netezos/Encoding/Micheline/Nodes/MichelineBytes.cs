@@ -9,6 +9,7 @@ namespace Netezos.Encoding
         public MichelineType Type => MichelineType.Bytes;
 
         [JsonPropertyName("bytes")]
+        [JsonConverter(typeof(HexConverter))]
         public byte[] Value { get; set; }
 
         public MichelineBytes(byte[] value) => Value = value;
