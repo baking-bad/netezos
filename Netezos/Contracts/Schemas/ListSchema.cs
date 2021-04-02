@@ -10,10 +10,7 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.list;
 
-        public override string Name => (Field ?? Type
-            ?? Item.Field ?? Item.Type
-            ?? Prim.ToString())
-            + Suffix;
+        public override string Name => (Annot ?? Item.Annot ?? Prim.ToString()) + Suffix;
 
         public override string Signature => $"list:{Item.Signature}";
 

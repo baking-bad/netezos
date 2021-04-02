@@ -56,10 +56,12 @@ namespace Netezos.Contracts
         public string Field { get; }
         public string Type { get; }
 
-        internal int _Suffix { get; set; } = -1;
-        internal string Suffix => _Suffix > -1 ? $"_{_Suffix}" : string.Empty;
+        internal int Index = -1;
+        internal string Annot = null;
 
-        public virtual string Name => (Field ?? Type ?? Prim.ToString()) + Suffix;
+        internal string Suffix => Index > -1 ? $"_{Index}" : string.Empty;
+
+        public virtual string Name => (Annot ?? Prim.ToString()) + Suffix;
         public virtual string Signature => Prim.ToString();
 
         protected Schema(MichelinePrim micheline)
@@ -68,6 +70,7 @@ namespace Netezos.Contracts
             {
                 Field = micheline.Annots.FirstOrDefault(x => x.Type == AnnotationType.Field && x.Value.Length > 0)?.Value;
                 Type = micheline.Annots.FirstOrDefault(x => x.Type == AnnotationType.Type && x.Value.Length > 0)?.Value;
+                Annot = (Field ?? Type)?.ToAlphaNumeric();
             }
         }
 

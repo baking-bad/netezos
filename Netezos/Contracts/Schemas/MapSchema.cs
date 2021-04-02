@@ -10,10 +10,7 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.map;
 
-        public override string Name => (Field ?? Type
-            ?? Value.Field ?? Value.Type
-            ?? Prim.ToString())
-            + Suffix;
+        public override string Name => (Annot ?? Value.Annot ?? Prim.ToString()) + Suffix;
 
         public override string Signature =>
             $"{(Key is IFlat ? "map_flat" : "map")}:{Key.Signature}:{Value.Signature}";
@@ -78,9 +75,9 @@ namespace Netezos.Contracts
             {
                 writer.WriteStartArray();
                 writer.WriteStartObject();
-                writer.WritePropertyName("key");
+                writer.WritePropertyName($"key:{Key.Signature}");
                 Key.WriteValue(writer);
-                writer.WritePropertyName("value");
+                writer.WritePropertyName($"value:{Value.Signature}");
                 Value.WriteValue(writer);
                 writer.WriteEndObject();
                 writer.WriteEndArray();

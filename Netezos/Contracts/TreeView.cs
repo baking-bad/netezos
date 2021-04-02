@@ -20,7 +20,7 @@ namespace Netezos.Contracts
                     return string.Empty;
 
                 var path = Parent.Path;
-                return path.Length == 0 ? Name : $"{path},{Name}";
+                return path.Length == 0 ? Name : $"{path}.{Name}";
             }
         }
 

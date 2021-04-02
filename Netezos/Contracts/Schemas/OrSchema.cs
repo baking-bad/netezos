@@ -36,23 +36,21 @@ namespace Netezos.Contracts
                 {
                     var name = child.Name;
                     if (fields.ContainsKey(name))
-                        child._Suffix = ++fields[name];
+                        child.Index = ++fields[name];
                     else
                         fields.Add(name, 0);
                 }
                 foreach (var kv in fields.Where(x => x.Value > 0))
-                    children.First(x => x.Name == kv.Key)._Suffix = 0;
+                    children.First(x => x.Name == kv.Key).Index = 0;
             }
         }
 
         internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
         {
             var (endSchema, endValue, endPath) = JumpToEnd(this, value);
-            var path = endSchema.Field != null
-                ? endSchema.Field + endSchema.Suffix
-                : endSchema.Type != null
-                    ? endSchema.Type + endSchema.Suffix
-                    : endPath;
+            var path = endSchema.Annot != null
+                ? endSchema.Annot + endSchema.Suffix
+                : endPath;
 
             var treeView = base.GetTreeView(parent, value, name, schema);
             treeView.Children = new List<TreeView>
@@ -129,11 +127,9 @@ namespace Netezos.Contracts
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
             var (endSchema, endValue, endPath) = JumpToEnd(this, value);
-            var path = endSchema.Field != null
-                ? endSchema.Field + endSchema.Suffix
-                : endSchema.Type != null
-                    ? endSchema.Type + endSchema.Suffix
-                    : endPath;
+            var path = endSchema.Annot != null
+                ? endSchema.Annot + endSchema.Suffix
+                : endPath;
 
             writer.WriteStartObject();
 
@@ -243,11 +239,9 @@ namespace Netezos.Contracts
             else
             {
                 var curPath = path + "L";
-                var curPathName = Left.Field != null
-                    ? Left.Field + Left.Suffix
-                    : Left.Type != null
-                        ? Left.Type + Left.Suffix
-                        : curPath;
+                var curPathName = Left.Annot != null
+                    ? Left.Annot + Left.Suffix
+                    : curPath;
 
                 yield return (curPath, curPathName, Left);
             }
@@ -260,11 +254,9 @@ namespace Netezos.Contracts
             else
             {
                 var curPath = path + "R";
-                var curPathName = Right.Field != null
-                    ? Right.Field + Right.Suffix
-                    : Right.Type != null
-                        ? Right.Type + Right.Suffix
-                        : curPath;
+                var curPathName = Right.Annot != null
+                    ? Right.Annot + Right.Suffix
+                    : curPath;
 
                 yield return (curPath, curPathName, Right);
             }

@@ -11,7 +11,7 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.pair;
 
-        public override string Name => Field ?? Type;
+        public override string Name => Annot;
 
         public override string Signature => "object";
 
@@ -67,12 +67,12 @@ namespace Netezos.Contracts
                 {
                     var name = child.Name;
                     if (fields.ContainsKey(name))
-                        child._Suffix = ++fields[name];
+                        child.Index = ++fields[name];
                     else
                         fields.Add(name, 0);
                 }
                 foreach (var kv in fields.Where(x => x.Value > 0))
-                    children.First(x => x.Name == kv.Key)._Suffix = 0;
+                    children.First(x => x.Name == kv.Key).Index = 0;
             }
         }
 

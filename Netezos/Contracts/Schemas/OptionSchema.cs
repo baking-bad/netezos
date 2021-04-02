@@ -9,10 +9,7 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.option;
 
-        public override string Name => (Field ?? Type
-            ?? Some.Field ?? Some.Type
-            ?? Some.Prim.ToString())
-            + Suffix;
+        public override string Name => (Annot ?? Some.Annot ?? Some.Prim.ToString()) + Suffix;
 
         public override string Signature => $"?{Some.Signature}";
 
