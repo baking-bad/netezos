@@ -93,7 +93,7 @@ namespace Netezos.Contracts
         {
             if (value is MichelineInt micheInt)
             {
-                writer.WriteStringValue(micheInt.Value.ToString());
+                writer.WriteNumberValue((long)micheInt.Value);
             }
             else if (value is MichelineArray micheArray)
             {
@@ -152,7 +152,7 @@ namespace Netezos.Contracts
             writer.WriteStartArray("oneOf");
             {
                 writer.WriteStartObject();
-                writer.WriteString("type", "string");
+                writer.WriteString("type", "integer");
                 writer.WriteString("$comment", "int");
                 writer.WriteEndObject();
 
