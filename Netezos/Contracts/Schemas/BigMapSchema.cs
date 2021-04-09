@@ -201,6 +201,17 @@ namespace Netezos.Contracts
             }
             writer.WriteEndArray();
 
+            if (Key is IFlat)
+            {
+                writer.WriteStartObject("default");
+                writer.WriteEndObject();
+            }
+            else
+            {
+                writer.WriteStartArray("default");
+                writer.WriteEndArray();
+            }
+
             writer.WriteString("$comment", Prim.ToString());
         }
 
