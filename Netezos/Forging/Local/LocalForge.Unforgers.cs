@@ -5,7 +5,7 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        static IMicheline UnforgeMicheline(ForgedReader reader)
+        public static IMicheline UnforgeMicheline(ForgedReader reader)
         {
             var micheline = reader.ReadMicheline();
 

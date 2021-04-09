@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Netezos.Encoding.Serialization;
+using Netezos.Forging;
 
 namespace Netezos.Encoding
 {
@@ -34,6 +35,17 @@ namespace Netezos.Encoding
             using (var bin = new BinaryReader(mem))
             {
                 return Read(bin);
+            }
+        }
+
+        public static IMicheline Unpack(byte[] bytes)
+        {
+            if (bytes[0] != 5)
+                throw new FormatException("Packed bytes should start with 0x05");
+
+            using (var reader = new ForgedReader(bytes.GetBytes(1, bytes.Length - 1)))
+            {
+                return LocalForge.UnforgeMicheline(reader);
             }
         }
 
