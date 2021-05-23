@@ -20,6 +20,7 @@ namespace Netezos.Forging.Models
         public Ballot Ballot { get; set; }
     }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Ballot
     {
         Yay  = 0,
