@@ -28,7 +28,7 @@ namespace Netezos.Forging.Models
                 case "transaction": return JsonSerializer.Deserialize<TransactionContent>(ref reader, options);
                 case "reveal": return JsonSerializer.Deserialize<RevealContent>(ref reader, options);
                 case "endorsement_with_slot":
-                    reader.Skip();
+                    reader.TrySkip();
                     sideReader.Read();
                     sideReader.Read();
                     sideReader.Read();
