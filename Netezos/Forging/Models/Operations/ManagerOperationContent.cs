@@ -2,7 +2,7 @@
 
 namespace Netezos.Forging.Models
 {
-    [JsonConverter(typeof(OperationContentConverter))]
+    [JsonConverter(typeof(ManagerOperationContentConverter))]
     public abstract class ManagerOperationContent : OperationContent
     {
         [JsonPropertyName("source")]
