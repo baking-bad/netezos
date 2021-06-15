@@ -11,6 +11,12 @@ namespace Netezos.Forging.Models
             var sideReader = reader;
 
             sideReader.Read();
+            while (!sideReader.ValueTextEquals("kind"))
+            {
+                sideReader.Skip();
+                sideReader.Read();
+            }
+
             sideReader.Read();
             var kind = sideReader.GetString();
 

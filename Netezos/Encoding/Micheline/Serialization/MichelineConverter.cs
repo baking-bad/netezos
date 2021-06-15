@@ -16,7 +16,7 @@ namespace Netezos.Encoding.Serialization
 
             sideReader.Read();
 
-            if (sideReader.ValueTextEquals("prim"))
+            if (sideReader.ValueTextEquals("prim") || sideReader.ValueTextEquals("args") || sideReader.ValueTextEquals("annots"))
                 return JsonSerializer.Deserialize<MichelinePrim>(ref reader, options);
 
             reader.Read();

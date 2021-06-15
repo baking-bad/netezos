@@ -11,12 +11,19 @@ namespace Netezos.Forging.Models
             var sideReader = reader;
 
             sideReader.Read();
+            while (!sideReader.ValueTextEquals("kind"))
+            {
+                sideReader.Skip();
+                sideReader.Read();
+            }
+
             sideReader.Read();
             var kind = sideReader.GetString();
 
             switch (kind)
             {
                 case "endorsement": return JsonSerializer.Deserialize<EndorsementContent>(ref reader, options);
+                case "endorsement_with_slot": return JsonSerializer.Deserialize<EndorsementWithSlotContent>(ref reader, options);
                 case "ballot": return JsonSerializer.Deserialize<BallotContent>(ref reader, options);
                 case "proposals": return JsonSerializer.Deserialize<ProposalsContent>(ref reader, options);
                 case "activate_account": return JsonSerializer.Deserialize<ActivationContent>(ref reader, options);
@@ -27,19 +34,6 @@ namespace Netezos.Forging.Models
                 case "origination": return JsonSerializer.Deserialize<OriginationContent>(ref reader, options);
                 case "transaction": return JsonSerializer.Deserialize<TransactionContent>(ref reader, options);
                 case "reveal": return JsonSerializer.Deserialize<RevealContent>(ref reader, options);
-                case "endorsement_with_slot":
-                    reader.TrySkip();
-                    sideReader.Read();
-                    sideReader.Read();
-                    sideReader.Read();
-                    sideReader.Read();
-                    sideReader.Read();
-                    sideReader.Read();
-                    sideReader.Read();
-                    sideReader.Read();
-                    sideReader.Read();
-                    sideReader.Read();
-                    return new EndorsementContent { Level = sideReader.GetInt32() };
                 default: throw new JsonException("Invalid operation kind");
             }
         }
