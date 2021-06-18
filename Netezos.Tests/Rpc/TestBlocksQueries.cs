@@ -5,9 +5,10 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestBlocksQueries : IClassFixture<SettingsFixture>
+    [Collection("Settings")]
+    public class TestBlocksQueries
     {
-        readonly TezosRpc Rpc;
+        readonly TezosRpcSandbox Rpc;
 
         public TestBlocksQueries(SettingsFixture settings)
         {
@@ -20,7 +21,7 @@ namespace Netezos.Tests.Rpc
             var query =  Rpc.Blocks.Head.Hash;
             Assert.Equal($"chains/main/blocks/head/hash/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonValue);
         }
 
@@ -30,7 +31,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Header;
             Assert.Equal($"chains/main/blocks/head/header/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonObject);
         }
 
@@ -40,7 +41,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Header.ProtocolData;
             Assert.Equal($"chains/main/blocks/head/header/protocol_data/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonObject);
         }
 
@@ -50,7 +51,7 @@ namespace Netezos.Tests.Rpc
             var query =  Rpc.Blocks.Head.Header.ProtocolData.Raw;
             Assert.Equal($"chains/main/blocks/head/header/protocol_data/raw/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonValue);
         }
 
@@ -60,7 +61,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Header.Shell;
             Assert.Equal($"chains/main/blocks/head/header/shell/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonObject);
         }
 
@@ -70,7 +71,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Header.Raw;
             Assert.Equal($"chains/main/blocks/head/header/raw/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonValue);
         }
 
@@ -80,7 +81,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Metadata;
             Assert.Equal($"chains/main/blocks/head/metadata/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonObject);
         }
 
@@ -90,7 +91,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.LiveBlocks;
             Assert.Equal($"chains/main/blocks/head/live_blocks/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonArray);
         }
 
@@ -100,7 +101,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.OperationsHashes;
             Assert.Equal($"chains/main/blocks/head/operation_hashes/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonArray);
         }
 
@@ -110,7 +111,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Operations;
             Assert.Equal($"chains/main/blocks/head/operations/", query.ToString());
 
-            var res = await query.GetAsync();
+            var res = await Rpc.GetAsync(query.ToString());
             Assert.True(res is DJsonArray);
         }
     }

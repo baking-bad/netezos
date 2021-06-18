@@ -1,6 +1,7 @@
 ﻿using Dynamic.Json;
 using Netezos.Rpc;
 using System;
+using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
@@ -8,7 +9,7 @@ namespace Netezos.Tests.Rpc
     {
         static readonly object Crit = new object();
 
-        public TezosRpc Rpc { get; }
+        public TezosRpcSandbox Rpc { get; }
         public string TestContract { get; }
         public string TestDelegate { get; }
         public string TestInactive { get; }
@@ -19,7 +20,7 @@ namespace Netezos.Tests.Rpc
             {
                 var settings = DJson.Read("../../../Rpc/settings.json");
 
-                Rpc = new TezosRpc(settings.node, 60);
+                Rpc = new TezosRpcSandbox(settings.node, 60);
                 TestContract = settings.TestContract;
                 TestDelegate = settings.TestDelegate;
                 TestInactive = settings.TestInactive;
@@ -27,5 +28,15 @@ namespace Netezos.Tests.Rpc
         }
 
         public void Dispose() => Rpc.Dispose();
+    }
+
+    /// <summary>
+    /// Singleton instance between all tests
+    /// See https://xunit.net/docs/shared-context#collection-fixture
+    /// </summary>
+    [CollectionDefinition("Settings")]
+    public class SettingsCollection : ICollectionFixture<SettingsFixture>
+    {
+        
     }
 }
