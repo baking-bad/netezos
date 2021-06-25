@@ -1,4 +1,11 @@
 {
+  "sandboxNode" : {
+    "imageName": "bakingbad/sandboxed-node",
+    "tag" : "v9.1-1",
+    "port" : "8732",
+    "host" : "http://localhost",
+    "healthCheckOnStartedTimeout": 20
+  },
   "node": "https://mainnet-tezos.giganode.io/",
   "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
   "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",

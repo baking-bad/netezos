@@ -5,10 +5,10 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    [Collection("Settings")]
+    [Collection(SettingsCollection.CollectionName)]
     public class TestHelpersQueries
     {
-        readonly TezosRpcSandbox Rpc;
+        readonly TezosRpc Rpc;
 
         public TestHelpersQueries(SettingsFixture settings)
         {
@@ -21,7 +21,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Helpers.BakingRights;
             Assert.Equal($"chains/main/blocks/head/helpers/baking_rights/", query.ToString());
 
-            var res = await Rpc.GetAsync(query.ToString());
+            var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
         }
 
@@ -31,7 +31,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Helpers.EndorsingRights;
             Assert.Equal($"chains/main/blocks/head/helpers/endorsing_rights/", query.ToString());
 
-            var res = await Rpc.GetAsync(query.ToString());
+            var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
         }
 
