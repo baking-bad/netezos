@@ -13,10 +13,7 @@
         /// Gets the query to the sum of ballots casted so far during a voting period
         /// </summary>
         public RpcObject Ballots => new RpcObject(this, "ballots/");
-        /// <summary>
-        /// Gets the query to the current period kind
-        /// </summary>
-        public RpcObject CurrentPeriodKind => new RpcObject(this, "current_period_kind/");
+        
         /// <summary>
         /// Gets the query to the current proposal under evaluation
         /// </summary>

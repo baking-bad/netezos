@@ -21,6 +21,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="operations">List of operations</param>
         /// <param name="seedNonceHash">Seed nonce hash (optional)</param>
         /// <returns></returns>
+        //TODO Add "liquidity_baking_escape_vote": {"type": "boolean"},
         public Task<dynamic> PostAsync(string protocol, int priority, string powNonce, string signature, List<List<object>> operations, string seedNonceHash = null)
             => PostAsync(new
             {

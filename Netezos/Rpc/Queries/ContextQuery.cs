@@ -7,6 +7,7 @@ namespace Netezos.Rpc.Queries
     /// </summary>
     public class ContextQuery : RpcQuery
     {
+        //TODO /context/big_maps... https://gitlab.com/tezos/tezos/-/blob/master/docs/api/granada-openapi.json
         /// <summary>
         /// Gets the query to the protocol's constants
         /// </summary>
@@ -28,6 +29,8 @@ namespace Netezos.Rpc.Queries
         /// </summary>
         public DelegatesQuery Delegates => new DelegatesQuery(this, "delegates/");
 
+        public LiquidityBakingQuery LiquidityBaking => new LiquidityBakingQuery(this, "liquidity_baking/");
+        
         /// <summary>
         /// Gets the query to the info about the nonce of a previous block
         /// </summary>
