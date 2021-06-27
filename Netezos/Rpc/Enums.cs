@@ -17,4 +17,11 @@
         Active,
         Inactive
     }
+
+    public enum BigMapNormalization
+    {
+        Readable,
+        Optimized,
+        Optimized_legacy
+    }
 }

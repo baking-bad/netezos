@@ -5,7 +5,7 @@
         public DeepRpcDictionary<string, RpcObject> Ballots
             => new DeepRpcDictionary<string, RpcObject>(this, "ballots/");
         
-        public RpcObject CurrentPeriodKind => new RpcObject(this, "current_period_kind/");
+        public RpcObject CurrentPeriod => new RpcObject(this, "current_period/");
 
         public RpcObject CurrentProposal => new RpcObject(this, "current_proposal/");
 

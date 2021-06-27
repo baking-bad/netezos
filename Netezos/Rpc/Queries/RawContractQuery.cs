@@ -50,12 +50,6 @@ namespace Netezos.Rpc.Queries
             => new RpcObject(this, "delegate_desactivation/");
 
         /// <summary>
-        /// 
-        /// </summary>
-        public RpcObject InactiveDelegate
-            => new RpcObject(this, "inactive_delegate/");
-
-        /// <summary>
         /// Gets the query to all contracts delegated to this contract
         /// </summary>
         public DeepRpcDictionary<string, RpcObject>

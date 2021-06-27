@@ -67,6 +67,11 @@ namespace Netezos.Tests.Rpc
             var res3 = await query3.GetAsync();
             Assert.True(res3 is DJsonArray);
 
+            if (res3.Count == 0)
+            {
+                return;
+            }
+            
             var query4 = Rpc.Blocks.Head.Context.Raw.BigMaps[(int)res[0]].Contents[res3[0]];
             Assert.Equal($"chains/main/blocks/head/context/raw/json/big_maps/index/{res[0]}/contents/{res3[0]}/", query4.ToString());
 
@@ -185,16 +190,6 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestRawContextContractInactiveDelegate()
-        {
-            var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestInactive].InactiveDelegate;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestInactive}/inactive_delegate/", query.ToString());
-
-           var res = await query.GetAsync();
-           Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
         public async Task TestRawContextContractDelegated()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].Delegated;
@@ -261,7 +256,7 @@ namespace Netezos.Tests.Rpc
             Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestContract}/storage/", query.ToString());
 
             var res = await query.GetAsync();
-            Assert.True(res is DJsonObject);
+            Assert.True(res is DJsonArray);
         }
 
         [Fact]
@@ -485,13 +480,13 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestRawContextVotesCurrentPeriodKind()
+        public async Task TestRawContextVotesCurrentPeriod()
         {
-            var query = Rpc.Blocks.Head.Context.Raw.Votes.CurrentPeriodKind;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/votes/current_period_kind/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Raw.Votes.CurrentPeriod;
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/votes/current_period/", query.ToString());
 
             var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]

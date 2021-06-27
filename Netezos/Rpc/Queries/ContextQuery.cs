@@ -7,12 +7,11 @@ namespace Netezos.Rpc.Queries
     /// </summary>
     public class ContextQuery : RpcQuery
     {
-        //TODO /context/big_maps... https://gitlab.com/tezos/tezos/-/blob/master/docs/api/granada-openapi.json
         /// <summary>
         /// Gets the query to the protocol's constants
         /// </summary>
-        public RpcSimpleArray<RpcSimpleDictionary<string, RpcObject>> BigMaps
-            => new RpcSimpleArray<RpcSimpleDictionary<string, RpcObject>>(this, "big_maps/");
+        public RpcSimpleArray<RpcSimpleDictionary<string, BigMapsQuery>> BigMaps
+            => new RpcSimpleArray<RpcSimpleDictionary<string, BigMapsQuery>>(this, "big_maps/");
 
         /// <summary>
         /// Gets the query to the protocol's constants

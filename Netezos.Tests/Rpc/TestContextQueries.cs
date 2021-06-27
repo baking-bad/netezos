@@ -10,23 +10,40 @@ namespace Netezos.Tests.Rpc
         readonly TezosRpc Rpc;
         readonly string TestContract;
         readonly string TestDelegate;
+        readonly int TestBigMapId;
+        readonly string TestBigMapExpr;
 
         public TestContextQueries(SettingsFixture settings)
         {
             Rpc = settings.Rpc;
             TestContract = settings.TestContract;
             TestDelegate = settings.TestDelegate;
+            TestBigMapId = settings.TestBigMapId;
+            TestBigMapExpr = settings.TestBigMapExpr;
         }
 
         [Fact]
         public async Task TestContextBigMaps()
         {
-            var query = Rpc.Blocks.Head.Context.BigMaps[31]["exprvTLSAygwBtv1BTN39CQ5eTtnLoqNrGAREJAffhX2WQcMwaA5fA"];
-            Assert.Equal("chains/main/blocks/head/context/big_maps/31/exprvTLSAygwBtv1BTN39CQ5eTtnLoqNrGAREJAffhX2WQcMwaA5fA/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.BigMaps[TestBigMapId][TestBigMapExpr];
+            Assert.Equal($"chains/main/blocks/head/context/big_maps/{TestBigMapId}/{TestBigMapExpr}/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
         }
+
+        [Fact]
+        public async Task TestContextBigMapsNormalized()
+        {
+            
+            var query = Rpc.Blocks.Head.Context.BigMaps[TestBigMapId][TestBigMapExpr].Normalized;
+            Assert.Equal($"chains/main/blocks/head/context/big_maps/{TestBigMapId}/{TestBigMapExpr}/normalized/", query.ToString());
+
+            var a = BigMapNormalization.Optimized_legacy.ToString();
+            var res = await query.PostAsync(BigMapNormalization.Optimized_legacy);
+            Assert.True(res is DJsonObject);
+        }
+        
 
         [Fact]
         public async Task TestContextConstants()

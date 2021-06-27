@@ -35,16 +35,6 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestVotesCurrentPeriodKind()
-        {
-            var query = Rpc.Blocks.Head.Votes.CurrentPeriodKind;
-            Assert.Equal("chains/main/blocks/head/votes/current_period_kind/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
         public void TestVotesCurrentProposal()
         {
             var query = Rpc.Blocks[123].Votes.CurrentProposals; // specific level is required
