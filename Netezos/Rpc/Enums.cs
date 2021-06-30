@@ -1,4 +1,7 @@
-﻿namespace Netezos.Rpc
+﻿using System.Text.Json.Serialization;
+using Netezos.Utils.Json;
+
+namespace Netezos.Rpc
 {
     /// <summary>
     /// Type of chain
@@ -18,10 +21,11 @@
         Inactive
     }
 
+    [JsonConverter(typeof(BigMapNormalizationConverter))]
     public enum BigMapNormalization
     {
         Readable,
         Optimized,
-        Optimized_legacy
+        OptimizedLegacy
     }
 }

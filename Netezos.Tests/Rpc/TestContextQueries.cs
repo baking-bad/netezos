@@ -39,8 +39,8 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Context.BigMaps[TestBigMapId][TestBigMapExpr].Normalized;
             Assert.Equal($"chains/main/blocks/head/context/big_maps/{TestBigMapId}/{TestBigMapExpr}/normalized/", query.ToString());
 
-            var a = BigMapNormalization.Optimized_legacy.ToString();
-            var res = await query.PostAsync(BigMapNormalization.Optimized_legacy);
+            var a = BigMapNormalization.OptimizedLegacy.ToString();
+            var res = await query.PostAsync(BigMapNormalization.OptimizedLegacy);
             Assert.True(res is DJsonObject);
         }
         

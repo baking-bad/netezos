@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,9 +17,26 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="unparsingMode">Unparsing mode. `Readable`, `Optimized` or `Optimized_legacy`</param>
         /// <returns></returns>
         public Task<dynamic> PostAsync(BigMapNormalization unparsingMode)
-            => PostAsync(new
+        {
+            var modeString = "";
+            switch (unparsingMode)
             {
-                unparsing_mode = unparsingMode.ToString()
+                case BigMapNormalization.Readable:
+                    modeString = "Readable";
+                    break;
+                case BigMapNormalization.Optimized:
+                    modeString = "Optimized";
+                    break;
+                case BigMapNormalization.OptimizedLegacy:
+                    modeString = "Optimized_legacy";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(unparsingMode), unparsingMode, null);
+            }
+            return PostAsync(new
+            {
+                unparsing_mode = modeString
             });
+        }
     }
 }

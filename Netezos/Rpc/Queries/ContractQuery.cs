@@ -33,7 +33,13 @@ namespace Netezos.Rpc.Queries
         /// Gets the query to the delegate of a contract, if any
         /// </summary>
         public RpcObject Delegate => new RpcObject(this, "delegate/");
+        
+        /// <summary>
+        /// Return the list of entrypoints of the contract
+        /// </summary>
+        public RpcObject Entrypoints => new RpcObject(this, "entrypoints/");
 
+        
         /// <summary>
         /// Gets the query to the manager of a contract
         /// </summary>
