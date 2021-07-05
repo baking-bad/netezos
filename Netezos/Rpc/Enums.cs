@@ -21,8 +21,8 @@ namespace Netezos.Rpc
         Inactive
     }
 
-    [JsonConverter(typeof(BigMapNormalizationConverter))]
-    public enum BigMapNormalization
+    [JsonConverter(typeof(NormalizationConverter))]
+    public enum Normalization
     {
         Readable,
         Optimized,

@@ -39,8 +39,7 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Context.BigMaps[TestBigMapId][TestBigMapExpr].Normalized;
             Assert.Equal($"chains/main/blocks/head/context/big_maps/{TestBigMapId}/{TestBigMapExpr}/normalized/", query.ToString());
 
-            var a = BigMapNormalization.OptimizedLegacy.ToString();
-            var res = await query.PostAsync(BigMapNormalization.OptimizedLegacy);
+            var res = await query.PostAsync(Normalization.OptimizedLegacy);
             Assert.True(res is DJsonObject);
         }
         
@@ -116,6 +115,26 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextContractEntrypoints()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Entrypoints;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/entrypoints/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextContractEntrypoint()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Entrypoints;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/entrypoints/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
         public void TestContextContractManager()
         {
             //var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].Manager;
@@ -142,6 +161,16 @@ namespace Netezos.Tests.Rpc
             Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/script/", query.ToString());
 
             var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextContractScriptNormalized()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Script.Normalized;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/script/normalized/", query.ToString());
+
+            var res = await query.PostAsync(Normalization.OptimizedLegacy);
             Assert.True(res is DJsonObject);
         }
 

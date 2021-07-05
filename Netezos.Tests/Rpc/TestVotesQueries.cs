@@ -33,6 +33,16 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
         }
+        
+        [Fact]
+        public void TestVotesCurrentPeriodKind()
+        {
+            /*var query = Rpc.Blocks.Head.Votes.CurrentPeriodKind;
+            Assert.Equal("chains/main/blocks/head/votes/current_period_kind/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);*/
+        }
 
         [Fact]
         public void TestVotesCurrentProposal()

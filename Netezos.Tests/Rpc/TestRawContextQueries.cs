@@ -190,6 +190,17 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public void TestRawContextContractInactiveDelegate()
+        {
+            /*var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestInactive].InactiveDelegate;
+            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestInactive}/inactive_delegate/",
+                query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);*/
+        }
+
+        [Fact]
         public async Task TestRawContextContractDelegated()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].Delegated;

@@ -4,5 +4,6 @@
   "testDelegate": "tz1RomaiWJV3NFDZWTMVR2aEeHknsn3iF5Gi",
   "testInactive": "tz1Qzyb4rBoWhRaxYXHMm7vsMrqYHGUMDbn8",
   "testBigMapId": 1207,
-  "testBigMapExpr": "exprtjVsTcMMbxaf7nPKJ8SrFUas3ahyNX6jmEPVftgC9FfrKvn3op"
+  "testBigMapExpr": "exprtjVsTcMMbxaf7nPKJ8SrFUas3ahyNX6jmEPVftgC9FfrKvn3op",
+  "testEntrypoint": "xtzToToken"
 }

@@ -1,4 +1,6 @@
-﻿namespace Netezos.Rpc.Queries
+﻿using System;
+
+namespace Netezos.Rpc.Queries
 {
     /// <summary>
     /// Rpc query to access voting data
@@ -13,7 +15,11 @@
         /// Gets the query to the sum of ballots casted so far during a voting period
         /// </summary>
         public RpcObject Ballots => new RpcObject(this, "ballots/");
-        
+        /// <summary>
+        /// Gets the query to the current period kind
+        /// </summary>
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
+        public RpcObject CurrentPeriodKind => new RpcObject(this, "current_period_kind/");
         /// <summary>
         /// Gets the query to the current proposal under evaluation
         /// </summary>

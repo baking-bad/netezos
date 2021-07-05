@@ -54,7 +54,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the code and data of the contract
         /// </summary>
-        public RpcObject Script => new RpcObject(this, "script/");
+        public ScriptQuery Script => new ScriptQuery(this, "script/");
 
         /// <summary>
         /// Gets the query to the flag, indicating if the contract tokens can be spent by the manager

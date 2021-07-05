@@ -8,7 +8,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Access the value associated with a key in a big map, normalize the output using the requested unparsing mode.
         /// </summary>
-        public NormalizedBigMapQuery Normalized => new NormalizedBigMapQuery(this, "normalized/");
+        public NormalizedQuery Normalized => new NormalizedQuery(this, "normalized/");
 
         internal BigMapsQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
         {
