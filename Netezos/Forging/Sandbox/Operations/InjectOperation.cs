@@ -8,6 +8,9 @@ using Netezos.Rpc;
 
 namespace Netezos.Forging.Sandbox.Base
 {
+    /// <summary>
+    /// Inject the signed block header
+    /// </summary>
     public class InjectOperation : HeaderOperation
     {
         public InjectOperation(TezosRpc rpc,

@@ -8,6 +8,9 @@ using Org.BouncyCastle.Math;
 
 namespace Netezos.Forging.Sandbox.Base
 {
+    /// <summary>
+    /// Fill missing fields essential for preapply 
+    /// </summary>
     public class FillOperation : HeaderOperation
     {
         public SignOperation Sign => new SignOperation(Rpc, Values, Apply);
@@ -22,9 +25,6 @@ namespace Netezos.Forging.Sandbox.Base
             throw new NotImplementedException();
         }
         
-        /// <summary>
-        /// Fill missing fields essential for preapply 
-        /// </summary>
         public async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues data)
         {
             var (_, header, _) = await Function(data);

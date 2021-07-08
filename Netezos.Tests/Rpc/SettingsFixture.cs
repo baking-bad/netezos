@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Dynamic.Json;
@@ -18,7 +20,7 @@ namespace Netezos.Tests.Rpc
         public string TestDelegate { get; }
         public string TestInactive { get; }
         private NodeContainer NodeContainer { get; }
-        private SandboxBlockHeaderService SandboxBlockHeader { get; }
+        private HeaderClient HeaderClient { get; }
         private int HealthCheckTimeout { get; }
 
         public SettingsFixture()
@@ -26,11 +28,17 @@ namespace Netezos.Tests.Rpc
             lock (Crit)
             {
                 var settings = DJson.Read("../../../Rpc/settings.json");
+                var node = GetActiveNodeConfig(settings);
+                var headerConfig = node.header;
 
-                NodeContainer = new NodeContainer(settings.sandboxNode.imageName, settings.sandboxNode.tag, settings.sandboxNode.port);
-                Rpc = new TezosRpc($"{settings.sandboxNode.host}:{settings.sandboxNode.port}", 60);
-                SandboxBlockHeader = new SandboxBlockHeaderService(Rpc);
-                HealthCheckTimeout = settings.sandboxNode.healthCheckOnStartedTimeout;
+                NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
+                Rpc = new TezosRpc($"{node.host}:{node.port}", 60);
+
+                HeaderClient = headerConfig != null 
+                    ? new HeaderClient(Rpc, headerConfig.protocol, headerConfig.key, headerConfig.blockId)
+                    : null;
+
+                HealthCheckTimeout = node.healthCheckOnStartedTimeout;
 
                 TestContract = settings.TestContract;
                 TestDelegate = settings.TestDelegate;
@@ -45,7 +53,7 @@ namespace Netezos.Tests.Rpc
                 var response = await Rpc.GetAsync("version/");
                 return response.version != null;
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException _)
             {
                 return false;
             }
@@ -62,7 +70,22 @@ namespace Netezos.Tests.Rpc
                 Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
             }
 
-            await SandboxBlockHeader.ActivationTest();
+            await HeaderClient?.ActivateProtocol.Fill.Sign.InjectBlock.ApplyAsync();
+        }
+
+        private dynamic GetActiveNodeConfig(dynamic settings)
+        {
+            string activeNode = settings.active;
+
+            var nodes = settings.nodes as DJsonArray;
+
+            var node = nodes?.FirstOrDefault(x =>
+            {
+                string type = ((dynamic)(DJsonObject) x).type;
+                return type.Equals(activeNode);
+            });
+
+            return ((dynamic)node)?.config;
         }
 
         public async Task DisposeAsync()

@@ -7,6 +7,9 @@ using Netezos.Rpc;
 
 namespace Netezos.Forging.Sandbox.Base
 {
+    /// <summary>
+    /// Sign the block header with the specified key
+    /// </summary>
     public class SignOperation : HeaderOperation
     {
         public SignOperation(TezosRpc rpc,
@@ -34,8 +37,7 @@ namespace Netezos.Forging.Sandbox.Base
             var key = Key.FromBase58(data.Key);
             var signature = key
                 .Sign(watermark.Concat(LocalForge.ForgeShellHeader(shell).Concat(LocalForge.ForgeProtocolData(header.ProtocolData))));
-//edsigteZmnR2LSFMmCSiX6kE3MrrnYb98PUKtAuGcTWWm1MxeWNWDBqQa1R49WE8oU3t36mstFgsAaBsM2DffA1pQDDvnLwAXeF
-//edsigteZmnR2LSFMmCSiX6kE3MrrnYb98PUKtAuGcTWWm1MxeWNWDBqQa1R49WE8oU3t36mstFgsAaBsM2DffA1pQDDvnLwAXeF
+
             return (shell, header, signature);
 
         }

@@ -1,12 +1,39 @@
 {
-  "sandboxNode" : {
-    "imageName": "bakingbad/sandboxed-node",
-    "tag" : "v9.1-1",
-    "port" : "8732",
-    "host" : "http://localhost",
-    "healthCheckOnStartedTimeout": 20
-  },
-  "node": "https://mainnet-tezos.giganode.io/",
+  "nodes" : [
+    {
+      "type": "sandbox",
+      "config": {
+        "imageName": "bakingbad/sandboxed-node",
+        "tag": "v9.1-1",
+        "port": "8732",
+        "host": "http://localhost",
+        "healthCheckOnStartedTimeout": 20,
+        "header": {
+          "protocol": "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i",
+          "key": "edsk31vznjHSSpGExDMHYASz45VZqXN4DPxvsa4hAyY8dHM28cZzp6",
+          "blockId": "genesis",
+          "minFee": ""
+        }
+      }
+    },
+    {
+      "type": "sandbox2",
+      "config": {
+        "imageName": "bakingbad/sandboxed-node",
+        "tag": "v9.1-1",
+        "port": "8732",
+        "host": "http://localhost",
+        "healthCheckOnStartedTimeout": 20,
+        "header": {
+          "protocol": "PsFLorenaUUuikDWvMDr6fGBRG8kt3e3D3fHoXK1j1BFRxeSH4i",
+          "key": "edsk31vznjHSSpGExDMHYASz45VZqXN4DPxvsa4hAyY8dHM28cZzp6",
+          "blockId": "genesis",
+          "minFee": ""
+        }
+      }
+    }
+  ],
+  "active" : "sandbox",
   "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
   "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",
   "testInactive": "tz1bR8MFMyWSa428KRQcdShZFu9C4gEA4iFd"
