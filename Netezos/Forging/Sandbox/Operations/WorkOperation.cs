@@ -8,7 +8,12 @@ namespace Netezos.Forging.Sandbox.Base
 {
     public class WorkOperation : HeaderOperation
     {
-        public WorkOperation(TezosRpc rpc, RequiredValues requiredValues, Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) : base(rpc, requiredValues, function)
+        /// <summary>
+        /// Perform calculations to find proof-of-work nonce
+        /// </summary>
+        public WorkOperation(TezosRpc rpc, RequiredValues requiredValues, 
+            Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) 
+            : base(rpc, requiredValues, function)
         {
         }
 
@@ -16,12 +21,12 @@ namespace Netezos.Forging.Sandbox.Base
         {
         }
 
-        /// <summary>
-        /// Perform calculations to find proof-of-work nonce
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public override Task<dynamic> ApplyAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues values)
         {
             throw new NotImplementedException();
         }

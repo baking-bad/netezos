@@ -40,5 +40,10 @@ namespace Netezos.Forging.Sandbox.Base
             );
             return hash;
         }
+
+        protected override Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues values)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

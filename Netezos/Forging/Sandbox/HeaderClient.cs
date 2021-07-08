@@ -5,8 +5,8 @@ namespace Netezos.Forging.Sandbox
 {
     public class HeaderClient
     {
-        private TezosRpc Rpc;
-        private RequiredValues Values;
+        private readonly TezosRpc Rpc;
+        private readonly RequiredValues Values;
 
         public ActivateProtocolOperation ActivateProtocol => new ActivateProtocolOperation(Rpc, Values);
         public BakeBlockOperation BakeBlock => new BakeBlockOperation(Rpc, Values);

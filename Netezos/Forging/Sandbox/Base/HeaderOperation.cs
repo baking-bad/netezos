@@ -8,13 +8,13 @@ namespace Netezos.Forging.Sandbox.Base
 {
     public abstract class HeaderOperation
     {
-        protected readonly TezosRpc Rpc;
+        internal readonly TezosRpc Rpc;
         /// <summary>
         /// 
         /// </summary>
-        protected readonly Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> Function;
+        internal readonly Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> Function;
 
-        protected readonly RequiredValues Values;
+        internal readonly RequiredValues Values;
 
         internal HeaderOperation(TezosRpc rpc, RequiredValues requiredValues, Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function)
         {
@@ -31,6 +31,8 @@ namespace Netezos.Forging.Sandbox.Base
         }
 
         public abstract Task<dynamic> ApplyAsync();
+
+        protected abstract Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues values);
     }
 
     public class RequiredValues

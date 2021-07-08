@@ -16,12 +16,9 @@ namespace Netezos.Forging.Sandbox.Base
         {
         }
         
-        public override Task<dynamic> ApplyAsync()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues data)
+        public override async Task<dynamic> ApplyAsync() => await Apply(Values);
+
+        protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues data)
         {
             var header = await Rpc.Blocks.Head.Header.Shell.GetAsync<ShellHeaderContent>();
             var fitness = header.Fitness.BumpFitness();
