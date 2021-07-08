@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Dynamic.Json;
+using Netezos.Forging.Sandbox;
 using Netezos.Rpc;
 using Xunit;
 
@@ -17,6 +18,7 @@ namespace Netezos.Tests.Rpc
         public string TestDelegate { get; }
         public string TestInactive { get; }
         private NodeContainer NodeContainer { get; }
+        private SandboxBlockHeaderService SandboxBlockHeader { get; }
         private int HealthCheckTimeout { get; }
 
         public SettingsFixture()
@@ -27,6 +29,7 @@ namespace Netezos.Tests.Rpc
 
                 NodeContainer = new NodeContainer(settings.sandboxNode.imageName, settings.sandboxNode.tag, settings.sandboxNode.port);
                 Rpc = new TezosRpc($"{settings.sandboxNode.host}:{settings.sandboxNode.port}", 60);
+                SandboxBlockHeader = new SandboxBlockHeaderService(Rpc);
                 HealthCheckTimeout = settings.sandboxNode.healthCheckOnStartedTimeout;
 
                 TestContract = settings.TestContract;
@@ -58,6 +61,8 @@ namespace Netezos.Tests.Rpc
             {
                 Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
             }
+
+            await SandboxBlockHeader.ActivationTest();
         }
 
         public async Task DisposeAsync()
