@@ -10,13 +10,13 @@ namespace Netezos.Forging
     {
         public static byte[] ForgeShellHeader(ShellHeaderContent header) => 
             Concat(
-                ForgeInt32(header.Level),
+                ForgeInt32(header.Level, 4),
                 ForgeInt32(header.Proto, 1),
                 Base58.Parse(header.Predecessor, 2),
-                ForgeInt64(header.Timestamp.ToUnixTime()),
+                ForgeInt64(header.Timestamp.ToUnixTime(), 8),
                 ForgeInt32(header.ValidationPass, 1),
                 Base58.Parse(header.OperationsHash, 3),
-                ForgeArray(header.Fitness.ToList().Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray()),
+                ForgeFitness(header.Fitness),
                 Base58.Parse(header.Context, 2)
                 );
 
@@ -24,7 +24,7 @@ namespace Netezos.Forging
             Concat(
                 ForgeShellHeader(header),
                 ForgeProtocolData(protocolData),
-                Base58.Parse(signature ?? throw new NullReferenceException("Forge binary payload: required signature is not null"))
+                Base58.Parse(signature ?? throw new NullReferenceException("Forge binary payload: required signature is not null"), 5)
                 );
 
         public static byte[] ForgeProtocolData(ProtocolDataContent protocolData)
@@ -46,16 +46,16 @@ namespace Netezos.Forging
         static byte[] ForgeContent(ActivationCommandContent content) =>
             Concat(
                 ForgeCommand(content.Command),
-                Base58.Parse(content.Hash),
+                Base58.Parse(content.Hash, 2),
                 ForgeFitness(content.Fitness),
-                // ForgeString(content.ProtocolParameters)
                 Hex.Parse(content.ProtocolParameters)
                 );
 
         static byte[] ForgeFitness(FitnessContent fitness) =>
             ForgeArray(fitness.ToList().Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray());
 
-        static byte[] ForgeCommand(string command)
+
+        public static byte[] ForgeCommand(string command)
         {
             switch (command)
             {

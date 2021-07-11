@@ -19,6 +19,7 @@ namespace Netezos.Forging.Sandbox.Base
         }
         
         public InjectOperation InjectBlock => new InjectOperation(Rpc, Values, Apply);
+//           tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV
 
         public override async Task<dynamic> ApplyAsync() => await Apply(Values);
 
@@ -27,11 +28,13 @@ namespace Netezos.Forging.Sandbox.Base
             var (shell, header, _) = await Function(data);
 
             var chainId = await Rpc.GetAsync<string>("chains/main/chain_id");
-            var watermark = new byte[] {1}.Concat(Base58.Parse(chainId));
+            var watermark = new byte[] {1}.Concat(Base58.Parse(chainId, 3));
 
-            var key = Key.FromBase58(data.Key);
-            var signature = key
-                .Sign(watermark.Concat(LocalForge.ForgeShellHeader(shell).Concat(LocalForge.ForgeProtocolData(header.ProtocolData))));
+            var signature = Key.FromBase58(data.Key).Sign(LocalForge.Concat(
+                watermark, 
+                LocalForge.ForgeShellHeader(shell), 
+                LocalForge.ForgeProtocolData(header.ProtocolData))
+            );
 
             return (shell, header, signature);
 

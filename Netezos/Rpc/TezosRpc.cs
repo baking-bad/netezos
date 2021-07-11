@@ -20,6 +20,11 @@ namespace Netezos.Rpc
         /// </summary>
         public InjectionQuery Inject { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public ConfigQuery Config { get; }
+
         string Chain { get; }
         RpcClient Client { get; }
 
@@ -37,6 +42,7 @@ namespace Netezos.Rpc
 
             Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
             Inject = new InjectionQuery(Client, $"injection/");
+            Config = new ConfigQuery(Client, $"config/network/");
         }
 
         /// <summary>
@@ -54,6 +60,7 @@ namespace Netezos.Rpc
 
             Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
             Inject = new InjectionQuery(Client, $"injection/");
+            Config = new ConfigQuery(Client, $"config/network/");
         }
 
         /// <summary>
@@ -70,6 +77,7 @@ namespace Netezos.Rpc
 
             Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
             Inject = new InjectionQuery(Client, $"injection/");
+            Config = new ConfigQuery(Client, $"config/network/");
         }
 
         /// <summary>

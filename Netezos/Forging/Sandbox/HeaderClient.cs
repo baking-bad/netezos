@@ -11,13 +11,24 @@ namespace Netezos.Forging.Sandbox
         public ActivateProtocolOperation ActivateProtocol => new ActivateProtocolOperation(Rpc, Values);
         public BakeBlockOperation BakeBlock => new BakeBlockOperation(Rpc, Values);
 
-        public HeaderClient(TezosRpc rpc, string protocol, string key, string blockId)
+        /// <summary>
+        /// Client for block creation call 
+        /// </summary>
+        /// <param name="rpc">Rpc client</param>
+        /// <param name="protocolHash">Protocol hash(required)</param>
+        /// <param name="key">Key(required)</param>
+        /// <param name="blockId">blockId: head or genesis(required)</param>
+        /// <param name="minFee">min fee for bakeCall(optional)</param>
+        /// <param name="signature">signature(optional)</param>
+        public HeaderClient(TezosRpc rpc, string protocolHash, string key, string blockId, int minFee = 0, string signature = null)
         {
             Values = new RequiredValues()
             {
-                ProtocolHash = protocol,
+                ProtocolHash = protocolHash,
                 Key = key,
-                BlockId = blockId
+                BlockId = blockId,
+                MinFee = minFee,
+                Signature = signature
             };
             Rpc = rpc;
         }
