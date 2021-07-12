@@ -8,7 +8,7 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        public static byte[] ForgeShellHeader(ShellHeaderContent header) => 
+        internal static byte[] ForgeShellHeader(ShellHeaderContent header) => 
             Concat(
                 ForgeInt32(header.Level, 4),
                 ForgeInt32(header.Proto, 1),
@@ -20,14 +20,20 @@ namespace Netezos.Forging
                 Base58.Parse(header.Context, 2)
                 );
 
-        public static byte[] ForgeBinaryPayload(ShellHeaderContent header, ProtocolDataContent protocolData, string signature) => 
+        internal static byte[] ForgeHeaderValues(ShellHeaderContent header, ProtocolDataContent protocolData) => 
+            Concat(
+                ForgeShellHeader(header),
+                ForgeProtocolData(protocolData)
+            );
+
+        internal static byte[] ForgeBinaryPayload(ShellHeaderContent header, ProtocolDataContent protocolData, string signature) => 
             Concat(
                 ForgeShellHeader(header),
                 ForgeProtocolData(protocolData),
                 Base58.Parse(signature ?? throw new NullReferenceException("Forge binary payload: required signature is not null"), 5)
                 );
 
-        public static byte[] ForgeProtocolData(ProtocolDataContent protocolData)
+        static byte[] ForgeProtocolData(ProtocolDataContent protocolData)
         {
             if (protocolData is ActivationProtocolDataContent data)
             {
@@ -55,7 +61,7 @@ namespace Netezos.Forging
             ForgeArray(fitness.ToList().Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray());
 
 
-        public static byte[] ForgeCommand(string command)
+        static byte[] ForgeCommand(string command)
         {
             switch (command)
             {

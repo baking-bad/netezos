@@ -11,15 +11,11 @@ namespace Netezos.Forging.Sandbox.Base
         /// <summary>
         /// Perform calculations to find proof-of-work nonce
         /// </summary>
-        public WorkOperation(TezosRpc rpc, RequiredValues requiredValues, 
+        public WorkOperation(
+            TezosRpc rpc, 
+            RequiredValues requiredValues, 
             Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) 
-            : base(rpc, requiredValues, function)
-        {
-        }
-
-        public WorkOperation(TezosRpc rpc, RequiredValues requiredValues) : base(rpc, requiredValues)
-        {
-        }
+            : base(rpc, requiredValues, function) { }
 
         public override Task<dynamic> ApplyAsync()
         {

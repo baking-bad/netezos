@@ -10,11 +10,7 @@ namespace Netezos.Forging.Sandbox.Base
     {
         public FillOperation Fill => new FillOperation(Rpc, Values, Apply);
         
-        public ActivateProtocolOperation(
-            TezosRpc rpc, 
-            RequiredValues requiredValues) : base(rpc, requiredValues)
-        {
-        }
+        internal ActivateProtocolOperation(TezosRpc rpc, RequiredValues requiredValues) : base(rpc, requiredValues) { }
         
         public override async Task<dynamic> ApplyAsync() => await Apply(Values);
 
@@ -30,7 +26,7 @@ namespace Netezos.Forging.Sandbox.Base
                     {
                         Hash = data.ProtocolHash,
                         Fitness = fitness,
-                        ProtocolParameters = data.ProtocolHash
+                        ProtocolParameters = data.ProtocolParameters.ToString()
                     }
                 }
             };

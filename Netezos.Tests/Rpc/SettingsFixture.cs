@@ -35,7 +35,7 @@ namespace Netezos.Tests.Rpc
                 Rpc = new TezosRpc($"{node.host}:{node.port}", 60);
 
                 HeaderClient = headerConfig != null 
-                    ? new HeaderClient(Rpc, headerConfig.protocol, headerConfig.key, headerConfig.blockId)
+                    ? new HeaderClient(Rpc, headerConfig.protocol, headerConfig.protocolParameters, headerConfig.key, headerConfig.blockId)
                     : null;
 
                 HealthCheckTimeout = node.healthCheckOnStartedTimeout;
@@ -70,7 +70,7 @@ namespace Netezos.Tests.Rpc
                 Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
             }
 
-            await HeaderClient?.ActivateProtocol.Fill.Sign.InjectBlock.ApplyAsync();
+            await HeaderClient?.ActivateProtocol.ApplyAsync();
         }
 
         private dynamic GetActiveNodeConfig(dynamic settings)

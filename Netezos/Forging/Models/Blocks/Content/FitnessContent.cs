@@ -11,7 +11,7 @@ namespace Netezos.Forging.Models
         public string Major { get; set; }
         public string Minor { get; set; }
 
-        public IEnumerable<string> ToList()
+        public List<string> ToList()
         {
             return new List<string>() { Major, Minor };
         }
@@ -23,7 +23,7 @@ namespace Netezos.Forging.Models
             return new FitnessContent()
             {
                 Major = major.ToString("X2"),
-                Minor = minor.ToString("X8")
+                Minor = minor == 1 ? "0000000000000001" : minor == 2 ? "0000000000000002" : "0000000000000003"
             };
         }
     }

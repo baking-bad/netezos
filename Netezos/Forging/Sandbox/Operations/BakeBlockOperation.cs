@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Dynamic.Json;
 using Netezos.Forging.Models;
 using Netezos.Keys;
 using Netezos.Rpc;
@@ -11,34 +12,21 @@ namespace Netezos.Forging.Sandbox.Base
     /// </summary>
     public class BakeBlockOperation : HeaderOperation
     {
-        public BakeBlockOperation(TezosRpc rpc, RequiredValues requiredValues, Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) : base(rpc, requiredValues, function)
-        {
-        }
-
-        public BakeBlockOperation(TezosRpc rpc, RequiredValues requiredValues) : base(rpc, requiredValues)
-        {
-        }
+        internal BakeBlockOperation(TezosRpc rpc, RequiredValues requiredValues) : base(rpc, requiredValues) { }
 
         public override async Task<dynamic> ApplyAsync() => await Apply(Values);
 
         protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues data)
         {
-            var pendingOperation = Rpc.GetAsync("/chains/main/mempool/pending_operations");
-            var header = await Rpc.Blocks.Head.Header.Shell.GetAsync<ShellHeaderContent>();
-            var fitness = header.Fitness.BumpFitness();
-            var blockHeader = new BlockHeaderContent()
-            {
-                ProtocolData = new ActivationProtocolDataContent()
-                {
-                    Content = new ActivationCommandContent()
-                    {
-                        Hash = data.ProtocolHash,
-                        Fitness = fitness,
-                        ProtocolParameters = data.ProtocolHash
-                    }
-                }
-            };
-            return (null, blockHeader, null);
+            if (!data.MinFee.HasValue)
+                throw new NullReferenceException($"MinFee parameter is required");
+
+            var pendingOperations = await Rpc.GetAsync("/chains/main/mempool/pending_operations");
+
+            var list = pendingOperations;
+            
+            
+            return (null, null, null);
         }
     }
 }

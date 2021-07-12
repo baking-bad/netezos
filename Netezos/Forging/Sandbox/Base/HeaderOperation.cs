@@ -37,7 +37,13 @@ namespace Netezos.Forging.Sandbox.Base
         public string Key { get; set; }
         public string BlockId { get; set; } = "head";
         public string ProtocolHash { get; set; }
+        public string ProtocolParameters { get; set; }
         public string Signature { get; set; }
         public int? MinFee { get; set; } = 0;
+
+        internal byte[] Forge()
+        {
+            return null;
+        }
     }
 }
