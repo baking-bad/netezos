@@ -35,7 +35,7 @@ namespace Netezos.Tests.Rpc
                 Rpc = new TezosRpc($"{node.host}:{node.port}", 60);
 
                 HeaderClient = headerConfig != null 
-                    ? new HeaderClient(Rpc, headerConfig.protocol, headerConfig.protocolParameters, headerConfig.key, headerConfig.blockId)
+                    ? new HeaderClient(Rpc, headerConfig.protocol, headerConfig.key, headerConfig.blockId, headerConfig.protocolParametersHex)
                     : null;
 
                 HealthCheckTimeout = node.healthCheckOnStartedTimeout;
