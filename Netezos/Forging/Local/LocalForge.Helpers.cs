@@ -5,7 +5,7 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        static byte[] Concat(params byte[][] arrays)
+        public static byte[] Concat(params byte[][] arrays)
         {
             var res = new byte[arrays.Sum(x => x.Length)];
 

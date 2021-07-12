@@ -5,7 +5,8 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestRawContextQueries : IClassFixture<SettingsFixture>
+    [Collection(SettingsCollection.CollectionName)]
+    public class TestRawContextQueries
     {
         readonly TezosRpc Rpc;
         readonly string TestContract;

@@ -38,6 +38,11 @@
         public HelpersQuery Helpers => new HelpersQuery(this, "helpers/");
 
         /// <summary>
+        /// Gets the query to the current and next protocol.
+        /// </summary>
+        public RpcObject Protocols => new RpcObject(this, "protocols/");
+
+        /// <summary>
         /// Gets the query to votes data associated with the block
         /// </summary>
         public VotesQuery Votes => new VotesQuery(this, "votes/");

@@ -5,7 +5,8 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestVotesQueries : IClassFixture<SettingsFixture>
+    [Collection(SettingsCollection.CollectionName)]
+    public class TestVotesQueries
     {
         readonly TezosRpc Rpc;
 

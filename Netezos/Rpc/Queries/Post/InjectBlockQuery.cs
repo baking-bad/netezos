@@ -19,7 +19,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="force">Force (optional)</param>
         /// <param name="chain">Chain (optional)</param>
         /// <returns></returns>
-        public Task<dynamic> PostAsync(string data, List<List<object>> operations,bool async = false, bool force = false, Chain chain = Chain.Main)
+        public Task<dynamic> PostAsync(string data, List<List<object>> operations, bool async = false, bool force = false, Chain chain = Chain.Main)
             => Client.PostJson(
                 $"{Query}?async={async}&force={force}&chain={chain.ToString().ToLower()}",
                 new { data, operations });

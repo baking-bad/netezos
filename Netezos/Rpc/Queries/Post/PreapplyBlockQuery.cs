@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Netezos.Forging.Models;
 
 namespace Netezos.Rpc.Queries.Post
 {
@@ -118,5 +119,73 @@ namespace Netezos.Rpc.Queries.Post
                         },
                         operations
                     });
+
+        /// <summary>
+        /// Simulates the activation protocol of a block that would contain the given operations and returns the resulting shell header
+        /// </summary>
+        /// <param name="protocol">Protocol hash</param>
+        /// <param name="command">Priority</param>
+        /// <param name="hash">Signature</param>
+        /// <param name="fitness">Fitness</param>
+        /// <param name="protocolParameters"></param>
+        /// <param name="signature">Signature</param>
+        /// <param name="operations">List of operations</param>
+        /// <param name="timestamp">Timestamp</param>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        internal Task<dynamic> PostAsync(string protocol, string command, string hash, IEnumerable<string> fitness,
+            string protocolParameters, string signature, List<List<object>> operations, DateTime timestamp, bool sort = false)
+            => Client.PostJson(
+                $"{Query}?sort={sort}&timestamp={timestamp.ToUnixTime()}",
+                new
+                {
+                    protocol_data = new
+                    {
+                        protocol,
+                        content = new
+                        {
+                          command,
+                          hash,
+                          fitness,
+                          protocol_parameters = protocolParameters
+                        },
+                        signature
+                    },
+                    operations
+                });
+
+        /// <summary>
+        /// Simulates the activation protocol of a block that would contain the given operations and returns the resulting shell header
+        /// </summary>
+        /// <param name="protocol">Protocol hash</param>
+        /// <param name="command">Priority</param>
+        /// <param name="hash">Signature</param>
+        /// <param name="fitness">Fitness</param>
+        /// <param name="protocolParameters"></param>
+        /// <param name="signature">Signature</param>
+        /// <param name="operations">List of operations</param>
+        /// <param name="timestamp">Timestamp</param>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        internal Task<T> PostAsync<T>(string protocol, string command, string hash, IEnumerable<string> fitness,
+            string protocolParameters, string signature, List<List<object>> operations, DateTime timestamp, bool sort = false)
+            => Client.PostJson<T>(
+                $"{Query}?sort={sort}&timestamp={timestamp.ToUnixTime()}",
+                new
+                {
+                    protocol_data = new
+                    {
+                        protocol,
+                        content = new
+                        {
+                            command,
+                            hash,
+                            fitness,
+                            protocol_parameters = protocolParameters
+                        },
+                        signature
+                    },
+                    operations
+                });
     }
 }
