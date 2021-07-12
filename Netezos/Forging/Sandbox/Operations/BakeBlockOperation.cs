@@ -12,11 +12,11 @@ namespace Netezos.Forging.Sandbox.Base
     /// </summary>
     public class BakeBlockOperation : HeaderOperation
     {
-        internal BakeBlockOperation(TezosRpc rpc, RequiredValues requiredValues) : base(rpc, requiredValues) { }
+        internal BakeBlockOperation(TezosRpc rpc, HeaderParameters headerParameters) : base(rpc, headerParameters) { }
 
-        public override async Task<dynamic> ApplyAsync() => await Apply(Values);
+        public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
-        protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues data)
+        protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> CallAsync(HeaderParameters data)
         {
             if (!data.MinFee.HasValue)
                 throw new NullReferenceException($"MinFee parameter is required");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Netezos.Encoding;
@@ -57,8 +58,8 @@ namespace Netezos.Forging
                 Hex.Parse(content.ProtocolParameters)
                 );
 
-        static byte[] ForgeFitness(FitnessContent fitness) =>
-            ForgeArray(fitness.ToList().Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray());
+        static byte[] ForgeFitness(List<string> fitness) =>
+            ForgeArray(fitness.Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray());
 
 
         static byte[] ForgeCommand(string command)

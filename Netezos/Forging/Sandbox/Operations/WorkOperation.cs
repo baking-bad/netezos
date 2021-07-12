@@ -13,16 +13,16 @@ namespace Netezos.Forging.Sandbox.Base
         /// </summary>
         public WorkOperation(
             TezosRpc rpc, 
-            RequiredValues requiredValues, 
-            Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) 
-            : base(rpc, requiredValues, function) { }
+            HeaderParameters headerParameters, 
+            Func<HeaderParameters, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) 
+            : base(rpc, headerParameters, function) { }
 
-        public override Task<dynamic> ApplyAsync()
+        public override Task<dynamic> CallAsync()
         {
             throw new NotImplementedException();
         }
 
-        protected override Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues values)
+        protected override Task<(ShellHeaderContent, BlockHeaderContent, Signature)> CallAsync(HeaderParameters values)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
@@ -15,7 +16,7 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("hash")]
         public string Hash { get; set; }
         [JsonPropertyName("fitness")]
-        public FitnessContent Fitness { get; set; }
+        public List<string> Fitness { get; set; }
         [JsonPropertyName("protocol_parameters")]
         public string ProtocolParameters { get; set; }
     }

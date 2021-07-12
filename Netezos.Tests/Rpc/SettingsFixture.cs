@@ -70,7 +70,7 @@ namespace Netezos.Tests.Rpc
                 Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
             }
 
-            await HeaderClient?.ActivateProtocol.ApplyAsync();
+            await HeaderClient?.ActivateProtocol.Fill.Sign.InjectBlock.CallAsync();
         }
 
         private dynamic GetActiveNodeConfig(dynamic settings)

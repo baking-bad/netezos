@@ -25,7 +25,7 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("operations_hash")]
         public string OperationsHash { get; set; }
         [JsonPropertyName("fitness")]
-        public FitnessContent Fitness { get; set; }
+        public List<string> Fitness { get; set; }
         [JsonPropertyName("context")]
         public string Context { get; set; }
         [JsonPropertyName("priority")]

@@ -6,7 +6,7 @@ namespace Netezos.Forging.Sandbox
     public class HeaderClient
     {
         private readonly TezosRpc Rpc;
-        private readonly RequiredValues Values;
+        private readonly HeaderParameters Values;
 
         public ActivateProtocolOperation ActivateProtocol => new ActivateProtocolOperation(Rpc, Values);
         public BakeBlockOperation BakeBlock => new BakeBlockOperation(Rpc, Values);
@@ -23,7 +23,7 @@ namespace Netezos.Forging.Sandbox
         /// <param name="signature">signature(optional)</param>
         public HeaderClient(TezosRpc rpc, string protocolHash, string key, string blockId, string protocolParameters, int minFee = 0, string signature = null)
         {
-            Values = new RequiredValues()
+            Values = new HeaderParameters()
             {
                 ProtocolHash = protocolHash,
                 Key = key,

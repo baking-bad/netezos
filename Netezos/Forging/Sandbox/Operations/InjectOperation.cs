@@ -16,15 +16,15 @@ namespace Netezos.Forging.Sandbox.Base
     {
         internal InjectOperation(
             TezosRpc rpc,
-            RequiredValues requiredValues,
-            Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> action) 
-            : base(rpc, requiredValues, action) { }
+            HeaderParameters headerParameters,
+            Func<HeaderParameters, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> action) 
+            : base(rpc, headerParameters, action) { }
 
         /// <summary>
         /// Returned hash block
         /// </summary>
         /// <returns></returns>
-        public override async Task<dynamic> ApplyAsync()
+        public override async Task<dynamic> CallAsync()
         {
             var (shell, blockHeader, signature) = await Function.Invoke(Values);
 
@@ -45,7 +45,7 @@ namespace Netezos.Forging.Sandbox.Base
             return hash;
         }
 
-        protected override Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues values)
+        protected override Task<(ShellHeaderContent, BlockHeaderContent, Signature)> CallAsync(HeaderParameters values)
         {
             throw new NotImplementedException("Inject operation not have next operation");
         }

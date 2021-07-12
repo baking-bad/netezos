@@ -14,15 +14,15 @@ namespace Netezos.Forging.Sandbox.Base
     {
         public SignOperation(
             TezosRpc rpc,
-            RequiredValues requiredValues,
-            Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) 
-            : base(rpc, requiredValues, function) { }
+            HeaderParameters headerParameters,
+            Func<HeaderParameters, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) 
+            : base(rpc, headerParameters, function) { }
         
-        public InjectOperation InjectBlock => new InjectOperation(Rpc, Values, Apply);
+        public InjectOperation InjectBlock => new InjectOperation(Rpc, Values, CallAsync);
 
-        public override async Task<dynamic> ApplyAsync() => await Apply(Values);
+        public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
-        protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues data)
+        protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> CallAsync(HeaderParameters data)
         {
             var (shell, header, _) = await Function(data);
 

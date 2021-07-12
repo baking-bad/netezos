@@ -13,26 +13,29 @@ namespace Netezos.Forging.Sandbox.Base
         /// <summary>
         /// Signature methods operation
         /// </summary>
-        internal readonly Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> Function;
+        internal readonly Func<HeaderParameters, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> Function;
 
-        internal readonly RequiredValues Values;
+        internal readonly HeaderParameters Values;
 
-        internal HeaderOperation(TezosRpc rpc, RequiredValues requiredValues, Func<RequiredValues, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function = null)
+        internal HeaderOperation(
+            TezosRpc rpc, 
+            HeaderParameters headerParameters, 
+            Func<HeaderParameters, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function = null)
         {
             Rpc = rpc;
-            Values = requiredValues;
+            Values = headerParameters;
             Function = function;
         }
 
-        public abstract Task<dynamic> ApplyAsync();
+        public abstract Task<dynamic> CallAsync();
 
-        protected abstract Task<(ShellHeaderContent, BlockHeaderContent, Signature)> Apply(RequiredValues values);
+        protected abstract Task<(ShellHeaderContent, BlockHeaderContent, Signature)> CallAsync(HeaderParameters values);
     }
 
     /// <summary>
     /// Required values for operation blocks
     /// </summary>
-    public class RequiredValues
+    public class HeaderParameters
     {
         public string Key { get; set; }
         public string BlockId { get; set; } = "head";
@@ -40,10 +43,5 @@ namespace Netezos.Forging.Sandbox.Base
         public string ProtocolParameters { get; set; }
         public string Signature { get; set; }
         public int? MinFee { get; set; } = 0;
-
-        internal byte[] Forge()
-        {
-            return null;
-        }
     }
 }
