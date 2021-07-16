@@ -12,6 +12,12 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("op2")]
         public InlinedEndorsement Op2 { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.DoubleEndorsement;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 2;
     }
 
     public class InlinedEndorsement

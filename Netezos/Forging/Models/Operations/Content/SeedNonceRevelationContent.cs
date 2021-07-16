@@ -12,5 +12,11 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("nonce")]
         public string Nonce { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.SeedNonceRevelation;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 2;
     }
 }

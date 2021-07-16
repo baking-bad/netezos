@@ -18,6 +18,12 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("ballot")]
         public Ballot Ballot { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.Ballot;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 1;
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

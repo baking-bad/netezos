@@ -12,5 +12,11 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("secret")]
         public string Secret { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.Activation;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 2;
     }
 }

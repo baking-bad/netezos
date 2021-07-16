@@ -7,5 +7,11 @@ namespace Netezos.Forging.Models
     {
         [JsonPropertyName("kind")]
         public abstract string Kind { get; }
+
+        [JsonIgnore]
+        internal abstract OperationTag Tag { get; }
+
+        [JsonIgnore]
+        internal abstract uint ValidationGroup { get; }
     }
 }

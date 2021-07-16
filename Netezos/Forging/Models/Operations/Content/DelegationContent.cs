@@ -9,5 +9,11 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("delegate")]
         public string Delegate { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.Delegation;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 3;
     }
 }

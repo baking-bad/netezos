@@ -9,5 +9,11 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("level")]
         public int Level { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.Endorsement;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 0;
     }
 }

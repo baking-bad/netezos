@@ -17,6 +17,12 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("parameters")]
         public Parameters Parameters { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.Transaction;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 3;
     }
 
     public class Parameters

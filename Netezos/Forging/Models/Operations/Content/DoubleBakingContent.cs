@@ -14,6 +14,12 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("bh2")]
         public BlockHeader BlockHeader2 { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.DoubleBaking;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 2;
     }
 
     public class BlockHeader

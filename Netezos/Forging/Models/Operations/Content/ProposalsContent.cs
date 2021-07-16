@@ -16,5 +16,11 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("proposals")]
         public List<string> Proposals { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.Proposals;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 1;
     }
 }

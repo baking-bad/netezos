@@ -9,5 +9,11 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("public_key")]
         public string PublicKey { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.Reveal;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 3;
     }
 }

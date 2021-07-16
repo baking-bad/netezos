@@ -17,6 +17,12 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("script")]
         public Script Script { get; set; }
+
+        [JsonIgnore]
+        internal override OperationTag Tag => OperationTag.Origination;
+
+        [JsonIgnore]
+        internal override uint ValidationGroup => 3;
     }
 
     public class Script
