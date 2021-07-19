@@ -1,40 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Netezos.Encoding;
 using Netezos.Forging.Models;
 using Netezos.Keys;
 using Netezos.Rpc;
+using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Math;
 
-namespace Netezos.Forging.Sandbox.Base
+namespace Netezos.Forging.Sandbox.Operations
 {
     /// <summary>
     /// Fill missing fields essential for preapply 
     /// </summary>
     public class FillOperation : HeaderOperation
     {
+        private readonly bool _fromBakeBlockCall;
+
         public SignOperation Sign => new SignOperation(Rpc, Values, CallAsync);
-        
+
+        public WorkOperation Work => new WorkOperation(Rpc, Values, CallAsync);
+
         internal FillOperation(
-            TezosRpc rpc, 
-            HeaderParameters headerParameters, 
-            Func<HeaderParameters, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) 
-            : base(rpc, headerParameters, function) { }
+            TezosRpc rpc,
+            HeaderParameters headerParameters,
+            Func<HeaderParameters, Task<ForwardingParameters>> function,
+            string blockId,
+            bool fromBakeBlock = false) : base(rpc, headerParameters, function)
+        {
+            Values.BlockId = blockId;
+            _fromBakeBlockCall = fromBakeBlock;
+        }
 
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
-        protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> CallAsync(HeaderParameters data)
+        internal override async Task<ForwardingParameters> CallAsync(HeaderParameters data)
         {
-            var (_, header, _) = await Function(data);
+            var parameters = await Function(data);
+            var header = parameters.BlockHeader;
 
             var predShellHeader = await Rpc.Blocks[data.BlockId].Header.Shell.GetAsync<ShellHeaderContent>();
             var timestamp = predShellHeader.Timestamp + TimeSpan.FromSeconds(1);
 
-            var protocols = await Rpc.Blocks[data.BlockId].Protocols.GetAsync<IDictionary<string, string>>();
+            var protocols = await Rpc.Blocks[data.BlockId].Protocols.GetAsync<Dictionary<string, string>>();
             header.ProtocolData.ProtocolHash = protocols["next_protocol"];
+            parameters.Operations?
+                .ForEach(x => 
+                    x.ForEach(h => h.Protocol = protocols["next_protocol"]));
 
-            var key = BigInteger.Zero.ToByteArrayUnsigned().Align(64);
-            var dummySignature = new Signature(key, Prefix.sig);
+            var bytes = BigInteger.Zero.ToByteArrayUnsigned().Align(64);
+            parameters.Signature = new Signature(bytes, Prefix.sig);
+
+            FillSeedNonceHash(
+                header.ProtocolData,
+                (int)(double)data.ProtocolParameters.blocks_per_commitment,
+                predShellHeader.Level);
+
+            if (_fromBakeBlockCall)
+            {
+                await FillPriority(header.ProtocolData, data.Key, data.BlockId);
+                var result2 = await Rpc
+                    .Blocks
+                    .Head
+                    .Helpers
+                    .Preapply
+                    .Block
+                    .PostAsync<ShellHeaderWithOperations>(
+                        header.ProtocolData.ProtocolHash,
+                        header.ProtocolData.Priority,
+                        header.ProtocolData.ProofOfWorkNonce,
+                        parameters.Signature.ToBase58(),
+                        parameters
+                            .Operations?
+                            .Select(x => 
+                                x.Select(y => (object)y)
+                                    .ToList())
+                            .ToList());
+                parameters.ShellHeader = result2.ShellHeader;
+                return parameters;
+
+            }
+
             var result = await Rpc
                 .Blocks
                 .Head
@@ -47,13 +94,31 @@ namespace Netezos.Forging.Sandbox.Base
                     header.ProtocolData.Content.Hash,
                     header.ProtocolData.Content.Fitness,
                     header.ProtocolData.Content.ProtocolParameters,
-                    dummySignature.ToBase58(),
-                    new List<List<object>>(), 
+                    parameters.Signature.ToBase58(),
+                    parameters
+                        .Operations?
+                        .Select(x => 
+                            x.Select(y => (object)y)
+                                .ToList())
+                        .ToList(),
                     timestamp,
                     true);
 
-            return (result.ShellHeader, header, dummySignature);
+            parameters.ShellHeader = result.ShellHeader;
+            return parameters;
+        }
 
-        } 
+        private void FillSeedNonceHash(ProtocolDataContent protocolData, int blocksPerCommitment, int level)
+            => protocolData.SeedNonceHash = level % blocksPerCommitment == 0
+                ? Base58.Convert(BigInteger.Zero.ToByteArrayUnsigned().Align(64), Prefix.nce)
+                : string.Empty;
+
+        private async Task FillPriority(ProtocolDataContent protocolData, string key, string blockId)
+        {
+            var baker = Key.FromBase58(key).PubKey.Address;
+            var bakingRights = await Rpc.Blocks[blockId].Helpers.BakingRights.GetAsync<List<Dictionary<string, dynamic>>>(baker);
+            var item = bakingRights.First(b => b["delegate"].ToString() == baker)["priority"];
+            protocolData.Priority = int.Parse(item.ToString());
+        }
     }
 }

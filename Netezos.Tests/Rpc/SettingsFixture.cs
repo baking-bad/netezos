@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Dynamic.Json;
-using Netezos.Forging.Sandbox;
+using Netezos.Forging.Sandbox.Header;
 using Netezos.Rpc;
 using Xunit;
 
@@ -34,9 +36,13 @@ namespace Netezos.Tests.Rpc
                 NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
                 Rpc = new TezosRpc($"{node.host}:{node.port}", 60);
 
-                HeaderClient = headerConfig != null 
-                    ? new HeaderClient(Rpc, headerConfig.protocol, headerConfig.key, headerConfig.blockId, headerConfig.protocolParametersHex)
-                    : null;
+                var keys = JsonSerializer.Deserialize<Dictionary<string, string>>(headerConfig.keys);
+
+                HeaderClient = new HeaderClient(
+                    Rpc,
+                    headerConfig.protocol,
+                    keys,
+                    headerConfig.protocolParameters);
 
                 HealthCheckTimeout = node.healthCheckOnStartedTimeout;
 
@@ -53,7 +59,7 @@ namespace Netezos.Tests.Rpc
                 var response = await Rpc.GetAsync("version/");
                 return response.version != null;
             }
-            catch (HttpRequestException _)
+            catch (HttpRequestException)
             {
                 return false;
             }
@@ -70,10 +76,14 @@ namespace Netezos.Tests.Rpc
                 Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
             }
 
-            await HeaderClient?.ActivateProtocol.Fill.Sign.InjectBlock.CallAsync();
+            if (HeaderClient != null)
+            {
+                await HeaderClient.ActivateProtocol("dictator").Fill().Sign.InjectBlock.CallAsync();
+                await HeaderClient.BakeBlock("bootstrap1").Fill().Work.Sign.InjectBlock.CallAsync();
+            }
         }
 
-        private dynamic GetActiveNodeConfig(dynamic settings)
+        private static dynamic GetActiveNodeConfig(dynamic settings)
         {
             string activeNode = settings.active;
 
@@ -81,7 +91,7 @@ namespace Netezos.Tests.Rpc
 
             var node = nodes?.FirstOrDefault(x =>
             {
-                string type = ((dynamic)(DJsonObject) x).type;
+                string type = ((dynamic)x).type;
                 return type.Equals(activeNode);
             });
 

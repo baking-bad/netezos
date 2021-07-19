@@ -34,7 +34,7 @@
         /// <summary>
         /// Gets the query to the context associated with the block
         /// </summary>
-        public RpcObject Mempool => new RpcObject(this, "mempool/");
+        public MempoolQuery Mempool => new MempoolQuery(this, "mempool/pending_operation/");
 
         internal ChainQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

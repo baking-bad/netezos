@@ -2,9 +2,9 @@
 
 namespace Netezos.Forging.Models
 {
-    public class CommandContent
+    public abstract class CommandContent
     {
         [JsonPropertyName("command")]
-        public string Command { get; set; }
+        public abstract string Command { get; }
     }
 }

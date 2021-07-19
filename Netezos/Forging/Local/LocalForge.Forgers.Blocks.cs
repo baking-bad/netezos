@@ -9,7 +9,7 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        internal static byte[] ForgeShellHeader(ShellHeaderContent header) => 
+        static byte[] ForgeShellHeader(ShellHeaderContent header) => 
             Concat(
                 ForgeInt32(header.Level, 4),
                 ForgeInt32(header.Proto, 1),
@@ -36,15 +36,15 @@ namespace Netezos.Forging
 
         static byte[] ForgeProtocolData(ProtocolDataContent protocolData)
         {
-            if (protocolData is ActivationProtocolDataContent data)
+            if (protocolData is ActivationProtocolDataContent data && data.Content is ActivationCommandContent content)
             {
-                return ForgeContent(data.Content);
+                return ForgeContent(content);
             }
 
             return Concat(
                 ForgeInt32(protocolData.Priority, 2),
                 Hex.Parse(protocolData.ProofOfWorkNonce),
-                protocolData.SeedNonceHash != null 
+                !string.IsNullOrEmpty(protocolData.SeedNonceHash)
                     ? new byte[] {255}.Concat(Base58.Parse(protocolData.SeedNonceHash)) 
                     : new byte[] {0}
                 );

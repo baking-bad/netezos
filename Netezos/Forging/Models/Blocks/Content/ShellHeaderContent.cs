@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Netezos.Utils.Json;
 
 namespace Netezos.Forging.Models
 {
@@ -35,7 +36,7 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("signature")]
         public string Signature { get; set; }
     }
-    
+
     public class ShellHeaderWithOperations
     {
         [JsonPropertyName("shell_header")]

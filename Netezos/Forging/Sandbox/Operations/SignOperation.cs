@@ -5,37 +5,37 @@ using Netezos.Forging.Models;
 using Netezos.Keys;
 using Netezos.Rpc;
 
-namespace Netezos.Forging.Sandbox.Base
+namespace Netezos.Forging.Sandbox.Operations
 {
     /// <summary>
     /// Sign the block header with the specified key
     /// </summary>
     public class SignOperation : HeaderOperation
     {
-        public SignOperation(
+        internal SignOperation(
             TezosRpc rpc,
             HeaderParameters headerParameters,
-            Func<HeaderParameters, Task<(ShellHeaderContent, BlockHeaderContent, Signature)>> function) 
+            Func<HeaderParameters, Task<ForwardingParameters>> function) 
             : base(rpc, headerParameters, function) { }
         
         public InjectOperation InjectBlock => new InjectOperation(Rpc, Values, CallAsync);
 
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
-        protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> CallAsync(HeaderParameters data)
+        internal override async Task<ForwardingParameters> CallAsync(HeaderParameters data)
         {
-            var (shell, header, _) = await Function(data);
+            var parameters = await Function(data);
 
             var chainId = await Rpc.GetAsync<string>("chains/main/chain_id");
             var watermark = new byte[] {1}.Concat(Base58.Parse(chainId, 3));
-            var signature = Key.FromBase58(data.Key).Sign(
+            parameters.Signature  = Key.FromBase58(data.Key).Sign(
                 LocalForge.Concat(
                     watermark, 
-                    LocalForge.ForgeHeaderValues(shell, header.ProtocolData)
+                    LocalForge.ForgeHeaderValues(parameters.ShellHeader, parameters.BlockHeader.ProtocolData)
                     )
                 );
 
-            return (shell, header, signature);
+            return parameters;
 
         }
         

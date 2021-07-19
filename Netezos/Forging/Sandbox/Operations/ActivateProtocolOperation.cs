@@ -1,23 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Netezos.Encoding;
 using Netezos.Forging.Models;
-using Netezos.Keys;
 using Netezos.Rpc;
+using Netezos.Utils.Json;
 
-namespace Netezos.Forging.Sandbox.Base
+namespace Netezos.Forging.Sandbox.Operations
 {
     public class ActivateProtocolOperation : HeaderOperation
     {
-        public FillOperation Fill => new FillOperation(Rpc, Values, CallAsync);
-        
-        internal ActivateProtocolOperation(TezosRpc rpc, HeaderParameters headerParameters) : base(rpc, headerParameters) { }
+        public FillOperation Fill(string blockId = "genesis") => new FillOperation(Rpc, Values, CallAsync, blockId);
+
+        internal ActivateProtocolOperation(TezosRpc rpc, HeaderParameters headerParameters, string keyName) 
+            : base(rpc, headerParameters)
+        {
+            headerParameters.Key = headerParameters.Keys.TryGetValue(keyName, out var key) 
+                ? key
+                : throw new KeyNotFoundException($"Parameter keyName {keyName} is not found");
+        }
         
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
-        protected override async Task<(ShellHeaderContent, BlockHeaderContent, Signature)> CallAsync(HeaderParameters data)
+        internal override async Task<ForwardingParameters> CallAsync(HeaderParameters data)
         {
             var header = await Rpc.Blocks.Head.Header.Shell.GetAsync<ShellHeaderContent>();
             var fitness = BumpFitness(header.Fitness);
@@ -30,11 +35,15 @@ namespace Netezos.Forging.Sandbox.Base
                     {
                         Hash = data.ProtocolHash,
                         Fitness = fitness,
-                        ProtocolParameters = data.ProtocolParameters
+                        ProtocolParameters = Hex.Convert(LocalForge.ForgeArray(
+                            BsonSerializer.Serialize(data.ProtocolParameters.ToString())))
                     }
                 }
             };
-            return (null, blockHeader, null);
+            return new ForwardingParameters
+            {
+                BlockHeader = blockHeader
+            };
         }
 
         private List<string> BumpFitness(List<string> fitness)
@@ -46,6 +55,6 @@ namespace Netezos.Forging.Sandbox.Base
                 Hex.Convert(LocalForge.ForgeInt32(major, 1)),
                 Hex.Convert(LocalForge.ForgeInt64(minor, 8))
             };
-        } 
+        }
     }
 }

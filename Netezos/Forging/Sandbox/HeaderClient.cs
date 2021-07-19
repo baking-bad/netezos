@@ -1,35 +1,32 @@
-﻿using Netezos.Forging.Sandbox.Base;
+﻿using System.Collections.Generic;
+using Netezos.Forging.Sandbox.Operations;
 using Netezos.Rpc;
 
-namespace Netezos.Forging.Sandbox
+namespace Netezos.Forging.Sandbox.Header
 {
-    public class HeaderClient
+    public partial class HeaderClient
     {
         private readonly TezosRpc Rpc;
         private readonly HeaderParameters Values;
 
-        public ActivateProtocolOperation ActivateProtocol => new ActivateProtocolOperation(Rpc, Values);
-        public BakeBlockOperation BakeBlock => new BakeBlockOperation(Rpc, Values);
+        public ActivateProtocolOperation ActivateProtocol(string keyName) => new ActivateProtocolOperation(Rpc, Values, keyName);
+        public BakeBlockOperation BakeBlock(string keyName, int minFee = 0) => new BakeBlockOperation(Rpc, Values, keyName, minFee);
 
         /// <summary>
         /// Client for block creation call 
         /// </summary>
         /// <param name="rpc">Rpc client</param>
         /// <param name="protocolHash">Protocol hash(required)</param>
-        /// <param name="key">Key(required)</param>
-        /// <param name="blockId">blockId: head or genesis(required)</param>
+        /// <param name="keys"></param>
         /// <param name="protocolParameters">Protocol parameters for sandbox node(activate protocol)</param>
-        /// <param name="minFee">min fee for bakeCall(optional)</param>
         /// <param name="signature">signature(optional)</param>
-        public HeaderClient(TezosRpc rpc, string protocolHash, string key, string blockId, string protocolParameters, int minFee = 0, string signature = null)
+        public HeaderClient(TezosRpc rpc, string protocolHash, Dictionary<string, string> keys, dynamic protocolParameters, string signature = null)
         {
             Values = new HeaderParameters()
             {
                 ProtocolHash = protocolHash,
-                Key = key,
+                Keys = keys,
                 ProtocolParameters = protocolParameters,
-                BlockId = blockId,
-                MinFee = minFee,
                 Signature = signature
             };
             Rpc = rpc;

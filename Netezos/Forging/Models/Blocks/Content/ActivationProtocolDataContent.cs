@@ -8,11 +8,11 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("content")]
         public ActivationCommandContent Content { get; set; }
     }
-    
+
     public class ActivationCommandContent : CommandContent
     {
         [JsonPropertyName("command")]
-        public string Command => "activate";
+        public override string Command => "activate";
         [JsonPropertyName("hash")]
         public string Hash { get; set; }
         [JsonPropertyName("fitness")]

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Netezos.Utils.Json;
 
 namespace Netezos.Forging.Models
 {
@@ -10,17 +11,21 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("operations")]
         public List<HeaderOperationContent> Operations { get; set; }
     }
-    
-    public class HeaderOperationContent
+
+    [JsonConverter(typeof(HeaderOperationConverter))]
+    public class HeaderOperationContent : Operation
     {
         [JsonPropertyName("protocol")]
         public string Protocol { get; set; }
-        [JsonPropertyName("branch")]
-        public string Branch { get; set; }
-        [JsonPropertyName("contents")]
-        public List<OperationContent> Contents { get; set; }
-        [JsonPropertyName("signature")]
-        public string Signature { get; set; }
+        [JsonPropertyName("error")]
+        public List<ErrorContent> Errors { get; set; }
     }
-    
+
+    public class ErrorContent
+    {
+        [JsonPropertyName("kind")]
+        public string Kind { get; set; }
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
+    }
 }
