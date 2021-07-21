@@ -9,6 +9,18 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
+        internal static byte[] ForgeBinaryPayload(ShellHeaderContent header, ProtocolDataContent protocolData, string signature) => 
+            Concat(
+                ForgeHeaderValues(header, protocolData),
+                Base58.Parse(signature ?? throw new NullReferenceException("Forge binary payload: required signature is not null"), 5)
+            );
+
+        internal static byte[] ForgeHeaderValues(ShellHeaderContent header, ProtocolDataContent protocolData) => 
+            Concat(
+                ForgeShellHeader(header),
+                ForgeProtocolData(protocolData)
+            );
+
         static byte[] ForgeShellHeader(ShellHeaderContent header) => 
             Concat(
                 ForgeInt32(header.Level, 4),
@@ -19,19 +31,6 @@ namespace Netezos.Forging
                 Base58.Parse(header.OperationsHash, 3),
                 ForgeFitness(header.Fitness),
                 Base58.Parse(header.Context, 2)
-                );
-
-        internal static byte[] ForgeHeaderValues(ShellHeaderContent header, ProtocolDataContent protocolData) => 
-            Concat(
-                ForgeShellHeader(header),
-                ForgeProtocolData(protocolData)
-            );
-
-        internal static byte[] ForgeBinaryPayload(ShellHeaderContent header, ProtocolDataContent protocolData, string signature) => 
-            Concat(
-                ForgeShellHeader(header),
-                ForgeProtocolData(protocolData),
-                Base58.Parse(signature ?? throw new NullReferenceException("Forge binary payload: required signature is not null"), 5)
                 );
 
         static byte[] ForgeProtocolData(ProtocolDataContent protocolData)

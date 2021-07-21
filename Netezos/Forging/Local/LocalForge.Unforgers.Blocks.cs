@@ -7,7 +7,7 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        public static ShellHeaderContent UnforgeShellHeader(ForgedReader reader) =>
+        internal static ShellHeaderContent UnforgeShellHeader(ForgedReader reader) =>
             new ShellHeaderContent()
             {
                 Level = reader.ReadInt32(),
