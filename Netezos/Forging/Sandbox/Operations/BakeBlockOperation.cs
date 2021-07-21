@@ -39,8 +39,8 @@ namespace Netezos.Forging.Sandbox.Operations
                 new List<HeaderOperationContent>(),
             };
 
-            applied?.Where(x =>
-                {
+            var operations = applied?.Where(x => 
+                { 
                     if (x.Contents.FirstOrDefault()?.ValidationGroup != 3) return true;
 
                     var totalFee = x.Contents
@@ -49,19 +49,14 @@ namespace Netezos.Forging.Sandbox.Operations
                         .Sum(m => m.Fee);
 
                     return totalFee >= parameters.MinFee;
-                })
-                .ToList()
-                .ForEach(x =>
-                    forwardingOperations[(int) x.Contents.First().ValidationGroup].Add(
-                        new HeaderOperationContent()
-                        {
-                            Branch = x.Branch,
-                            Contents = x.Contents,
-                            Hash = x.Hash,
-                            Signature = x.Signature
-                        })
-                    );
+                });
 
+            foreach (var operation in operations)
+            {
+                var index = (int) operation.Contents.First().ValidationGroup % forwardingOperations.Count;
+                forwardingOperations[index].Add(operation);
+            }
+                
             return new ForwardingParameters()
             {
                 ShellHeader = new ShellHeaderContent(),

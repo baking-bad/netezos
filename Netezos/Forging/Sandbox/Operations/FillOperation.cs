@@ -73,12 +73,9 @@ namespace Netezos.Forging.Sandbox.Operations
                         header.ProtocolData.Priority,
                         header.ProtocolData.ProofOfWorkNonce,
                         parameters.Signature.ToBase58(),
-                        parameters
-                            .Operations?
-                            .Select(x => 
-                                x.Select(y => (object)y)
-                                    .ToList())
-                            .ToList());
+                        parameters.Operations?.Select(x => x.Select(y => (object)y))
+                                ?? new List<List<object>>()
+                        );
                 parameters.ShellHeader = bakeBlockResult.ShellHeader;
                 return parameters;
 
@@ -97,12 +94,8 @@ namespace Netezos.Forging.Sandbox.Operations
                     header.ProtocolData.Content.Fitness,
                     header.ProtocolData.Content.ProtocolParameters,
                     parameters.Signature.ToBase58(),
-                    parameters
-                        .Operations?
-                        .Select(x => 
-                            x.Select(y => (object)y)
-                                .ToList())
-                        .ToList(),
+                    parameters.Operations?.Select(x => x.Select(y => (object)y))
+                            ?? new List<List<object>>(),
                     timestamp,
                     true);
 
