@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Dynamic.Json;
+using Netezos.Forging.Models;
 using Netezos.Rpc;
 using Xunit;
 
@@ -112,6 +113,16 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
+        }
+        
+        [Fact]
+        public async Task TestBlockHeaderOperations()
+        {
+            var query = Rpc.Blocks.Head.Header.ProtocolData;
+            Assert.Equal($"chains/main/blocks/head/header/protocol_data", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
     }
 }
