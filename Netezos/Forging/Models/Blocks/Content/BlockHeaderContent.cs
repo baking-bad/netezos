@@ -6,26 +6,13 @@ namespace Netezos.Forging.Models
 {
     public class BlockHeaderContent
     {
+        [JsonPropertyName("chain_id")]
+        public string ChainId { get; set; }
+        [JsonPropertyName("hash")]
+        public string Hash { get; set; }
         [JsonPropertyName("protocol_data")]
-        public ActivationProtocolDataContent ProtocolData { get; set; }
-        [JsonPropertyName("operations")]
-        public List<HeaderOperationContent> Operations { get; set; }
-    }
-
-    [JsonConverter(typeof(HeaderOperationConverter))]
-    public class HeaderOperationContent : Operation
-    {
-        [JsonPropertyName("protocol")]
-        public string Protocol { get; set; }
-        [JsonPropertyName("error")]
-        public List<ErrorContent> Errors { get; set; }
-    }
-
-    public class ErrorContent
-    {
-        [JsonPropertyName("kind")]
-        public string Kind { get; set; }
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public ProtocolDataContent ProtocolData { get; set; }
+        [JsonPropertyName("shell_header")]
+        public ShellHeaderContent ShellHeader { get; set; }
     }
 }

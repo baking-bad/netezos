@@ -31,7 +31,7 @@ namespace Netezos.Forging.Sandbox.Operations
             int.TryParse(values.ProtocolParameters.ProofOfWorkThreshold, out int threshold);
 
             var nonce = 0;
-            while (PowStamp(parameters.ShellHeader, parameters.BlockHeader.ProtocolData) > threshold)
+            while (PowStamp(parameters.BlockHeader.ShellHeader, parameters.BlockHeader.ProtocolData) > threshold)
             {
                 nonce++;
                 parameters.BlockHeader.ProtocolData.ProofOfWorkNonce = Hex.Convert(LocalForge.ForgeInt64(nonce));

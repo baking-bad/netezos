@@ -29,7 +29,7 @@ namespace Netezos.Forging.Sandbox.Operations
             var parameters = await Function(Values);
 
             var data = Hex.Convert(LocalForge.ForgeBinaryPayload(
-                parameters.ShellHeader,
+                parameters.BlockHeader.ShellHeader,
                 parameters.BlockHeader.ProtocolData,
                 parameters.Signature)
             );

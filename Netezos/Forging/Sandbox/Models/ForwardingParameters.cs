@@ -13,8 +13,6 @@ namespace Netezos.Forging.Sandbox
 
         public BlockHeaderContent BlockHeader { get; set; }
 
-        public ShellHeaderContent ShellHeader { get; set; }
-
         public List<List<HeaderOperationContent>> Operations { get; set; }
 
         public Signature Signature { get; set; }

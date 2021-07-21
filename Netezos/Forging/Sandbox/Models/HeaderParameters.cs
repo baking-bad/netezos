@@ -13,6 +13,6 @@ namespace Netezos.Forging.Sandbox
         public string ProtocolHash { get; set; }
         public ProtocolParametersContent ProtocolParameters { get; set; }
         public string Signature { get; set; }
-        public int MinFee { get; set; } = 0;
+        public int MinFee { get; set; }
     }
 }

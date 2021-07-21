@@ -57,14 +57,14 @@ namespace Netezos.Forging.Sandbox.Operations
                 
             return new ForwardingParameters()
             {
-                ShellHeader = new ShellHeaderContent(),
                 BlockHeader = new BlockHeaderContent()
                 {
-                    ProtocolData = new ActivationProtocolDataContent()
+                    ProtocolData = new ProtocolDataContent()
                     {
                         //default
                         ProofOfWorkNonce = "0000000000000000"
-                    }
+                    },
+                    ShellHeader = new ShellHeaderContent()
                 },
                 Operations = forwardingOperations
             };

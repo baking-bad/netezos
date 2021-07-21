@@ -32,7 +32,7 @@ namespace Netezos.Forging.Sandbox.Operations
             parameters.Signature  = Key.FromBase58(data.Key).Sign(
                 LocalForge.Concat(
                     watermark, 
-                    LocalForge.ForgeHeaderValues(parameters.ShellHeader, parameters.BlockHeader.ProtocolData)
+                    LocalForge.ForgeHeaderValues(parameters.BlockHeader.ShellHeader, parameters.BlockHeader.ProtocolData)
                     )
                 );
 

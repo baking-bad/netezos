@@ -72,34 +72,38 @@ namespace Netezos.Forging.Sandbox.Operations
                         header.ProtocolData.ProtocolHash,
                         header.ProtocolData.Priority,
                         header.ProtocolData.ProofOfWorkNonce,
-                        parameters.Signature.ToBase58(),
+                        parameters.Signature,
                         parameters.Operations?.Select(x => x.Select(y => (object)y))
                                 ?? new List<List<object>>()
                         );
-                parameters.ShellHeader = bakeBlockResult.ShellHeader;
+                parameters.BlockHeader.ShellHeader = bakeBlockResult.ShellHeader;
                 return parameters;
 
             }
 
-            var result = await Rpc
-                .Blocks
-                .Head
-                .Helpers
-                .Preapply
-                .Block
-                .PostAsync<ShellHeaderWithOperations>(
-                    header.ProtocolData.ProtocolHash,
-                    header.ProtocolData.Content.Command,
-                    header.ProtocolData.Content.Hash,
-                    header.ProtocolData.Content.Fitness,
-                    header.ProtocolData.Content.ProtocolParameters,
-                    parameters.Signature.ToBase58(),
-                    parameters.Operations?.Select(x => x.Select(y => (object)y))
-                            ?? new List<List<object>>(),
-                    timestamp,
-                    true);
+            if (header.ProtocolData is ActivationProtocolDataContent protocolData)
+            {
+                var result = await Rpc
+                    .Blocks
+                    .Head
+                    .Helpers
+                    .Preapply
+                    .Block
+                    .PostAsync<ShellHeaderWithOperations>(
+                        header.ProtocolData.ProtocolHash,
+                        protocolData.Content.Command,
+                        protocolData.Content.Hash,
+                        protocolData.Content.Fitness,
+                        protocolData.Content.ProtocolParameters,
+                        parameters.Signature,
+                        parameters.Operations?.Select(x => x.Select(y => (object)y))
+                        ?? new List<List<object>>(),
+                        timestamp,
+                        true);
 
-            parameters.ShellHeader = result.ShellHeader;
+                parameters.BlockHeader.ShellHeader = result.ShellHeader;
+            }
+
             return parameters;
         }
 

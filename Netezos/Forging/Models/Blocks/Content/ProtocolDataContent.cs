@@ -2,7 +2,7 @@
 
 namespace Netezos.Forging.Models
 {
-    public abstract class ProtocolDataContent
+    public class ProtocolDataContent
     {
         [JsonPropertyName("protocol")]
         public string ProtocolHash { get; set; }
@@ -10,10 +10,10 @@ namespace Netezos.Forging.Models
         public int Priority { get; set; }
         [JsonPropertyName("proof_of_work_nonce")]
         public string ProofOfWorkNonce { get; set; }
-        [JsonPropertyName("seed_nonce_hash")]
-        public string SeedNonceHash { get; set; }
         [JsonPropertyName("signature")]
         public string Signature { get; set; }
+        [JsonIgnore]
+        public string SeedNonceHash { get; set; }
     }
     
 }
