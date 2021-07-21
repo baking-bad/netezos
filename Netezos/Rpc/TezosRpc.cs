@@ -26,11 +26,11 @@ namespace Netezos.Rpc
         public ConfigQuery Config { get; }
 
         /// <summary>
-        /// Gets the query to the config 
+        /// Gets the query to the chain 
         /// </summary>
-        public ChainsQuery Chains { get; }
+        public ChainQuery Chain { get; }
 
-        string Chain { get; }
+        string _chain { get; }
         RpcClient Client { get; }
 
         /// <summary>
@@ -43,12 +43,12 @@ namespace Netezos.Rpc
         public TezosRpc(string uri, Chain chain = Rpc.Chain.Main)
         {
             Client = new RpcClient(uri);
-            Chain = chain.ToString().ToLower();
+            _chain = chain.ToString().ToLower();
 
-            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Blocks = new BlocksQuery(Client, $"chains/{_chain}/blocks/");
             Inject = new InjectionQuery(Client, $"injection/");
             Config = new ConfigQuery(Client, "config/network/");
-            Chains = new ChainsQuery(Client, "chains/queries");
+            Chain = new ChainQuery(Client, $"chains/{_chain}/");
         }
 
         /// <summary>
@@ -62,11 +62,12 @@ namespace Netezos.Rpc
         public TezosRpc(string uri, int timeout, Chain chain = Rpc.Chain.Main)
         {
             Client = new RpcClient(uri, timeout);
-            Chain = chain.ToString().ToLower();
+            _chain = chain.ToString().ToLower();
 
-            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Blocks = new BlocksQuery(Client, $"chains/{_chain}/blocks/");
             Inject = new InjectionQuery(Client, $"injection/");
             Config = new ConfigQuery(Client, $"config/network/");
+            Chain = new ChainQuery(Client, $"chains/{_chain}/");
         }
 
         /// <summary>
@@ -79,11 +80,12 @@ namespace Netezos.Rpc
         public TezosRpc(HttpClient client, Chain chain = Rpc.Chain.Main)
         {
             Client = new RpcClient(client);
-            Chain = chain.ToString().ToLower();
+            _chain = chain.ToString().ToLower();
 
-            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Blocks = new BlocksQuery(Client, $"chains/{_chain}/blocks/");
             Inject = new InjectionQuery(Client, $"injection/");
             Config = new ConfigQuery(Client, $"config/network/");
+            Chain = new ChainQuery(Client, $"chains/{_chain}/");
         }
 
         /// <summary>

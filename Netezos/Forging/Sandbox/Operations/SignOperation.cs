@@ -26,7 +26,8 @@ namespace Netezos.Forging.Sandbox.Operations
         {
             var parameters = await Function(data);
 
-            var chainId = await Rpc.GetAsync<string>("chains/main/chain_id");
+            var chainId = await Rpc.Chain.ChainId.GetAsync<string>();
+
             var watermark = new byte[] {1}.Concat(Base58.Parse(chainId, 3));
             parameters.Signature  = Key.FromBase58(data.Key).Sign(
                 LocalForge.Concat(

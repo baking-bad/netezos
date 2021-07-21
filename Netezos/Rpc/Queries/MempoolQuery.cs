@@ -7,7 +7,7 @@ namespace Netezos.Rpc.Queries
     {
         internal MempoolQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
-        public Task<dynamic> GetAsync()
-            => GetAsync();
+        public RpcObject PendingOperations => new RpcObject(this, "pending_operations/");
+        public RpcObject MonitorOperations => new RpcObject(this, "monitor_operations/");
     }
 }

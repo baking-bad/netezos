@@ -8,9 +8,6 @@ using Netezos.Rpc;
 
 namespace Netezos.Forging.Sandbox.Operations
 {
-    /// <summary>
-    /// Create call to bake new block
-    /// </summary>
     public class BakeBlockOperation : HeaderOperation
     {
         public FillOperation Fill(string blockId = "head") => new FillOperation(Rpc, Values, CallAsync, blockId, true);
@@ -27,7 +24,8 @@ namespace Netezos.Forging.Sandbox.Operations
 
         internal override async Task<ForwardingParameters> CallAsync(HeaderParameters parameters)
         {
-            var pendingOperations = await Rpc.GetAsync<Dictionary<string, List<HeaderOperationContent>>>("/chains/main/mempool/pending_operations");
+
+            var pendingOperations = await Rpc.Chain.Mempool.PendingOperations.GetAsync<Dictionary<string, List<HeaderOperationContent>>>();
 
             pendingOperations.TryGetValue("applied", out var applied);
 

@@ -12,6 +12,12 @@ namespace Netezos.Forging.Sandbox.Operations
     {
         public FillOperation Fill(string blockId = "genesis") => new FillOperation(Rpc, Values, CallAsync, blockId);
 
+        /// <summary>
+        /// Create call to bake genesis block with specified parameters
+        /// </summary>
+        /// <param name="rpc"></param>
+        /// <param name="headerParameters"></param>
+        /// <param name="keyName"></param>
         internal ActivateProtocolOperation(TezosRpc rpc, HeaderParameters headerParameters, string keyName) 
             : base(rpc, headerParameters)
         {
@@ -22,6 +28,9 @@ namespace Netezos.Forging.Sandbox.Operations
         
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
+        /// <summary>
+        /// Create call to bake genesis block with specified parameters
+        /// </summary>
         internal override async Task<ForwardingParameters> CallAsync(HeaderParameters data)
         {
             var header = await Rpc.Blocks.Head.Header.Shell.GetAsync<ShellHeaderContent>();

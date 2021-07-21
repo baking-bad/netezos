@@ -111,9 +111,8 @@ namespace Netezos.Forging.Sandbox.Operations
         private async Task FillPriority(ProtocolDataContent protocolData, string key, string blockId)
         {
             var baker = Key.FromBase58(key).PubKey.Address;
-            var bakingRights = await Rpc.Blocks[blockId].Helpers.BakingRights.GetAsync<List<Dictionary<string, dynamic>>>(baker);
-            var item = bakingRights.First(b => b["delegate"].ToString() == baker)["priority"];
-            protocolData.Priority = int.Parse(item.ToString());
+            var bakingRights = await Rpc.Blocks[blockId].Helpers.BakingRights.GetAsync<List<BakingRightsContent>>(baker);
+            protocolData.Priority = bakingRights.First(b => b.Delegate == baker).Priority;
         }
     }
 }

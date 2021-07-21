@@ -30,7 +30,7 @@ namespace Netezos.Forging.Sandbox.Operations
 
             int.TryParse(values.ProtocolParameters.ProofOfWorkThreshold, out int threshold);
 
-            int nonce = 0;
+            var nonce = 0;
             while (PowStamp(parameters.ShellHeader, parameters.BlockHeader.ProtocolData) > threshold)
             {
                 nonce++;
