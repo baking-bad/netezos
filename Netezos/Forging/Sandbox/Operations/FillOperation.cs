@@ -22,6 +22,8 @@ namespace Netezos.Forging.Sandbox.Operations
 
         public WorkOperation Work => new WorkOperation(Rpc, Values, CallAsync);
 
+        private readonly string _blockId;
+
         internal FillOperation(
             TezosRpc rpc,
             HeaderParameters headerParameters,
@@ -29,7 +31,7 @@ namespace Netezos.Forging.Sandbox.Operations
             string blockId,
             bool fromBakeBlock = false) : base(rpc, headerParameters, function)
         {
-            Values.BlockId = blockId;
+            _blockId = blockId;
             _fromBakeBlockCall = fromBakeBlock;
         }
 
@@ -40,10 +42,10 @@ namespace Netezos.Forging.Sandbox.Operations
             var parameters = await Function(data);
             var header = parameters.BlockHeader;
 
-            var predShellHeader = await Rpc.Blocks[data.BlockId].Header.Shell.GetAsync<ShellHeaderContent>();
+            var predShellHeader = await Rpc.Blocks[_blockId].Header.Shell.GetAsync<ShellHeaderContent>();
             var timestamp = predShellHeader.Timestamp + TimeSpan.FromSeconds(1);
 
-            var protocols = await Rpc.Blocks[data.BlockId].Protocols.GetAsync<Dictionary<string, string>>();
+            var protocols = await Rpc.Blocks[_blockId].Protocols.GetAsync<Dictionary<string, string>>();
             header.ProtocolData.ProtocolHash = protocols["next_protocol"];
             parameters.Operations?
                 .ForEach(x => 
@@ -54,13 +56,13 @@ namespace Netezos.Forging.Sandbox.Operations
 
             FillSeedNonceHash(
                 header.ProtocolData,
-                (int)(double)data.ProtocolParameters.blocks_per_commitment,
+                (int)data.ProtocolParameters.BlocksPerCommitment,
                 predShellHeader.Level);
 
             if (_fromBakeBlockCall)
             {
-                await FillPriority(header.ProtocolData, data.Key, data.BlockId);
-                var result2 = await Rpc
+                await FillPriority(header.ProtocolData, data.Key, _blockId);
+                var bakeBlockResult = await Rpc
                     .Blocks
                     .Head
                     .Helpers
@@ -77,7 +79,7 @@ namespace Netezos.Forging.Sandbox.Operations
                                 x.Select(y => (object)y)
                                     .ToList())
                             .ToList());
-                parameters.ShellHeader = result2.ShellHeader;
+                parameters.ShellHeader = bakeBlockResult.ShellHeader;
                 return parameters;
 
             }

@@ -28,13 +28,13 @@ namespace Netezos.Forging.Sandbox.Operations
         {
             var parameters = await Function.Invoke(Values);
 
-            int.TryParse(values.ProtocolParameters.proof_of_work_threshold.ToString(), out int threshold);
+            int.TryParse(values.ProtocolParameters.ProofOfWorkThreshold, out int threshold);
 
-            var nonce = 1;
+            int nonce = 0;
             while (PowStamp(parameters.ShellHeader, parameters.BlockHeader.ProtocolData) > threshold)
             {
-                parameters.BlockHeader.ProtocolData.ProofOfWorkNonce = Hex.Convert(LocalForge.ForgeInt64(nonce));
                 nonce++;
+                parameters.BlockHeader.ProtocolData.ProofOfWorkNonce = Hex.Convert(LocalForge.ForgeInt64(nonce));
             }
 
             return parameters;

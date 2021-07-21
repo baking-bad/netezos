@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Dynamic.Json;
+using Netezos.Forging.Models;
 using Netezos.Forging.Sandbox.Header;
 using Netezos.Rpc;
 using Xunit;
@@ -42,7 +42,7 @@ namespace Netezos.Tests.Rpc
                     Rpc,
                     headerConfig.protocol,
                     keys,
-                    headerConfig.protocolParameters);
+                    JsonSerializer.Deserialize<ProtocolParametersContent>(headerConfig.protocolParameters.ToString()));
 
                 HealthCheckTimeout = node.healthCheckOnStartedTimeout;
 

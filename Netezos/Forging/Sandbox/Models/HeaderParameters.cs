@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Netezos.Forging.Models;
 
 namespace Netezos.Forging.Sandbox
 {
@@ -9,9 +10,8 @@ namespace Netezos.Forging.Sandbox
     {
         public string Key { get; set; }
         public Dictionary<string, string> Keys { get; set; }
-        public string BlockId { get; set; }
         public string ProtocolHash { get; set; }
-        public dynamic ProtocolParameters { get; set; }
+        public ProtocolParametersContent ProtocolParameters { get; set; }
         public string Signature { get; set; }
         public int MinFee { get; set; } = 0;
     }

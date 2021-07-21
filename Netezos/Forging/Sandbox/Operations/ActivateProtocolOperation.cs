@@ -36,7 +36,7 @@ namespace Netezos.Forging.Sandbox.Operations
                         Hash = data.ProtocolHash,
                         Fitness = fitness,
                         ProtocolParameters = Hex.Convert(LocalForge.ForgeArray(
-                            BsonSerializer.Serialize(data.ProtocolParameters.ToString())))
+                            BsonSerializer.Serialize(data.ProtocolParameters)))
                     }
                 }
             };
