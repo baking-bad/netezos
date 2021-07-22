@@ -23,7 +23,8 @@ namespace Netezos.Rpc
         /// <summary>
         /// Lists blocks that have been declared invalid along with the errors that led to them being declared invalid.
         /// </summary>
-        public RpcObject InvalidBlocks => new RpcObject(ChainQuery, "invalid_blocks/");
+        public RpcDictionary<string, RpcObject> InvalidBlocks
+            => new RpcDictionary<string, RpcObject>(ChainQuery, "invalid_blocks/");
 
         /// <summary>
         /// The bootstrap status of a chain
