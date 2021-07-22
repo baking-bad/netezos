@@ -11,27 +11,48 @@ namespace Netezos.Rpc
     public class TezosRpc : IDisposable
     {
         /// <summary>
+        /// The chain unique identifier.
+        /// </summary>
+        public RpcObject ChainId => new RpcObject(ChainQuery, "chain_id/");
+
+        /// <summary>
+        /// The current checkpoint for this chain.
+        /// </summary>
+        public RpcObject Checkpoint => new RpcObject(ChainQuery, "checkpoint/");
+
+        /// <summary>
+        /// Lists blocks that have been declared invalid along with the errors that led to them being declared invalid.
+        /// </summary>
+        public RpcObject InvalidBlocks => new RpcObject(ChainQuery, "invalid_blocks/");
+
+        /// <summary>
+        /// The bootstrap status of a chain
+        /// </summary>
+        public RpcObject IsBootstrapped => new RpcObject(ChainQuery, "is_bootstrapped/");
+
+        /// <summary>
+        /// Gets the query to the mempool data associated with the block
+        /// </summary>
+        public MempoolQuery Mempool => new MempoolQuery(ChainQuery, "mempool/");
+
+        /// <summary>
         /// Gets the query to the blocks
         /// </summary>
-        public BlocksQuery Blocks { get; }
-        
+        public BlocksQuery Blocks => new BlocksQuery(ChainQuery, "blocks/");
+
         /// <summary>
         /// Gets the query to the injection
         /// </summary>
-        public InjectionQuery Inject { get; }
+        public InjectionQuery Inject => new InjectionQuery(Client, $"injection/");
 
         /// <summary>
         /// Gets the query to the config 
         /// </summary>
-        public ConfigQuery Config { get; }
-
-        /// <summary>
-        /// Gets the query to the chain 
-        /// </summary>
-        public ChainQuery Chain { get; }
+        public ConfigQuery Config => new ConfigQuery(Client, "config/network/");
 
         string _chain { get; }
         RpcClient Client { get; }
+        RpcQuery ChainQuery { get; }
 
         /// <summary>
         /// Creates the instanse of TezosRpc
@@ -44,11 +65,7 @@ namespace Netezos.Rpc
         {
             Client = new RpcClient(uri);
             _chain = chain.ToString().ToLower();
-
-            Blocks = new BlocksQuery(Client, $"chains/{_chain}/blocks/");
-            Inject = new InjectionQuery(Client, $"injection/");
-            Config = new ConfigQuery(Client, "config/network/");
-            Chain = new ChainQuery(Client, $"chains/{_chain}/");
+            ChainQuery = new RpcQuery(Client, $"chains/{_chain}/");
         }
 
         /// <summary>
@@ -63,11 +80,7 @@ namespace Netezos.Rpc
         {
             Client = new RpcClient(uri, timeout);
             _chain = chain.ToString().ToLower();
-
-            Blocks = new BlocksQuery(Client, $"chains/{_chain}/blocks/");
-            Inject = new InjectionQuery(Client, $"injection/");
-            Config = new ConfigQuery(Client, $"config/network/");
-            Chain = new ChainQuery(Client, $"chains/{_chain}/");
+            ChainQuery = new RpcQuery(Client, $"chains/{_chain}/");
         }
 
         /// <summary>
@@ -81,11 +94,7 @@ namespace Netezos.Rpc
         {
             Client = new RpcClient(client);
             _chain = chain.ToString().ToLower();
-
-            Blocks = new BlocksQuery(Client, $"chains/{_chain}/blocks/");
-            Inject = new InjectionQuery(Client, $"injection/");
-            Config = new ConfigQuery(Client, $"config/network/");
-            Chain = new ChainQuery(Client, $"chains/{_chain}/");
+            ChainQuery = new RpcQuery(Client, $"chains/{_chain}/");
         }
 
         /// <summary>

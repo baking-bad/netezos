@@ -30,7 +30,7 @@ namespace Netezos.Rpc.Queries
         /// <returns></returns>
         public BlockQuery this[string hash] => new BlockQuery(this, $"{hash}/");
 
-        internal BlocksQuery(RpcClient client, string query) : base(client, query) { }
+        internal BlocksQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
         /// Executes the query and returns known heads of the blockchain, sorted with decreasing fitness

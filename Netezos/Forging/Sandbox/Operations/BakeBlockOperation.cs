@@ -25,7 +25,7 @@ namespace Netezos.Forging.Sandbox.Operations
         internal override async Task<ForwardingParameters> CallAsync(HeaderParameters parameters)
         {
 
-            var pendingOperations = await Rpc.Chain.Mempool.PendingOperations.GetAsync<Dictionary<string, List<HeaderOperationContent>>>();
+            var pendingOperations = await Rpc.Mempool.PendingOperations.GetAsync<Dictionary<string, List<HeaderOperationContent>>>();
 
             pendingOperations.TryGetValue("applied", out var applied);
 
