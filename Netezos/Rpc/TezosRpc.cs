@@ -50,7 +50,7 @@ namespace Netezos.Rpc
         /// </summary>
         public ConfigQuery Config => new ConfigQuery(Client, "config/network/");
 
-        string _chain { get; }
+        string Chain { get; }
         RpcClient Client { get; }
         RpcQuery ChainQuery { get; }
 
@@ -59,13 +59,12 @@ namespace Netezos.Rpc
         /// </summary>
         /// <param name="uri">Base URI of the node</param>
         /// <param name="chain">Chain to work with.
-        /// Note: this is not a network (mainnet or testnet), but a chain of the particular network.
-        /// In 99.99% cases you likely want to use Chain.Main, because Chain.Test is only relevant during the testing phase of the Tezos voting process.</param>
-        public TezosRpc(string uri, Chain chain = Rpc.Chain.Main)
+        /// Note: this is not a network (mainnet or testnet), but an ID of the chain, in case you use a multi-chain node.</param>
+        public TezosRpc(string uri, string chain = "main")
         {
+            Chain = chain;
             Client = new RpcClient(uri);
-            _chain = chain.ToString().ToLower();
-            ChainQuery = new RpcQuery(Client, $"chains/{_chain}/");
+            ChainQuery = new RpcQuery(Client, $"chains/{Chain}/");
         }
 
         /// <summary>
@@ -74,13 +73,12 @@ namespace Netezos.Rpc
         /// <param name="uri">Base URI of the node</param>
         /// <param name="timeout">Timeout in seconds for the requests</param>
         /// <param name="chain">Chain to work with.
-        /// Note: this is not a network (mainnet or testnet), but a chain of the network.
-        /// In 99.99% cases you likely want to use Chain.Main, because Chain.Test is only relevant during the testing phase of the Tezos voting process.</param>
-        public TezosRpc(string uri, int timeout, Chain chain = Rpc.Chain.Main)
+        /// Note: this is not a network (mainnet or testnet), but an ID of the chain, in case you use a multi-chain node.</param>
+        public TezosRpc(string uri, int timeout, string chain = "main")
         {
+            Chain = chain;
             Client = new RpcClient(uri, timeout);
-            _chain = chain.ToString().ToLower();
-            ChainQuery = new RpcQuery(Client, $"chains/{_chain}/");
+            ChainQuery = new RpcQuery(Client, $"chains/{Chain}/");
         }
 
         /// <summary>
@@ -88,13 +86,12 @@ namespace Netezos.Rpc
         /// </summary>
         /// <param name="client">HttpClient instanse that will be used for sending RPC requests.</param>
         /// <param name="chain">Chain to work with.
-        /// Note: this is not a network (mainnet or testnet), but a chain of the network.
-        /// In 99.99% cases you likely want to use Chain.Main, because Chain.Test is only relevant during the testing phase of the Tezos voting process.</param>
-        public TezosRpc(HttpClient client, Chain chain = Rpc.Chain.Main)
+        /// Note: this is not a network (mainnet or testnet), but an ID of the chain, in case you use a multi-chain node.</param>
+        public TezosRpc(HttpClient client, string chain = "main")
         {
+            Chain = chain;
             Client = new RpcClient(client);
-            _chain = chain.ToString().ToLower();
-            ChainQuery = new RpcQuery(Client, $"chains/{_chain}/");
+            ChainQuery = new RpcQuery(Client, $"chains/{Chain}/");
         }
 
         /// <summary>
