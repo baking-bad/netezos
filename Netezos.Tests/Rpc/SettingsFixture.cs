@@ -31,20 +31,24 @@ namespace Netezos.Tests.Rpc
             {
                 var settings = DJson.Read("../../../Rpc/settings.json");
                 var node = GetActiveNodeConfig(settings);
-                var headerConfig = node.header;
 
-                NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
                 Rpc = new TezosRpc($"{node.host}:{node.port}", 60);
 
-                var keys = JsonSerializer.Deserialize<Dictionary<string, string>>(headerConfig.keys);
+                if (node.isImage)
+                {
+                    NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
 
-                HeaderClient = new HeaderClient(
-                    Rpc,
-                    headerConfig.protocol,
-                    keys,
-                    JsonSerializer.Deserialize<ProtocolParametersContent>(headerConfig.protocolParameters.ToString()));
+                    var headerConfig = node.header;
+                    var keys = JsonSerializer.Deserialize<Dictionary<string, string>>(headerConfig.keys);
 
-                HealthCheckTimeout = node.healthCheckOnStartedTimeout;
+                    HeaderClient = new HeaderClient(
+                        Rpc,
+                        headerConfig.protocol,
+                        keys, 
+                        JsonSerializer.Deserialize<ProtocolParametersContent>(
+                            headerConfig.protocolParameters.ToString()));
+                    HealthCheckTimeout = node.healthCheckOnStartedTimeout;
+                }
 
                 TestContract = settings.TestContract;
                 TestDelegate = settings.TestDelegate;
@@ -69,17 +73,20 @@ namespace Netezos.Tests.Rpc
 
         public async Task InitializeAsync()
         {
-            await NodeContainer.Container.StartAsync();
-
-            while (!await HealthCheckResultAsync())
+            if (NodeContainer != null)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
-            }
+                await NodeContainer.Container.StartAsync();
 
-            if (HeaderClient != null)
-            {
-                await HeaderClient.ActivateProtocol("dictator").Fill().Sign.InjectBlock.CallAsync();
-                await HeaderClient.BakeBlock("bootstrap1").Fill().Work.Sign.InjectBlock.CallAsync();
+                while (!await HealthCheckResultAsync())
+                {
+                    Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
+                }
+
+                if (HeaderClient != null)
+                {
+                    await HeaderClient.ActivateProtocol("dictator").Fill().Sign.InjectBlock.CallAsync();
+                    await HeaderClient.BakeBlock("bootstrap1").Fill().Work.Sign.InjectBlock.CallAsync();
+                }
             }
         }
 
@@ -100,7 +107,8 @@ namespace Netezos.Tests.Rpc
 
         public async Task DisposeAsync()
         {
-            await NodeContainer.Container.StopAsync();
+            if (NodeContainer != null) 
+                await NodeContainer.Container.StopAsync();
             Rpc.Dispose();
         }
     }
