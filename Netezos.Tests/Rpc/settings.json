@@ -3,6 +3,7 @@
     {
       "type": "sandbox",
       "config": {
+        "isImage": true,
         "imageName": "bakingbad/sandboxed-node",
         "tag": "v9.1-1",
         "port": "8732",
@@ -65,9 +66,17 @@
           }
         }
       }
+    },
+    {
+      "type": "mainnet",
+      "config": {
+        "isImage": false,
+        "host": "https://mainnet-tezos.giganode.io",
+        "port": "443"
+      }
     }
   ],
-  "active" : "sandbox",
+  "active" : "mainnet",
   "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
   "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",
   "testInactive": "tz1bR8MFMyWSa428KRQcdShZFu9C4gEA4iFd"
