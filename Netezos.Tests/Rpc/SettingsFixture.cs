@@ -7,8 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dynamic.Json;
 using Netezos.Forging.Models;
-using Netezos.Forging.Sandbox.Header;
 using Netezos.Rpc;
+using Netezos.Sandbox;
 using Xunit;
 
 namespace Netezos.Tests.Rpc
@@ -34,9 +34,10 @@ namespace Netezos.Tests.Rpc
 
                 Rpc = new TezosRpc($"{node.host}:{node.port}", 60);
 
-                if (node.isImage)
+                
+                if (node.type.ToString().Equals("internal"))
                 {
-                    NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
+                    // NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
 
                     var headerConfig = node.header;
                     var keys = JsonSerializer.Deserialize<Dictionary<string, string>>(headerConfig.keys);
@@ -98,8 +99,8 @@ namespace Netezos.Tests.Rpc
 
             var node = nodes?.FirstOrDefault(x =>
             {
-                string type = ((dynamic)x).type;
-                return type.Equals(activeNode);
+                string name = ((dynamic)x).name;
+                return name.Equals(activeNode);
             });
 
             return ((dynamic)node)?.config;

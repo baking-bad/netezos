@@ -1,9 +1,9 @@
 {
   "nodes" : [
     {
-      "type": "sandbox",
+      "name": "sandbox-v9.1-1",
       "config": {
-        "isImage": true,
+        "type": "internal",
         "imageName": "bakingbad/sandboxed-node",
         "tag": "v9.1-1",
         "port": "8732",
@@ -68,9 +68,9 @@
       }
     },
     {
-      "type": "mainnet",
+      "name": "mainnet",
       "config": {
-        "isImage": false,
+        "type": "external",
         "host": "https://mainnet-tezos.giganode.io",
         "port": "443"
       }
