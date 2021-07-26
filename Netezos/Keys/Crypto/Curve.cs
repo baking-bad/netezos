@@ -10,6 +10,7 @@ namespace Netezos.Keys
         public abstract byte[] PublicKeyPrefix { get; }
         public abstract byte[] PrivateKeyPrefix { get; }
         public abstract byte[] SignaturePrefix { get; }
+        public abstract byte[] SeedKey { get; }
 
         public abstract byte[] GeneratePrivateKey();
 
