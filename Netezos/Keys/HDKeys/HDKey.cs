@@ -58,8 +58,8 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                //TODO: Hd.GetChildPrivateKey(Curve, Store.Data, ...
-                throw new NotImplementedException();
+                var privateKey = Hd.GetChildPrivateKey(Curve, Store.Data, index);
+                return new HDKey(privateKey, Hd.Kind, Curve.Kind);
             }
         }
 
