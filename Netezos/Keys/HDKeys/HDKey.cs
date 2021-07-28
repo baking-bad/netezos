@@ -17,7 +17,8 @@ namespace Netezos.Keys
                 {
                     using (Store.Unlock())
                     {
-                        var privateKey = Store.Data.GetBytes(0, 32);
+                        //TODO Changed lenght from 32 to 64 for testing purposes. Change back after tests
+                        var privateKey = Store.Data.GetBytes(0, 64);
                         _Key = new Key(privateKey, Curve.Kind, true);
                     }
                 }
@@ -87,11 +88,20 @@ namespace Netezos.Keys
         }
 
         #region static
-        public static HDKey FromBytes(byte[] bytes, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-            => new HDKey(bytes, hdStandard, ecKind);
 
-        public static HDKey FromHex(string hex, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-            => new HDKey(Hex.Parse(hex), hdStandard, ecKind, true);
+        public static HDKey FromBytes(byte[] bytes, HDStandardKind hdStandard = HDStandardKind.Slip10,
+            ECKind ecKind = ECKind.Ed25519)
+        {
+            var res = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), bytes);
+            return new HDKey(res, hdStandard, ecKind, true);
+        }
+
+        public static HDKey FromHex(string hex, HDStandardKind hdStandard = HDStandardKind.Slip10,
+            ECKind ecKind = ECKind.Ed25519)
+        {
+            var res = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), Hex.Parse(hex));
+            return new HDKey(res, hdStandard, ecKind, true);
+        }
 
         public static HDKey FromBase64(string base64, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
             => new HDKey(Base64.Parse(base64), hdStandard, ecKind, true);

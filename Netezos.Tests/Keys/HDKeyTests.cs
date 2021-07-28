@@ -48,6 +48,7 @@ namespace Netezos.Tests.Keys
         {
             var key = HDKey.FromHex(seed, HDStandardKind.Slip10, ECKind.Ed25519);
 
+            
             var masterKeyFromSeed = key.Key.GetBytes();
 
             
