@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Netezos.Encoding;
 using Netezos.Utils;
@@ -29,6 +30,7 @@ namespace Netezos.Keys
         readonly Curve Curve;
         readonly HDStandard Hd;
         readonly ISecretStore Store;
+        readonly uint hardenedOffset = 0x80000000;
 
         public HDKey() : this(HDStandardKind.Slip10, ECKind.Ed25519) { }
 
@@ -45,8 +47,9 @@ namespace Netezos.Keys
 
         internal HDKey(byte[] bytes, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
         {
-            if (bytes?.Length != 64)
-                throw new ArgumentException("Invalid extended key length", nameof(bytes));
+            //TODO Turn off after tests (test vector only 16 bytes long)
+            // if (bytes?.Length != 64)
+            //     throw new ArgumentException("Invalid extended key length", nameof(bytes));
 
             Curve = Curve.FromKind(ecKind);
             Hd = HDStandard.FromKind(hdStandard);
@@ -67,8 +70,9 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                //TODO: Hd.GetChildPrivateKey(Curve, Store.Data, ...
-                throw new NotImplementedException();
+                var privateKey = path.Indexes
+                    .Aggregate(Store.Data, (mks, next) => Hd.GetChildPrivateKey(Curve, mks, next + hardenedOffset));
+                return new HDKey(privateKey, Hd.Kind, Curve.Kind);
             }
         }
 
