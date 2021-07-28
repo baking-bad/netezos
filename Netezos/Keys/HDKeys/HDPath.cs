@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Netezos.Keys
 {
@@ -18,8 +20,15 @@ namespace Netezos.Keys
         
         public HDPath(string path)
         {
-            //TODO: parse path from string like "m/0/1'/2"
-            throw new NotImplementedException();
+            if (!IsValidPath(path))
+                throw new FormatException("Invalid derivation path");
+            
+            _Indexes = path
+                .Split('/')
+                .Slice(1)
+                .Select(a => a.Replace("'", ""))
+                .Select(a => Convert.ToUInt32(a, 10))
+                .ToArray();
         }
 
         public HDPath Derive(HDPath path)
@@ -30,7 +39,6 @@ namespace Netezos.Keys
 
         public HDPath Derive(int index, bool hardened = false)
         {
-            //TODO: appended the index and return the new path
             throw new NotImplementedException();
         }
 
@@ -52,6 +60,22 @@ namespace Netezos.Keys
             //TODO: parse path from string like "m/0/1'/2"
             throw new NotImplementedException();
         }
+        
+        private static bool IsValidPath(string path)
+        {
+            var regex = new Regex("^m(\\/[0-9]+')+$");
+
+            if (!regex.IsMatch(path))
+                return false;
+
+            var valid = !(path.Split('/')
+                .Slice(1)
+                .Select(a => a.Replace("'", ""))
+                .Any(a => !Int32.TryParse(a, out _)));
+
+            return valid;
+        }
+        
         #endregion
     }
 }
