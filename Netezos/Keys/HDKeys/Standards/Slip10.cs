@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Security.Cryptography;
 using Netezos.Keys.HDKeys;
 
 namespace Netezos.Keys
@@ -22,7 +19,7 @@ namespace Netezos.Keys
         {
             var buffer = new BigEndianBuffer();
 
-            buffer.Write(new byte[] { 0 });
+            buffer.Write(new byte[] {0});
             buffer.Write(extKey.GetBytes(0, 32));
             buffer.WriteUInt(index);
 
@@ -31,7 +28,7 @@ namespace Netezos.Keys
                 var i = hmacSha512.ComputeHash(buffer.ToArray());
 
                 var il = i.GetBytes(0, 32);
-                var ir = i.GetBytes(32,32);
+                var ir = i.GetBytes(32, 32);
 
                 return i;
             }
@@ -41,7 +38,7 @@ namespace Netezos.Keys
         {
             var buffer = new BigEndianBuffer();
 
-            buffer.Write(new byte[] { 0 });
+            buffer.Write(new byte[] {0});
             buffer.Write(extKey.GetBytes(0, 32));
             buffer.WriteUInt(index);
 
@@ -50,20 +47,35 @@ namespace Netezos.Keys
                 var i = hmacSha512.ComputeHash(buffer.ToArray());
 
                 var il = i.GetBytes(0, 32);
-                var ir = i.GetBytes(32,32);
+                var ir = i.GetBytes(32, 32);
 
                 var publicKey = curve.GetPublicKey(i);
-                
-                var zero = new byte[] { 0 };
+
+                var zero = new byte[] {0};
 
                 var pubBuffer = new BigEndianBuffer();
                 if (withZeroByte)
                     pubBuffer.Write(zero);
 
                 pubBuffer.Write(publicKey);
-                
+
                 return pubBuffer.ToArray();
             }
+        }
+
+        public override byte[] GetChildPublicKey(Curve curve, byte[] privateKey, bool withZeroByte = true)
+        {
+            var publicKey = curve.GetPublicKey(privateKey);
+
+            var zero = new byte[] {0};
+
+            var pubBuffer = new BigEndianBuffer();
+            if (withZeroByte)
+                pubBuffer.Write(zero);
+
+            pubBuffer.Write(publicKey);
+
+            return pubBuffer.ToArray();
         }
     }
 }

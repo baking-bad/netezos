@@ -13,7 +13,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the current head
         /// </summary>
-        public BlockQuery Head => new BlockQuery(this, "head/");
+        public BlockQuery Head => new BlockQuery(this, "/head");
 
         /// <summary>
         /// Gets the query to the block at the specified level
@@ -21,14 +21,14 @@ namespace Netezos.Rpc.Queries
         /// <param name="level">Level of the block. If level < 0, then it will be used as [head - level].</param>
         /// <returns></returns>
         public BlockQuery this[int level]
-            => level >= 0 ? new BlockQuery(this, $"{level}/") : new BlockQuery(this, $"head~{-level}/");
+            => level >= 0 ? new BlockQuery(this, $"/{level}") : new BlockQuery(this, $"/head~{-level}");
 
         /// <summary>
         /// Gets the query to the block with the specified hash
         /// </summary>
         /// <param name="hash">Hash of the block</param>
         /// <returns></returns>
-        public BlockQuery this[string hash] => new BlockQuery(this, $"{hash}/");
+        public BlockQuery this[string hash] => new BlockQuery(this, $"/{hash}");
 
         internal BlocksQuery(RpcClient client, string query) : base(client, query) { }
 

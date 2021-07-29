@@ -51,8 +51,7 @@ namespace Netezos.Keys
         #region static
         public static HDPath Parse(string path)
         {
-            //TODO: parse path from string like "m/0/1'/2"
-            throw new NotImplementedException();
+            return new HDPath(path);
         }
 
         public static bool TryParse(string path, out HDPath result)
