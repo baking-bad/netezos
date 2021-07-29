@@ -55,6 +55,26 @@ namespace Netezos.Tests.Keys
             return (masterKeyFromSeed.GetBytes(0, 32), masterKeyFromSeed.GetBytes(32, masterKeyFromSeed.Length - 32));
         }
         
+        private (byte[] Key, byte[] ChainCode) TestDerivePath(string path, string seed)
+        {
+            var key = HDKey.FromHex(seed, HDStandardKind.Slip10, ECKind.Ed25519);
+
+
+            var derivePath = key.Derive(HDPath.Parse(path)).Key.GetBytes();
+
+            return (derivePath.GetBytes(0, 32), derivePath.GetBytes(32, 32));
+        }
+        
+        private byte[] TestGetPublicKey(string path, string seed)
+        {
+            var key = HDKey.FromHex(seed, HDStandardKind.Slip10, ECKind.Ed25519);
+
+
+            var derivePath = key.Derive(HDPath.Parse(path)).Key;
+
+            return derivePath.PubKey.GetBytes();
+        }
+        
         [Fact]
         public void TestVector1_Test1()
         {
@@ -68,12 +88,13 @@ namespace Netezos.Tests.Keys
             Assert.Equal(Vector1KeyHexExpected, Hex.Convert(testMasterKeyFromSeed.Key));
             Assert.Equal(Vector1ChainCodeExpected, Hex.Convert(testMasterKeyFromSeed.ChainCode));
 
-            // var testDerivePath = TestDerivePath(expectedPath, Vector1Seed);
-            // Assert.Equal(expectedKey, testDerivePath.Key.ToStringHex());
-            // Assert.Equal(expectedChainCode, testDerivePath.ChainCode.ToStringHex());
-            //
-            // var testPublicKey = TestGetPublicKey(testDerivePath.Key);
-            // Assert.Equal(expectedPublicKey, testPublicKey.ToStringHex());
+            var testDerivePath = TestDerivePath(expectedPath, Vector1Seed);
+            Assert.Equal(expectedKey, Hex.Convert(testDerivePath.Key));
+            Assert.Equal(expectedChainCode, Hex.Convert(testDerivePath.ChainCode));
+            
+            
+            var testPublicKey = TestGetPublicKey(expectedPath, Vector1Seed);
+            Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
         }
     }
 }

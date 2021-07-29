@@ -35,5 +35,10 @@ In case IL is 0 or ≥n, the master key is invalid.*/
         {
             throw new NotImplementedException();
         }
+
+        public override byte[] GetChildPublicKey(Curve curve, byte[] privateKey, bool withZeroByte = true)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

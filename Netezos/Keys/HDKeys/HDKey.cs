@@ -19,7 +19,7 @@ namespace Netezos.Keys
                     {
                         //TODO Changed lenght from 32 to 64 for testing purposes. Change back after tests
                         var privateKey = Store.Data.GetBytes(0, 64);
-                        _Key = new Key(privateKey, Curve.Kind, true);
+                        _Key = new Key(privateKey, Curve.Kind, true, _PubKey);
                     }
                 }
 
@@ -27,6 +27,23 @@ namespace Netezos.Keys
             }
         }
         Key _Key;
+        
+        public PubKey PubKey
+        {
+            get
+            {
+                if (_PubKey == null)
+                {
+                    using (Store.Unlock())
+                    {
+                        _PubKey = new PubKey(Curve.GetPublicKey(Store.Data), Curve.Kind, true);
+                    }
+                }
+
+                return _PubKey;
+            }
+        }
+        PubKey _PubKey;
 
         readonly Curve Curve;
         readonly HDStandard Hd;
@@ -55,6 +72,7 @@ namespace Netezos.Keys
             Curve = Curve.FromKind(ecKind);
             Hd = HDStandard.FromKind(hdStandard);
             Store = new PlainSecretStore(bytes);
+            _PubKey = new PubKey(Hd.GetChildPublicKey(Curve, bytes), Curve.Kind, flush);
             if (flush) bytes.Flush();
         }
 
@@ -73,6 +91,7 @@ namespace Netezos.Keys
             {
                 var privateKey = path.Indexes
                     .Aggregate(Store.Data, (mks, next) => Hd.GetChildPrivateKey(Curve, mks, next + hardenedOffset));
+
                 return new HDKey(privateKey, Hd.Kind, Curve.Kind);
             }
         }

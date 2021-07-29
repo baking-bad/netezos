@@ -13,7 +13,7 @@
         /// <summary>
         /// Gets the query to the shell data
         /// </summary>
-        public RpcObject Shell => new RpcObject(this, "shell/");
+        public RpcObject Shell => new RpcObject(this, "shell");
 
         internal BlockHeaderQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }
