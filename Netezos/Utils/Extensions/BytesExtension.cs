@@ -1,4 +1,5 @@
 ﻿using System;
+using Netezos.Encoding;
 
 namespace Netezos
 {
@@ -77,6 +78,11 @@ namespace Netezos
                     return false;
 
             return true;
+        }
+        
+        public static string ToStringHex(this byte[] bytes)
+        {
+            return Hex.Convert(bytes);
         }
     }
 }

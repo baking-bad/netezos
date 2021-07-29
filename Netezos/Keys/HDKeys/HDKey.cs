@@ -63,7 +63,7 @@ namespace Netezos.Keys
             bytes.Flush();
         }
 
-        internal HDKey(byte[] bytes, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
+        public HDKey(byte[] bytes, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
         {
             //TODO Turn off after tests (test vector only 16 bytes long)
             // if (bytes?.Length != 64)
