@@ -72,7 +72,8 @@ namespace Netezos.Keys
             Curve = Curve.FromKind(ecKind);
             Hd = HDStandard.FromKind(hdStandard);
             Store = new PlainSecretStore(bytes);
-            _PubKey = new PubKey(Hd.GetChildPublicKey(Curve, bytes), Curve.Kind, flush);
+            //TODO Consider moving out the chain code
+            _PubKey = new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32)), Curve.Kind, flush);
             if (flush) bytes.Flush();
         }
 
