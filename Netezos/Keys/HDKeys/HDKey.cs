@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Netezos.Encoding;
 using Netezos.Utils;
@@ -73,7 +75,18 @@ namespace Netezos.Keys
             Hd = HDStandard.FromKind(hdStandard);
             Store = new PlainSecretStore(bytes);
             //TODO Consider moving out the chain code
-            _PubKey = new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32)), Curve.Kind, flush);
+            //TODO That's working with zero bytes for ed25519 and doesn't for secp256k1
+            _PubKey = ecKind switch
+            {
+                ECKind.Ed25519 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32), true), Curve.Kind,
+                    flush),
+                ECKind.Secp256k1 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32), false), Curve.Kind,
+                    flush),
+                ECKind.NistP256 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32), false), Curve.Kind,
+                    flush),
+                _ => throw new InvalidEnumArgumentException()
+            };
+            
             if (flush) bytes.Flush();
         }
 

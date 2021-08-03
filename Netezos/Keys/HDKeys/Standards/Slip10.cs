@@ -1,5 +1,9 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Linq;
+using System.Security.Cryptography;
 using Netezos.Keys.HDKeys;
+using Org.BouncyCastle.Asn1.Sec;
+using Org.BouncyCastle.Math;
 
 namespace Netezos.Keys
 {
@@ -17,21 +21,81 @@ namespace Netezos.Keys
 
         public override byte[] GetChildPrivateKey(Curve curve, byte[] extKey, uint index)
         {
-            var buffer = new BigEndianBuffer();
-
-            buffer.Write(new byte[] {0});
-            buffer.Write(extKey.GetBytes(0, 32));
-            buffer.WriteUInt(index);
-
-            using (var hmacSha512 = new HMACSHA512(extKey.GetBytes(32, 32)))
+            if (curve.Kind == ECKind.Ed25519)
             {
-                var i = hmacSha512.ComputeHash(buffer.ToArray());
+                var buffer = new BigEndianBuffer();
 
-                var il = i.GetBytes(0, 32);
-                var ir = i.GetBytes(32, 32);
+                buffer.Write(new byte[] {0});
+                buffer.Write(extKey.GetBytes(0, 32));
+                buffer.WriteUInt(index);
 
-                return i;
+                using (var hmacSha512 = new HMACSHA512(extKey.GetBytes(32, 32)))
+                {
+                    var i = hmacSha512.ComputeHash(buffer.ToArray());
+
+                    var il = i.GetBytes(0, 32);
+                    var ir = i.GetBytes(32, 32);
+
+                    return i;
+                }
             }
+
+            var ccChild = new byte[4];
+
+            var cc = extKey.GetBytes(32, 32);
+            byte[]? l = null;
+
+            if ((index >> 31) == 0)
+            {
+                var pubKey = curve.GetPublicKey(extKey.GetBytes(0, 32));
+                l = BIP32Hash(cc, index, pubKey[0], pubKey.GetBytes(1, pubKey.Length - 1));
+            }
+            else
+            {
+                l = BIP32Hash(cc, index, 0, extKey.GetBytes(0, 32));
+            }
+
+            var ll = l.GetBytes(0, 32);
+            var lr = l.GetBytes(32, 32);
+
+            ccChild = lr;
+
+            var parse256LL = new BigInteger(1, ll);
+
+            //TODO data here is vch NBitcoin
+            var kPar = new BigInteger(1, extKey.GetBytes(0, 32));
+
+            var crve = SecNamedCurves.GetByName("secp256k1");
+            var N = crve.N;
+
+            var keyBytes = new byte[4];
+            if (curve.Kind == ECKind.Ed25519)
+            {
+                var key = parse256LL.Add(kPar);
+                if (key == BigInteger.Zero)
+                    throw new InvalidOperationException(
+                        "You won the big prize ! this has probability lower than 1 in 2^127. Take a screenshot, and roll the dice again.");
+
+                keyBytes = key.ToByteArrayUnsigned();
+                if (keyBytes.Length < 32)
+                    keyBytes = new byte[32 - keyBytes.Length].Concat(keyBytes).ToArray();
+            }
+            else
+            {
+                if (parse256LL.CompareTo(N) >= 0)
+                    throw new InvalidOperationException(
+                        "You won a prize ! this should happen very rarely. Take a screenshot, and roll the dice again.");
+                var key = parse256LL.Add(kPar).Mod(N);
+                if (key == BigInteger.Zero)
+                    throw new InvalidOperationException(
+                        "You won the big prize ! this has probability lower than 1 in 2^127. Take a screenshot, and roll the dice again.");
+
+                keyBytes = key.ToByteArrayUnsigned();
+                if (keyBytes.Length < 32)
+                    keyBytes = new byte[32 - keyBytes.Length].Concat(keyBytes).ToArray();
+            }
+
+            return keyBytes.Concat(ccChild);
         }
 
         public override byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index, bool withZeroByte = true)
@@ -76,6 +140,24 @@ namespace Netezos.Keys
             pubBuffer.Write(publicKey);
 
             return pubBuffer.ToArray();
+        }
+
+        public static byte[] BIP32Hash(byte[] chainCode, uint nChild, byte header, byte[] data)
+        {
+            byte[] num = new byte[4];
+            num[0] = (byte) ((nChild >> 24) & 0xFF);
+            num[1] = (byte) ((nChild >> 16) & 0xFF);
+            num[2] = (byte) ((nChild >> 8) & 0xFF);
+            num[3] = (byte) ((nChild >> 0) & 0xFF);
+
+            using (var hmacSha512 = new HMACSHA512(chainCode))
+            {
+                var i = hmacSha512.ComputeHash(new byte[] {header}
+                    .Concat(data)
+                    .Concat(num).ToArray());
+
+                return i;
+            }
         }
     }
 }
