@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using Netezos.Encoding;
 using Netezos.Utils;
 
@@ -94,7 +91,10 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                var privateKey = Hd.GetChildPrivateKey(Curve, Store.Data, index);
+
+                var privateKey = hardened
+                    ? Hd.GetChildPrivateKey(Curve, Store.Data, index)
+                    : Hd.GetChildPrivateKey(Curve, Store.Data, index);
                 return new HDKey(privateKey, Hd.Kind, Curve.Kind);
             }
         }
@@ -104,7 +104,7 @@ namespace Netezos.Keys
             using (Store.Unlock())
             {
                 var privateKey = path.Indexes
-                    .Aggregate(Store.Data, (mks, next) => Hd.GetChildPrivateKey(Curve, mks, next + hardenedOffset));
+                    .Aggregate(Store.Data, (mks, next) => Hd.GetChildPrivateKey(Curve, mks, next));
 
                 return new HDKey(privateKey, Hd.Kind, Curve.Kind);
             }

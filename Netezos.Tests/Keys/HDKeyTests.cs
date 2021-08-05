@@ -45,15 +45,9 @@ namespace Netezos.Tests.Keys
         {
             var key = HDKey.FromHex(seed, hdStandard, ecKind);
 
-
-            var check = key.Derive(0).Key.GetBytes();
-
-            var b = Hex.Convert(check);
-            
             var derivePath = key.Derive(HDPath.Parse(path)).Key.GetBytes();
             
             var c = Hex.Convert(derivePath);
-
 
             return (derivePath.GetBytes(0, 32), derivePath.GetBytes(32, 32));
         }
@@ -79,6 +73,14 @@ namespace Netezos.Tests.Keys
         }
 
         #endregion
+
+        [Fact]
+        public void TestHDPath()
+        {
+            var keyPath = new HDPath(new uint[] { 0x8000002Cu, 1u });
+            var a = keyPath.ToString();
+            Assert.Equal("44'/1", keyPath.ToString());
+        }
 
         #region Ed25519
 
@@ -298,6 +300,29 @@ namespace Netezos.Tests.Keys
             const string expectedPublicKey = "035a784662a4a20a65bf6aab9ae98a6c068a81c52e4b032c0fb5400c706cfccc56";
             var tst =
                 "04bfb2dd60fa8921c2a4085ec15507a921f49cdc839f27f0f280e9c1495d44b547fdacbd0f1097043b78c63c20c34ef4ed9a111d980047ad16282c7ae6236141";
+            var testMasterKeyFromSeed = TestMasterKeyFromSeed(Vector1Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+
+            
+            Assert.Equal(Secp256k1Vector1KeyHexExpected, Hex.Convert(testMasterKeyFromSeed.Key));
+            Assert.Equal(Secp256k1Vector1ChainCodeExpected, Hex.Convert(testMasterKeyFromSeed.ChainCode));
+
+            var testDerivePath = TestDerivePath(expectedPath, Vector1Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedKey, Hex.Convert(testDerivePath.Key));
+            Assert.Equal(expectedChainCode, Hex.Convert(testDerivePath.ChainCode));
+            
+            
+            var testPublicKey = TestGetPublicKey(expectedPath, Vector1Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
+        }
+
+        [Fact]
+        public void TestSecp256k1Vector1Test2()
+        {
+            const string expectedPath = "m/0'/1";
+            const string expectedChainCode = "2a7857631386ba23dacac34180dd1983734e444fdbf774041578e9b6adb37c19";
+            const string expectedKey = "3c6cb8d0f6a264c91ea8b5030fadaa8e538b020f0a387421a12de9319dc93368";
+            const string expectedPublicKey = "03501e454bf00751f24b1b489aa925215d66af2234e3891c3b21a52bedb3cd711c";
+
             var testMasterKeyFromSeed = TestMasterKeyFromSeed(Vector1Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
 
             Assert.Equal(Secp256k1Vector1KeyHexExpected, Hex.Convert(testMasterKeyFromSeed.Key));
