@@ -337,6 +337,44 @@ namespace Netezos.Tests.Keys
             Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
         }
 
+        [Fact]
+        public void TestSecp256k1Vector1Test3()
+        {
+            //TODO TBD
+            const string expectedPath = "m/0'/1/2'";
+            const string expectedChainCode = "04466b9cc8e161e966409ca52986c584f07e9dc81f735db683c3ff6ec7b1503f";
+            const string expectedKey = "cbce0d719ecf7431d88e6a89fa1483e02e35092af60c042b1df2ff59fa424dca";
+            const string expectedPublicKey = "0357bfe1e341d01c69fe5654309956cbea516822fba8a601743a012a7896ee8dc2";
+
+            var testMasterKeyFromSeed = TestMasterKeyFromSeed(Vector1Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+
+            Assert.Equal(Secp256k1Vector1KeyHexExpected, Hex.Convert(testMasterKeyFromSeed.Key));
+            Assert.Equal(Secp256k1Vector1ChainCodeExpected, Hex.Convert(testMasterKeyFromSeed.ChainCode));
+
+            var testDerivePath = TestDerivePath(expectedPath, Vector1Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedKey, Hex.Convert(testDerivePath.Key));
+            Assert.Equal(expectedChainCode, Hex.Convert(testDerivePath.ChainCode));
+            
+            
+            var testPublicKey = TestGetPublicKey(expectedPath, Vector1Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
+        }
+
+        [Fact]
+        public void Kukai()
+        {
+            //TODO Working without zeroing byte GetChildPublicKey()
+            //The same for Temple
+            var mnemonic =
+                "find load relief loop surround tired document coin seven filter draft place music jewel match shoe hope duty thumb cereal lyrics embody talent lumber";
+            var address = "tz1dP3E6Pa7Yp8wTeN2CPKfDr5ueLQwiDDTy";
+            var secondAddress = "tz1NWFkgmi2aQRkkjcs1yVY18U1xRrPyWiWA";
+
+            var key = HDKey.FromMnemonic(Mnemonic.Parse(mnemonic)).Derive(HDPath.Parse("m/44'/1729'/0'/0'"));
+            Assert.Equal(address, key.PubKey.Address);
+
+        }
+
         #endregion
         //TODO TestVector3
         //TODO TestVector4
