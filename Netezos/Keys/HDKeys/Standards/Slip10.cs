@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using Netezos.Keys.HDKeys;
@@ -33,9 +34,6 @@ namespace Netezos.Keys
                 {
                     var i = hmacSha512.ComputeHash(buffer.ToArray());
 
-                    var il = i.GetBytes(0, 32);
-                    var ir = i.GetBytes(32, 32);
-
                     return i;
                 }
             }
@@ -65,9 +63,6 @@ namespace Netezos.Keys
             //TODO data here is vch NBitcoin
             var kPar = new BigInteger(1, extKey.GetBytes(0, 32));
 
-            var crve = SecNamedCurves.GetByName("secp256k1");
-            var N = crve.N;
-
             var keyBytes = new byte[4];
             if (curve.Kind == ECKind.Ed25519)
             {
@@ -82,6 +77,13 @@ namespace Netezos.Keys
             }
             else
             {
+                var N = curve.Kind switch
+                {
+                    ECKind.Secp256k1 => SecNamedCurves.GetByName("secp256k1").N,
+                    ECKind.NistP256 => SecNamedCurves.GetByName("secp256r1").N,
+                    _ => throw new InvalidEnumArgumentException()
+                };
+
                 if (parse256LL.CompareTo(N) >= 0)
                     throw new InvalidOperationException(
                         "You won a prize ! this should happen very rarely. Take a screenshot, and roll the dice again.");
