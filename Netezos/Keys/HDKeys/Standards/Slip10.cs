@@ -22,7 +22,7 @@ namespace Netezos.Keys
 
         public override byte[] GetChildPrivateKey(Curve curve, byte[] extKey, uint index)
         {
-            if (curve.Kind == ECKind.Ed25519)
+            /*if (curve.Kind == ECKind.Ed25519)
             {
                 var buffer = new BigEndianBuffer();
 
@@ -30,13 +30,20 @@ namespace Netezos.Keys
                 buffer.Write(extKey.GetBytes(0, 32));
                 buffer.WriteUInt(index);
 
-                using (var hmacSha512 = new HMACSHA512(extKey.GetBytes(32, 32)))
+                while (true)
                 {
-                    var i = hmacSha512.ComputeHash(buffer.ToArray());
+                    using var hmacSha512 = new HMACSHA512(extKey.GetBytes(32, 32));
+                
+                    var i = hmacSha512.ComputeHash(buffer.ToArray());      
+                    
+                    if (curve.Kind == ECKind.Ed25519)
+                        return i;
 
-                    return i;
+                    if ()
                 }
-            }
+                
+                return i;
+            }*/
 
             var ccChild = new byte[4];
 
@@ -51,6 +58,11 @@ namespace Netezos.Keys
             else
             {
                 l = BIP32Hash(cc, index, 0, extKey.GetBytes(0, 32));
+            }
+
+            if (curve.Kind == ECKind.Ed25519)
+            {
+                return l;
             }
 
             var ll = l.GetBytes(0, 32);
@@ -100,7 +112,7 @@ namespace Netezos.Keys
             return keyBytes.Concat(ccChild);
         }
 
-        public override byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index, bool withZeroByte = true)
+        public override byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index)
         {
             var buffer = new BigEndianBuffer();
 
@@ -112,36 +124,19 @@ namespace Netezos.Keys
             {
                 var i = hmacSha512.ComputeHash(buffer.ToArray());
 
-                var il = i.GetBytes(0, 32);
-                var ir = i.GetBytes(32, 32);
-
-                var publicKey = curve.GetPublicKey(i);
-
-                var zero = new byte[] {0};
-
-                var pubBuffer = new BigEndianBuffer();
-                if (withZeroByte)
-                    pubBuffer.Write(zero);
-
-                pubBuffer.Write(publicKey);
-
-                return pubBuffer.ToArray();
+                return curve.GetPublicKey(i);
             }
         }
 
-        public override byte[] GetChildPublicKey(Curve curve, byte[] privateKey, bool withZeroByte = true)
+        public override byte[] GetChildPublicKey(Curve curve, byte[] privateKey)
         {
             var publicKey = curve.GetPublicKey(privateKey);
 
-            var zero = new byte[] {0};
-
             var pubBuffer = new BigEndianBuffer();
-            if (withZeroByte)
-                pubBuffer.Write(zero);
 
             pubBuffer.Write(publicKey);
 
-            return pubBuffer.ToArray();
+            return curve.GetPublicKey(privateKey);
         }
 
         public static byte[] BIP32Hash(byte[] chainCode, uint nChild, byte header, byte[] data)
