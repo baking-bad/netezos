@@ -75,11 +75,11 @@ namespace Netezos.Keys
             //TODO That's working with zero bytes for ed25519 and doesn't for secp256k1
             _PubKey = ecKind switch
             {
-                ECKind.Ed25519 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32), false), Curve.Kind,
+                ECKind.Ed25519 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32)), Curve.Kind,
                     flush),
-                ECKind.Secp256k1 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32), false), Curve.Kind,
+                ECKind.Secp256k1 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32)), Curve.Kind,
                     flush),
-                ECKind.NistP256 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32), false), Curve.Kind,
+                ECKind.NistP256 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32)), Curve.Kind,
                     flush),
                 _ => throw new InvalidEnumArgumentException()
             };

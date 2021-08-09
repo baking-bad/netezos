@@ -25,8 +25,8 @@ namespace Netezos.Keys
         }
         #endregion
 
-        public abstract byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index, bool withZeroByte = true);
-        public abstract byte[] GetChildPublicKey(Curve curve, byte[] privateKey, bool withZeroByte = true);
+        public abstract byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index);
+        public abstract byte[] GetChildPublicKey(Curve curve, byte[] privateKey);
     }
 
     public enum HDStandardKind
