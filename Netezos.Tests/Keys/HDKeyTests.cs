@@ -525,6 +525,45 @@ namespace Netezos.Tests.Keys
             var testPublicKey = TestGetPublicKey(expectedPath, Vector2Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
             Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
         }
+        
+        [Fact]
+        public void TestVector3()
+        {
+            /*TestVector test3 =
+                new TestVector("4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be")
+                    .Add("xpub661MyMwAqRbcEZVB4dScxMAdx6d4nFc9nvyvH3v4gJL378CSRZiYmhRoP7mBy6gSPSCYk6SzXPTf3ND1cZAceL7SfJ1Z3GC8vBgp2epUt13",
+                        "xprv9s21ZrQH143K25QhxbucbDDuQ4naNntJRi4KUfWT7xo4EKsHt2QJDu7KXp1A3u7Bi1j8ph3EGsZ9Xvz9dGuVrtHHs7pXeTzjuxBrCmmhgC6",
+                        0x80000000)
+                    .Add("xpub68NZiKmJWnxxS6aaHmn81bvJeTESw724CRDs6HbuccFQN9Ku14VQrADWgqbhhTHBaohPX4CjNLf9fq9MYo6oDaPPLPxSb7gwQN3ih19Zm4Y",
+                        "xprv9uPDJpEQgRQfDcW7BkF7eTya6RPxXeJCqCJGHuCJ4GiRVLzkTXBAJMu2qaMWPrS7AANYqdq6vcBcBUdJCVVFceUvJFjaPdGZ2y9WACViL4L",
+                        1)*/
+            
+            
+            const string seed = "4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be";
+            const string masterPrivate = "00ddb80b067e0d4993197fe10f2657a844a384589847602d56f0c629c81aae32";
+            const string masterPublic = "03683af1ba5743bdfc798cf814efeeab2735ec52d95eced528e692b8e34c4e5669";
+            const string masterChainCode = "01d28a3e53cffa419ec122c968b3259e16b65076495494d97cae10bbfec3c36f";
+            const string expectedPath = "m/0'";
+            const string expectedChainCode = "e5fea12a97b927fc9dc3d2cb0d1ea1cf50aa5a1fdc1f933e8906bb38df3377bd";
+            const string expectedKey = "491f7a2eebc7b57028e0d3faa0acda02e75c33b03c48fb288c41e2ea44e1daef";
+            const string expectedPublicKey = "026557fdda1d5d43d79611f784780471f086d58e8126b8c40acb82272a7712e7f2";
+            
+            var (key, chainCode) = TestMasterKeyFromSeed(seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            
+            Assert.Equal(masterPrivate, Hex.Convert(key));
+            Assert.Equal(masterChainCode, Hex.Convert(chainCode));
+            Assert.Equal(masterPublic, Hex.Convert(TestGetPublicKey(key, HDStandardKind.Slip10, ECKind.Secp256k1)));
+            
+            var testDerivePath = TestDerivePath(expectedPath, Vector2Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedKey, Hex.Convert(testDerivePath.Key));
+            Assert.Equal(expectedChainCode, Hex.Convert(testDerivePath.ChainCode));
+            
+            
+            var testPublicKey = TestGetPublicKey(expectedPath, Vector2Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
+
+
+        }
         #endregion
 
         #region nist256p1
@@ -798,6 +837,9 @@ namespace Netezos.Tests.Keys
 
 
         }
+
+
+        
         //TODO TestVector3
         //TODO TestVector4
     }
