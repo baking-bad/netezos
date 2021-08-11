@@ -14,37 +14,33 @@ namespace Netezos.Keys
 
         public override byte[] GenerateMasterKey(Curve curve, byte[] seed)
         {
-            using (var hmacSha512 = new HMACSHA512(curve.SeedKey))
+            using var hmacSha512 = new HMACSHA512(curve.SeedKey);
+            while (true)
             {
-                return hmacSha512.ComputeHash(seed);
+                var l = hmacSha512.ComputeHash(seed);
+                if (curve.Kind == ECKind.Ed25519)
+                {
+                    return l;
+                }
+                
+                var N = curve.Kind switch
+                {
+                    ECKind.Secp256k1 => SecNamedCurves.GetByName("secp256k1").N,
+                    ECKind.NistP256 => SecNamedCurves.GetByName("secp256r1").N,
+                    _ => throw new InvalidEnumArgumentException()
+                };
+                
+                var ll = l.GetBytes(0, 32);
+                var parse256LL = new BigInteger(1, ll);
+
+                if (parse256LL.CompareTo(N) < 0 && !Equals(parse256LL, BigInteger.Zero)) return l;
+                
+                seed = l;
             }
         }
 
         public override byte[] GetChildPrivateKey(Curve curve, byte[] extKey, uint index)
         {
-            /*if (curve.Kind == ECKind.Ed25519)
-            {
-                var buffer = new BigEndianBuffer();
-
-                buffer.Write(new byte[] {0});
-                buffer.Write(extKey.GetBytes(0, 32));
-                buffer.WriteUInt(index);
-
-                while (true)
-                {
-                    using var hmacSha512 = new HMACSHA512(extKey.GetBytes(32, 32));
-                
-                    var i = hmacSha512.ComputeHash(buffer.ToArray());      
-                    
-                    if (curve.Kind == ECKind.Ed25519)
-                        return i;
-
-                    if ()
-                }
-                
-                return i;
-            }*/
-
             var ccChild = new byte[4];
 
             var cc = extKey.GetBytes(32, 32);
@@ -65,30 +61,21 @@ namespace Netezos.Keys
                 return l;
             }
 
-            var ll = l.GetBytes(0, 32);
-            var lr = l.GetBytes(32, 32);
 
-            ccChild = lr;
-
-            var parse256LL = new BigInteger(1, ll);
-
-            //TODO data here is vch NBitcoin
-            var kPar = new BigInteger(1, extKey.GetBytes(0, 32));
-
-            var keyBytes = new byte[4];
-            if (curve.Kind == ECKind.Ed25519)
+            while (true)
             {
-                var key = parse256LL.Add(kPar);
-                if (key == BigInteger.Zero)
-                    throw new InvalidOperationException(
-                        "You won the big prize ! this has probability lower than 1 in 2^127. Take a screenshot, and roll the dice again.");
+                var ll = l.GetBytes(0, 32);
+                var lr = l.GetBytes(32, 32);
 
-                keyBytes = key.ToByteArrayUnsigned();
-                if (keyBytes.Length < 32)
-                    keyBytes = new byte[32 - keyBytes.Length].Concat(keyBytes).ToArray();
-            }
-            else
-            {
+                ccChild = lr;
+
+                var parse256LL = new BigInteger(1, ll);
+
+                //TODO data here is vch NBitcoin
+                var kPar = new BigInteger(1, extKey.GetBytes(0, 32));
+
+                var keyBytes = new byte[4];
+
                 var N = curve.Kind switch
                 {
                     ECKind.Secp256k1 => SecNamedCurves.GetByName("secp256k1").N,
@@ -96,27 +83,27 @@ namespace Netezos.Keys
                     _ => throw new InvalidEnumArgumentException()
                 };
 
-                if (parse256LL.CompareTo(N) >= 0)
-                    throw new InvalidOperationException(
-                        "You won a prize ! this should happen very rarely. Take a screenshot, and roll the dice again.");
                 var key = parse256LL.Add(kPar).Mod(N);
-                if (key == BigInteger.Zero)
-                    throw new InvalidOperationException(
-                        "You won the big prize ! this has probability lower than 1 in 2^127. Take a screenshot, and roll the dice again.");
+
+                if (parse256LL.CompareTo(N) >= 0 || key == BigInteger.Zero)
+                {
+                    l = BIP32Hash(cc, index, 1, lr);
+                    continue;
+                }
 
                 keyBytes = key.ToByteArrayUnsigned();
                 if (keyBytes.Length < 32)
                     keyBytes = new byte[32 - keyBytes.Length].Concat(keyBytes).ToArray();
-            }
 
-            return keyBytes.Concat(ccChild);
+                return keyBytes.Concat(ccChild);
+            }
         }
 
         public override byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index)
         {
             var buffer = new BigEndianBuffer();
 
-            buffer.Write(new byte[] {0});
+            buffer.Write(new byte[] { 0 });
             buffer.Write(extKey.GetBytes(0, 32));
             buffer.WriteUInt(index);
 
@@ -142,19 +129,17 @@ namespace Netezos.Keys
         public static byte[] BIP32Hash(byte[] chainCode, uint nChild, byte header, byte[] data)
         {
             byte[] num = new byte[4];
-            num[0] = (byte) ((nChild >> 24) & 0xFF);
-            num[1] = (byte) ((nChild >> 16) & 0xFF);
-            num[2] = (byte) ((nChild >> 8) & 0xFF);
-            num[3] = (byte) ((nChild >> 0) & 0xFF);
+            num[0] = (byte)((nChild >> 24) & 0xFF);
+            num[1] = (byte)((nChild >> 16) & 0xFF);
+            num[2] = (byte)((nChild >> 8) & 0xFF);
+            num[3] = (byte)((nChild >> 0) & 0xFF);
 
-            using (var hmacSha512 = new HMACSHA512(chainCode))
-            {
-                var i = hmacSha512.ComputeHash(new byte[] {header}
-                    .Concat(data)
-                    .Concat(num).ToArray());
+            using var hmacSha512 = new HMACSHA512(chainCode);
+            var i = hmacSha512.ComputeHash(new byte[] { header }
+                .Concat(data)
+                .Concat(num).ToArray());
 
-                return i;
-            }
+            return i;
         }
     }
 }

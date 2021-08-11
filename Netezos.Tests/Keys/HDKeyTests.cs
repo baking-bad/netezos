@@ -768,10 +768,12 @@ namespace Netezos.Tests.Keys
         public void SeedRetryTest()
         {
             //TODO TBD
+            const string seed = "a7305bc8df8d0951f0cb224c0e95d7707cbdf2c6ce7e8d481fec69c7ff5e9446";
             const string masterChainCode = "7762f9729fed06121fd13f326884c82f59aa95c57ac492ce8c9654e60efd130c";
             const string masterPrivate = "3b8c18469a4634517d6d0b65448f8e6c62091b45540a1743c5846be55d47d88f";
             const string masterPublic = "0383619fadcde31063d8c5cb00dbfe1713f3e6fa169d8541a798752a1c1ca0cb20";
-            var (key, chainCode) = TestMasterKeyFromSeed(Vector2Seed, HDStandardKind.Slip10, ECKind.NistP256);
+            var (key, chainCode) = TestMasterKeyFromSeed(seed, HDStandardKind.Slip10, ECKind.NistP256);
+            
 
             Assert.Equal(masterPrivate, Hex.Convert(key));
             Assert.Equal(masterChainCode, Hex.Convert(chainCode));
