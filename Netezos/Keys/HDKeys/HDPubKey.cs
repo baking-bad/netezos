@@ -29,6 +29,10 @@ namespace Netezos.Keys
         readonly Curve Curve;
         readonly HDStandard Hd;
         readonly ISecretStore Store;
+        
+        private const int ChainCodeLength = 32;
+        internal readonly byte[] vchChainCode = new byte[ChainCodeLength];
+
 
         internal HDPubKey(byte[] bytes, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
         {
@@ -45,8 +49,8 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                //TODO: Hd.GetChildPublicKey(Curve, Store.Data, ...
-                throw new NotImplementedException();
+                var bytes = Hd.GetChildPublicKey(Curve, Store.Data, vchChainCode, index);
+                return new HDPubKey(bytes, Hd.Kind, Curve.Kind);
             }
         }
 

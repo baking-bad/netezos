@@ -858,16 +858,20 @@ namespace Netezos.Tests.Keys
         {
             //The same for Temple
             const string mnemonic = "find load relief loop surround tired document coin seven filter draft place music jewel match shoe hope duty thumb cereal lyrics embody talent lumber";
+            const string mnemonic1 =
+                "guide,dove,reform,mesh,grant,gold,process,fiscal,popular,odor,decorate,bright,  clock,human,  enough,inquiry,upper,hire,foster,law,canal,jeans,pact,push";
             const string address = "tz1dP3E6Pa7Yp8wTeN2CPKfDr5ueLQwiDDTy";
             const string secondAddress = "tz1NWFkgmi2aQRkkjcs1yVY18U1xRrPyWiWA";
 
             var key = HDKey.FromMnemonic(Mnemonic.Parse(mnemonic)).Derive(HDPath.Parse("m/44'/1729'/0'/0'"));
+            var key1 = HDKey.FromMnemonic(Mnemonic.Parse(mnemonic1)).Derive(HDPath.Parse("m/44'/1729'/0'/0'"));
             Assert.Equal(address, key.PubKey.Address);
+            Assert.Equal("tz1R8HydaqYsfBE6NhzqAddpYepEuhSh6WBB", key1.PubKey.Address);
 
             var secondKey = HDKey.FromMnemonic(Mnemonic.Parse(mnemonic)).Derive(HDPath.Parse("m/44'/1729'/1'/0'"));
+            var secondKey1 = HDKey.FromMnemonic(Mnemonic.Parse(mnemonic1)).Derive(HDPath.Parse("m/44'/1729'/1'/0'"));
             Assert.Equal(secondAddress, secondKey.PubKey.Address);
-
-
+            Assert.Equal("tz1h2PMMKPJq2hg55RJ7XDvR3bBFLEhEq1Vx", secondKey1.PubKey.Address);
         }
 
 
