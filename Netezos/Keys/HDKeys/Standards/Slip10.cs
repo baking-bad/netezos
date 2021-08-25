@@ -99,20 +99,43 @@ namespace Netezos.Keys
             }
         }
 
-        public override byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index)
+        public override byte[] GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index)
         {
-            var buffer = new BigEndianBuffer();
+            var l = new byte[32];
+            var r = new byte[32];
+            var lr = BIP32Hash(chainCode, index, pubKey[0], pubKey.Skip(1).ToArray());
+            Array.Copy(lr, l, 32);
+            Array.Copy(lr, 32, r, 0, 32);
 
-            buffer.Write(new byte[] { 0 });
-            buffer.Write(extKey.GetBytes(0, 32));
-            buffer.WriteUInt(index);
-
-            using (var hmacSha512 = new HMACSHA512(extKey.GetBytes(32, 32)))
+            return curve.GetPublicKey(l);
+            
+            if (curve.Kind == ECKind.Ed25519)
             {
-                var i = hmacSha512.ComputeHash(buffer.ToArray());
-
-                return curve.GetPublicKey(i);
+                return l;
             }
+            
+            var N = curve.Kind switch
+            {
+                ECKind.Secp256k1 => SecNamedCurves.GetByName("secp256k1").N,
+                ECKind.NistP256 => SecNamedCurves.GetByName("secp256r1").N,
+                _ => throw new InvalidEnumArgumentException()
+            };
+
+            return curve.GetPublicKey(l);
+            
+            /*
+            BigInteger parse256LL = new BigInteger(1, l);
+
+            if (parse256LL.CompareTo(N) >= 0)
+                throw new InvalidOperationException("You won a prize ! this should happen very rarely. Take a screenshot, and roll the dice again.");
+
+            var q = ECKey.CURVE.G.Multiply(parse256LL).Add(ECKey.GetPublicKeyParameters().Q);
+            if (q.IsInfinity)
+                throw new InvalidOperationException("You won the big prize ! this would happen only 1 in 2^127. Take a screenshot, and roll the dice again.");
+
+            q = q.Normalize();
+            var p = new NBitcoin.BouncyCastle.Math.EC.FpPoint(ECKey.CURVE.Curve, q.XCoord, q.YCoord, true);
+            return new PubKey(p.GetEncoded());*/
         }
 
         public override byte[] GetChildPublicKey(Curve curve, byte[] privateKey)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Netezos.Keys
 {
@@ -16,12 +15,12 @@ namespace Netezos.Keys
 
         public HDPath()
         {
-            _Indexes = new uint[0];
+            _Indexes = Array.Empty<uint>();
         }
         
         public HDPath(string path)
         {
-	        int count = 0;
+	        var count = 0;
 	        _Indexes =
 		        path
 			        .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
@@ -29,16 +28,16 @@ namespace Netezos.Keys
 			        .Select(p =>
 			        {
 				        if (!TryParseCore(p, out var i))
-					        throw new FormatException("HDPath uncorrectly formatted");
+					        throw new FormatException("HDPath incorrectly formatted");
 				        count++;
 				        if (count > 255)
-					        throw new FormatException("HDPath uncorrectly formatted");
+					        throw new FormatException("HDPath incorrectly formatted");
 				        return i;
 			        })
 			        .ToArray();
         }
         
-        public HDPath(uint[] indexes)
+        public HDPath(params uint[] indexes)
         {
 	        if (indexes.Length > 255)
 		        throw new ArgumentException(paramName: nameof(indexes), message: "An HDPath should have at most 255 indices");
@@ -47,13 +46,19 @@ namespace Netezos.Keys
 
         public HDPath Derive(HDPath path)
         {
-            //TODO: appended the path and return the new path
-            throw new NotImplementedException();
+	        return new HDPath(
+		        _Indexes
+			        .Concat(path._Indexes)
+			        .ToArray());
         }
 
         public HDPath Derive(int index, bool hardened = false)
         {
-            throw new NotImplementedException();
+	        if (index < 0)
+		        throw new ArgumentOutOfRangeException(nameof(index), "the index can't be negative");
+	        var realIndex = (uint)index;
+	        realIndex = hardened ? realIndex | 0x80000000u : realIndex;
+	        return Derive(new HDPath(realIndex));
         }
         
         /// <summary>
@@ -69,10 +74,10 @@ namespace Netezos.Keys
 	        }
         }
 
-        string? _Path;
+        string _Path;
         public override string ToString()
         {
-	        return _Path ?? (_Path = string.Join("/", _Indexes.Select(ToString).ToArray()));
+	        return _Path ??= string.Join("/", _Indexes.Select(ToString).ToArray());
         }
         
         private static string ToString(uint i)
@@ -124,7 +129,7 @@ namespace Netezos.Keys
 				index = 0;
 				return false;
 			}
-			bool hardened = i[i.Length - 1] == '\'' || i[i.Length - 1] == 'h';
+			var hardened = i[i.Length - 1] == '\'' || i[i.Length - 1] == 'h';
 			var nonhardened = hardened ? i.Substring(0, i.Length - 1) : i;
 			if (!uint.TryParse(nonhardened, out index))
 				return false;
@@ -145,21 +150,6 @@ namespace Netezos.Keys
 				return true;
 			}
 		}
-        
-        private static bool IsValidPath(string path)
-        {
-            var regex = new Regex("^m(\\/[0-9]+')+$");
-
-            if (!regex.IsMatch(path))
-                return false;
-
-            var valid = !(path.Split('/')
-                .Slice(1)
-                .Select(a => a.Replace("'", ""))
-                .Any(a => !Int32.TryParse(a, out _)));
-
-            return valid;
-        }
         
         #endregion
     }

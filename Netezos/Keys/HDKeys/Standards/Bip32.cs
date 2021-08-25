@@ -31,7 +31,7 @@ In case IL is 0 or ≥n, the master key is invalid.*/
             throw new NotImplementedException();
         }
 
-        public override byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index)
+        public override byte[] GetChildPublicKey(Curve curve, byte[] extPubKey, byte[] chainCode, uint index)
         {
             throw new NotImplementedException();
         }
