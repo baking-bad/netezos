@@ -529,16 +529,6 @@ namespace Netezos.Tests.Keys
         [Fact]
         public void TestVector3()
         {
-            /*TestVector test3 =
-                new TestVector("4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be")
-                    .Add("xpub661MyMwAqRbcEZVB4dScxMAdx6d4nFc9nvyvH3v4gJL378CSRZiYmhRoP7mBy6gSPSCYk6SzXPTf3ND1cZAceL7SfJ1Z3GC8vBgp2epUt13",
-                        "xprv9s21ZrQH143K25QhxbucbDDuQ4naNntJRi4KUfWT7xo4EKsHt2QJDu7KXp1A3u7Bi1j8ph3EGsZ9Xvz9dGuVrtHHs7pXeTzjuxBrCmmhgC6",
-                        0x80000000)
-                    .Add("xpub68NZiKmJWnxxS6aaHmn81bvJeTESw724CRDs6HbuccFQN9Ku14VQrADWgqbhhTHBaohPX4CjNLf9fq9MYo6oDaPPLPxSb7gwQN3ih19Zm4Y",
-                        "xprv9uPDJpEQgRQfDcW7BkF7eTya6RPxXeJCqCJGHuCJ4GiRVLzkTXBAJMu2qaMWPrS7AANYqdq6vcBcBUdJCVVFceUvJFjaPdGZ2y9WACViL4L",
-                        1)*/
-            
-            
             const string seed = "4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be";
             const string masterPrivate = "00ddb80b067e0d4993197fe10f2657a844a384589847602d56f0c629c81aae32";
             const string masterPublic = "03683af1ba5743bdfc798cf814efeeab2735ec52d95eced528e692b8e34c4e5669";
@@ -554,15 +544,57 @@ namespace Netezos.Tests.Keys
             Assert.Equal(masterChainCode, Hex.Convert(chainCode));
             Assert.Equal(masterPublic, Hex.Convert(TestGetPublicKey(key, HDStandardKind.Slip10, ECKind.Secp256k1)));
             
-            var testDerivePath = TestDerivePath(expectedPath, Vector2Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            var testDerivePath = TestDerivePath(expectedPath, seed, HDStandardKind.Slip10, ECKind.Secp256k1);
             Assert.Equal(expectedKey, Hex.Convert(testDerivePath.Key));
             Assert.Equal(expectedChainCode, Hex.Convert(testDerivePath.ChainCode));
             
             
-            var testPublicKey = TestGetPublicKey(expectedPath, Vector2Seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            var testPublicKey = TestGetPublicKey(expectedPath, seed, HDStandardKind.Slip10, ECKind.Secp256k1);
             Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
-
-
+        }
+        
+        [Fact]
+        public void TestVector4()
+        {
+            const string seed = "3ddd5602285899a946114506157c7997e5444528f3003f6134712147db19b678";
+            const string masterPrivate = "12c0d59c7aa3a10973dbd3f478b65f2516627e3fe61e00c345be9a477ad2e215";
+            const string masterPublic = "026f6fedc9240f61daa9c7144b682a430a3a1366576f840bf2d070101fcbc9a02d";
+            const string masterChainCode = "d0c8a1f6edf2500798c3e0b54f1b56e45f6d03e6076abd36e5e2f54101e44ce6";
+            const string expectedPath = "m/0'";
+            const string expectedChainCode = "cdc0f06456a14876c898790e0b3b1a41c531170aec69da44ff7b7265bfe7743b";
+            const string expectedKey = "00d948e9261e41362a688b916f297121ba6bfb2274a3575ac0e456551dfd7f7e";
+            const string expectedPublicKey = "039382d2b6003446792d2917f7ac4b3edf079a1a94dd4eb010dc25109dda680a9d";
+            
+            var (key, chainCode) = TestMasterKeyFromSeed(seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            
+            Assert.Equal(masterPrivate, Hex.Convert(key));
+            Assert.Equal(masterChainCode, Hex.Convert(chainCode));
+            Assert.Equal(masterPublic, Hex.Convert(TestGetPublicKey(key, HDStandardKind.Slip10, ECKind.Secp256k1)));
+            
+            var testDerivePath = TestDerivePath(expectedPath, seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedKey, Hex.Convert(testDerivePath.Key));
+            Assert.Equal(expectedChainCode, Hex.Convert(testDerivePath.ChainCode));
+            
+            
+            var testPublicKey = TestGetPublicKey(expectedPath, seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
+        }
+        
+        [Fact]
+        public void TestVector4Test3()
+        {
+            const string seed = "3ddd5602285899a946114506157c7997e5444528f3003f6134712147db19b678";
+            const string expectedPath = "m/0'/1'";
+            const string expectedChainCode = "a48ee6674c5264a237703fd383bccd9fad4d9378ac98ab05e6e7029b06360c0d";
+            const string expectedKey = "3a2086edd7d9df86c3487a5905a1712a9aa664bce8cc268141e07549eaa8661d";
+            const string expectedPublicKey = "032edaf9e591ee27f3c69c36221e3c54c38088ef34e93fbb9bb2d4d9b92364cbbd";
+            
+            var testDerivePath = TestDerivePath(expectedPath, seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedKey, Hex.Convert(testDerivePath.Key));
+            Assert.Equal(expectedChainCode, Hex.Convert(testDerivePath.ChainCode));
+            
+            var testPublicKey = TestGetPublicKey(expectedPath, seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
         }
         #endregion
 
