@@ -59,8 +59,9 @@ namespace Netezos.Tests.Keys
             ECKind ecKind = ECKind.Ed25519)
         {
             var key = HDKey.FromHex(seed, hdStandard, ecKind);
-
-            var derivePath = key.Derive(HDPath.Parse(path)).Key;
+            var pubKey = HDPubKey.FromBytes(key.PubKey.GetBytes(), key.GetBytes().GetBytes(32,32), hdStandard, ecKind);
+            
+            var derivePath = pubKey.Derive(HDPath.Parse(path));
 
             return derivePath.PubKey.GetBytes();
         }
@@ -104,6 +105,10 @@ namespace Netezos.Tests.Keys
             Assert.Equal(expectedKey, Hex.Convert(testDerivePath.Key));
             Assert.Equal(expectedChainCode, Hex.Convert(testDerivePath.ChainCode));
 
+            var key = HDKey.FromHex(Vector1Seed, HDStandardKind.Slip10, ECKind.Ed25519);
+            var pubKey = HDPubKey.FromBytes(key.PubKey.GetBytes(), key.GetBytes().GetBytes(32,32), HDStandardKind.Slip10, ECKind.Ed25519);
+            
+            var derivePub = pubKey.Derive(HDPath.Parse(expectedPath));
 
             var testPublicKey = TestGetPublicKey(expectedPath, Vector1Seed);
             Assert.Equal(expectedPublicKey, Hex.Convert(testPublicKey));
