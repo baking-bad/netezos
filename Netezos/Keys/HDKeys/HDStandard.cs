@@ -10,8 +10,6 @@ namespace Netezos.Keys
 
         public abstract byte[] GetChildPrivateKey(Curve curve, byte[] extKey, uint index);
 
-        // public abstract byte[] GetChildPublicKey(Curve curve, byte[] extKey, uint index);
-
         #region static
         public static HDStandard FromKind(HDStandardKind kind)
         {
@@ -26,7 +24,7 @@ namespace Netezos.Keys
         #endregion
 
         public abstract byte[] GetChildPublicKey(Curve curve, byte[] privateKey);
-        public abstract byte[] GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index);
+        public abstract (byte[], byte[]) GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index);
     }
 
     public enum HDStandardKind

@@ -99,7 +99,7 @@ namespace Netezos.Keys
             }
         }
 
-        public override byte[] GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index)
+        public override (byte[], byte[]) GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index)
         {
             var l = new byte[32];
             var r = new byte[32];
@@ -107,11 +107,11 @@ namespace Netezos.Keys
             Array.Copy(lr, l, 32);
             Array.Copy(lr, 32, r, 0, 32);
 
-            return curve.GetPublicKey(l);
+            return (curve.GetPublicKey(l), r);
             
             if (curve.Kind == ECKind.Ed25519)
             {
-                return l;
+                return (l, r);
             }
             
             var N = curve.Kind switch
@@ -121,7 +121,7 @@ namespace Netezos.Keys
                 _ => throw new InvalidEnumArgumentException()
             };
 
-            return curve.GetPublicKey(l);
+            return (curve.GetPublicKey(l), r);
             
             /*
             BigInteger parse256LL = new BigInteger(1, l);

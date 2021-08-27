@@ -91,15 +91,12 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-
-                var privateKey = hardened
-                    ? Hd.GetChildPrivateKey(Curve, Store.Data, index)
-                    : Hd.GetChildPrivateKey(Curve, Store.Data, index);
+                var privateKey = Hd.GetChildPrivateKey(Curve, Store.Data, index);
                 return new HDKey(privateKey, Hd.Kind, Curve.Kind);
             }
         }
 
-        public HDKey Derive(HDPath path)
+        public HDKey Derive(HDPath path) 
         {
             using (Store.Unlock())
             {
