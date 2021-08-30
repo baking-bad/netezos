@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Dynamic.Json;
 using Netezos.Encoding;
 using Netezos.Keys;
@@ -55,15 +56,28 @@ namespace Netezos.Tests.Keys
             return (derivePath.GetBytes(0, 32), derivePath.GetBytes(32, 32));
         }
 
-        private byte[] TestGetPublicKey(string path, string seed,HDStandardKind hdStandard = HDStandardKind.Slip10,
+        private byte[] TestGetPublicKey(string path, string seed, HDStandardKind hdStandard = HDStandardKind.Slip10,
             ECKind ecKind = ECKind.Ed25519)
         {
             var key = HDKey.FromHex(seed, hdStandard, ecKind);
             var pubKey = HDPubKey.FromBytes(key.PubKey.GetBytes(), key.GetBytes().GetBytes(32,32), hdStandard, ecKind);
-            
-            var derivePath = pubKey.Derive(HDPath.Parse(path));
 
-            return derivePath.PubKey.GetBytes();
+            foreach (var index in HDPath.Parse(path).Indexes)
+            {
+                var keyNew = key.Derive(index);
+                var pubKeyNew = keyNew.HdPubKey;
+
+                if ((index & 0x80000000) == 0)
+                {
+                    var derivedPubKey = pubKey.Derive(index);
+                    Assert.Equal(derivedPubKey, pubKeyNew);
+                }
+
+                key = keyNew;
+                pubKey = pubKeyNew;
+            }
+
+            return pubKey.GetBytes();
         }
 
         private byte[] TestGetPublicKey(byte[] privateKey, HDStandardKind hdStandard = HDStandardKind.Slip10,
@@ -84,6 +98,19 @@ namespace Netezos.Tests.Keys
             var keyPath = new HDPath(new uint[] { 0x8000002Cu, 1u });
             var a = keyPath.ToString();
             Assert.Equal("44'/1", keyPath.ToString());
+        }
+
+        [Fact]
+        public void PubTest()
+        {
+            var cc = "a48ee6674c5264a237703fd383bccd9fad4d9378ac98ab05e6e7029b06360c0d";
+            uint index = 0;
+            var pubKey = "032edaf9e591ee27f3c69c36221e3c54c38088ef34e93fbb9bb2d4d9b92364cbbd";
+
+            var key = HDPubKey.FromBytes(Hex.Parse(pubKey), Hex.Parse(cc), HDStandardKind.Slip10, ECKind.Secp256k1);
+            var child = key.Derive(index);
+
+            var a = Hex.Convert(child.GetBytes());
         }
 
         #region Ed25519
@@ -804,7 +831,7 @@ namespace Netezos.Tests.Keys
 
             Assert.Equal(masterPrivate, Hex.Convert(key));
             Assert.Equal(masterChainCode, Hex.Convert(chainCode));
-            Assert.Equal(masterPublic, Hex.Convert(TestGetPublicKey(key, HDStandardKind.Slip10, ECKind.NistP256)));
+            Assert.Equal(masterPublic, Hex.Convert(TestGetPublicKey(key.Concat(chainCode), HDStandardKind.Slip10, ECKind.NistP256)));
         }
         
         [Fact]

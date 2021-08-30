@@ -35,13 +35,16 @@ namespace Netezos.Keys
                 {
                     using (Store.Unlock())
                     {
-                        _PubKey = new PubKey(Curve.GetPublicKey(Store.Data), Curve.Kind, true);
+                        _PubKey = new PubKey(Curve.GetPublicKey(Store.Data.GetBytes(0,32)), Curve.Kind, true);
+                        HdPubKey = new HDPubKey(Curve.GetPublicKey(Store.Data.GetBytes(0,32)), Store.Data.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
                     }
                 }
 
                 return _PubKey;
             }
         }
+
+        public HDPubKey HdPubKey;
         PubKey _PubKey;
 
         readonly Curve Curve;
@@ -59,6 +62,7 @@ namespace Netezos.Keys
             Hd = HDStandard.FromKind(hdStandard);
             var bytes = RNG.GetBytes(64);
             Store = new PlainSecretStore(bytes);
+            HdPubKey = new HDPubKey(Curve.GetPublicKey(bytes.GetBytes(0, 32)), Store.Data.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
             bytes.Flush();
         }
 
@@ -83,6 +87,8 @@ namespace Netezos.Keys
                     flush),
                 _ => throw new InvalidEnumArgumentException()
             };
+            
+            HdPubKey = new HDPubKey(Curve.GetPublicKey(bytes.GetBytes(0, 32)), Store.Data.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
             
             if (flush) bytes.Flush();
         }

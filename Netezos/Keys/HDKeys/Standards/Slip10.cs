@@ -2,9 +2,13 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
+using Netezos.Encoding;
 using Netezos.Keys.HDKeys;
 using Org.BouncyCastle.Asn1.Sec;
+using Org.BouncyCastle.Crypto.EC;
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Math.EC;
 
 namespace Netezos.Keys
 {
@@ -101,41 +105,53 @@ namespace Netezos.Keys
 
         public override (byte[], byte[]) GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index)
         {
+            if (curve.Kind == ECKind.Ed25519)
+                throw new NotSupportedException("Ed25519 public key derivation not supported by slip-10");
+            if (pubKey.Length != 33)
+                throw new NotSupportedException("Invalid public key size");
+            if ((index >> 31) != 0)
+                throw new InvalidOperationException("A public key can't derivate an hardened child");
+
             var l = new byte[32];
             var r = new byte[32];
             var lr = BIP32Hash(chainCode, index, pubKey[0], pubKey.Skip(1).ToArray());
             Array.Copy(lr, l, 32);
             Array.Copy(lr, 32, r, 0, 32);
 
-            return (curve.GetPublicKey(l), r);
-            
-            if (curve.Kind == ECKind.Ed25519)
-            {
-                return (l, r);
-            }
-            
             var N = curve.Kind switch
             {
                 ECKind.Secp256k1 => SecNamedCurves.GetByName("secp256k1").N,
                 ECKind.NistP256 => SecNamedCurves.GetByName("secp256r1").N,
                 _ => throw new InvalidEnumArgumentException()
             };
-
-            return (curve.GetPublicKey(l), r);
             
-            /*
+            var c = curve.Kind switch
+            {
+                ECKind.Secp256k1 => SecNamedCurves.GetByName("secp256k1"),
+                ECKind.NistP256 => SecNamedCurves.GetByName("secp256r1"),
+                _ => throw new InvalidEnumArgumentException()
+            };
+            
+            var parameters = new ECDomainParameters(c.Curve, c.G, c.N, c.H, c.GetSeed());
+            //TODO add while true, not sure about kee
+            var kee = new ECPublicKeyParameters("EC", c.Curve.DecodePoint(pubKey),
+                parameters);
             BigInteger parse256LL = new BigInteger(1, l);
-
+            
             if (parse256LL.CompareTo(N) >= 0)
                 throw new InvalidOperationException("You won a prize ! this should happen very rarely. Take a screenshot, and roll the dice again.");
-
-            var q = ECKey.CURVE.G.Multiply(parse256LL).Add(ECKey.GetPublicKeyParameters().Q);
+            
+            var q = kee.Parameters.G.Multiply(parse256LL).Add(kee.Q);
+            
             if (q.IsInfinity)
                 throw new InvalidOperationException("You won the big prize ! this would happen only 1 in 2^127. Take a screenshot, and roll the dice again.");
 
             q = q.Normalize();
-            var p = new NBitcoin.BouncyCastle.Math.EC.FpPoint(ECKey.CURVE.Curve, q.XCoord, q.YCoord, true);
-            return new PubKey(p.GetEncoded());*/
+            var a = new FpPoint(parameters.Curve, q.XCoord, q.YCoord, true);
+            var b = a.GetEncoded();
+            var v = Hex.Convert(b);
+            return (b, r);
+
         }
 
         public override byte[] GetChildPublicKey(Curve curve, byte[] privateKey)
