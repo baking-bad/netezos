@@ -73,6 +73,12 @@ namespace Netezos.Keys
             }
         }
 
+        public string GetChainCodeHex()
+        {
+            return Hex.Convert(vchChainCode);
+        }
+        
+
         #region static
         public static HDPubKey FromBytes(byte[] bytes, byte[] chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
             => new HDPubKey(bytes, chainCode, hdStandard, ecKind);

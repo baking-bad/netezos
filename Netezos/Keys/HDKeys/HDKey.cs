@@ -68,9 +68,8 @@ namespace Netezos.Keys
 
         public HDKey(byte[] bytes, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
         {
-            //TODO Turn off after tests (test vector only 16 bytes long)
-            // if (bytes?.Length != 64)
-            //     throw new ArgumentException("Invalid extended key length", nameof(bytes));
+            if (bytes?.Length != 64)
+                throw new ArgumentException("Invalid extended key length", nameof(bytes));
 
             Curve = Curve.FromKind(ecKind);
             Hd = HDStandard.FromKind(hdStandard);
@@ -88,7 +87,7 @@ namespace Netezos.Keys
                 _ => throw new InvalidEnumArgumentException()
             };
             
-            HdPubKey = new HDPubKey(Curve.GetPublicKey(bytes.GetBytes(0, 32)), Store.Data.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
+            HdPubKey = new HDPubKey(Curve.GetPublicKey(bytes.GetBytes(0, 32)), bytes.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
             
             if (flush) bytes.Flush();
         }
