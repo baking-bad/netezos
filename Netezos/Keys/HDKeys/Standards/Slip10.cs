@@ -136,21 +136,29 @@ namespace Netezos.Keys
             //TODO add while true, not sure about kee
             var kee = new ECPublicKeyParameters("EC", c.Curve.DecodePoint(pubKey),
                 parameters);
-            BigInteger parse256LL = new BigInteger(1, l);
-            
-            if (parse256LL.CompareTo(N) >= 0)
-                throw new InvalidOperationException("You won a prize ! this should happen very rarely. Take a screenshot, and roll the dice again.");
-            
-            var q = kee.Parameters.G.Multiply(parse256LL).Add(kee.Q);
-            
-            if (q.IsInfinity)
-                throw new InvalidOperationException("You won the big prize ! this would happen only 1 in 2^127. Take a screenshot, and roll the dice again.");
 
-            q = q.Normalize();
-            var a = new FpPoint(parameters.Curve, q.XCoord, q.YCoord, true);
-            var b = a.GetEncoded();
-            var v = Hex.Convert(b);
-            return (b, r);
+            while (true)
+            {
+                Array.Copy(lr, l, 32);
+                Array.Copy(lr, 32, r, 0, 32);
+                
+                BigInteger parse256LL = new BigInteger(1, l);
+            
+                var q = kee.Parameters.G.Multiply(parse256LL).Add(kee.Q);
+
+                if (parse256LL.CompareTo(N) >= 0 || q.IsInfinity)
+                {
+                    lr = BIP32Hash(chainCode, index, 1, r);
+                    continue;
+                }
+                    
+                q = q.Normalize();
+                var a = new FpPoint(parameters.Curve, q.XCoord, q.YCoord, true);
+                var b = a.GetEncoded();
+                var v = Hex.Convert(b);
+                return (b, r);
+            }
+
 
         }
 
