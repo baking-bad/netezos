@@ -2,13 +2,10 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
-using Netezos.Encoding;
 using Netezos.Keys.HDKeys;
 using Org.BouncyCastle.Asn1.Sec;
-using Org.BouncyCastle.Crypto.EC;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Math.EC;
 
 namespace Netezos.Keys
 {
@@ -16,7 +13,7 @@ namespace Netezos.Keys
     {
         public override HDStandardKind Kind => HDStandardKind.Slip10;
 
-        public override byte[] GenerateMasterKey(Curve curve, byte[] seed)
+        public override (byte[], byte[]) GenerateMasterKey(Curve curve, byte[] seed)
         {
             using var hmacSha512 = new HMACSHA512(curve.SeedKey);
             while (true)
@@ -24,7 +21,7 @@ namespace Netezos.Keys
                 var l = hmacSha512.ComputeHash(seed);
                 if (curve.Kind == ECKind.Ed25519)
                 {
-                    return l;
+                    return (l.GetBytes(0, 32), l.GetBytes(32,32));
                 }
                 
                 var N = curve.Kind switch
@@ -37,48 +34,41 @@ namespace Netezos.Keys
                 var ll = l.GetBytes(0, 32);
                 var parse256LL = new BigInteger(1, ll);
 
-                if (parse256LL.CompareTo(N) < 0 && !Equals(parse256LL, BigInteger.Zero)) return l;
+                if (parse256LL.CompareTo(N) < 0 && !Equals(parse256LL, BigInteger.Zero))
+                    return (l.GetBytes(0, 32), l.GetBytes(32,32));
                 
                 seed = l;
             }
         }
 
-        public override byte[] GetChildPrivateKey(Curve curve, byte[] extKey, uint index)
+        public override (byte[], byte[]) GetChildPrivateKey(Curve curve, byte[] privateKey, byte[] chainCode, uint index)
         {
-            var ccChild = new byte[4];
 
-            var cc = extKey.GetBytes(32, 32);
-            byte[]? l = null;
+            byte[] l;
 
             if ((index >> 31) == 0)
             {
-                var pubKey = curve.GetPublicKey(extKey.GetBytes(0, 32));
-                l = BIP32Hash(cc, index, pubKey[0], pubKey.GetBytes(1, pubKey.Length - 1));
+                var pubKey = curve.GetPublicKey(privateKey);
+                l = BIP32Hash(chainCode, index, pubKey[0], pubKey.GetBytes(1, pubKey.Length - 1));
             }
             else
             {
-                l = BIP32Hash(cc, index, 0, extKey.GetBytes(0, 32));
+                l = BIP32Hash(chainCode, index, 0, privateKey);
             }
 
             if (curve.Kind == ECKind.Ed25519)
             {
-                return l;
+                return (l.GetBytes(0,32), l.GetBytes(32,32));
             }
-
 
             while (true)
             {
-                var ll = l.GetBytes(0, 32);
                 var lr = l.GetBytes(32, 32);
 
-                ccChild = lr;
-
-                var parse256LL = new BigInteger(1, ll);
+                var parse256LL = new BigInteger(1, l.GetBytes(0, 32));
 
                 //TODO data here is vch NBitcoin
-                var kPar = new BigInteger(1, extKey.GetBytes(0, 32));
-
-                var keyBytes = new byte[4];
+                var kPar = new BigInteger(1, privateKey);
 
                 var N = curve.Kind switch
                 {
@@ -91,15 +81,15 @@ namespace Netezos.Keys
 
                 if (parse256LL.CompareTo(N) >= 0 || key == BigInteger.Zero)
                 {
-                    l = BIP32Hash(cc, index, 1, lr);
+                    l = BIP32Hash(chainCode, index, 1, lr);
                     continue;
                 }
 
-                keyBytes = key.ToByteArrayUnsigned();
+                var keyBytes = key.ToByteArrayUnsigned();
                 if (keyBytes.Length < 32)
                     keyBytes = new byte[32 - keyBytes.Length].Concat(keyBytes).ToArray();
 
-                return keyBytes.Concat(ccChild);
+                return (keyBytes, lr);
             }
         }
 
@@ -117,13 +107,6 @@ namespace Netezos.Keys
             var lr = BIP32Hash(chainCode, index, pubKey[0], pubKey.Skip(1).ToArray());
             Array.Copy(lr, l, 32);
             Array.Copy(lr, 32, r, 0, 32);
-
-            var N = curve.Kind switch
-            {
-                ECKind.Secp256k1 => SecNamedCurves.GetByName("secp256k1").N,
-                ECKind.NistP256 => SecNamedCurves.GetByName("secp256r1").N,
-                _ => throw new InvalidEnumArgumentException()
-            };
             
             var c = curve.Kind switch
             {
@@ -132,10 +115,10 @@ namespace Netezos.Keys
                 _ => throw new InvalidEnumArgumentException()
             };
             
-            var parameters = new ECDomainParameters(c.Curve, c.G, c.N, c.H, c.GetSeed());
+            var domainParameters = new ECDomainParameters(c.Curve, c.G, c.N, c.H, c.GetSeed());
             //TODO add while true, not sure about kee
-            var kee = new ECPublicKeyParameters("EC", c.Curve.DecodePoint(pubKey),
-                parameters);
+            var keyParameters = new ECPublicKeyParameters("EC", c.Curve.DecodePoint(pubKey),
+                domainParameters);
 
             while (true)
             {
@@ -144,36 +127,21 @@ namespace Netezos.Keys
                 
                 BigInteger parse256LL = new BigInteger(1, l);
             
-                var q = kee.Parameters.G.Multiply(parse256LL).Add(kee.Q);
+                var q = keyParameters.Parameters.G.Multiply(parse256LL).Add(keyParameters.Q);
 
-                if (parse256LL.CompareTo(N) >= 0 || q.IsInfinity)
+                if (parse256LL.CompareTo(c.N) >= 0 || q.IsInfinity)
                 {
                     lr = BIP32Hash(chainCode, index, 1, r);
                     continue;
                 }
-                    
+                
                 q = q.Normalize();
-                var a = new FpPoint(parameters.Curve, q.XCoord, q.YCoord, true);
-                var b = a.GetEncoded();
-                var v = Hex.Convert(b);
+                var b = domainParameters.Curve.CreatePoint(q.XCoord.ToBigInteger(), q.YCoord.ToBigInteger()).GetEncoded(true);
                 return (b, r);
             }
-
-
         }
 
-        public override byte[] GetChildPublicKey(Curve curve, byte[] privateKey)
-        {
-            var publicKey = curve.GetPublicKey(privateKey);
-
-            var pubBuffer = new BigEndianBuffer();
-
-            pubBuffer.Write(publicKey);
-
-            return curve.GetPublicKey(privateKey);
-        }
-
-        public static byte[] BIP32Hash(byte[] chainCode, uint nChild, byte header, byte[] data)
+        static byte[] BIP32Hash(byte[] chainCode, uint nChild, byte header, byte[] data)
         {
             byte[] num = new byte[4];
             num[0] = (byte)((nChild >> 24) & 0xFF);
