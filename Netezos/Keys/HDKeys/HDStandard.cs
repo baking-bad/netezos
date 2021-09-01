@@ -6,24 +6,22 @@ namespace Netezos.Keys
     {
         public abstract HDStandardKind Kind { get; }
 
-        public abstract byte[] GenerateMasterKey(Curve curve, byte[] seed);
+        public abstract (byte[], byte[]) GenerateMasterKey(Curve curve, byte[] seed);
 
-        public abstract byte[] GetChildPrivateKey(Curve curve, byte[] extKey, uint index);
+        public abstract (byte[], byte[]) GetChildPrivateKey(Curve curve, byte[] privKey, byte[] chainCode, uint index);
 
         #region static
         public static HDStandard FromKind(HDStandardKind kind)
         {
-            switch (kind)
+            return kind switch
             {
-                case HDStandardKind.Bip32: return new Bip32();
-                case HDStandardKind.Slip10: return new Slip10();
-                default:
-                    throw new ArgumentException("Invalid HD standard");
-            }
+                HDStandardKind.Bip32 => new Bip32(),
+                HDStandardKind.Slip10 => new Slip10(),
+                _ => throw new ArgumentException("Invalid HD standard")
+            };
         }
         #endregion
 
-        public abstract byte[] GetChildPublicKey(Curve curve, byte[] privateKey);
         public abstract (byte[], byte[]) GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index);
     }
 

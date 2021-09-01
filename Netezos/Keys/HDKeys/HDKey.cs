@@ -17,7 +17,7 @@ namespace Netezos.Keys
                     using (Store.Unlock())
                     {
                         //TODO Changed lenght from 32 to 64 for testing purposes. Change back after tests
-                        var privateKey = Store.Data.GetBytes(0, 64);
+                        var privateKey = Store.Data.GetBytes(0, 32);
                         _Key = new Key(privateKey, Curve.Kind, true, _PubKey);
                     }
                 }
@@ -51,6 +51,7 @@ namespace Netezos.Keys
         readonly HDStandard Hd;
         readonly ISecretStore Store;
         readonly uint hardenedOffset = 0x80000000;
+        public byte[] ChainCode;
 
         public HDKey() : this(HDStandardKind.Slip10, ECKind.Ed25519) { }
 
@@ -58,46 +59,42 @@ namespace Netezos.Keys
 
         public HDKey(HDStandardKind hdStandard, ECKind ecKind)
         {
+            //TODO Check the generation
             Curve = Curve.FromKind(ecKind);
             Hd = HDStandard.FromKind(hdStandard);
             var bytes = RNG.GetBytes(64);
-            Store = new PlainSecretStore(bytes);
-            HdPubKey = new HDPubKey(Curve.GetPublicKey(bytes.GetBytes(0, 32)), Store.Data.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
+            Store = new PlainSecretStore(bytes.GetBytes(0,32));
+            ChainCode = bytes.GetBytes(32, 32);
+            HdPubKey = new HDPubKey(Curve.GetPublicKey(bytes.GetBytes(0, 32)), bytes.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
             bytes.Flush();
         }
 
-        public HDKey(byte[] bytes, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
+        public HDKey(byte[] privateKey, byte[] chainCode, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
         {
-            if (bytes?.Length != 64)
-                throw new ArgumentException("Invalid extended key length", nameof(bytes));
+            if (privateKey?.Length != 32)
+                throw new ArgumentException("Invalid private key length", nameof(privateKey));
+            if (chainCode?.Length != 32)
+                throw new ArgumentException("Invalid chainCode  length", nameof(chainCode));
 
             Curve = Curve.FromKind(ecKind);
             Hd = HDStandard.FromKind(hdStandard);
-            Store = new PlainSecretStore(bytes);
+            Store = new PlainSecretStore(privateKey);
+            ChainCode = chainCode;
             //TODO Consider moving out the chain code
             //TODO That's working with zero bytes for ed25519 and doesn't for secp256k1
-            _PubKey = ecKind switch
-            {
-                ECKind.Ed25519 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32)), Curve.Kind,
-                    flush),
-                ECKind.Secp256k1 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32)), Curve.Kind,
-                    flush),
-                ECKind.NistP256 => new PubKey(Hd.GetChildPublicKey(Curve, bytes.GetBytes(0, 32)), Curve.Kind,
-                    flush),
-                _ => throw new InvalidEnumArgumentException()
-            };
+            _PubKey = new PubKey(Curve.GetPublicKey(privateKey), Curve.Kind, flush);
             
-            HdPubKey = new HDPubKey(Curve.GetPublicKey(bytes.GetBytes(0, 32)), bytes.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
+            HdPubKey = new HDPubKey(Curve.GetPublicKey(privateKey.GetBytes(0, 32)), chainCode, Hd.Kind, Curve.Kind, true);
             
-            if (flush) bytes.Flush();
+            if (flush) privateKey.Flush();
         }
 
         public HDKey Derive(uint index, bool hardened = false)
         {
             using (Store.Unlock())
             {
-                var privateKey = Hd.GetChildPrivateKey(Curve, Store.Data, index);
-                return new HDKey(privateKey, Hd.Kind, Curve.Kind);
+                var (privateKey, chainCode) = Hd.GetChildPrivateKey(Curve, Store.Data, ChainCode, index);
+                return new HDKey(privateKey, chainCode, Hd.Kind, Curve.Kind);
             }
         }
 
@@ -105,10 +102,10 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                var privateKey = path.Indexes
-                    .Aggregate(Store.Data, (mks, next) => Hd.GetChildPrivateKey(Curve, mks, next));
+                var (privateKey, chainCode) = path.Indexes
+                    .Aggregate((Store.Data, ChainCode), (mks, next) => Hd.GetChildPrivateKey(Curve, mks.Data, mks.ChainCode, next));
 
-                return new HDKey(privateKey, Hd.Kind, Curve.Kind);
+                return new HDKey(privateKey, chainCode, Hd.Kind, Curve.Kind);
             }
         }
 
@@ -127,24 +124,24 @@ namespace Netezos.Keys
         public static HDKey FromBytes(byte[] bytes, HDStandardKind hdStandard = HDStandardKind.Slip10,
             ECKind ecKind = ECKind.Ed25519)
         {
-            var res = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), bytes);
-            return new HDKey(res, hdStandard, ecKind, true);
+            var (privateKey, chainCode) = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), bytes);
+            return new HDKey(privateKey, chainCode, hdStandard, ecKind, true);
         }
 
         public static HDKey FromHex(string hex, HDStandardKind hdStandard = HDStandardKind.Slip10,
             ECKind ecKind = ECKind.Ed25519)
         {
-            var res = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), Hex.Parse(hex));
-            return new HDKey(res, hdStandard, ecKind, true);
+            var (privateKey, chainCode) = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), Hex.Parse(hex));
+            return new HDKey(privateKey, chainCode, hdStandard, ecKind, true);
         }
 
-        public static HDKey FromBase64(string base64, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-            => new HDKey(Base64.Parse(base64), hdStandard, ecKind, true);
+        public static HDKey FromBase64(string privateKey, string chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
+            => new HDKey(Base64.Parse(privateKey), Base64.Parse(chainCode), hdStandard, ecKind, true);
 
         public static HDKey FromSeed(byte[] seed, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
         {
-            var bytes = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), seed);
-            return new HDKey(bytes, hdStandard, ecKind, true);
+            var (privateKey, chainCode) = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), seed);
+            return new HDKey(privateKey, chainCode, hdStandard, ecKind, true);
         }
 
         public static HDKey FromMnemonic(Mnemonic mnemonic, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
