@@ -120,7 +120,7 @@ namespace Netezos.Encoding.Serialization
                 case MichelineInt val:
                     return $"{val.Value}";
                 case MichelineString str:
-                    return str.Value;
+                    return $"\"{str.Value}\"";
                 default:
                     throw new ArgumentException($"Invalid micheline type {node.Type}");
             }
