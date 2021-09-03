@@ -6,54 +6,26 @@ using Netezos.Encoding;
 
 namespace Netezos.Keys
 {
-    public class HDPubKey
+    public class HDPubKey : PubKey
     {
-        public PubKey PubKey
-        {
-            get
-            {
-                if (_PubKey == null)
-                {
-                    using (Store.Unlock())
-                    {
-                        //TODO: properly handle public key length for different EC
-                        var publicKey = Store.Data.GetBytes(0, 32);
-                        _PubKey = new PubKey(publicKey, Curve.Kind, true);
-                    }
-                }
-
-                return _PubKey;
-            }
-        }
-        PubKey _PubKey;
-
-        readonly Curve Curve;
         readonly HDStandard Hd;
-        readonly ISecretStore Store;
-        
-        private const int ChainCodeLength = 32;
-        internal readonly byte[] vchChainCode = new byte[ChainCodeLength];
+        const int ChainCodeLength = 32;
+        readonly byte[] ChainCode = new byte[ChainCodeLength];
 
-
-        internal HDPubKey(byte[] bytes, byte[] chainCode, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
+        internal HDPubKey(byte[] bytes, byte[] chainCode, HDStandardKind hdStandard, ECKind ecKind, bool flush = false) : base(bytes, ecKind, flush)
         {
-            //TODO Return back after tests
-            /*if (bytes?.Length != 64)
-                throw new ArgumentException("Invalid extended key length", nameof(bytes));*/
-
-            vchChainCode = chainCode;
-            Curve = Curve.FromKind(ecKind);
+            if (chainCode?.Length != 32)
+                throw new ArgumentException("Invalid extended key length", nameof(bytes));
             Hd = HDStandard.FromKind(hdStandard);
-            Store = new PlainSecretStore(bytes);
-            if (flush) bytes.Flush();
+            ChainCode = chainCode;
         }
 
         public HDPubKey Derive(uint index, bool hardened = false)
         {
             using (Store.Unlock())
             {
-                var bytes = Hd.GetChildPublicKey(Curve, Store.Data, vchChainCode, index);
-                return new HDPubKey(bytes.Item1, bytes.Item2, Hd.Kind, Curve.Kind);
+                var (bytes, chainCode) = Hd.GetChildPublicKey(Curve, Store.Data, ChainCode, index);
+                return new HDPubKey(bytes, chainCode, Hd.Kind, Curve.Kind);
             }
         }
 
@@ -63,22 +35,11 @@ namespace Netezos.Keys
                 return path.Indexes.Aggregate(result, (current, index) => current.Derive(index));
         }
 
-        public byte[] GetBytes()
-        {
-            using (Store.Unlock())
-            {
-                var bytes = new byte[Store.Data.Length];
-                Buffer.BlockCopy(Store.Data, 0, bytes, 0, Store.Data.Length);
-                return bytes;
-            }
-        }
-
         public string GetChainCodeHex()
         {
-            return Hex.Convert(vchChainCode);
+            return Hex.Convert(ChainCode);
         }
         
-
         #region static
         public static HDPubKey FromBytes(byte[] bytes, byte[] chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
             => new HDPubKey(bytes, chainCode, hdStandard, ecKind);

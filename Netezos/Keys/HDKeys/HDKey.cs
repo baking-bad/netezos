@@ -17,7 +17,7 @@ namespace Netezos.Keys
                     using (Store.Unlock())
                     {
                         //TODO Changed lenght from 32 to 64 for testing purposes. Change back after tests
-                        var privateKey = Store.Data.GetBytes(0, 32);
+                        var privateKey = Store.Data;
                         _Key = new Key(privateKey, Curve.Kind, true, _PubKey);
                     }
                 }
@@ -35,8 +35,7 @@ namespace Netezos.Keys
                 {
                     using (Store.Unlock())
                     {
-                        _PubKey = new PubKey(Curve.GetPublicKey(Store.Data.GetBytes(0,32)), Curve.Kind, true);
-                        HdPubKey = new HDPubKey(Curve.GetPublicKey(Store.Data.GetBytes(0,32)), Store.Data.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
+                        _PubKey = new PubKey(Curve.GetPublicKey(Store.Data), Curve.Kind, true);
                     }
                 }
 
@@ -44,8 +43,25 @@ namespace Netezos.Keys
             }
         }
 
-        public HDPubKey HdPubKey;
         PubKey _PubKey;
+        
+        public HDPubKey HdPubKey
+        {
+            get
+            {
+                if (_HDPubKey == null)
+                {
+                    using (Store.Unlock())
+                    {
+                        _HDPubKey = new HDPubKey(Curve.GetPublicKey(Store.Data), ChainCode, Hd.Kind, Curve.Kind, true);
+                    }
+                }
+
+                return _HDPubKey;
+            }
+        }
+
+        HDPubKey _HDPubKey;
 
         readonly Curve Curve;
         readonly HDStandard Hd;
@@ -65,7 +81,6 @@ namespace Netezos.Keys
             var bytes = RNG.GetBytes(64);
             Store = new PlainSecretStore(bytes.GetBytes(0,32));
             ChainCode = bytes.GetBytes(32, 32);
-            HdPubKey = new HDPubKey(Curve.GetPublicKey(bytes.GetBytes(0, 32)), bytes.GetBytes(32,32), Hd.Kind, Curve.Kind, true);
             bytes.Flush();
         }
 
@@ -83,8 +98,6 @@ namespace Netezos.Keys
             //TODO Consider moving out the chain code
             //TODO That's working with zero bytes for ed25519 and doesn't for secp256k1
             _PubKey = new PubKey(Curve.GetPublicKey(privateKey), Curve.Kind, flush);
-            
-            HdPubKey = new HDPubKey(Curve.GetPublicKey(privateKey.GetBytes(0, 32)), chainCode, Hd.Kind, Curve.Kind, true);
             
             if (flush) privateKey.Flush();
         }
