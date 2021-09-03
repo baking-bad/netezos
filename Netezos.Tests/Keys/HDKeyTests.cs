@@ -67,7 +67,7 @@ namespace Netezos.Tests.Keys
                 if ((index & 0x80000000) == 0)
                 {
                     var derivedPubKey = pubKey.Derive(index);
-                    Assert.Equal(derivedPubKey.PubKey.GetBase58(), pubKeyNew.PubKey.GetBase58());
+                    Assert.Equal(derivedPubKey.GetBase58(), pubKeyNew.GetBase58());
                     Assert.Equal(derivedPubKey.GetChainCodeHex(), pubKeyNew.GetChainCodeHex());
                 }
 
