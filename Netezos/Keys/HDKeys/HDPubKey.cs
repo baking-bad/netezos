@@ -49,6 +49,9 @@ namespace Netezos.Keys
 
         public static HDPubKey FromBase64(string base64, string chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
             => new HDPubKey(Base64.Parse(base64), Base64.Parse(chainCode), hdStandard, ecKind, true);
+        
+        public static HDPubKey FromPubKey(PubKey pubKey, byte[] chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10)
+            => new HDPubKey(pubKey.GetBytes(), chainCode, hdStandard, pubKey.Curve.Kind);
         #endregion
     }
 }
