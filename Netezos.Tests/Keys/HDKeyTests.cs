@@ -95,6 +95,8 @@ namespace Netezos.Tests.Keys
         {
             var path = new HDPath("m/44/1729/0/0/0");
             var key = new HDKey(HDStandardKind.Slip10, ECKind.Secp256k1);
+            var anotherKey = new HDKey(HDStandardKind.Slip10, ECKind.Secp256k1);
+            Assert.NotEqual(key.PubKey.Address, anotherKey.PubKey.Address);
             var derived = key.Derive(path);
             var pubDerived = key.HdPubKey.Derive(path);
             Assert.Equal(derived.PubKey.Address, pubDerived.Address);
