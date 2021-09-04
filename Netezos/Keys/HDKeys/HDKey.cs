@@ -51,12 +51,18 @@ namespace Netezos.Keys
             {
                 if (_HDPubKey == null)
                 {
-                    using (Store.Unlock())
+                    if (_PubKey == null)
                     {
-                        _HDPubKey = new HDPubKey(Curve.GetPublicKey(Store.Data), ChainCode, Hd.Kind, Curve.Kind, true);
+                        using (Store.Unlock())
+                        {
+                            _HDPubKey = new HDPubKey(Curve.GetPublicKey(Store.Data), ChainCode, Hd.Kind, Curve.Kind, true);
+                        }
+                    }
+                    else
+                    {
+                        _HDPubKey = HDPubKey.FromPubKey(_PubKey, ChainCode, Hd.Kind);
                     }
                 }
-
                 return _HDPubKey;
             }
         }
