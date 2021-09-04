@@ -91,6 +91,26 @@ namespace Netezos.Tests.Keys
         #endregion
 
         [Fact]
+        public void TestHDKeyGenerationSecp()
+        {
+            var path = new HDPath("m/44/1729/0/0/0");
+            var key = new HDKey(HDStandardKind.Slip10, ECKind.Secp256k1);
+            var derived = key.Derive(path);
+            var pubDerived = key.HdPubKey.Derive(path);
+            Assert.Equal(derived.PubKey.Address, pubDerived.Address);
+        }
+
+        [Fact]
+        public void TestHDKeyGenerationNist()
+        {
+            var path = new HDPath("m/44/1729/0/0/1");
+            var key = new HDKey(HDStandardKind.Slip10, ECKind.NistP256);
+            var derived = key.Derive(path);
+            var pubDerived = key.HdPubKey.Derive(path);
+            Assert.Equal(derived.PubKey.Address, pubDerived.Address);
+        }
+        
+        [Fact]
         public void TestHDPath()
         {
             var keyPath = new HDPath(new uint[] { 0x8000002Cu, 1u });

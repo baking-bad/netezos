@@ -16,8 +16,7 @@ namespace Netezos.Keys
                 {
                     using (Store.Unlock())
                     {
-                        //TODO Changed lenght from 32 to 64 for testing purposes. Change back after tests
-                        var privateKey = Store.Data;
+                        var privateKey = Store.Data.GetBytes(0, 32);
                         _Key = new Key(privateKey, Curve.Kind, true, _PubKey);
                     }
                 }
