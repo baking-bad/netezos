@@ -71,8 +71,9 @@ namespace Netezos.Keys
         readonly Curve Curve;
         readonly HDStandard Hd;
         readonly ISecretStore Store;
-        readonly uint hardenedOffset = 0x80000000;
-        public byte[] ChainCode;
+        
+        //TODO Consider moving to ISecretStore
+        public readonly byte[] ChainCode;
 
         public HDKey() : this(HDStandardKind.Slip10, ECKind.Ed25519) { }
 
@@ -80,7 +81,6 @@ namespace Netezos.Keys
 
         public HDKey(HDStandardKind hdStandard, ECKind ecKind)
         {
-            //TODO Check the generation
             Curve = Curve.FromKind(ecKind);
             Hd = HDStandard.FromKind(hdStandard);
             var bytes = RNG.GetBytes(64);
@@ -100,10 +100,6 @@ namespace Netezos.Keys
             Hd = HDStandard.FromKind(hdStandard);
             Store = new PlainSecretStore(privateKey);
             ChainCode = chainCode;
-            //TODO Consider moving out the chain code
-            //TODO That's working with zero bytes for ed25519 and doesn't for secp256k1
-            _PubKey = new PubKey(Curve.GetPublicKey(privateKey), Curve.Kind, flush);
-            
             if (flush) privateKey.Flush();
         }
 
