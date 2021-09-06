@@ -1,49 +1,38 @@
-using System;
-using System.Linq;
-using Dynamic.Json;
 using Netezos.Encoding;
 using Netezos.Keys;
 using Xunit;
-using Xunit.Abstractions;
-using Netezos;
 
 namespace Netezos.Tests.Keys
 {
     public class HDKeyTests
     {
-        private const string Vector1Seed = "000102030405060708090a0b0c0d0e0f";
-        
-        private const string Ed25519Vector1KeyHexExpected = "2b4be7f19ee27bbf30c667b642d5f4aa69fd169872f8fc3059c08ebae2eb19e7";
-        private const string Ed25519Vector1ChainCodeExpected = "90046a93de5380a72b5e45010748567d5ea02bbf6522f979e05c0d8d8ca9fffb";   
-        
-        private const string Secp256k1Vector1KeyHexExpected = "e8f32e723decf4051aefac8e2c93c9c5b214313817cdb01a1494b917c8436b35";
-        private const string Secp256k1Vector1ChainCodeExpected = "873dff81c02f525623fd1fe5167eac3a55a049de3d314bb42ee227ffed37d508";
+        const string Vector1Seed = "000102030405060708090a0b0c0d0e0f";
 
-        private const string Vector2Seed = "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542";
-        
-        private const string Ed25519Vector2KeyHexExpected = "171cb88b1b3c1db25add599712e36245d75bc65a1a5c9e18d76f9f2b1eab4012";
-        private const string Ed25519Vector2ChainCodeExpected = "ef70a74db9c3a5af931b5fe73ed8e1a53464133654fd55e7a66f8570b8e33c3b";
-        
-        private const string Secp256k1Vector2KeyHexExpected = "4b03d6fc340455b363f51020ad3ecca4f0850280cf436c70c727923f6db46c3e";
-        private const string Secp256k1Vector2ChainCodeExpected = "60499f801b896d83179a4374aeb7822aaeaceaa0db1f85ee3e904c4defbd9689";
+        const string Ed25519Vector1KeyHexExpected = "2b4be7f19ee27bbf30c667b642d5f4aa69fd169872f8fc3059c08ebae2eb19e7";
+        const string Ed25519Vector1ChainCodeExpected = "90046a93de5380a72b5e45010748567d5ea02bbf6522f979e05c0d8d8ca9fffb";
 
-        
-        readonly uint hardenedOffset = 0x80000000;
+        const string Secp256k1Vector1KeyHexExpected = "e8f32e723decf4051aefac8e2c93c9c5b214313817cdb01a1494b917c8436b35";
+        const string Secp256k1Vector1ChainCodeExpected = "873dff81c02f525623fd1fe5167eac3a55a049de3d314bb42ee227ffed37d508";
+
+        const string Vector2Seed = "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542";
+
+        const string Ed25519Vector2KeyHexExpected = "171cb88b1b3c1db25add599712e36245d75bc65a1a5c9e18d76f9f2b1eab4012";
+        const string Ed25519Vector2ChainCodeExpected = "ef70a74db9c3a5af931b5fe73ed8e1a53464133654fd55e7a66f8570b8e33c3b";
+
+        const string Secp256k1Vector2KeyHexExpected = "4b03d6fc340455b363f51020ad3ecca4f0850280cf436c70c727923f6db46c3e";
+        const string Secp256k1Vector2ChainCodeExpected = "60499f801b896d83179a4374aeb7822aaeaceaa0db1f85ee3e904c4defbd9689";
 
         #region helpers
 
-        private (byte[] Key, byte[] ChainCode) TestMasterKeyFromSeed(string seed, HDStandardKind hdStandard = HDStandardKind.Slip10,
+        static (byte[] Key, byte[] ChainCode) TestMasterKeyFromSeed(string seed, HDStandardKind hdStandard = HDStandardKind.Slip10,
             ECKind ecKind = ECKind.Ed25519)
         {
             var key = HDKey.FromHex(seed, hdStandard, ecKind);
             
-            var masterKeyFromSeed = key.Key.GetBytes();
-
-
             return (key.Key.GetBytes(), key.ChainCode);
         }
 
-        private (byte[] Key, byte[] ChainCode) TestDerivePath(string path, string seed,HDStandardKind hdStandard = HDStandardKind.Slip10,
+        static (byte[] Key, byte[] ChainCode) TestDerivePath(string path, string seed,HDStandardKind hdStandard = HDStandardKind.Slip10,
             ECKind ecKind = ECKind.Ed25519)
         {
             var key = HDKey.FromHex(seed, hdStandard, ecKind);
@@ -53,7 +42,7 @@ namespace Netezos.Tests.Keys
             return (derivePath.Key.GetBytes(), derivePath.ChainCode);
         }
 
-        private byte[] TestGetPublicKey(string path, string seed, HDStandardKind hdStandard = HDStandardKind.Slip10,
+        static byte[] TestGetPublicKey(string path, string seed, HDStandardKind hdStandard = HDStandardKind.Slip10,
             ECKind ecKind = ECKind.Ed25519)
         {
             var key = HDKey.FromHex(seed, hdStandard, ecKind);
@@ -78,7 +67,7 @@ namespace Netezos.Tests.Keys
             return pubKey.GetBytes();
         }
 
-        private byte[] TestGetPublicKey(byte[] privateKey, byte[] chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10,
+        static byte[] TestGetPublicKey(byte[] privateKey, byte[] chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10,
             ECKind ecKind = ECKind.Ed25519)
         {
             var key = new HDKey(privateKey, chainCode, hdStandard, ecKind);

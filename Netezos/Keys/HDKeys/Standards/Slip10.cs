@@ -49,11 +49,11 @@ namespace Netezos.Keys
             if ((index >> 31) == 0)
             {
                 var pubKey = curve.GetPublicKey(privateKey);
-                l = BIP32Hash(chainCode, index, pubKey[0], pubKey.GetBytes(1, pubKey.Length - 1));
+                l = Bip32Hash(chainCode, index, pubKey[0], pubKey.GetBytes(1, pubKey.Length - 1));
             }
             else
             {
-                l = BIP32Hash(chainCode, index, 0, privateKey);
+                l = Bip32Hash(chainCode, index, 0, privateKey);
             }
 
             if (curve.Kind == ECKind.Ed25519)
@@ -67,7 +67,7 @@ namespace Netezos.Keys
 
                 var parse256LL = new BigInteger(1, l.GetBytes(0, 32));
 
-                //TODO data here is vch NBitcoin
+                //data here is vch NBitcoin
                 var kPar = new BigInteger(1, privateKey);
 
                 var N = curve.Kind switch
@@ -81,7 +81,7 @@ namespace Netezos.Keys
 
                 if (parse256LL.CompareTo(N) >= 0 || key == BigInteger.Zero)
                 {
-                    l = BIP32Hash(chainCode, index, 1, lr);
+                    l = Bip32Hash(chainCode, index, 1, lr);
                     continue;
                 }
 
@@ -104,7 +104,7 @@ namespace Netezos.Keys
 
             var l = new byte[32];
             var r = new byte[32];
-            var lr = BIP32Hash(chainCode, index, pubKey[0], pubKey.Skip(1).ToArray());
+            var lr = Bip32Hash(chainCode, index, pubKey[0], pubKey.Skip(1).ToArray());
             Array.Copy(lr, l, 32);
             Array.Copy(lr, 32, r, 0, 32);
             
@@ -116,7 +116,6 @@ namespace Netezos.Keys
             };
             
             var domainParameters = new ECDomainParameters(c.Curve, c.G, c.N, c.H, c.GetSeed());
-            //TODO add while true, not sure about kee
             var keyParameters = new ECPublicKeyParameters("EC", c.Curve.DecodePoint(pubKey),
                 domainParameters);
 
@@ -125,13 +124,13 @@ namespace Netezos.Keys
                 Array.Copy(lr, l, 32);
                 Array.Copy(lr, 32, r, 0, 32);
                 
-                BigInteger parse256LL = new BigInteger(1, l);
+                var parse256LL = new BigInteger(1, l);
             
                 var q = keyParameters.Parameters.G.Multiply(parse256LL).Add(keyParameters.Q);
 
                 if (parse256LL.CompareTo(c.N) >= 0 || q.IsInfinity)
                 {
-                    lr = BIP32Hash(chainCode, index, 1, r);
+                    lr = Bip32Hash(chainCode, index, 1, r);
                     continue;
                 }
                 
@@ -141,9 +140,9 @@ namespace Netezos.Keys
             }
         }
 
-        static byte[] BIP32Hash(byte[] chainCode, uint nChild, byte header, byte[] data)
+        static byte[] Bip32Hash(byte[] chainCode, uint nChild, byte header, byte[] data)
         {
-            byte[] num = new byte[4];
+            var num = new byte[4];
             num[0] = (byte)((nChild >> 24) & 0xFF);
             num[1] = (byte)((nChild >> 16) & 0xFF);
             num[2] = (byte)((nChild >> 8) & 0xFF);
