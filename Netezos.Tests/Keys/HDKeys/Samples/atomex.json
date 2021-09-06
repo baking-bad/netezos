@@ -1,0 +1,20 @@
+[
+  {
+    "mnemonic": "blossom kite abuse predict remember acquire useful rifle situate polar noodle retreat surround turn exotic human push depart uncover nut wise snow pulp filter",
+    "path": "m/44'/1729'/0'/0'",
+    "privateKey": "edsk3QsgTz7AcEsmY8HZS4D164thNvttMvLMbcgvWSXCv4Ee6z51By",
+    "address": "tz1VmJrHivDEppXkyNfmVm9L1iAskMNP9x9U"
+  },
+  {
+    "mnemonic": "blossom kite abuse predict remember acquire useful rifle situate polar noodle retreat surround turn exotic human push depart uncover nut wise snow pulp filter",
+    "path": "m/44'/1729'/1'/0'",
+    "privateKey": "edsk4AfFtwD79KM1Uxcsop41TrMYWFGvKEM8zKbYSrYMQLFT9uPqS7",
+    "address": "tz1MYSt3kAzNmvRK3Xo32hUwBzQMpRDGFsPH"
+  },
+  {
+    "mnemonic": "blossom kite abuse predict remember acquire useful rifle situate polar noodle retreat surround turn exotic human push depart uncover nut wise snow pulp filter",
+    "path": "m/44'/1729'/2'/0'",
+    "privateKey": "edsk3C4ZFwWj92JmzFUQMoSirVCM15jdrfQ6ZbjFxHMzRK7Z4Cw8wa",
+    "address": "tz1VAbTH5i9xzqd6yy1xfvrYcgp9EcQScxAn"
+  }  
+]
