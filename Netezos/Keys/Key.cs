@@ -65,6 +65,14 @@ namespace Netezos.Keys
             }
         }
 
+        public string GetHex()
+        {
+            using (Store.Unlock())
+            {
+                return Hex.Convert(Store.Data);
+            }
+        }
+
         public Signature Sign(byte[] bytes)
         {
             using (Store.Unlock())
