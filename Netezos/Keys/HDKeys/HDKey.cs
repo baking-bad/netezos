@@ -123,6 +123,11 @@ namespace Netezos.Keys
             }
         }
 
+        public HDKey Derive(string path)
+        {
+            return Derive(HDPath.Parse(path));
+        }
+
         public byte[] GetBytes()
         {
             using (Store.Unlock())
