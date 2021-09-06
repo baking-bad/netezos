@@ -38,9 +38,8 @@ namespace Netezos.Keys
 
         internal Key(byte[] bytes, ECKind kind, bool flush = false, PubKey pubKey = null)
         {
-            //TODO Changed lenght from 32 to 64 for testing purposes. Change back after tests
-            // if (bytes?.Length != 32)
-                // throw new ArgumentException("Invalid private key length", nameof(bytes));
+            if (bytes?.Length != 32)
+                throw new ArgumentException("Invalid private key length", nameof(bytes));
 
             Curve = Curve.FromKind(kind);
             Store = new PlainSecretStore(bytes);
