@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Netezos.Forging.Models;
 
-namespace Netezos.Forging.Sandbox
+namespace Netezos.Sandbox.Models
 {
     /// <summary>
     /// Required values for operation blocks
     /// </summary>
-    internal class HeaderParameters
+    public class HeaderParameters
     {
         public string Key { get; set; }
         public Dictionary<string, string> Keys { get; set; }

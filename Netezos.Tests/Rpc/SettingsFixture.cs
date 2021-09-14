@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dynamic.Json;
 using Netezos.Forging.Models;
+using Netezos.Keys;
 using Netezos.Rpc;
 using Netezos.Sandbox;
 using Xunit;
@@ -18,11 +19,12 @@ namespace Netezos.Tests.Rpc
         static readonly object Crit = new object();
 
         public TezosRpc Rpc { get; }
+        public BlockHeaderClient BlockHeaderClient { get; }
+        public BlockOperationsClient BlockOperationsClient { get; }
         public string TestContract { get; }
         public string TestDelegate { get; }
         public string TestInactive { get; }
         private NodeContainer NodeContainer { get; }
-        private HeaderClient HeaderClient { get; }
         private int HealthCheckTimeout { get; }
 
         public SettingsFixture()
@@ -37,12 +39,12 @@ namespace Netezos.Tests.Rpc
                 
                 if (node.type.ToString().Equals("internal"))
                 {
-                    // NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
+                    NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
 
                     var headerConfig = node.header;
                     var keys = JsonSerializer.Deserialize<Dictionary<string, string>>(headerConfig.keys);
 
-                    HeaderClient = new HeaderClient(
+                    BlockHeaderClient = new BlockHeaderClient(
                         Rpc,
                         headerConfig.protocol,
                         keys, 
@@ -50,6 +52,12 @@ namespace Netezos.Tests.Rpc
                             headerConfig.protocolParameters.ToString()));
                     HealthCheckTimeout = node.healthCheckOnStartedTimeout;
                 }
+
+                BlockOperationsClient = new BlockOperationsClient(Rpc, 
+                    Key.FromMnemonic(new Mnemonic(new List<string>()
+                    {
+                        "arctic", "blame", "brush", "economy", "solar", "swallow", "canvas", "live", "vote", "two", "post", "neutral", "spare", "split", "fall",
+                    }), "nbhcylbg.xllfjgrk@tezos.example.org", "ZuPOpZgMNM"));
 
                 TestContract = settings.TestContract;
                 TestDelegate = settings.TestDelegate;
@@ -83,10 +91,14 @@ namespace Netezos.Tests.Rpc
                     Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
                 }
 
-                if (HeaderClient != null)
+                if (BlockHeaderClient != null)
                 {
-                    await HeaderClient.ActivateProtocol("dictator").Fill().Sign.InjectBlock.CallAsync();
-                    await HeaderClient.BakeBlock("bootstrap1").Fill().Work.Sign.InjectBlock.CallAsync();
+                    var branch = await BlockHeaderClient.ActivateProtocol("dictator").Fill().Sign.InjectBlock.CallAsync();
+                    await BlockHeaderClient.BakeBlock("bootstrap1").Fill().Work.Sign.InjectBlock.CallAsync();
+                    BlockOperationsClient.Add(new ActivationContent());
+                    await BlockOperationsClient.AutoFill.Sign.Inject.CallAsync();
+                    await BlockHeaderClient.BakeBlock("bootstrap1").Fill().Work.Sign.InjectBlock.CallAsync();
+
                 }
             }
         }
@@ -110,6 +122,7 @@ namespace Netezos.Tests.Rpc
         {
             if (NodeContainer != null) 
                 await NodeContainer.Container.StopAsync();
+            BlockHeaderClient?.Dispose();
             Rpc.Dispose();
         }
     }

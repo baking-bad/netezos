@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Netezos.Encoding;
-using Netezos.Forging.Models;
+using Netezos.Forging;
 using Netezos.Keys;
 using Netezos.Rpc;
+using Netezos.Sandbox.Models;
 
-namespace Netezos.Forging.Sandbox.Operations
+namespace Netezos.Sandbox.HeaderMethods
 {
     /// <summary>
     /// Sign the block header with the specified key
     /// </summary>
-    public class SignOperation : HeaderOperation
+    public class SignMethodHandler : HeaderMethodHandler
     {
-        internal SignOperation(
+        internal SignMethodHandler(
             TezosRpc rpc,
             HeaderParameters headerParameters,
             Func<HeaderParameters, Task<ForwardingParameters>> function) 
             : base(rpc, headerParameters, function) { }
         
-        public InjectOperation InjectBlock => new InjectOperation(Rpc, Values, CallAsync);
+        public InjectMethodHandler InjectBlock => new InjectMethodHandler(Rpc, Values, CallAsync);
 
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 

@@ -3,69 +3,99 @@ using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
-    public class ProtocolParametersContent
+    public class ConstantsContent
     {
-        [JsonPropertyName("bootstrap_accounts")]
-        public List<List<string>> BootstrapAccounts { get; set; }
-        [JsonPropertyName("bootstrap_contracts")]
-        public List<object> BootstrapContracts { get; set; }
-        [JsonPropertyName("commitments")]
-        public List<List<string>> Commitments { get; set; }
+        [JsonPropertyName("proof_of_work_nonce_size")]
+        public int ProofOfWorkNonceSize { get; set; }
+
+        [JsonPropertyName("nonce_length")]
+        public int NonceLength { get; set; }
+
+        [JsonPropertyName("max_anon_ops_per_block")]
+        public int MaxAnonOpsPerBlock { get; set; }
+
+        [JsonPropertyName("max_operation_data_length")]
+        public int MaxOperationDataLength { get; set; }
+
+        [JsonPropertyName("max_proposals_per_delegate")]
+        public int MaxProposalsPerDelegate { get; set; }
+
         [JsonPropertyName("preserved_cycles")]
-        public decimal PreservedCycles { get; set; }
+        public int PreservedCycles { get; set; }
+
         [JsonPropertyName("blocks_per_cycle")]
-        public decimal BlocksPerCycle { get; set; }
+        public int BlocksPerCycle { get; set; }
+
         [JsonPropertyName("blocks_per_commitment")]
-        public decimal BlocksPerCommitment { get; set; }
+        public int BlocksPerCommitment { get; set; }
+
         [JsonPropertyName("blocks_per_roll_snapshot")]
-        public decimal BlocksPerRollSnapshot { get; set; }
+        public int BlocksPerRollSnapshot { get; set; }
+
         [JsonPropertyName("blocks_per_voting_period")]
-        public decimal BlocksPerVotingPeriod { get; set; }
+        public int BlocksPerVotingPeriod { get; set; }
+
         [JsonPropertyName("time_between_blocks")]
         public List<string> TimeBetweenBlocks { get; set; }
+
         [JsonPropertyName("endorsers_per_block")]
-        public decimal EndorsersPerBlock { get; set; }
+        public int EndorsersPerBlock { get; set; }
+
         [JsonPropertyName("hard_gas_limit_per_operation")]
-        public string HardGasLimitPerOperation { get; set; }
+        public int HardGasLimitPerOperation { get; set; }
+
         [JsonPropertyName("hard_gas_limit_per_block")]
         public string HardGasLimitPerBlock { get; set; }
+
         [JsonPropertyName("proof_of_work_threshold")]
         public string ProofOfWorkThreshold { get; set; }
+
         [JsonPropertyName("tokens_per_roll")]
         public string TokensPerRoll { get; set; }
+
         [JsonPropertyName("michelson_maximum_type_size")]
-        public decimal MichelsonMaximumTypeSize { get; set; }
+        public int MichelsonMaximumTypeSize { get; set; }
+
         [JsonPropertyName("seed_nonce_revelation_tip")]
         public string SeedNonceRevelationTip { get; set; }
+
         [JsonPropertyName("origination_size")]
-        public decimal OriginationSize { get; set; }
+        public int OriginationSize { get; set; }
+
         [JsonPropertyName("block_security_deposit")]
         public string BlockSecurityDeposit { get; set; }
+
         [JsonPropertyName("endorsement_security_deposit")]
         public string EndorsementSecurityDeposit { get; set; }
+
         [JsonPropertyName("baking_reward_per_endorsement")]
         public List<string> BakingRewardPerEndorsement { get; set; }
+
         [JsonPropertyName("endorsement_reward")]
         public List<string> EndorsementReward { get; set; }
+
         [JsonPropertyName("cost_per_byte")]
         public string CostPerByte { get; set; }
+
         [JsonPropertyName("hard_storage_limit_per_operation")]
-        public string HardStorageLimitPerOperation { get; set; }
+        public int HardStorageLimitPerOperation { get; set; }
+
         [JsonPropertyName("test_chain_duration")]
         public string TestChainDuration { get; set; }
+
         [JsonPropertyName("quorum_min")]
-        public decimal QuorumMin { get; set; }
+        public int QuorumMin { get; set; }
+
         [JsonPropertyName("quorum_max")]
-        public decimal QuorumMax { get; set; }
+        public int QuorumMax { get; set; }
+
         [JsonPropertyName("min_proposal_quorum")]
-        public decimal MinProposalQuorum { get; set; }
+        public int MinProposalQuorum { get; set; }
+
         [JsonPropertyName("initial_endorsers")]
-        public decimal InitialEndorsers { get; set; }
+        public int InitialEndorsers { get; set; }
+
         [JsonPropertyName("delay_per_missing_endorsement")]
         public string DelayPerMissingEndorsement { get; set; }
-        [JsonPropertyName("security_deposit_ramp_up_cycles")]
-        public decimal? SecurityDepositRampUpCycles { get; set; }
-        [JsonPropertyName("no_reward_cycles")]
-        public decimal? NoRewardCycles { get; set; }
     }
 }

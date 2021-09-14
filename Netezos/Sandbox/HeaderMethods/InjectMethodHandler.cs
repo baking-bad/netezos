@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Netezos.Encoding;
-using Netezos.Forging.Models;
-using Netezos.Keys;
+using Netezos.Forging;
 using Netezos.Rpc;
+using Netezos.Sandbox.Models;
 
-namespace Netezos.Forging.Sandbox.Operations
+namespace Netezos.Sandbox.HeaderMethods
 {
     /// <summary>
     /// Inject the signed block header
     /// </summary>
-    public class InjectOperation : HeaderOperation
+    public class InjectMethodHandler : HeaderMethodHandler
     {
-        internal InjectOperation(
+        internal InjectMethodHandler(
             TezosRpc rpc,
             HeaderParameters headerParameters,
             Func<HeaderParameters, Task<ForwardingParameters>> action) 

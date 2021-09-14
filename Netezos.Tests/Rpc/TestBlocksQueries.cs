@@ -119,7 +119,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestBlockHeaderOperations()
         {
             var query = Rpc.Blocks.Head.Header.ProtocolData;
-            Assert.Equal($"chains/main/blocks/head/header/protocol_data", query.ToString());
+            Assert.Equal($"chains/main/blocks/head/header/protocol_data/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);

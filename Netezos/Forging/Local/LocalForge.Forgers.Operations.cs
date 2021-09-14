@@ -7,7 +7,7 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        static byte[] ForgeOperation(OperationContent content)
+        internal static byte[] ForgeOperation(OperationContent content)
         {
             switch (content)
             {

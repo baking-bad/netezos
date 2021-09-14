@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Netezos.Forging.Models;
 using Netezos.Rpc;
+using Netezos.Sandbox.Models;
 
-namespace Netezos.Forging.Sandbox.Operations
+namespace Netezos.Sandbox.HeaderMethods
 {
-    public class BakeBlockOperation : HeaderOperation
+    public class BakeBlockMethodHandler : HeaderMethodHandler
     {
-        public FillOperation Fill(string blockId = "head") => new FillOperation(Rpc, Values, CallAsync, blockId, true);
+        public FillMethodHandler Fill(string blockId = "head") => new FillMethodHandler(Rpc, Values, CallAsync, blockId, true);
 
-        internal BakeBlockOperation(TezosRpc rpc, HeaderParameters headerParameters, string keyName, int minFee) : base(rpc, headerParameters)
+        internal BakeBlockMethodHandler(TezosRpc rpc, HeaderParameters headerParameters, string keyName, int minFee) : base(rpc, headerParameters)
         {
             headerParameters.Key = headerParameters.Keys.TryGetValue(keyName, out var key) 
                 ? key
@@ -25,20 +24,21 @@ namespace Netezos.Forging.Sandbox.Operations
         internal override async Task<ForwardingParameters> CallAsync(HeaderParameters parameters)
         {
 
-            var pendingOperations = await Rpc.Mempool.PendingOperations.GetAsync<Dictionary<string, List<HeaderOperationContent>>>();
+            
+            var pendingOperations = await Rpc.Mempool.PendingOperations.GetAsync<MempoolOperations>();
 
-            pendingOperations.TryGetValue("applied", out var applied);
-
-            var forwardingOperations = new List<List<HeaderOperationContent>>()
+            var forwardingOperations = new List<List<MempoolOperation>>()
             {
-                new List<HeaderOperationContent>(),
-                new List<HeaderOperationContent>(),
-                new List<HeaderOperationContent>(),
-                new List<HeaderOperationContent>(),
+                new List<MempoolOperation>(),
+                new List<MempoolOperation>(),
+                new List<MempoolOperation>(),
+                new List<MempoolOperation>()
             };
 
-            var operations = applied?.Where(x => 
-                { 
+            var operations = pendingOperations.Applied?
+                .Where(x => x != null)
+                .Where(x => 
+                {
                     if (x.Contents.FirstOrDefault()?.ValidationGroup != 3) return true;
 
                     var totalFee = x.Contents
@@ -47,12 +47,18 @@ namespace Netezos.Forging.Sandbox.Operations
                         .Sum(m => m.Fee);
 
                     return totalFee >= parameters.MinFee;
-                });
+                }) ?? new List<Operation>();
 
             foreach (var operation in operations)
             {
                 var index = (int) operation.Contents.First().ValidationGroup % forwardingOperations.Count;
-                forwardingOperations[index].Add(operation);
+                forwardingOperations[index].Add(new MempoolOperation()
+                {
+                    Protocol = parameters.ProtocolHash,
+                    Branch = operation.Branch,
+                    Contents = operation.Contents,
+                    Signature = operation.Signature
+                });
             }
                 
             return new ForwardingParameters()

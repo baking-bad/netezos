@@ -30,6 +30,6 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("shell_header")]
         public ShellHeaderContent ShellHeader { get; set; }
         [JsonPropertyName("operations")]
-        public List<HeaderOperationContent> Operations { get; set; }
+        public List<Dictionary<string, List<Operation>>> Operations { get; set; }
     }
 }

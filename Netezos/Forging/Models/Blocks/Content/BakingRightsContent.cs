@@ -11,7 +11,7 @@ namespace Netezos.Forging.Models
         public string Delegate { get; set; }
         [JsonPropertyName("priority")]
         public int Priority { get; set; }
-        [JsonPropertyName("estimate_time")]
+        [JsonPropertyName("estimated_time")]
         public DateTime EstimateTime { get; set; }
     }
 }

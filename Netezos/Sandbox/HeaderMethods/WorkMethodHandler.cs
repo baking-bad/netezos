@@ -2,25 +2,26 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Netezos.Encoding;
+using Netezos.Forging;
 using Netezos.Forging.Models;
 using Netezos.Rpc;
+using Netezos.Sandbox.Models;
 using Netezos.Utils;
-using Org.BouncyCastle.Math;
 
-namespace Netezos.Forging.Sandbox.Operations
+namespace Netezos.Sandbox.HeaderMethods
 {
-    public class WorkOperation : HeaderOperation
+    public class WorkMethodHandler : HeaderMethodHandler
     {
         /// <summary>
         /// Perform calculations to find proof-of-work nonce
         /// </summary>
-        internal WorkOperation(
+        internal WorkMethodHandler(
             TezosRpc rpc, 
             HeaderParameters headerParameters, 
             Func<HeaderParameters, Task<ForwardingParameters>> function) 
             : base(rpc, headerParameters, function) { }
 
-        public SignOperation Sign => new SignOperation(Rpc, Values, CallAsync);
+        public SignMethodHandler Sign => new SignMethodHandler(Rpc, Values, CallAsync);
 
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
@@ -44,7 +45,7 @@ namespace Netezos.Forging.Sandbox.Operations
         {
             var data = LocalForge.Concat(
                 LocalForge.ForgeHeaderValues(header, protocolData),
-                BigInteger.Zero.ToByteArrayUnsigned().Align(64));
+                new byte[64]);
 
             var hashDigest = Blake2b.GetDigest(data).Take(8).ToArray();
 
