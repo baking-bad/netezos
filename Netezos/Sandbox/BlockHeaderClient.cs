@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Netezos.Forging.Models;
+using Netezos.Keys;
 using Netezos.Rpc;
 using Netezos.Sandbox.Base;
 using Netezos.Sandbox.HeaderMethods;
@@ -8,7 +9,7 @@ using Netezos.Sandbox.Models;
 
 namespace Netezos.Sandbox
 {
-    public class BlockHeaderClient : IBlockHeaderClient, IDisposable
+    internal class BlockHeaderClient : IBlockHeaderClient, IDisposable
     {
         private readonly TezosRpc Rpc;
         private readonly HeaderParameters Values;

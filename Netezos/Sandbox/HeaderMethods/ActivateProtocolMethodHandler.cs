@@ -26,6 +26,11 @@ namespace Netezos.Sandbox.HeaderMethods
                 : throw new KeyNotFoundException($"Parameter keyName {keyName} is not found");
         }
 
+        /// <summary>
+        /// Filling missing fields essential for preapply 
+        /// </summary>
+        /// <param name="blockId">"head" or "genesis"</param>
+        /// <returns>Header method handler</returns>
         public FillMethodHandler Fill(string blockId = "genesis") => 
             new FillMethodHandler(Rpc, Values, CallAsync, blockId);
 

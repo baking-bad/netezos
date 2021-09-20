@@ -26,10 +26,10 @@ namespace Netezos.Sandbox.HeaderMethods
 
         internal FillMethodHandler(
             TezosRpc rpc,
-            HeaderParameters headerParameters,
+            HeaderParameters parameters,
             Func<HeaderParameters, Task<ForwardingParameters>> function,
             string blockId,
-            bool fromBakeBlock = false) : base(rpc, headerParameters, function)
+            bool fromBakeBlock = false) : base(rpc, parameters, function)
         {
             BlockId = blockId;
             FromBakeCall = fromBakeBlock;

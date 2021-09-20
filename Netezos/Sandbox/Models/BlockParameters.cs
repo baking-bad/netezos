@@ -16,5 +16,6 @@ namespace Netezos.Sandbox.Models
         public bool IsSandbox { get; set; }
         public int? BranchOffset { get; set; }
         public int? Ttl { get; set; }
+        public SandboxConstants Constants { get; set; }
     }
 }

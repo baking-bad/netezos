@@ -9,20 +9,27 @@ using Netezos.Sandbox.Models;
 
 namespace Netezos.Sandbox
 {
-    public class BlockOperationsClient : IDisposable
+    internal class BlockOperationsClient : IBlockOperationsClient, IDisposable
     {
         private readonly TezosRpc Rpc;
-        private readonly BlockParameters Values;
+        private BlockParameters Values;
 
-        public BlockOperationsClient(TezosRpc rpc, Key key, List<OperationContent> operations = null)
+        internal BlockOperationsClient(
+            TezosRpc rpc,
+            SandboxConstants constants)
         {
             Values = new BlockParameters()
             {
-                Operations = new List<OperationContent>(),
-                Key = key,
+                Constants = constants ?? new SandboxConstants(),
                 IsSandbox = true
             };
             Rpc = rpc;
+        }
+
+        internal void SetOperationGroup(Key key, List<OperationContent> operations)
+        {
+            Values.Key = key;
+            Values.Operations = operations;
         }
 
         public FillMethodHandler Fill => new FillMethodHandler(Rpc, Values);
@@ -49,5 +56,9 @@ namespace Netezos.Sandbox
             Rpc?.Dispose();
             Values?.Operations?.Clear();
         }
+
+        FillMethodHandler IBlockOperationsClient.Fill() => Fill;
+
+        AutoFillMethodHandler IBlockOperationsClient.AutoFill() => AutoFill;
     }
 }

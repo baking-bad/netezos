@@ -29,7 +29,7 @@ namespace Netezos.Sandbox.HeaderMethods
         {
             var parameters = await Function.Invoke(Values);
 
-            int.TryParse(values.ProtocolParameters.ProofOfWorkThreshold, out int threshold);
+            long.TryParse(values.ProtocolParameters.ProofOfWorkThreshold, out long threshold);
 
             var nonce = 0;
             while (PowStamp(parameters.BlockHeader.ShellHeader, parameters.BlockHeader.ProtocolData) > threshold)

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Netezos.Forging.Models;
+using Netezos.Keys;
 using Netezos.Rpc;
 using Netezos.Sandbox.Models;
 
@@ -9,14 +10,19 @@ namespace Netezos.Sandbox.HeaderMethods
 {
     public class BakeBlockMethodHandler : HeaderMethodHandler
     {
+        /// <summary>
+        /// Filling missing fields essential for preapply 
+        /// </summary>
+        /// <param name="blockId">"head" or "genesis"</param>
+        /// <returns>Header method handler</returns>
         public FillMethodHandler Fill(string blockId = "head") => new FillMethodHandler(Rpc, Values, CallAsync, blockId, true);
 
-        internal BakeBlockMethodHandler(TezosRpc rpc, HeaderParameters headerParameters, string keyName, int minFee) : base(rpc, headerParameters)
+        internal BakeBlockMethodHandler(TezosRpc rpc, HeaderParameters parameters, string keyName, int minFee) : base(rpc, parameters)
         {
-            headerParameters.Key = headerParameters.Keys.TryGetValue(keyName, out var key) 
+            parameters.Key = parameters.Keys.TryGetValue(keyName, out var key) 
                 ? key
                 : throw new KeyNotFoundException($"Parameter keyName {keyName} is not found");
-            headerParameters.MinFee = minFee;
+            parameters.MinFee = minFee;
         }
 
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
@@ -24,7 +30,6 @@ namespace Netezos.Sandbox.HeaderMethods
         internal override async Task<ForwardingParameters> CallAsync(HeaderParameters parameters)
         {
 
-            
             var pendingOperations = await Rpc.Mempool.PendingOperations.GetAsync<MempoolOperations>();
 
             var forwardingOperations = new List<List<MempoolOperation>>()
