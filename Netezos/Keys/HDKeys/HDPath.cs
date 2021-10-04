@@ -7,21 +7,17 @@ namespace Netezos.Keys
 {
     public class HDPath
     {
-        public int Depth => _Indexes.Length;
+	    public IEnumerable<uint> Indexes { get; }
 
-        public IEnumerable<uint> Indexes => _Indexes;
-
-        readonly uint[] _Indexes;
-
-        public HDPath()
+	    public HDPath()
         {
-            _Indexes = Array.Empty<uint>();
+            Indexes = Array.Empty<uint>();
         }
         
         public HDPath(string path)
         {
 	        var count = 0;
-	        _Indexes =
+	        Indexes =
 		        path
 			        .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
 			        .Where(p => p != "m")
@@ -41,14 +37,14 @@ namespace Netezos.Keys
         {
 	        if (indexes.Length > 255)
 		        throw new ArgumentException(paramName: nameof(indexes), message: "An HDPath should have at most 255 indices");
-	        _Indexes = indexes;
+	        Indexes = indexes;
         }
 
         public HDPath Derive(HDPath path)
         {
 	        return new HDPath(
-		        _Indexes
-			        .Concat(path._Indexes)
+		        Indexes
+			        .Concat(path.Indexes)
 			        .ToArray());
         }
 
@@ -68,23 +64,23 @@ namespace Netezos.Keys
         {
 	        get
 	        {
-		        if (_Indexes.Length == 0)
+		        if (!Indexes.Any())
 			        throw new InvalidOperationException("No index found in this HDPath");
-		        return (_Indexes[_Indexes.Length - 1] & 0x80000000u) != 0;
+		        return (Indexes.Last() & 0x80000000u) != 0;
 	        }
         }
 
-        string _Path;
+        string Path;
         public override string ToString()
         {
-	        return _Path ??= string.Join("/", _Indexes.Select(ToString).ToArray());
+	        return Path ??= string.Join("/", Indexes.Select(ToString).ToArray());
         }
         
         private static string ToString(uint i)
         {
 	        var hardened = (i & 0x80000000u) != 0;
-	        var nonhardened = (i & ~0x80000000u);
-	        return hardened ? nonhardened + "'" : nonhardened.ToString(CultureInfo.InvariantCulture);
+	        var unhardened = (i & ~0x80000000u);
+	        return hardened ? unhardened + "'" : unhardened.ToString(CultureInfo.InvariantCulture);
         }
 
         #region static
@@ -97,8 +93,8 @@ namespace Netezos.Keys
 		{
 			if (path == null)
 				throw new ArgumentNullException(nameof(path));
-			bool isValid = true;
-			int count = 0;
+			var isValid = true;
+			var count = 0;
 			var indices =
 				path
 				.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
@@ -130,8 +126,8 @@ namespace Netezos.Keys
 				return false;
 			}
 			var hardened = i[i.Length - 1] == '\'' || i[i.Length - 1] == 'h';
-			var nonhardened = hardened ? i.Substring(0, i.Length - 1) : i;
-			if (!uint.TryParse(nonhardened, out index))
+			var unhardened = hardened ? i.Substring(0, i.Length - 1) : i;
+			if (!uint.TryParse(unhardened, out index))
 				return false;
 
 			// when parsing, number equals or greater than 0x80000000 (= 2147483648) should not be allowed.
@@ -142,7 +138,7 @@ namespace Netezos.Keys
 			}
 			if (hardened)
 			{
-				index = index |  0x80000000u;
+				index |= 0x80000000u;
 				return true;
 			}
 			else
