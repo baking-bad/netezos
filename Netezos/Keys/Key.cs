@@ -25,9 +25,7 @@ namespace Netezos.Keys
         readonly Curve Curve;
         readonly ISecretStore Store;
 
-        public Key() : this(ECKind.Ed25519) { }
-
-        public Key(ECKind kind)
+        public Key(ECKind kind = ECKind.Ed25519)
         {
             Curve = Curve.FromKind(kind);
             var bytes = Curve.GeneratePrivateKey();

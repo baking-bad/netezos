@@ -35,9 +35,12 @@ namespace Netezos.Tests.Keys
             var path = new HDPath("m/44/1729/0/0/0");
             var key = new HDKey(HDStandardKind.Slip10, ECKind.Secp256k1);
             var anotherKey = new HDKey(HDStandardKind.Slip10, ECKind.Secp256k1);
+            
             Assert.NotEqual(key.PubKey.Address, anotherKey.PubKey.Address);
+            
             var derived = key.Derive(path);
             var pubDerived = key.HdPubKey.Derive(path);
+            
             Assert.Equal(derived.PubKey.Address, pubDerived.Address);
         }
 
@@ -48,12 +51,15 @@ namespace Netezos.Tests.Keys
             var key = new HDKey(HDStandardKind.Slip10, ECKind.NistP256);
             var derived = key.Derive(path);
             var pubDerived = key.HdPubKey.Derive(path);
+            
             Assert.Equal(derived.PubKey.Address, pubDerived.Address);
         }
         
         [Fact]
         public void TestHDPath()
         {
+            var ley = new HDKey();
+            
             var keyPath = new HDPath(0x8000002Cu, 1u);
             var a = keyPath.ToString();
             Assert.Equal("44'/1", keyPath.ToString());

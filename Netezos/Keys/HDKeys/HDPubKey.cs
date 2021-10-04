@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Netezos.Encoding;
 
 namespace Netezos.Keys
@@ -10,7 +8,7 @@ namespace Netezos.Keys
     {
         readonly HDStandard Hd;
         const int ChainCodeLength = 32;
-        readonly byte[] ChainCode = new byte[ChainCodeLength];
+        readonly byte[] ChainCode;
 
         internal HDPubKey(byte[] bytes, byte[] chainCode, HDStandardKind hdStandard, ECKind ecKind, bool flush = false) : base(bytes, ecKind, flush)
         {

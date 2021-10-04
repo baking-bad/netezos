@@ -8,7 +8,7 @@ namespace Netezos.Keys
 
         public abstract (byte[], byte[]) GenerateMasterKey(Curve curve, byte[] seed);
 
-        public abstract (byte[], byte[]) GetChildPrivateKey(Curve curve, byte[] privKey, byte[] chainCode, uint index);
+        public abstract (byte[], byte[]) GetChildPrivateKey(Curve curve, byte[] privateKey, byte[] chainCode, uint index);
 
         #region static
         public static HDStandard FromKind(HDStandardKind kind)
