@@ -24,7 +24,6 @@ namespace Netezos.Keys
 
         readonly Curve Curve;
         readonly ISecretStore Store;
-        private readonly bool Ext;
 
         public Key() : this(ECKind.Ed25519) { }
 
@@ -36,14 +35,13 @@ namespace Netezos.Keys
             bytes.Flush();
         }
 
-        internal Key(byte[] bytes, ECKind kind, bool flush = false, PubKey pubKey = null)
+        internal Key(byte[] bytes, ECKind kind, bool flush = false)
         {
             if (bytes?.Length != 32)
                 throw new ArgumentException("Invalid private key length", nameof(bytes));
 
             Curve = Curve.FromKind(kind);
             Store = new PlainSecretStore(bytes);
-            _PubKey = pubKey;
             if (flush) bytes.Flush();
         }
 

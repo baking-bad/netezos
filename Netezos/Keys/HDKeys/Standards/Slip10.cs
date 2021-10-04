@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
-using Netezos.Keys.HDKeys;
 using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
@@ -100,7 +99,7 @@ namespace Netezos.Keys
             if (pubKey.Length != 33)
                 throw new NotSupportedException("Invalid public key size");
             if ((index >> 31) != 0)
-                throw new InvalidOperationException("A public key can't derivate an hardened child");
+                throw new InvalidOperationException("A public key can't derivate a hardened child");
 
             var l = new byte[32];
             var r = new byte[32];

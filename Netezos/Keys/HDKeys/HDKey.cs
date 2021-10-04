@@ -17,7 +17,7 @@ namespace Netezos.Keys
                     using (Store.Unlock())
                     {
                         var privateKey = Store.Data.GetBytes(0, 32);
-                        _Key = new Key(privateKey, Curve.Kind, true, _PubKey);
+                        _Key = new Key(privateKey, Curve.Kind, true);
                     }
                 }
 

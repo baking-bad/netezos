@@ -15,7 +15,6 @@ namespace Netezos.Keys
         {
             return kind switch
             {
-                HDStandardKind.Bip32 => new Bip32(),
                 HDStandardKind.Slip10 => new Slip10(),
                 _ => throw new ArgumentException("Invalid HD standard")
             };
@@ -27,8 +26,7 @@ namespace Netezos.Keys
 
     public enum HDStandardKind
     {
-        Bip32, //https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
+        // Bip32, //https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
         Slip10, //https://github.com/satoshilabs/slips/blob/master/slip-0010.md
-        //TODO: add custom implemetations from the most popular Tezos wallets for better importing/exporting UX
     }
 }
