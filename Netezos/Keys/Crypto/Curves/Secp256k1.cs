@@ -9,12 +9,17 @@ namespace Netezos.Keys
 {
     class Secp256k1 : Curve
     {
+        #region static
+        static readonly byte[] _SeedKey = { 66, 105, 116, 99, 111, 105, 110, 32, 115, 101, 101, 100 }; // "Bitcoin seed"
+        #endregion
+        
         public override ECKind Kind => ECKind.Secp256k1;
 
         public override byte[] AddressPrefix => Prefix.tz2;
         public override byte[] PublicKeyPrefix => Prefix.sppk;
         public override byte[] PrivateKeyPrefix => Prefix.spsk;
         public override byte[] SignaturePrefix => Prefix.spsig;
+        public override byte[] SeedKey => _SeedKey;
 
         public override byte[] GeneratePrivateKey()
         {
