@@ -34,6 +34,7 @@ namespace Netezos.Forging.Models
                 case "origination": return JsonSerializer.Deserialize<OriginationContent>(ref reader, options);
                 case "transaction": return JsonSerializer.Deserialize<TransactionContent>(ref reader, options);
                 case "reveal": return JsonSerializer.Deserialize<RevealContent>(ref reader, options);
+                case "register_global_constant": return JsonSerializer.Deserialize<RegisterConstantContent>(ref reader, options);
                 default: throw new JsonException("Invalid operation kind");
             }
         }

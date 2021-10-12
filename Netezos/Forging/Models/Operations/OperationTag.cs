@@ -12,6 +12,7 @@
         Reveal              = 107,
         Transaction         = 108,
         Origination         = 109,
-        Delegation          = 110
+        Delegation          = 110,
+        RegisterConstant    = 111
     }
 }

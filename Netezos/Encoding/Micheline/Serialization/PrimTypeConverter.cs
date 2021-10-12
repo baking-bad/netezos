@@ -151,6 +151,12 @@ namespace Netezos.Encoding.Serialization
                 case "SPLIT_TICKET": return PrimType.SPLIT_TICKET;
                 case "JOIN_TICKETS": return PrimType.JOIN_TICKETS;
                 case "GET_AND_UPDATE": return PrimType.GET_AND_UPDATE;
+                case "chest": return PrimType.chest;
+                case "chest_key": return PrimType.chest_key;
+                case "OPEN_CHEST": return PrimType.OPEN_CHEST;
+                case "VIEW": return PrimType.VIEW;
+                case "view": return PrimType.view;
+                case "constant": return PrimType.constant;
                 default:
                     throw new FormatException("Unknown prim type");
             }

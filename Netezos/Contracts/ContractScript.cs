@@ -15,7 +15,7 @@ namespace Netezos.Contracts
 
         public ContractScript(IMicheline script)
         {
-            if (!(script is MichelineArray array) || array.Count != 3)
+            if (!(script is MichelineArray array) || array.Count < 3)
                 throw new FormatException("Invalid micheline");
 
             var parameter = array.FirstOrDefault(x => (x as MichelinePrim)?.Prim == PrimType.parameter) as MichelinePrim

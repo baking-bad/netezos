@@ -33,6 +33,8 @@ namespace Netezos.Forging
                     return ForgeTransaction(transaction);
                 case RevealContent reveal:
                     return ForgeReveal(reveal);
+                case RegisterConstantContent registerConstant:
+                    return ForgeRegisterConstant(registerConstant);
                 default:
                     throw new ArgumentException($"Invalid operation content kind {content.Kind}");
             }
@@ -138,7 +140,7 @@ namespace Netezos.Forging
                 ForgeAddress(operation.Destination),
                 ForgeParameters(operation.Parameters));
         }
-
+        
         static byte[] ForgeReveal(RevealContent operation)
         {
             return Concat(
@@ -149,6 +151,18 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
                 ForgePublicKey(operation.PublicKey));
+        }
+
+        static byte[] ForgeRegisterConstant(RegisterConstantContent operation)
+        {
+            return Concat(
+                ForgeMicheNat((int)OperationTag.RegisterConstant),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeArray(ForgeMicheline(operation.Value)));
         }
 
         #region nested

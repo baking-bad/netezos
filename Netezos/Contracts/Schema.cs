@@ -22,7 +22,10 @@ namespace Netezos.Contracts
                 case PrimType.big_map: return new BigMapSchema(micheline);
                 case PrimType.@bool: return new BoolSchema(micheline);
                 case PrimType.bytes: return new BytesSchema(micheline);
+                case PrimType.chest: return new ChestSchema(micheline);
+                case PrimType.chest_key: return new ChestKeySchema(micheline);
                 case PrimType.chain_id: return new ChainIdSchema(micheline);
+                case PrimType.constant: return new ConstantSchema(micheline);
                 case PrimType.contract: return new ContractSchema(micheline);
                 case PrimType.@int: return new IntSchema(micheline);
                 case PrimType.key: return new KeySchema(micheline);
@@ -45,6 +48,7 @@ namespace Netezos.Contracts
                 case PrimType.timestamp: return new TimestampSchema(micheline);
                 case PrimType.unit: return new UnitSchema(micheline);
                 case PrimType.operation: return new OperationSchema(micheline);
+                case PrimType.view: return new ViewSchema(micheline);
                 default:
                     throw new NotImplementedException($"Schema for prim {micheline.Prim} is not implemented");
             }

@@ -47,7 +47,7 @@ namespace Netezos.Encoding.Serialization
 
         static bool IsScript(MichelineArray node)
         {
-            return node.Count == 3
+            return node.Count >= 3
                 && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.parameter)
                 && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.storage)
                 && node.Any(x => x is MichelinePrim p && p.Prim == PrimType.code);

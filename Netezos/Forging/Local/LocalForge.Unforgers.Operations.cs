@@ -35,6 +35,8 @@ namespace Netezos.Forging
                     return UnforgeTransaction(reader);
                 case OperationTag.Reveal:
                     return UnforgeReveal(reader);
+                case OperationTag.RegisterConstant:
+                    return UnforgeRegisterConstant(reader);
                 default:
                     throw new ArgumentException($"Invalid operation: {operation}");
             }
@@ -147,7 +149,7 @@ namespace Netezos.Forging
                 Parameters = UnforgeParameters(reader)
             };
         }
-
+        
         static RevealContent UnforgeReveal(ForgedReader reader)
         {
             return new RevealContent
@@ -158,6 +160,19 @@ namespace Netezos.Forging
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
                 PublicKey = reader.ReadPublicKey()
+            };
+        }
+
+        static RegisterConstantContent UnforgeRegisterConstant(ForgedReader reader)
+        {
+            return new RegisterConstantContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Value = reader.ReadEnumerableSingle(UnforgeMicheline)
             };
         }
 

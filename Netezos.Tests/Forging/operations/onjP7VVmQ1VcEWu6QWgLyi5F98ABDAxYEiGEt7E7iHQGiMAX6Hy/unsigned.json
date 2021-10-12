@@ -1,0 +1,32 @@
+﻿{
+  "branch": "BM4g2VE3kgQrUenL13RewpVv2i6d1K4aeLLnsRP78Mn6iLoYYFn",
+  "contents": [
+    {
+      "kind": "register_global_constant",
+      "source": "tz1LZhjR5Tyn63zZ1JSgT4WQZYyPXKTQiveu",
+      "fee": "10000",
+      "counter": "3819148",
+      "gas_limit": "10000",
+      "storage_limit": "1000",
+      "value": [
+        {
+          "prim": "PUSH",
+          "args": [
+            {
+              "prim": "int"
+            },
+            {
+              "int": "1234"
+            }
+          ]
+        },
+        {
+          "prim": "SWAP"
+        },
+        {
+          "prim": "MUL"
+        }
+      ]
+    }
+  ]
+}
