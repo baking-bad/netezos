@@ -1,7 +1,4 @@
 ﻿using Dynamic.Json;
-using System;
-using System.Threading.Tasks;
-using Netezos.Keys;
 using Xunit;
 
 using Netezos.Encoding;
