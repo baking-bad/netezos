@@ -35,8 +35,8 @@ namespace Netezos.Rpc
             Client = new RpcClient(uri);
             Chain = chain.ToString().ToLower();
 
-            Blocks = new BlocksQuery(Client, $"/chains/{Chain}/blocks");
-            Inject = new InjectionQuery(Client, $"/injection");
+            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Inject = new InjectionQuery(Client, $"injection/");
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace Netezos.Rpc
             Client = new RpcClient(uri, timeout);
             Chain = chain.ToString().ToLower();
 
-            Blocks = new BlocksQuery(Client, $"/chains/{Chain}/blocks");
-            Inject = new InjectionQuery(Client, $"/injection");
+            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Inject = new InjectionQuery(Client, $"injection/");
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace Netezos.Rpc
             Client = new RpcClient(client);
             Chain = chain.ToString().ToLower();
 
-            Blocks = new BlocksQuery(Client, $"/chains/{Chain}/blocks");
-            Inject = new InjectionQuery(Client, $"/injection");
+            Blocks = new BlocksQuery(Client, $"chains/{Chain}/blocks/");
+            Inject = new InjectionQuery(Client, $"injection/");
         }
 
         /// <summary>
