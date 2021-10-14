@@ -1,5 +1,4 @@
 ﻿using System;
-using Netezos.Encoding;
 
 namespace Netezos
 {
@@ -36,6 +35,13 @@ namespace Netezos
         public static void CopyTo(this byte[] src, byte[] dst, int dstOffset)
         {
             Buffer.BlockCopy(src, 0, dst, dstOffset, src.Length);
+        }
+
+        public static byte[] Copy(this byte[] src)
+        {
+            var res = new byte[src.Length];
+            Buffer.BlockCopy(src, 0, res, 0, src.Length);
+            return res;
         }
 
         public static byte[] Reverse(this byte[] data)
@@ -83,11 +89,6 @@ namespace Netezos
                     return false;
 
             return true;
-        }
-        
-        public static string ToStringHex(this byte[] bytes)
-        {
-            return Hex.Convert(bytes);
         }
     }
 }

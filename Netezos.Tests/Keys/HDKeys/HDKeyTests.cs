@@ -1,31 +1,32 @@
 using Dynamic.Json;
 using Netezos.Encoding;
 using Netezos.Keys;
+using System;
 using Xunit;
 
 namespace Netezos.Tests.Keys
 {
     public class HDKeyTests
     {
-        static void TestPublicKeyDerivation(string path, string seed, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Secp256k1)
+        static void TestPublicKeyDerivation(string path, string seed, ECKind kind = ECKind.Secp256k1)
         {
-            var key = HDKey.FromHex(seed, hdStandard, ecKind);
-            var pubKey = HDPubKey.FromBytes(key.PubKey.GetBytes(), key.ChainCode, hdStandard, ecKind);
+            var masterKey = HDKey.FromSeed(Hex.Parse(seed), kind);
+            var masterPubKey = masterKey.HDPubKey;
 
-            foreach (var index in HDPath.Parse(path).Indexes)
+            foreach (var uind in HDPath.Parse(path))
             {
-                var keyNew = key.Derive(index);
-                var pubKeyNew = keyNew.HdPubKey;
+                var childKey = masterKey.Derive((int)(uind & 0x7FFFFFFF), (uind & 0x80000000) != 0);
+                var childPubKey = childKey.HDPubKey;
 
-                if ((index & 0x80000000) == 0)
+                if ((uind & 0x80000000) == 0)
                 {
-                    var derivedPubKey = pubKey.Derive(index);
-                    Assert.Equal(derivedPubKey.GetBase58(), pubKeyNew.GetBase58());
-                    Assert.Equal(derivedPubKey.GetChainCodeHex(), pubKeyNew.GetChainCodeHex());
+                    var derivedPubKey = masterPubKey.Derive((int)uind);
+                    Assert.Equal(derivedPubKey.PubKey.GetBase58(), childPubKey.PubKey.GetBase58());
+                    Assert.Equal(Hex.Convert(derivedPubKey.ChainCode), Hex.Convert(childPubKey.ChainCode));
                 }
 
-                key = keyNew;
-                pubKey = pubKeyNew;
+                masterKey = childKey;
+                masterPubKey = childPubKey;
             }
         }
         
@@ -33,36 +34,79 @@ namespace Netezos.Tests.Keys
         public void TestHdKeyGenerationSecp()
         {
             var path = new HDPath("m/44/1729/0/0/0");
-            var key = new HDKey(HDStandardKind.Slip10, ECKind.Secp256k1);
-            var anotherKey = new HDKey(HDStandardKind.Slip10, ECKind.Secp256k1);
+            var key = new HDKey(ECKind.Secp256k1);
+            var anotherKey = new HDKey(ECKind.Secp256k1);
             
-            Assert.NotEqual(key.PubKey.Address, anotherKey.PubKey.Address);
+            Assert.NotEqual(key.Address, anotherKey.Address);
             
             var derived = key.Derive(path);
-            var pubDerived = key.HdPubKey.Derive(path);
+            var pubDerived = key.HDPubKey.Derive(path);
             
-            Assert.Equal(derived.PubKey.Address, pubDerived.Address);
+            Assert.Equal(derived.Address, pubDerived.Address);
         }
 
         [Fact]
         public void TestHDKeyGenerationNist()
         {
             var path = new HDPath("m/44/1729/0/0/1");
-            var key = new HDKey(HDStandardKind.Slip10, ECKind.NistP256);
+            var key = new HDKey(ECKind.NistP256);
             var derived = key.Derive(path);
-            var pubDerived = key.HdPubKey.Derive(path);
+            var pubDerived = key.HDPubKey.Derive(path);
             
-            Assert.Equal(derived.PubKey.Address, pubDerived.Address);
+            Assert.Equal(derived.Address, pubDerived.Address);
         }
-        
+
         [Fact]
-        public void TestHDPath()
+        public void TestHDPathParse()
         {
-            var ley = new HDKey();
-            
-            var keyPath = new HDPath(0x8000002Cu, 1u);
-            var a = keyPath.ToString();
-            Assert.Equal("44'/1", keyPath.ToString());
+            Assert.Equal("m", HDPath.Parse("").ToString());
+            Assert.Equal("m", HDPath.Parse("m").ToString());
+            Assert.Equal("m", HDPath.Parse("/").ToString());
+            Assert.Equal("m", HDPath.Parse("m/").ToString());
+            Assert.Equal("m/1", HDPath.Parse("1").ToString());
+            Assert.Equal("m/1", HDPath.Parse("/1").ToString());
+            Assert.Equal("m/1", HDPath.Parse("m/1").ToString());
+            Assert.Equal("m/1/2'/3'", HDPath.Parse("m/1/2'/3h").ToString());
+
+            Assert.Throws<ArgumentNullException>(() => HDPath.Parse(null));
+            Assert.Throws<FormatException>(() => HDPath.Parse("m/1//2"));
+            Assert.Throws<FormatException>(() => HDPath.Parse("m/m"));
+            Assert.Throws<FormatException>(() => HDPath.Parse("m/-1"));
+            Assert.Throws<FormatException>(() => HDPath.Parse($"m/{0x80000000u}"));
+        }
+
+        [Fact]
+        public void TestHDPathTryParse()
+        {
+            Assert.True(HDPath.TryParse("", out var p));
+            Assert.Equal("m", p.ToString());
+
+            Assert.True(HDPath.TryParse("m", out p));
+            Assert.Equal("m", p.ToString());
+
+            Assert.True(HDPath.TryParse("/", out p));
+            Assert.Equal("m", p.ToString());
+
+            Assert.True(HDPath.TryParse("m/", out p));
+            Assert.Equal("m", p.ToString());
+
+            Assert.True(HDPath.TryParse("1", out p));
+            Assert.Equal("m/1", p.ToString());
+
+            Assert.True(HDPath.TryParse("/1", out p));
+            Assert.Equal("m/1", p.ToString());
+
+            Assert.True(HDPath.TryParse("m/1", out p));
+            Assert.Equal("m/1", p.ToString());
+
+            Assert.True(HDPath.TryParse("m/1/2'/3h", out p));
+            Assert.Equal("m/1/2'/3'", p.ToString());
+
+            Assert.False(HDPath.TryParse(null, out _));
+            Assert.False(HDPath.TryParse("m/1//2", out _));
+            Assert.False(HDPath.TryParse("m/m", out _));
+            Assert.False(HDPath.TryParse("m/-1", out _));
+            Assert.False(HDPath.TryParse($"m/{0x80000000u}", out _));
         }
 
         [Fact]
@@ -70,11 +114,12 @@ namespace Netezos.Tests.Keys
         {
             foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\ed25519.json"))
             {
-                var key = HDKey.FromHex((string)sample.seed).Derive((string)sample.path);
+                var hdKey = HDKey.FromSeed(Hex.Parse((string)sample.seed))
+                    .Derive((string)sample.path);
             
-                Assert.Equal(sample.privateKey, key.Key.GetHex());
-                Assert.Equal(sample.chainCode, key.ChainCode.ToStringHex());
-                Assert.Equal(sample.pubKey, key.PubKey.GetHex());
+                Assert.Equal(sample.privateKey, hdKey.Key.GetHex());
+                Assert.Equal(sample.chainCode, Hex.Convert(hdKey.ChainCode));
+                Assert.Equal(sample.pubKey, hdKey.PubKey.GetHex());
             }
         }
 
@@ -83,13 +128,14 @@ namespace Netezos.Tests.Keys
         {
             foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\secp256k1.json"))
             {
-                var key = HDKey.FromHex((string)sample.seed, HDStandardKind.Slip10, ECKind.Secp256k1).Derive((string)sample.path);
+                var hdKey = HDKey.FromSeed(Hex.Parse((string)sample.seed), ECKind.Secp256k1)
+                    .Derive((string)sample.path);
             
-                Assert.Equal(sample.privateKey, key.Key.GetHex());
-                Assert.Equal(sample.chainCode, key.ChainCode.ToStringHex());
-                Assert.Equal(sample.pubKey, key.PubKey.GetHex());
+                Assert.Equal(sample.privateKey, hdKey.Key.GetHex());
+                Assert.Equal(sample.chainCode, Hex.Convert(hdKey.ChainCode));
+                Assert.Equal(sample.pubKey, hdKey.PubKey.GetHex());
                 
-                TestPublicKeyDerivation(sample.path, sample.seed, HDStandardKind.Slip10, ECKind.Secp256k1);
+                TestPublicKeyDerivation(sample.path, sample.seed, ECKind.Secp256k1);
             }
         }
         
@@ -99,13 +145,14 @@ namespace Netezos.Tests.Keys
         {
             foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\nistp256.json"))
             {
-                var key = HDKey.FromHex((string)sample.seed, HDStandardKind.Slip10, ECKind.NistP256).Derive((string)sample.path);
+                var hdKey = HDKey.FromSeed(Hex.Parse((string)sample.seed), ECKind.NistP256)
+                    .Derive((string)sample.path);
             
-                Assert.Equal(sample.privateKey, key.Key.GetHex());
-                Assert.Equal(sample.chainCode, key.ChainCode.ToStringHex());
-                Assert.Equal(sample.pubKey, key.PubKey.GetHex());
+                Assert.Equal(sample.privateKey, hdKey.Key.GetHex());
+                Assert.Equal(sample.chainCode, Hex.Convert(hdKey.ChainCode));
+                Assert.Equal(sample.pubKey, hdKey.PubKey.GetHex());
                 
-                TestPublicKeyDerivation(sample.path, sample.seed, HDStandardKind.Slip10, ECKind.NistP256);
+                TestPublicKeyDerivation(sample.path, sample.seed, ECKind.NistP256);
             }
         }
         
@@ -114,10 +161,11 @@ namespace Netezos.Tests.Keys
         {
             foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\atomex.json"))
             {
-                var key = HDKey.FromMnemonic(Mnemonic.Parse((string)sample.mnemonic)).Derive((string)sample.path);
+                var hdKey = HDKey.FromMnemonic(Mnemonic.Parse((string)sample.mnemonic))
+                    .Derive((string)sample.path);
             
-                Assert.Equal(sample.privateKey, key.Key.GetBase58());
-                Assert.Equal(sample.address, key.PubKey.Address);
+                Assert.Equal(sample.privateKey, hdKey.Key.GetBase58());
+                Assert.Equal(sample.address, hdKey.Address);
             }
         }
         
@@ -126,9 +174,10 @@ namespace Netezos.Tests.Keys
         {
             foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\kukai.json"))
             {
-                var key = HDKey.FromMnemonic(Mnemonic.Parse((string)sample.mnemonic)).Derive((string)sample.path);
+                var hdKey = HDKey.FromMnemonic(Mnemonic.Parse((string)sample.mnemonic))
+                    .Derive((string)sample.path);
             
-                Assert.Equal(sample.address, key.PubKey.Address);
+                Assert.Equal(sample.address, hdKey.Address);
             }
         }
     }

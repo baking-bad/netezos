@@ -1,55 +1,105 @@
 ﻿using System;
 using System.Linq;
-using Netezos.Encoding;
 
 namespace Netezos.Keys
 {
-    public class HDPubKey : PubKey
+    /// <summary>
+    /// 
+    /// </summary>
+    public class HDPubKey
     {
-        readonly HDStandard Hd;
-        const int ChainCodeLength = 32;
-        readonly byte[] ChainCode;
+        /// <summary>
+        /// 
+        /// </summary>
+        public PubKey PubKey { get; }
 
-        internal HDPubKey(byte[] bytes, byte[] chainCode, HDStandardKind hdStandard, ECKind ecKind, bool flush = false) : base(bytes, ecKind, flush)
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Address => PubKey.Address;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte[] ChainCode => _ChainCode.Copy();
+        
+        readonly byte[] _ChainCode;
+        Curve Curve => PubKey.Curve;
+        HDStandard HD => HDStandard.Slip10;
+        ISecretStore Store => PubKey.Store;
+
+        internal HDPubKey(PubKey pubKey, byte[] chainCode)
         {
-            if (chainCode?.Length != 32)
-                throw new ArgumentException("Invalid extended key length", nameof(bytes));
-            Hd = HDStandard.FromKind(hdStandard);
-            ChainCode = chainCode;
+            PubKey = pubKey ?? throw new ArgumentNullException(nameof(pubKey));
+            _ChainCode = chainCode?.Copy() ?? throw new ArgumentNullException(nameof(chainCode));
+            if (chainCode.Length != 32) throw new ArgumentException("Invalid chain code length", nameof(chainCode));
         }
 
-        public HDPubKey Derive(uint index, bool hardened = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="hardened"></param>
+        /// <returns></returns>
+        public HDPubKey Derive(int index, bool hardened = false)
         {
+            var uind = HDPath.GetIndex(index, hardened);
             using (Store.Unlock())
             {
-                var (bytes, chainCode) = Hd.GetChildPublicKey(Curve, Store.Data, ChainCode, index);
-                return new HDPubKey(bytes, chainCode, Hd.Kind, Curve.Kind);
+                var (pubKey, chainCode) = HD.GetChildPublicKey(Curve, Store.Data, _ChainCode, uind);
+                return new(new(pubKey, Curve.Kind, true), chainCode);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public HDPubKey Derive(HDPath path)
         {
-                var result = this;
-                return path.Indexes.Aggregate(result, (current, index) => current.Derive(index));
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            if (!path.Any())
+                return this;
+
+            using (Store.Unlock())
+            {
+                var pubKey = Store.Data;
+                var chainCode = _ChainCode;
+
+                foreach (var uind in path)
+                    (pubKey, chainCode) = HD.GetChildPublicKey(Curve, pubKey, chainCode, uind);
+
+                return new(new(pubKey, Curve.Kind, true), chainCode);
+            }
         }
 
-        public string GetChainCodeHex()
-        {
-            return Hex.Convert(ChainCode);
-        }
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="signature"></param>
+        /// <returns></returns>
+        public bool Verify(byte[] data, byte[] signature) => PubKey.Verify(data, signature);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="signature"></param>
+        /// <returns></returns>
+        public bool Verify(string message, string signature) => PubKey.Verify(message, signature);
+
         #region static
-        public static HDPubKey FromBytes(byte[] bytes, byte[] chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-            => new HDPubKey(bytes, chainCode, hdStandard, ecKind);
-
-        public static HDPubKey FromHex(string hex, string chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-            => new HDPubKey(Hex.Parse(hex), Hex.Parse(chainCode), hdStandard, ecKind, true);
-
-        public static HDPubKey FromBase64(string base64, string chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-            => new HDPubKey(Base64.Parse(base64), Base64.Parse(chainCode), hdStandard, ecKind, true);
-        
-        public static HDPubKey FromPubKey(PubKey pubKey, byte[] chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10)
-            => new HDPubKey(pubKey.GetBytes(), chainCode, hdStandard, pubKey.Curve.Kind);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pubKey"></param>
+        /// <param name="chainCode"></param>
+        /// <returns></returns>
+        public static HDPubKey FromPubKey(PubKey pubKey, byte[] chainCode) => new(pubKey, chainCode);
         #endregion
     }
 }

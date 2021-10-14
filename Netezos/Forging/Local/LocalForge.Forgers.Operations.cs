@@ -2,6 +2,7 @@
 using System.Linq;
 using Netezos.Encoding;
 using Netezos.Forging.Models;
+using Netezos.Utils;
 
 namespace Netezos.Forging
 {
@@ -42,14 +43,14 @@ namespace Netezos.Forging
 
         static byte[] ForgeEndorsement(EndorsementContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Endorsement),
                 ForgeInt32(operation.Level));
         }
 
         static byte[] ForgeBallot(BallotContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Ballot),
                 ForgeTzAddress(operation.Source),
                 ForgeInt32(operation.Period),
@@ -59,7 +60,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeProposals(ProposalsContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Proposals),
                 ForgeTzAddress(operation.Source),
                 ForgeInt32(operation.Period),
@@ -71,7 +72,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeActivation(ActivationContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Activation),
                 ForgeTz1Address(operation.Address),
                 Hex.Parse(operation.Secret));
@@ -79,7 +80,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeDoubleBaking(DoubleBakingContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.DoubleBaking),
                 ForgeArray(ForgeBlockHeader(operation.BlockHeader1)),
                 ForgeArray(ForgeBlockHeader(operation.BlockHeader2)));
@@ -87,7 +88,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeDoubleEndorsement(DoubleEndorsementContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.DoubleEndorsement),
                 ForgeArray(ForgeInlinedEndorsement(operation.Op1)),
                 ForgeArray(ForgeInlinedEndorsement(operation.Op2)));
@@ -95,7 +96,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeSeedNonceRevelaion(SeedNonceRevelationContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.SeedNonceRevelation),
                 ForgeInt32(operation.Level),
                 Hex.Parse(operation.Nonce));
@@ -103,7 +104,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeDelegation(DelegationContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Delegation),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
@@ -115,7 +116,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeOrigination(OriginationContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Origination),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
@@ -129,7 +130,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeTransaction(TransactionContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Transaction),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
@@ -143,7 +144,7 @@ namespace Netezos.Forging
         
         static byte[] ForgeReveal(RevealContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Reveal),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
@@ -155,7 +156,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeRegisterConstant(RegisterConstantContent operation)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.RegisterConstant),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
@@ -168,7 +169,7 @@ namespace Netezos.Forging
         #region nested
         static byte[] ForgeBlockHeader(BlockHeader header)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeInt32(header.Level),
                 ForgeInt32(header.Proto, 1),
                 Base58.Parse(header.Predecessor, 2),
@@ -185,7 +186,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeInlinedEndorsement(InlinedEndorsement op)
         {
-            return Concat(
+            return Bytes.Concat(
                 Base58.Parse(op.Branch, 2),
                 ForgeMicheNat((int)OperationTag.Endorsement),
                 ForgeInt32(op.Operations.Level),
@@ -194,21 +195,21 @@ namespace Netezos.Forging
 
         static byte[] ForgeSeedNonce(string nonce)
         {
-            return nonce == null ? ForgeBool(false) : Concat(
+            return nonce == null ? ForgeBool(false) : Bytes.Concat(
                 ForgeBool(true),
                 Base58.Parse(nonce, 3));
         }
 
         static byte[] ForgeDelegate(string delegat)
         {
-            return delegat == null ? ForgeBool(false) : Concat(
+            return delegat == null ? ForgeBool(false) : Bytes.Concat(
                 ForgeBool(true),
                 ForgeTzAddress(delegat));
         }
 
         static byte[] ForgeParameters(Parameters param)
         {
-            return param == null ? ForgeBool(false) : Concat(
+            return param == null ? ForgeBool(false) : Bytes.Concat(
                 ForgeBool(true),
                 ForgeEntrypoint(param.Entrypoint),
                 ForgeArray(ForgeMicheline(param.Value).ToArray()));
@@ -216,7 +217,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeScript(Script script)
         {
-            return Concat(
+            return Bytes.Concat(
                 ForgeArray(ForgeMicheline(script.Code)),
                 ForgeArray(ForgeMicheline(script.Storage)));
         }

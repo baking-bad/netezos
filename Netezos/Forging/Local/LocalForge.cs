@@ -1,8 +1,9 @@
-﻿using Netezos.Encoding;
-using Netezos.Forging.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Netezos.Encoding;
+using Netezos.Forging.Models;
+using Netezos.Utils;
 
 namespace Netezos.Forging
 {
@@ -19,7 +20,7 @@ namespace Netezos.Forging
         public Task<byte[]> ForgeOperationGroupAsync(string branch, IEnumerable<ManagerOperationContent> contents)
         {
             var branchBytes = Base58.Parse(branch, Prefix.B.Length);
-            var contentBytes = Concat(contents.Select(ForgeOperation).ToArray());
+            var contentBytes = Bytes.Concat(contents.Select(ForgeOperation).ToArray());
 
             return Task.FromResult(branchBytes.Concat(contentBytes));
         }

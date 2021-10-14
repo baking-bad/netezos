@@ -5,6 +5,7 @@ namespace Netezos.Keys
 {
     public class Key
     {
+        public string Address => PubKey.Address;
         public PubKey PubKey
         {
             get
@@ -22,8 +23,8 @@ namespace Netezos.Keys
         }
         PubKey _PubKey;
 
-        readonly Curve Curve;
-        readonly ISecretStore Store;
+        internal readonly Curve Curve;
+        internal readonly ISecretStore Store;
 
         public Key(ECKind kind = ECKind.Ed25519)
         {

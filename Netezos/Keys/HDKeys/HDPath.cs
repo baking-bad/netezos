@@ -1,157 +1,176 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace Netezos.Keys
 {
-    public class HDPath
+    /// <summary>
+    /// 
+    /// </summary>
+    public class HDPath : IEnumerable<uint>
     {
-        public IEnumerable<uint> Indexes { get; }
+        /// <summary>
+        /// True if the last index in the path is hardened
+        /// </summary>
+        public bool Hardened => (Indexes.LastOrDefault() & 0x80000000) != 0;
 
+        readonly uint[] Indexes;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public HDPath()
         {
             Indexes = Array.Empty<uint>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
         public HDPath(string path)
         {
-            var count = 0;
-            Indexes = path
-                .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(p => p != "m")
-                .Select(p =>
-                {
-                    if (!TryParseCore(p, out var i))
-                        throw new FormatException("HDPath incorrectly formatted");
-                    count++;
-                    if (count > 255)
-                        throw new FormatException("HDPath incorrectly formatted");
-                    return i;
-                })
-                .ToArray();
+            path = path?.TrimStart('m').Trim('/')
+                ?? throw new ArgumentNullException(nameof(path));
+            Indexes = path.Length == 0
+                ? Array.Empty<uint>()
+                : path.Split('/').Select(ParseIndex).ToArray();
         }
 
-        public HDPath(params uint[] indexes)
+        HDPath(uint[] indexes)
         {
-            if (indexes.Length > 255)
-                throw new ArgumentException(paramName: nameof(indexes),
-                    message: "An HDPath should have at most 255 indices");
             Indexes = indexes;
         }
 
-        public HDPath Derive(HDPath path)
-        {
-            return new HDPath(
-                Indexes
-                    .Concat(path.Indexes)
-                    .ToArray());
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="hardened"></param>
+        /// <returns></returns>
         public HDPath Derive(int index, bool hardened = false)
         {
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index), "the index can't be negative");
-            var realIndex = (uint)index;
-            realIndex = hardened ? realIndex | 0x80000000u : realIndex;
-            return Derive(new HDPath(realIndex));
+            var indexes = new uint[Indexes.Length + 1];
+            Indexes.CopyTo(indexes, 0);
+            indexes[indexes.Length - 1] = GetIndex(index, hardened);
+            return new(indexes);
         }
 
         /// <summary>
-        /// True if the last index in the path is hardened
+        /// 
         /// </summary>
-        public bool IsHardened
-        {
-            get
-            {
-                if (!Indexes.Any())
-                    throw new InvalidOperationException("No index found in this HDPath");
-                return (Indexes.Last() & 0x80000000u) != 0;
-            }
-        }
-
-        string Path;
-
+        /// <returns></returns>
         public override string ToString()
         {
-            return Path ??= string.Join("/", Indexes.Select(ToString).ToArray());
+            if (Indexes.Length == 0) return "m";
+            return $"m/{string.Join("/", Indexes.Select(IndexToString))}";
         }
 
-        private static string ToString(uint i)
-        {
-            var hardened = (i & 0x80000000u) != 0;
-            var unhardened = (i & ~0x80000000u);
-            return hardened ? unhardened + "'" : unhardened.ToString(CultureInfo.InvariantCulture);
-        }
+        #region IEnumerable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<uint> GetEnumerator() => ((IEnumerable<uint>)Indexes).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => Indexes.GetEnumerator();
+        #endregion
 
         #region static
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static HDPath Parse(string path)
         {
-            return new HDPath(path);
+            return new(path);
         }
 
-        public static bool TryParse(string path, out HDPath keyPath)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        public static bool TryParse(string path, out HDPath res)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-            var isValid = true;
-            var count = 0;
-            var indices =
-                path
-                    .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Where(p => p != "m")
-                    .Select(p =>
-                    {
-                        isValid &= TryParseCore(p, out var i);
-                        count++;
-                        if (count > 255)
-                            isValid = false;
-                        return i;
-                    })
-                    .Where(_ => isValid)
-                    .ToArray();
-            if (!isValid)
+            res = null;
+            if (path == null) return false;
+
+            path = path.TrimStart('m').Trim('/');
+            if (path.Length == 0)
             {
-                keyPath = null;
-                return false;
+                res = new();
+                return true;
             }
 
-            keyPath = new HDPath(indices);
+            var ss = path.Split('/');
+            var indexes = new uint[ss.Length];
+            for (int i = 0; i < ss.Length; i++)
+            {
+                if (!TryParseIndex(ss[i], out var ind))
+                    return false;
+                indexes[i] = ind;
+            }
+
+            res = new(indexes);
             return true;
         }
 
-        private static bool TryParseCore(string i, out uint index)
+        internal static uint GetIndex(int index, bool hardened)
         {
-            if (i.Length == 0)
-            {
-                index = 0;
-                return false;
-            }
+            if (index < 0)
+                throw new ArgumentException(nameof(index), "Index must be positive");
 
-            var hardened = i[i.Length - 1] == '\'' || i[i.Length - 1] == 'h';
-            var unhardened = hardened ? i.Substring(0, i.Length - 1) : i;
-            if (!uint.TryParse(unhardened, out index))
-                return false;
-
-            // when parsing, number equals or greater than 0x80000000 (= 2147483648) should not be allowed.
-            if (index >= 0x80000000u)
-            {
-                index = 0;
-                return false;
-            }
-
-            if (hardened)
-            {
-                index |= 0x80000000u;
-                return true;
-            }
-            else
-            {
-                return true;
-            }
+            return hardened ? (uint)index | 0x80000000 : (uint)index;
         }
 
+        static bool TryParseIndex(string str, out uint ind)
+        {
+            if (str.Length == 0)
+            {
+                ind = 0;
+                return false;
+            }
+
+            var hardened = str[str.Length - 1] == '\'' || str[str.Length - 1] == 'h';
+
+            if (!uint.TryParse(hardened ? str.Substring(0, str.Length - 1) : str, out ind))
+                return false;
+
+            if ((ind & 0x80000000) != 0)
+                return false;
+
+            if (hardened)
+                ind |= 0x80000000;
+
+            return true;
+        }
+
+        static uint ParseIndex(string str)
+        {
+            if (str.Length == 0)
+                throw new FormatException("Path contains empty element");
+
+            var hardened = str[str.Length - 1] == '\'' || str[str.Length - 1] == 'h';
+
+            if (!uint.TryParse(hardened ? str.Substring(0, str.Length - 1) : str, out var ind))
+                throw new FormatException("Path contains invalid index");
+
+            if ((ind & 0x80000000) != 0)
+                throw new FormatException("Path contains too large index");
+
+            return hardened ? (ind | 0x80000000) : ind;
+        }
+
+        static string IndexToString(uint ind)
+        {
+            var plain = ind & 0x7FFFFFFF;
+            var hardened = (ind & 0x80000000) != 0;
+            return hardened ? $"{plain}'" : plain.ToString();
+        }
         #endregion
     }
 }

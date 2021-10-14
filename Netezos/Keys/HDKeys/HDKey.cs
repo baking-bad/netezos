@@ -1,106 +1,183 @@
 ﻿using System;
 using System.Linq;
-using Netezos.Encoding;
 using Netezos.Utils;
 
 namespace Netezos.Keys
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class HDKey
     {
-        public PubKey PubKey => _PubKey ??= new PubKey(Curve.GetPublicKey(Key.GetBytes()), Curve.Kind, true);
-        PubKey _PubKey;
-        
-        public HDPubKey HdPubKey
+        /// <summary>
+        /// 
+        /// </summary>
+        public Key Key { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte[] ChainCode => _ChainCode.Copy();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public PubKey PubKey => Key.PubKey;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public HDPubKey HDPubKey => _HDPubKey ??= new(Key.PubKey, _ChainCode);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Address => Key.Address;
+
+        readonly byte[] _ChainCode;
+        HDPubKey _HDPubKey;
+        Curve Curve => Key.Curve;
+        HDStandard HD => HDStandard.Slip10;
+        ISecretStore Store => Key.Store;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="kind"></param>
+        public HDKey(ECKind kind = ECKind.Ed25519)
         {
-            get
+            Key = new(RNG.GetBytes(32), kind, true);
+            _ChainCode = RNG.GetBytes(32);
+        }
+
+        internal HDKey(Key key, byte[] chainCode)
+        {
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+            _ChainCode = chainCode?.Copy() ?? throw new ArgumentNullException(nameof(chainCode));
+            if (chainCode.Length != 32) throw new ArgumentException("Invalid chain code length", nameof(chainCode));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="hardened"></param>
+        /// <returns></returns>
+        public HDKey Derive(int index, bool hardened = false)
+        {
+            var uind = HDPath.GetIndex(index, hardened);
+            using (Store.Unlock())
             {
-                return _HDPubKey ??= _PubKey == null
-                    ? new HDPubKey(Curve.GetPublicKey(Key.GetBytes()), ChainCode, Hd.Kind, Curve.Kind, true)
-                    : HDPubKey.FromPubKey(_PubKey, ChainCode, Hd.Kind);
+                var (prvKey, chainCode) = HD.GetChildPrivateKey(Curve, Store.Data, _ChainCode, uind);
+                return new(new(prvKey, Curve.Kind, true), chainCode);
             }
         }
-        HDPubKey _HDPubKey;
 
-        readonly Curve Curve;
-        readonly HDStandard Hd;
-        
-        public readonly byte[] ChainCode;
-        public readonly Key Key;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public HDKey Derive(string path) => Derive(HDPath.Parse(path));
 
-        public HDKey(HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public HDKey Derive(HDPath path)
         {
-            Curve = Curve.FromKind(ecKind);
-            Hd = HDStandard.FromKind(hdStandard);
-            var bytes = RNG.GetBytes(64);
-            Key = Key.FromBytes(bytes.GetBytes(0, 32), Curve.Kind);
-            ChainCode = bytes.GetBytes(32, 32);
-            bytes.Flush();
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            if (!path.Any())
+                return this;
+
+            using (Store.Unlock())
+            {
+                var prvKey = Store.Data;
+                var chainCode = _ChainCode;
+
+                foreach (var uind in path)
+                    (prvKey, chainCode) = HD.GetChildPrivateKey(Curve, prvKey, chainCode, uind);
+
+                return new(new(prvKey, Curve.Kind, true), chainCode);
+            }
         }
 
-        HDKey(byte[] privateKey, byte[] chainCode, HDStandardKind hdStandard, ECKind ecKind, bool flush = false)
-        {
-            if (privateKey?.Length != 32)
-                throw new ArgumentException("Invalid private key length", nameof(privateKey));
-            if (chainCode?.Length != 32)
-                throw new ArgumentException("Invalid chainCode  length", nameof(chainCode));
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public Signature Sign(byte[] bytes) => Key.Sign(bytes);
 
-            Curve = Curve.FromKind(ecKind);
-            Hd = HDStandard.FromKind(hdStandard);
-            Key = Key.FromBytes(privateKey, Curve.Kind);
-            ChainCode = chainCode;
-            if (flush) privateKey.Flush();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public Signature Sign(string message) => Key.Sign(message);
 
-        public HDKey Derive(uint index, bool hardened = false)
-        {
-            var (privateKey, chainCode) = Hd.GetChildPrivateKey(Curve, Key.GetBytes(), ChainCode, index);
-            return new HDKey(privateKey, chainCode, Hd.Kind, Curve.Kind);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public Signature SignOperation(byte[] bytes) => Key.SignOperation(bytes);
 
-        public HDKey Derive(HDPath path) 
-        {
-            var (privateKey, chainCode) = path.Indexes
-                .Aggregate((PrivKey: Key.GetBytes(), ChainCode), (mks, next) => Hd.GetChildPrivateKey(Curve, mks.PrivKey, mks.ChainCode, next));
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="signature"></param>
+        /// <returns></returns>
+        public bool Verify(byte[] data, byte[] signature) => Key.Verify(data, signature);
 
-            return new HDKey(privateKey, chainCode, Hd.Kind, Curve.Kind);
-        }
-
-        public HDKey Derive(string path)
-        {
-            return Derive(HDPath.Parse(path));
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="signature"></param>
+        /// <returns></returns>
+        public bool Verify(string message, string signature) => Key.Verify(message, signature);
 
         #region static
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="chainCode"></param>
+        /// <returns></returns>
+        public static HDKey FromKey(Key key, byte[] chainCode) => new(key, chainCode);
 
-        public static HDKey FromBytes(byte[] bytes, HDStandardKind hdStandard = HDStandardKind.Slip10,
-            ECKind ecKind = ECKind.Ed25519)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mnemonic"></param>
+        /// <param name="passphrase"></param>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        public static HDKey FromMnemonic(Mnemonic mnemonic, string passphrase = "", ECKind kind = ECKind.Ed25519)
         {
-            var (privateKey, chainCode) = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), bytes);
-            return new HDKey(privateKey, chainCode, hdStandard, ecKind, true);
-        }
-
-        public static HDKey FromHex(string hex, HDStandardKind hdStandard = HDStandardKind.Slip10,
-            ECKind ecKind = ECKind.Ed25519)
-        {
-            var (privateKey, chainCode) = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), Hex.Parse(hex));
-            return new HDKey(privateKey, chainCode, hdStandard, ecKind, true);
-        }
-
-        public static HDKey FromBase64(string privateKey, string chainCode, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-            => new HDKey(Base64.Parse(privateKey), Base64.Parse(chainCode), hdStandard, ecKind, true);
-
-        public static HDKey FromSeed(byte[] seed, HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-        {
-            var (privateKey, chainCode) = HDStandard.FromKind(hdStandard).GenerateMasterKey(Curve.FromKind(ecKind), seed);
-            return new HDKey(privateKey, chainCode, hdStandard, ecKind, true);
-        }
-        
-        public static HDKey FromMnemonic(Mnemonic mnemonic, string passphrase = "", HDStandardKind hdStandard = HDStandardKind.Slip10, ECKind ecKind = ECKind.Ed25519)
-        {
+            if (mnemonic == null) throw new ArgumentNullException(nameof(mnemonic));
             var seed = mnemonic.GetSeed(passphrase);
-            var key = FromSeed(seed, hdStandard, ecKind);
+            var key = FromSeed(seed, kind);
             seed.Flush();
             return key;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="seed"></param>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        public static HDKey FromSeed(byte[] seed, ECKind kind = ECKind.Ed25519)
+        {
+            if (seed == null) throw new ArgumentNullException(nameof(seed));
+            var (prvKey, chainCode) = HDStandard.Slip10.GenerateMasterKey(Curve.FromKind(kind), seed);
+            return new(new(prvKey, kind, true), chainCode);
         }
         #endregion
     }
