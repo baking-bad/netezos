@@ -104,6 +104,7 @@ Following is a chart of Tezos operations and their operation native type counter
 | endorsement                 | EndorsementContent         |
 | origination                 | OriginationContent         |
 | proposals                   | ProposalsContent           |
+| register_global_constant    | RegisterConstantContent    |
 | reveal                      | RevealContent              |
 | seed_nonce_revelation       | SeedNonceRevelationContent |
 | transaction                 | TransactionContent         |

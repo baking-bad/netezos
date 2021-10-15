@@ -1,5 +1,8 @@
 - name: Get Started
   href: get-started.md
+  
+- name: Wallet Import
+  href: wallet-import.md
 
 - name: Tezos RPC
   href: tezos-rpc.md
