@@ -122,7 +122,7 @@ namespace Netezos.Keys
         internal static uint GetIndex(int index, bool hardened)
         {
             if (index < 0)
-                throw new ArgumentException(nameof(index), "Index must be positive");
+                throw new ArgumentException("Index must be positive", nameof(index));
 
             return hardened ? (uint)index | 0x80000000 : (uint)index;
         }
