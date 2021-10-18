@@ -56,6 +56,13 @@ namespace Netezos.Keys
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
+        public HDPubKey Derive(string path) => Derive(HDPath.Parse(path));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public HDPubKey Derive(HDPath path)
         {
             if (path == null)
