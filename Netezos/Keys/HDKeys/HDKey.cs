@@ -4,33 +4,34 @@ using Netezos.Utils;
 
 namespace Netezos.Keys
 {
+    //TODO Fill in returns summary
     /// <summary>
-    /// 
+    /// Private Hierarchical Deterministic Key
     /// </summary>
     public class HDKey
     {
         /// <summary>
-        /// 
+        /// Private Key
         /// </summary>
         public Key Key { get; }
 
         /// <summary>
-        /// 
+        /// 256 bits of entropy added to the public and private keys to help them generate secure child keys
         /// </summary>
         public byte[] ChainCode => _ChainCode.Copy();
 
         /// <summary>
-        /// 
+        /// Public Key
         /// </summary>
         public PubKey PubKey => Key.PubKey;
 
         /// <summary>
-        /// 
+        /// Public Hierarchical Deterministic Key
         /// </summary>
         public HDPubKey HDPubKey => _HDPubKey ??= new(Key.PubKey, _ChainCode);
 
         /// <summary>
-        /// 
+        /// Public Key Hash
         /// </summary>
         public string Address => Key.Address;
 
@@ -41,9 +42,9 @@ namespace Netezos.Keys
         ISecretStore Store => Key.Store;
 
         /// <summary>
-        /// 
+        /// Gets an elliptic curve kind and return a generated Private Hierarchical Deterministic Key
         /// </summary>
-        /// <param name="kind"></param>
+        /// <param name="kind">Elliptic curve kind. Ed25519, Secp256k1 and Nistp256 are supported</param>
         public HDKey(ECKind kind = ECKind.Ed25519)
         {
             Key = new(RNG.GetBytes(32), kind, true);
@@ -58,11 +59,11 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// 
+        /// Derives a new extended key in the hierarchy as the given child number.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="hardened"></param>
-        /// <returns></returns>
+        /// <param name="index">Child number index</param>
+        /// <param name="hardened">Hardened key or not (or, equivalently, whether i ≥ 2^31)</param>
+        /// <returns>Derived child Hierarchical Deterministic Private Key</returns>
         public HDKey Derive(int index, bool hardened = false)
         {
             var uind = HDPath.GetIndex(index, hardened);
@@ -74,17 +75,17 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// 
+        /// Derives a new extended key in the hierarchy at the given path string below the current key, by deriving the specified child at each step.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">The Key path formated like m/44'/1729'/0'/0'</param>
+        /// <returns>Derived child Hierarchical Deterministic Private Key</returns>
         public HDKey Derive(string path) => Derive(HDPath.Parse(path));
 
         /// <summary>
-        /// 
+        /// Derives a new extended key in the hierarchy at the given path object below the current key, by deriving the specified child at each step.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">Represent a path in the hierarchy of HD keys (BIP32)</param>
+        /// <returns>Derived child Hierarchical Deterministic Private Key</returns>
         public HDKey Derive(HDPath path)
         {
             if (path == null)
@@ -106,47 +107,47 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// 
+        /// Gets an array of bytes and sign it with the given key. Returns a Signature object.
         /// </summary>
-        /// <param name="bytes"></param>
-        /// <returns></returns>
+        /// <param name="bytes">Array of bytes</param>
+        /// <returns>Signature object</returns>
         public Signature Sign(byte[] bytes) => Key.Sign(bytes);
 
         /// <summary>
-        /// 
+        /// Gets a message string and sign it with the given key. Returns a Signature object.
         /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
+        /// <param name="message">Any string to be signed</param>
+        /// <returns>Signature object</returns>
         public Signature Sign(string message) => Key.Sign(message);
 
         /// <summary>
-        /// 
+        /// Prepends forged operation bytes with 0x03 and signs the result
         /// </summary>
-        /// <param name="bytes"></param>
-        /// <returns></returns>
+        /// <param name="bytes">Forged operation bytes</param>
+        /// <returns>Signature object</returns>
         public Signature SignOperation(byte[] bytes) => Key.SignOperation(bytes);
 
         /// <summary>
-        /// 
+        /// Gets arrays of bytes of data and signature and verify them with the given public key. Returns true if the given signature is valid.
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="signature"></param>
-        /// <returns></returns>
+        /// <param name="data">An array of the signed payload data</param>
+        /// <param name="signature">The signature to be verified</param>
+        /// <returns>True if the signature is valid</returns>
         public bool Verify(byte[] data, byte[] signature) => Key.Verify(data, signature);
 
         /// <summary>
-        /// 
+        /// Gets a message string and a signature string nd verify them with the given public key. Returns true if the given signature is valid. 
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="signature"></param>
-        /// <returns></returns>
+        /// <param name="message">String representation of the signed payload data</param>
+        /// <param name="signature">The signature to be verified</param>
+        /// <returns>True if the signature is valid</returns>
         public bool Verify(string message, string signature) => Key.Verify(message, signature);
 
         #region static
         /// <summary>
-        /// 
+        /// Gets a private key and a chain code and returns a Hierarchical Deterministic Private Key.
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">Private Key</param>
         /// <param name="chainCode"></param>
         /// <returns></returns>
         public static HDKey FromKey(Key key, byte[] chainCode) => new(key, chainCode);
