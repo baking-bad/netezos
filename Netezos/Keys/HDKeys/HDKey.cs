@@ -77,7 +77,7 @@ namespace Netezos.Keys
         /// <summary>
         /// Derives a new extended key in the hierarchy at the given path string below the current key, by deriving the specified child at each step.
         /// </summary>
-        /// <param name="path">The Key path formated like m/44'/1729'/0'/0'</param>
+        /// <param name="path">The Key path formatted like m/44'/1729'/0/0'</param>
         /// <returns>Derived child Hierarchical Deterministic Private Key</returns>
         public HDKey Derive(string path) => Derive(HDPath.Parse(path));
 
@@ -148,17 +148,18 @@ namespace Netezos.Keys
         /// Gets a private key and a chain code and returns a Hierarchical Deterministic Private Key.
         /// </summary>
         /// <param name="key">Private Key</param>
-        /// <param name="chainCode"></param>
-        /// <returns></returns>
+        /// <param name="chainCode">256 bits of entropy added to the public and private keys to help them generate secure child keys</param>
+        /// <returns>Private Hierarchical Deterministic Key</returns>
         public static HDKey FromKey(Key key, byte[] chainCode) => new(key, chainCode);
 
         /// <summary>
-        /// 
+        /// Gets a BIP-0039 mnemonic, a passphrase and an elliptic curve kind. If a passphrase is not present, an empty string "" is used instead.
+        /// Returns a Hierarchical Deterministic Private Key.
         /// </summary>
-        /// <param name="mnemonic"></param>
-        /// <param name="passphrase"></param>
-        /// <param name="kind"></param>
-        /// <returns></returns>
+        /// <param name="mnemonic">BIP-0039 mnemonic sentence</param>
+        /// <param name="passphrase">Passphrase string. If a passphrase is not present, an empty string "" is used instead.</param>
+        /// <param name="kind">Elliptic curve kind. Ed25519, Secp256k1 and Nistp256 are supported</param>
+        /// <returns>Private Hierarchical Deterministic Key</returns>
         public static HDKey FromMnemonic(Mnemonic mnemonic, string passphrase = "", ECKind kind = ECKind.Ed25519)
         {
             if (mnemonic == null) throw new ArgumentNullException(nameof(mnemonic));
@@ -169,11 +170,11 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// 
+        /// Gets a seed byte sequence and an elliptic curve kind. Returns a Hierarchical Deterministic Private Key.
         /// </summary>
-        /// <param name="seed"></param>
-        /// <param name="kind"></param>
-        /// <returns></returns>
+        /// <param name="seed">Seed byte sequence</param>
+        /// <param name="kind">Elliptic curve kind. Ed25519, Secp256k1 and Nistp256 are supported</param>
+        /// <returns>Private Hierarchical Deterministic Key</returns>
         public static HDKey FromSeed(byte[] seed, ECKind kind = ECKind.Ed25519)
         {
             if (seed == null) throw new ArgumentNullException(nameof(seed));

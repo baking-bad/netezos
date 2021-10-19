@@ -6,7 +6,7 @@ using System.Linq;
 namespace Netezos.Keys
 {
     /// <summary>
-    /// 
+    /// Represent a path in the hierarchy of HD keys (BIP32)
     /// </summary>
     public class HDPath : IEnumerable<uint>
     {
@@ -18,7 +18,7 @@ namespace Netezos.Keys
         readonly uint[] Indexes;
 
         /// <summary>
-        /// 
+        /// Creates an empty HDPath object
         /// </summary>
         public HDPath()
         {
@@ -26,9 +26,9 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// 
+        /// Creates an HDPath object for a given string path.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">The Key path formatted like m/44'/1729'/0/0'</param>
         public HDPath(string path)
         {
             path = path?.TrimStart('m').Trim('/')
@@ -44,11 +44,11 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// 
+        /// Add an index child number to the HDPath object.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="hardened"></param>
-        /// <returns></returns>
+        /// <param name="index">Child number index</param>
+        /// <param name="hardened">Hardened key or not (or, equivalently, whether i ≥ 2^31)</param>
+        /// <returns>HDPath object, extended by the given index.</returns>
         public HDPath Derive(int index, bool hardened = false)
         {
             var indexes = new uint[Indexes.Length + 1];
@@ -58,20 +58,17 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// 
+        /// Convert the HDPath object to the string representation, formatted like m/44'/1729'/0/0'
         /// </summary>
-        /// <returns></returns>
+        /// <returns>HDPath string representation, formatted like m/44'/1729'/0/0'</returns>
         public override string ToString()
         {
-            if (Indexes.Length == 0) return "m";
-            return $"m/{string.Join("/", Indexes.Select(IndexToString))}";
+            return Indexes.Length == 0 ? "m" : $"m/{string.Join("/", Indexes.Select(IndexToString))}";
         }
 
         #region IEnumerable
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Returns an enumerator that iterates through an indexes collection.</summary>
+        /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the indexes collection.</returns>
         public IEnumerator<uint> GetEnumerator() => ((IEnumerable<uint>)Indexes).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => Indexes.GetEnumerator();
@@ -79,21 +76,21 @@ namespace Netezos.Keys
 
         #region static
         /// <summary>
-        /// 
+        /// Convert the key path, formatted like m/44'/1729'/0/0', to the HDPath object
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">The Key path formatted like m/44'/1729'/0/0'</param>
+        /// <returns>HDPath object</returns>
         public static HDPath Parse(string path)
         {
             return new(path);
         }
 
         /// <summary>
-        /// 
+        /// Try to convert the key path, formatted like m/44'/1729'/0/0', to the HDPath object
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="res"></param>
-        /// <returns></returns>
+        /// <param name="path">The key path, formatted like m/44'/1729'/0/0'</param>
+        /// <param name="res">The successfully parsed Key path</param>
+        /// <returns>True if the string is parsed successfully; otherwise false</returns>
         public static bool TryParse(string path, out HDPath res)
         {
             res = null;
