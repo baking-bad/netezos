@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Netezos.Encoding;
 using Netezos.Forging.Models;
@@ -43,7 +44,7 @@ namespace Netezos.Sandbox.HeaderMethods
             var header = parameters.BlockHeader;
 
             var predShellHeader = await Rpc.Blocks[BlockId].Header.Shell.GetAsync<ShellHeaderContent>();
-            var timestamp = predShellHeader.Timestamp + TimeSpan.FromSeconds(1);
+            var timestamp = predShellHeader.Timestamp + TimeSpan.FromSeconds(5);
 
             var protocols = await Rpc.Blocks[BlockId].Protocols.GetAsync<Dictionary<string, string>>();
             header.ProtocolData.ProtocolHash = protocols["next_protocol"];
@@ -69,7 +70,7 @@ namespace Netezos.Sandbox.HeaderMethods
                     .Helpers
                     .Preapply
                     .Block
-                    .PostAsync<ShellHeaderWithOperations>(
+                    .PostAsync<PreapplyShellHeaderResult>(
                         header.ProtocolData.ProtocolHash,
                         header.ProtocolData.Priority,
                         header.ProtocolData.ProofOfWorkNonce,
@@ -79,6 +80,14 @@ namespace Netezos.Sandbox.HeaderMethods
                     );
 
                 parameters.BlockHeader.ShellHeader = bakeBlockResult.ShellHeader;
+
+                parameters.ForgedOperations = new List<PreapplyHashOperation>[0].ToList();
+
+                foreach (var operation in bakeBlockResult.Operations)
+                {
+                    parameters.ForgedOperations.Add(operation["applied"]);
+                }
+
                 return parameters;
             }
 
@@ -90,7 +99,7 @@ namespace Netezos.Sandbox.HeaderMethods
                     .Helpers
                     .Preapply
                     .Block
-                    .PostAsync<ShellHeaderWithOperations>(
+                    .PostAsync<PreapplyShellHeaderResult>(
                         header.ProtocolData.ProtocolHash,
                         protocolData.Content.Command,
                         protocolData.Content.Hash,

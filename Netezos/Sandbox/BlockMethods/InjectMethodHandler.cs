@@ -11,7 +11,7 @@ namespace Netezos.Sandbox.BlockMethods
 {
     public class InjectMethodHandler : BlockMethodHandler
     {
-        public InjectMethodHandler(TezosRpc rpc, 
+        internal InjectMethodHandler(TezosRpc rpc, 
             BlockParameters headerParameters, 
             Func<BlockParameters, Task<ForwardingParameters>> function = null) 
             : base(rpc, headerParameters, function)
@@ -22,7 +22,7 @@ namespace Netezos.Sandbox.BlockMethods
         {
             var parameters = await Function(Values);
             var binaryPayload = await BinaryPayload();
-            return await Rpc.Inject.Operation.PostAsync<MempoolOperation>(binaryPayload, async:false);
+            return await Rpc.Inject.Operation.PostAsync<dynamic>(binaryPayload, async:false);
         }
 
         private async Task<byte[]> BinaryPayload()
@@ -40,7 +40,7 @@ namespace Netezos.Sandbox.BlockMethods
             if (Values.Signature == null)
                 throw new NullReferenceException("Not Signed");
 
-            return Hex.Parse(forgedData).Concat(Base58.Parse(Values.Signature));
+            return Hex.Parse(forgedData).Concat(Base58.Parse(Values.Signature, 5));
         }
 
         internal override Task<ForwardingParameters> CallAsync(BlockParameters values)

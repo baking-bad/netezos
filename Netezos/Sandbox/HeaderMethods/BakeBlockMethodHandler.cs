@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using Netezos.Forging.Models;
 using Netezos.Keys;
 using Netezos.Rpc;
+using Netezos.Sandbox.Base;
 using Netezos.Sandbox.Models;
 
 namespace Netezos.Sandbox.HeaderMethods
 {
-    public class BakeBlockMethodHandler : HeaderMethodHandler
+    public class BakeBlockMethodHandler : HeaderMethodHandler, IBakeBlockHandler
     {
         /// <summary>
         /// Filling missing fields essential for preapply 
@@ -25,6 +26,12 @@ namespace Netezos.Sandbox.HeaderMethods
             parameters.MinFee = minFee;
         }
 
+        internal BakeBlockMethodHandler(TezosRpc rpc, HeaderParameters parameters, Key key, int minFee) : base(rpc, parameters)
+        {
+            parameters.Key = key.GetBase58();
+            parameters.MinFee = minFee;
+        }
+
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
         internal override async Task<ForwardingParameters> CallAsync(HeaderParameters parameters)
@@ -32,13 +39,9 @@ namespace Netezos.Sandbox.HeaderMethods
 
             var pendingOperations = await Rpc.Mempool.PendingOperations.GetAsync<MempoolOperations>();
 
-            var forwardingOperations = new List<List<MempoolOperation>>()
-            {
-                new List<MempoolOperation>(),
-                new List<MempoolOperation>(),
-                new List<MempoolOperation>(),
-                new List<MempoolOperation>()
-            };
+            var forwardingOperations = new List<MempoolOperation>[4]
+                .Select(x => new List<MempoolOperation>())
+                .ToList();
 
             var operations = pendingOperations.Applied?
                 .Where(x => x != null)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Netezos.Forging.Models;
 using Netezos.Keys;
 using Netezos.Rpc;
@@ -31,6 +32,28 @@ namespace Netezos.Sandbox
         }
 
         public IBlockHeaderClient Header => BlockHeaderClient;
+
+        public async Task<dynamic> BakeBlock(string keyName, string blockId)
+        {
+            lock (this)
+            {
+                return BlockHeaderClient.BakeBlock(keyName).Fill(blockId).Work.Sign.InjectBlock.CallAsync().Result;
+            }
+        }
+
+        public async Task<dynamic> ActivateProtocol(string keyName, string blockId) => 
+            await BlockHeaderClient.ActivateProtocol(keyName).Fill(blockId).Sign.InjectBlock.CallAsync();
+
+        public async Task<dynamic> BakeBlock(Key key, string blockId)
+        {
+            lock (this)
+            {
+                return BlockHeaderClient.BakeBlock(key).Fill(blockId).Work.Sign.InjectBlock.CallAsync().Result;
+            }
+        }
+
+        public async Task<dynamic> ActivateProtocol(Key key, string blockId) => 
+            await BlockHeaderClient.ActivateProtocol(key).Fill(blockId).Sign.InjectBlock.CallAsync();
 
         public void Dispose()
         {

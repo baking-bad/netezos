@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using TestContainers.Container.Abstractions;
 using TestContainers.Container.Abstractions.Hosting;
 
-namespace Netezos.Tests.Rpc
+namespace Netezos.Tests.Startup
 {
     public class NodeContainer
     {

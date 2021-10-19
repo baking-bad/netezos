@@ -29,9 +29,9 @@ namespace Netezos.Sandbox.HeaderMethods
         {
             var parameters = await Function.Invoke(Values);
 
-            long.TryParse(values.ProtocolParameters.ProofOfWorkThreshold, out long threshold);
+            decimal.TryParse(values.ProtocolParameters.ProofOfWorkThreshold, out var threshold);
 
-            var nonce = 0;
+            long nonce = 0;
             while (PowStamp(parameters.BlockHeader.ShellHeader, parameters.BlockHeader.ProtocolData) > threshold)
             {
                 nonce++;
@@ -41,7 +41,7 @@ namespace Netezos.Sandbox.HeaderMethods
             return parameters;
         }
 
-        private long PowStamp(ShellHeaderContent header, ProtocolDataContent protocolData)
+        private decimal PowStamp(ShellHeaderContent header, ProtocolDataContent protocolData)
         {
             var data = LocalForge.Concat(
                 LocalForge.ForgeHeaderValues(header, protocolData),
@@ -49,7 +49,11 @@ namespace Netezos.Sandbox.HeaderMethods
 
             var hashDigest = Blake2b.GetDigest(data).Take(8).ToArray();
 
-            return BitConverter.ToInt64(hashDigest, 0);
+            // byte order
+            hashDigest = BitConverter.IsLittleEndian ? hashDigest.Reverse() : hashDigest;
+
+            var pow = BitConverter.ToUInt64(hashDigest, 0);
+            return pow;
         }
     }
 }

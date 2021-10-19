@@ -11,7 +11,7 @@ namespace Netezos.Sandbox.BlockMethods
 {
     public class FillMethodHandler : BlockMethodHandler
     {
-        public FillMethodHandler(TezosRpc rpc,
+        internal FillMethodHandler(TezosRpc rpc,
             BlockParameters parameters,
             Func<BlockParameters, Task<ForwardingParameters>> function = null) 
             : base(rpc, parameters, function)
@@ -39,11 +39,12 @@ namespace Netezos.Sandbox.BlockMethods
 
             values.Protocol = shellHeader["protocol"].GetString();
             var source = values.Key.PubKey.Address;
-            values.Counter = values.Counter == 0 
+            var counter = values.Counter == 0 
                 ? await Rpc.Blocks.Head.Context.Contracts[source].Counter.GetAsync<int>() + 1
                 : values.Counter;
 
-            values.Operations = values.Operations.Select(FillConstants).ToList();
+            var constants = await Rpc.Blocks[values.Branch].Context.Constants.GetAsync<ConstantsContent>();
+            values.Operations = values.Operations.Select(x => FillConstants(x, constants, ref counter)).ToList();
 
             var parameters = new ForwardingParameters()
             {
@@ -63,7 +64,7 @@ namespace Netezos.Sandbox.BlockMethods
             return parameters;
         }
 
-        private OperationContent FillConstants(OperationContent operation)
+        private OperationContent FillConstants(OperationContent operation, ConstantsContent constants, ref int counter)
         {
             switch (operation)
             {
@@ -82,7 +83,6 @@ namespace Netezos.Sandbox.BlockMethods
                     return proposals;
                 case ActivationContent activation:
                     activation.Address = Values.Key.PubKey.Address;
-                    activation.Secret = "7375ef222cc038001b6c8fb768246c86e994745b";
                     return activation;
                 case DoubleBakingContent doubleBaking:
                     return doubleBaking;
@@ -92,32 +92,32 @@ namespace Netezos.Sandbox.BlockMethods
                     return seed;
                 case DelegationContent delegation:
                     delegation.Delegate = Values.Key.PubKey.Address;
-                    delegation.Source = Values.Key.PubKey.Address;
-                    delegation.Counter = ++Values.Counter;
-                    delegation.GasLimit = delegation.DefaultGasLimit();
-                    delegation.StorageLimit = delegation.DefaultStorageLimit();
+                    delegation.Source =  Values.Key.PubKey.Address;
+                    delegation.Counter = counter++;
+                    delegation.GasLimit = delegation.DefaultGasLimit(constants);
+                    delegation.StorageLimit = delegation.DefaultStorageLimit(constants);
                     return delegation;
                 case OriginationContent origination:
-                    origination.Delegate = Values.Key.PubKey.Address;
-                    origination.Source = Values.Key.PubKey.Address;
-                    origination.Counter = ++Values.Counter;
-                    origination.GasLimit = origination.DefaultGasLimit();
-                    origination.StorageLimit = origination.DefaultStorageLimit();
+                    origination.Delegate =  Values.Key.PubKey.Address;
+                    origination.Source =  Values.Key.PubKey.Address;
+                    origination.Counter = counter++;
+                    origination.GasLimit = origination.DefaultGasLimit(constants);
+                    origination.StorageLimit = origination.DefaultStorageLimit(constants);
                     return origination;
                 case TransactionContent transaction:
-                    transaction.Fee = transaction.DefaultFee();
                     transaction.Source = Values.Key.PubKey.Address;
-                    transaction.Counter = ++Values.Counter;
-                    transaction.GasLimit = transaction.DefaultGasLimit();
-                    transaction.StorageLimit = transaction.DefaultStorageLimit();
+                    transaction.Counter = counter++;
+                    transaction.GasLimit = transaction.DefaultGasLimit(constants);
+                    transaction.StorageLimit = transaction.DefaultStorageLimit(constants);
+                    transaction.Fee = transaction.DefaultFee(constants);
                     return transaction;
                 case RevealContent reveal:
-                    reveal.PublicKey = Values.Key.PubKey.Address;
+                    reveal.PublicKey = Values.Key.PubKey.GetBase58();
                     reveal.Source = Values.Key.PubKey.Address;
-                    reveal.Fee = reveal.DefaultFee();
-                    reveal.Counter = ++Values.Counter;
-                    reveal.GasLimit = reveal.DefaultGasLimit();
-                    reveal.StorageLimit = reveal.DefaultStorageLimit();
+                    reveal.Fee = reveal.DefaultFee(constants);
+                    reveal.Counter = counter++;
+                    reveal.GasLimit = reveal.DefaultGasLimit(constants);
+                    reveal.StorageLimit = reveal.DefaultStorageLimit(constants);
                     return reveal;
                 default:
                     throw new ArgumentException($"Invalid operation content kind {operation.Kind}");

@@ -14,9 +14,10 @@ namespace Netezos
         /// Take hard gas limit instead of precise amount (no simulation) and calculate fee.
         /// </summary>
         /// <param name="operation">operation</param>
-        public static int DefaultFee(this OperationContent operation)
+        /// <param name="constants">Constants from context current branch</param>
+        public static int DefaultFee(this OperationContent operation, ConstantsContent constants)
         {
-            return CalculateFee(operation, operation.DefaultGasLimit(), 32 + 64 + 3 * 3);
+            return CalculateFee(operation, operation.DefaultGasLimit(constants), 32 + 64 + 3 * 3);
         }
 
         /// <summary>

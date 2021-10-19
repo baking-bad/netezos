@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Netezos.Encoding;
+using Netezos.Forging;
 using Netezos.Keys;
 using Netezos.Rpc;
 using Netezos.Sandbox.Base;
@@ -11,7 +12,7 @@ namespace Netezos.Sandbox.BlockMethods
 {
     public class SignMethodHandler : BlockMethodHandler
     {
-        public SignMethodHandler(
+        internal SignMethodHandler(
             TezosRpc rpc, 
             BlockParameters headerParameters, 
             Func<BlockParameters, Task<ForwardingParameters>> function = null) 

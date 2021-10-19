@@ -2,6 +2,7 @@
 using Dynamic.Json;
 using Netezos.Forging.Models;
 using Netezos.Rpc;
+using Netezos.Tests.Startup;
 using Xunit;
 
 namespace Netezos.Tests.Rpc

@@ -10,9 +10,10 @@ using Netezos.Forging.Models;
 using Netezos.Keys;
 using Netezos.Rpc;
 using Netezos.Sandbox;
+using Netezos.Sandbox.Models;
 using Xunit;
 
-namespace Netezos.Tests.Rpc
+namespace Netezos.Tests.Startup
 {
     public class SettingsFixture : IDisposable, IAsyncLifetime
     {
@@ -22,6 +23,7 @@ namespace Netezos.Tests.Rpc
         public SandboxService SandboxService { get; }
 
         public Key ActiveKey { get; }
+        public string SecretActiveKey { get; }
         public string TestContract { get; }
         public string TestDelegate { get; }
         public string TestInactive { get; }
@@ -32,12 +34,11 @@ namespace Netezos.Tests.Rpc
         {
             lock (Crit)
             {
-                var settings = DJson.Read("../../../Rpc/settings.json");
+                var settings = DJson.Read("../../../Startup/settings.json");
                 var node = GetActiveNodeConfig(settings);
 
                 Rpc = new TezosRpc($"{node.host}:{node.port}", 60);
 
-                
                 if (node.type.ToString().Equals("internal"))
                 {
                     NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
@@ -50,16 +51,19 @@ namespace Netezos.Tests.Rpc
                         headerConfig.protocol,
                         keys,
                         JsonSerializer.Deserialize<ProtocolParametersContent>(
-                            headerConfig.protocolParameters.ToString())
+                            headerConfig.protocolParameters.ToString()),
+                        JsonSerializer.Deserialize<SandboxConstants>(
+                            node.sandboxConstants.ToString())
                         );
-                        
+
+                    ActiveKey = Key.FromMnemonic(
+                        new Mnemonic(JsonSerializer.Deserialize<List<string>>(node.sandboxCommitment.mnemonic)), 
+                        node.sandboxCommitment.email,
+                        node.sandboxCommitment.password);
+                    SecretActiveKey = node.sandboxCommitment.secret.ToString();
+
                     HealthCheckTimeout = node.healthCheckOnStartedTimeout;
                 }
-
-                ActiveKey = Key.FromMnemonic(new Mnemonic(new List<string>()
-                {
-                    "arctic", "blame", "brush", "economy", "solar", "swallow", "canvas", "live", "vote", "two", "post", "neutral", "spare", "split", "fall",
-                }), "nbhcylbg.xllfjgrk@tezos.example.org", "ZuPOpZgMNM");
 
                 TestContract = settings.TestContract;
                 TestDelegate = settings.TestDelegate;
@@ -95,9 +99,8 @@ namespace Netezos.Tests.Rpc
 
                 if (SandboxService != null)
                 {
-                    var branch = await SandboxService.Header.ActivateProtocol("dictator").Fill("genesis").Sign.InjectBlock.CallAsync();
-                    await SandboxService.Header.BakeBlock("bootstrap1").Fill("head").Work.Sign.InjectBlock.CallAsync();
-
+                    await SandboxService.ActivateProtocol("dictator", "genesis");
+                    await SandboxService.BakeBlock("bootstrap2", "head");
                 }
             }
         }

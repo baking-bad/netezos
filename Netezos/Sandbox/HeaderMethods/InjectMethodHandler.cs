@@ -35,7 +35,7 @@ namespace Netezos.Sandbox.HeaderMethods
             );
 
             var hash = await Rpc.Inject.Block.PostAsync<string>(data, 
-                parameters.Operations?.Select(x => x.Select(y => (object)y)) 
+                parameters.ForgedOperations?.Select(x => x.Select(y => (object)y)) 
                         ?? new List<List<object>>(), 
                 force:true, 
                 async:false

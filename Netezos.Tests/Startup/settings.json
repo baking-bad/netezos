@@ -64,6 +64,40 @@
             "initial_endorsers": 0.0,
             "delay_per_missing_endorsement": "1"
           }
+        },
+        "sandboxCommitment": {
+            "mnemonic": [
+              "arctic",
+              "blame",
+              "brush",
+              "economy",
+              "solar",
+              "swallow",
+              "canvas",
+              "live",
+              "vote",
+              "two",
+              "post",
+              "neutral",
+              "spare",
+              "split",
+              "fall"
+            ],
+            "secret": "7375ef222cc038001b6c8fb768246c86e994745b",
+            "amount": "38323962971",
+            "pkh": "tz1W86h1XuWy6awbNUTRUgs6nk8q5vqXQwgk",
+            "password": "ZuPOpZgMNM",
+            "email": "nbhcylbg.xllfjgrk@tezos.example.org"
+        },
+        "sandboxConstants": {
+          "gas_reserve": 3,
+          "burn_reserve": 3,
+          "counter": 3,
+          "ttl": 3,
+          "fee": 43,
+          "gas_limit": 34,
+          "storage_limit": 43,
+          "branch_offset": 34
         }
       }
     },

@@ -25,11 +25,25 @@ namespace Netezos.Forging.Models
         public string Context { get; set; }
     }
 
-    public class ShellHeaderWithOperations
+    internal class PreapplyShellHeaderResult
     {
         [JsonPropertyName("shell_header")]
         public ShellHeaderContent ShellHeader { get; set; }
+
         [JsonPropertyName("operations")]
-        public List<Dictionary<string, List<Operation>>> Operations { get; set; }
+        public List<Dictionary<string, List<PreapplyHashOperation>>> Operations { get; set; }
+    }
+
+    public class PreapplyHashOperation
+    {
+        [JsonIgnore]
+        public string Hash { get; set; }
+
+        [JsonPropertyName("branch")]
+        public string Branch { get; set; }
+
+        [JsonPropertyName("data")]
+        public string Data { get; set; }
+
     }
 }

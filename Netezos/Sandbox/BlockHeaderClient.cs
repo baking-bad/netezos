@@ -36,7 +36,11 @@ namespace Netezos.Sandbox
 
         public ActivateProtocolMethodHandler ActivateProtocol(string keyName) => new ActivateProtocolMethodHandler(Rpc, Values, keyName);
 
+        public ActivateProtocolMethodHandler ActivateProtocol(Key key) => new ActivateProtocolMethodHandler(Rpc, Values, key);
+
         public BakeBlockMethodHandler BakeBlock(string keyName, int minFee = 0) => new BakeBlockMethodHandler(Rpc, Values, keyName, minFee);
+
+        public BakeBlockMethodHandler BakeBlock(Key key, int minFee = 0) => new BakeBlockMethodHandler(Rpc, Values, key, minFee);
 
         public void Dispose() => Rpc.Dispose();
     }
