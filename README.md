@@ -14,7 +14,7 @@ The following features have been implemented so far:
 | --------- | ----------- | ------ |
 | Netezos.Contracts | Interaction with Tezos smart contracts | Ready to use. Dynamic wrapper: in progress... |
 | Netezos.Forge| Forging (encoding) operation bytes | Ready to use |
-| Netezos.Keys| Working with keys, signing, verifying signature, etc. | Ready to use. HD keys: in progress... |
+| Netezos.Keys| Working with keys, HD keys, signing, verifying signature, etc. | Ready to use |
 | Netezos.Ledger| Interaction with Tezos Ledger App | Ready to use (separate package) |
 | Netezos.Rpc | Tezos RPC wrapper | Ready to use |
 

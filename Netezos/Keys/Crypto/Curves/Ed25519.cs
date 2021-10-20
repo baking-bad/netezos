@@ -7,12 +7,17 @@ namespace Netezos.Keys
 {
     class Ed25519 : Curve
     {
+        #region static
+        static readonly byte[] _SeedKey = { 101, 100, 50, 53, 53, 49, 57, 32, 115, 101, 101, 100 }; // "ed25519 seed"
+        #endregion
+        
         public override ECKind Kind => ECKind.Ed25519;
 
         public override byte[] AddressPrefix => Prefix.tz1;
         public override byte[] PublicKeyPrefix => Prefix.edpk;
         public override byte[] PrivateKeyPrefix => Prefix.edsk;
         public override byte[] SignaturePrefix => Prefix.edsig;
+        public override byte[] SeedKey => _SeedKey;
 
         public override byte[] GeneratePrivateKey()
         {

@@ -51,6 +51,15 @@ namespace Netezos.Keys
             using (Store.Unlock())
             {
                 return Base58.Convert(Store.Data, Curve.PublicKeyPrefix);
+
+            }
+        }
+
+        public string GetHex()
+        {
+            using (Store.Unlock())
+            {
+                return Hex.Convert(Store.Data);
             }
         }
 

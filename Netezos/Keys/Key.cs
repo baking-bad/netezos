@@ -5,6 +5,7 @@ namespace Netezos.Keys
 {
     public class Key
     {
+        public string Address => PubKey.Address;
         public PubKey PubKey
         {
             get
@@ -22,12 +23,10 @@ namespace Netezos.Keys
         }
         PubKey _PubKey;
 
-        readonly Curve Curve;
-        readonly ISecretStore Store;
+        internal readonly Curve Curve;
+        internal readonly ISecretStore Store;
 
-        public Key() : this(ECKind.Ed25519) { }
-
-        public Key(ECKind kind)
+        public Key(ECKind kind = ECKind.Ed25519)
         {
             Curve = Curve.FromKind(kind);
             var bytes = Curve.GeneratePrivateKey();
@@ -60,6 +59,14 @@ namespace Netezos.Keys
             using (Store.Unlock())
             {
                 return Base58.Convert(Store.Data, Curve.PrivateKeyPrefix);
+            }
+        }
+
+        public string GetHex()
+        {
+            using (Store.Unlock())
+            {
+                return Hex.Convert(Store.Data);
             }
         }
 

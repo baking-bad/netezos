@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 
-namespace Netezos.Forging
+namespace Netezos.Utils
 {
-    public partial class LocalForge
+    static class Bytes
     {
-        static byte[] Concat(params byte[][] arrays)
+        public static byte[] Concat(params byte[][] arrays)
         {
             var res = new byte[arrays.Sum(x => x.Length)];
 
