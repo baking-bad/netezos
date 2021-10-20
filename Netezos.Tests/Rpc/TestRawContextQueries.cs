@@ -67,11 +67,11 @@ namespace Netezos.Tests.Rpc
             var res3 = await query3.GetAsync();
             Assert.True(res3 is DJsonArray);
 
-            var query4 = Rpc.Blocks.Head.Context.Raw.BigMaps[(int)res[0]].Contents[res3[0]];
+            /*var query4 = Rpc.Blocks.Head.Context.Raw.BigMaps[(int)res[0]].Contents[res3[0]];
             Assert.Equal($"chains/main/blocks/head/context/raw/json/big_maps/index/{res[0]}/contents/{res3[0]}/", query4.ToString());
 
             var res4 = await query4.GetAsync();
-            Assert.True(res4 is DJsonObject);
+            Assert.True(res4 is DJsonObject);*/
         }
 
         [Fact]
@@ -450,8 +450,10 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Context.Raw.Rolls.OwnerSnapshot;
             Assert.Equal($"chains/main/blocks/head/context/raw/json/rolls/owner/snapshot/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
+            // Too heavy to test
+            /*var res = await query.GetAsync();
+            
+            Assert.True(res is DJsonArray);*/
         }
 
         [Fact]
@@ -490,8 +492,8 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Context.Raw.Votes.CurrentPeriodKind;
             Assert.Equal($"chains/main/blocks/head/context/raw/json/votes/current_period_kind/", query.ToString());
 
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            /*var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);*/
         }
 
         [Fact]

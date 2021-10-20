@@ -18,7 +18,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestHelpersBakingRights()
         {
             var query = Rpc.Blocks.Head.Helpers.BakingRights;
-            Assert.Equal($"chains/main/blocks/head/helpers/baking_rights/", query.ToString());
+            Assert.Equal($"chains/main/blocks/head/helpers/baking_rights", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
@@ -28,7 +28,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestHelpersEndorsingRights()
         {
             var query = Rpc.Blocks.Head.Helpers.EndorsingRights;
-            Assert.Equal($"chains/main/blocks/head/helpers/endorsing_rights/", query.ToString());
+            Assert.Equal($"chains/main/blocks/head/helpers/endorsing_rights", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);

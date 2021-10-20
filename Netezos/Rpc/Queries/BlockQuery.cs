@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets the query to the block hash
         /// </summary>
-        public RpcObject Hash => new RpcObject(this, "hash/");
+        public RpcObject Hash => new RpcObject(this, "hash");
 
         /// <summary>
         /// Gets the query to the block header
@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets the query to the block metadata
         /// </summary>
-        public RpcObject Metadata => new RpcObject(this, "metadata/");
+        public RpcObject Metadata => new RpcObject(this, "metadata");
 
         /// <summary>
         /// Gets the query to the list of the ancestors of the block which,

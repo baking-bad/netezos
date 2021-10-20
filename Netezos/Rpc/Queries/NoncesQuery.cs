@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="level">Level of the block</param>
         /// <returns></returns>
-        public RpcObject this[int level] => new RpcObject(this, $"{level}/");
+        public RpcObject this[int level] => new RpcObject(this, $"{level}");
 
         internal NoncesQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

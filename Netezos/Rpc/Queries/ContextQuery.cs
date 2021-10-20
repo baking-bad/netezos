@@ -41,7 +41,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the seed data
         /// </summary>
-        public SeedQuery Seed => new SeedQuery(this, "seed/");
+        public SeedQuery Seed => new SeedQuery(this, "seed");
 
         internal ContextQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

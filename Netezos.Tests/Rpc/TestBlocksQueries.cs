@@ -18,7 +18,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestBlockHash()
         {
             var query =  Rpc.Blocks.Head.Hash;
-            Assert.Equal($"chains/main/blocks/head/hash/", query.ToString());
+            Assert.Equal($"chains/main/blocks/head/hash", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -78,7 +78,7 @@ namespace Netezos.Tests.Rpc
         public async Task TestBlockMetadata()
         {
             var query = Rpc.Blocks.Head.Metadata;
-            Assert.Equal($"chains/main/blocks/head/metadata/", query.ToString());
+            Assert.Equal($"chains/main/blocks/head/metadata", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
