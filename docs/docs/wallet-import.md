@@ -32,7 +32,7 @@ That way, the `secondChild` path will be `"m/44'/1729'/1'/0'"` (default derivati
 ## Public Key Derivation
 
 Public key derivation process is identical to the private key derivation, but keep in mind that it always fails for `Ed25519` and it is only defined for non-hardened child keys.
-To create a `HDPubKey` object we need a public key and a child code
+To create an `HDPubKey` object we need a public key and a child code
 
 ```cs
 var hdKey = new HDKey(ECKind.NistP256);

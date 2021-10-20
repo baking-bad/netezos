@@ -4,7 +4,6 @@ using Netezos.Utils;
 
 namespace Netezos.Keys
 {
-    //TODO Fill in returns summary
     /// <summary>
     /// Private Hierarchical Deterministic Key
     /// </summary>
@@ -16,7 +15,7 @@ namespace Netezos.Keys
         public Key Key { get; }
 
         /// <summary>
-        /// 256 bits of entropy added to the public and private keys to help them generate secure child keys
+        /// 256 bits of entropy added to the private key to help it generate secure child keys
         /// </summary>
         public byte[] ChainCode => _ChainCode.Copy();
 
@@ -59,10 +58,10 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Derives a new extended key in the hierarchy as the given child number.
+        /// Derives a new extended key in the hierarchy as the given child index.
         /// </summary>
-        /// <param name="index">Child number index</param>
-        /// <param name="hardened">Hardened key or not (or, equivalently, whether i ≥ 2^31)</param>
+        /// <param name="index">Child index</param>
+        /// <param name="hardened">Hardened key or not (index | 0x80000000 will be performed)</param>
         /// <returns>Derived child Hierarchical Deterministic Private Key</returns>
         public HDKey Derive(int index, bool hardened = false)
         {
@@ -77,14 +76,14 @@ namespace Netezos.Keys
         /// <summary>
         /// Derives a new extended key in the hierarchy at the given path string below the current key, by deriving the specified child at each step.
         /// </summary>
-        /// <param name="path">The Key path formatted like m/44'/1729'/0/0'</param>
+        /// <param name="path">The key path formatted like m/44'/1729'/0/0'</param>
         /// <returns>Derived child Hierarchical Deterministic Private Key</returns>
         public HDKey Derive(string path) => Derive(HDPath.Parse(path));
 
         /// <summary>
         /// Derives a new extended key in the hierarchy at the given path object below the current key, by deriving the specified child at each step.
         /// </summary>
-        /// <param name="path">Represent a path in the hierarchy of HD keys (BIP32)</param>
+        /// <param name="path">HDPath object</param>
         /// <returns>Derived child Hierarchical Deterministic Private Key</returns>
         public HDKey Derive(HDPath path)
         {
@@ -107,14 +106,14 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Gets an array of bytes and sign it with the given key. Returns a Signature object.
+        /// Gets an array of bytes and sign it with the given key.
         /// </summary>
         /// <param name="bytes">Array of bytes</param>
         /// <returns>Signature object</returns>
         public Signature Sign(byte[] bytes) => Key.Sign(bytes);
 
         /// <summary>
-        /// Gets a message string and sign it with the given key. Returns a Signature object.
+        /// Gets a message string and sign it with the given key.
         /// </summary>
         /// <param name="message">Any string to be signed</param>
         /// <returns>Signature object</returns>
@@ -128,33 +127,32 @@ namespace Netezos.Keys
         public Signature SignOperation(byte[] bytes) => Key.SignOperation(bytes);
 
         /// <summary>
-        /// Gets arrays of bytes of data and signature and verify them with the given public key. Returns true if the given signature is valid.
+        /// Gets arrays of bytes of data and signature and verify them with the given public key.
         /// </summary>
         /// <param name="data">An array of the signed payload data</param>
         /// <param name="signature">The signature to be verified</param>
-        /// <returns>True if the signature is valid</returns>
+        /// <returns>True if the signature is valid. Otherwise false</returns>
         public bool Verify(byte[] data, byte[] signature) => Key.Verify(data, signature);
 
         /// <summary>
-        /// Gets a message string and a signature string nd verify them with the given public key. Returns true if the given signature is valid. 
+        /// Gets a message string and a signature string nd verify them with the given public key.
         /// </summary>
         /// <param name="message">String representation of the signed payload data</param>
         /// <param name="signature">The signature to be verified</param>
-        /// <returns>True if the signature is valid</returns>
+        /// <returns>True if the signature is valid. Otherwise false</returns>
         public bool Verify(string message, string signature) => Key.Verify(message, signature);
 
         #region static
         /// <summary>
-        /// Gets a private key and a chain code and returns a Hierarchical Deterministic Private Key.
+        /// Gets a private key and a chain code to restore a Hierarchical Deterministic Private Key.
         /// </summary>
         /// <param name="key">Private Key</param>
-        /// <param name="chainCode">256 bits of entropy added to the public and private keys to help them generate secure child keys</param>
+        /// <param name="chainCode">256 bits of entropy added to the private key to help it generate secure child keys</param>
         /// <returns>Private Hierarchical Deterministic Key</returns>
         public static HDKey FromKey(Key key, byte[] chainCode) => new(key, chainCode);
 
         /// <summary>
-        /// Gets a BIP-0039 mnemonic, a passphrase and an elliptic curve kind. If a passphrase is not present, an empty string "" is used instead.
-        /// Returns a Hierarchical Deterministic Private Key.
+        /// Gets a BIP-0039 mnemonic, a passphrase and an elliptic curve kind to restore a Hierarchical Deterministic Private Key.
         /// </summary>
         /// <param name="mnemonic">BIP-0039 mnemonic sentence</param>
         /// <param name="passphrase">Passphrase string. If a passphrase is not present, an empty string "" is used instead.</param>
@@ -170,7 +168,7 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Gets a seed byte sequence and an elliptic curve kind. Returns a Hierarchical Deterministic Private Key.
+        /// Gets a seed byte sequence and an elliptic curve kind to restore a Hierarchical Deterministic Private Key.
         /// </summary>
         /// <param name="seed">Seed byte sequence</param>
         /// <param name="kind">Elliptic curve kind. Ed25519, Secp256k1 and Nistp256 are supported</param>

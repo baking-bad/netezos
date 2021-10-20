@@ -6,7 +6,7 @@ using System.Linq;
 namespace Netezos.Keys
 {
     /// <summary>
-    /// Represent a path in the hierarchy of HD keys (BIP32)
+    /// Represents a path in the HD keys hierarchy (BIP32)
     /// </summary>
     public class HDPath : IEnumerable<uint>
     {
@@ -28,7 +28,7 @@ namespace Netezos.Keys
         /// <summary>
         /// Creates an HDPath object for a given string path.
         /// </summary>
-        /// <param name="path">The Key path formatted like m/44'/1729'/0/0'</param>
+        /// <param name="path">The child key path, formatted like m/44'/1729'/0/0'</param>
         public HDPath(string path)
         {
             path = path?.TrimStart('m').Trim('/')
@@ -44,11 +44,11 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Add an index child number to the HDPath object.
+        /// Add a child index to the HDPath object.
         /// </summary>
-        /// <param name="index">Child number index</param>
-        /// <param name="hardened">Hardened key or not (or, equivalently, whether i ≥ 2^31)</param>
-        /// <returns>HDPath object, extended by the given index.</returns>
+        /// <param name="index">Child index</param>
+        /// <param name="hardened">Hardened key or not (index | 0x80000000 will be performed)</param>
+        /// <returns>HDPath object extended by the given index.</returns>
         public HDPath Derive(int index, bool hardened = false)
         {
             var indexes = new uint[Indexes.Length + 1];
@@ -58,7 +58,7 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Convert the HDPath object to the string representation, formatted like m/44'/1729'/0/0'
+        /// Convert the HDPath object to a string representation, formatted like m/44'/1729'/0/0'
         /// </summary>
         /// <returns>HDPath string representation, formatted like m/44'/1729'/0/0'</returns>
         public override string ToString()
@@ -67,8 +67,8 @@ namespace Netezos.Keys
         }
 
         #region IEnumerable
-        /// <summary>Returns an enumerator that iterates through an indexes collection.</summary>
-        /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the indexes collection.</returns>
+        /// <summary>Returns an enumerator that iterates through an HDPath indexes collection.</summary>
+        /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the HDPath indexes collection.</returns>
         public IEnumerator<uint> GetEnumerator() => ((IEnumerable<uint>)Indexes).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => Indexes.GetEnumerator();
@@ -78,7 +78,7 @@ namespace Netezos.Keys
         /// <summary>
         /// Convert the key path, formatted like m/44'/1729'/0/0', to the HDPath object
         /// </summary>
-        /// <param name="path">The Key path formatted like m/44'/1729'/0/0'</param>
+        /// <param name="path">The key path formatted like m/44'/1729'/0/0'</param>
         /// <returns>HDPath object</returns>
         public static HDPath Parse(string path)
         {

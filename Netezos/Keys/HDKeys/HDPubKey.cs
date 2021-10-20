@@ -19,7 +19,7 @@ namespace Netezos.Keys
         public string Address => PubKey.Address;
 
         /// <summary>
-        /// 256 bits of entropy added to the public and private keys to help them generate secure child keys
+        /// 256 bits of entropy added to the public key to help it generate secure child keys
         /// </summary>
         public byte[] ChainCode => _ChainCode.Copy();
         
@@ -36,10 +36,10 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Derives a new extended public key in the hierarchy as the given child number.
+        /// Derives a new extended public key in the hierarchy as the given child index.
         /// </summary>
-        /// <param name="index">Child number index</param>
-        /// <param name="hardened">Hardened key or not (or, equivalently, whether i ≥ 2^31)</param>
+        /// <param name="index">Child index</param>
+        /// <param name="hardened">Hardened key or not (index | 0x80000000 will be performed)</param>
         /// <returns>Derived child Hierarchical Deterministic Public Key</returns>
         public HDPubKey Derive(int index, bool hardened = false)
         {
@@ -54,14 +54,14 @@ namespace Netezos.Keys
         /// <summary>
         /// Derives a new extended public key in the hierarchy at the given path string below the current key, by deriving the specified child at each step.
         /// </summary>
-        /// <param name="path">The Key path formatted like m/44'/1729'/0'/0'</param>
+        /// <param name="path">The key path formatted like m/44'/1729'/0'/0'</param>
         /// <returns>Derived child Hierarchical Deterministic Public Key</returns>
         public HDPubKey Derive(string path) => Derive(HDPath.Parse(path));
 
         /// <summary>
         /// Derives a new extended public key in the hierarchy at the given path object below the current key, by deriving the specified child at each step.
         /// </summary>
-        /// <param name="path">Represent a path in the hierarchy of HD keys (BIP32)</param>
+        /// <param name="path">HDPath object</param>
         /// <returns>Derived child Hierarchical Deterministic Public Key</returns>
         public HDPubKey Derive(HDPath path)
         {
@@ -84,19 +84,19 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Gets arrays of bytes of data and signature and verify them with the given public key. Returns true if the given signature is valid.
+        /// Gets arrays of bytes of data and signature and verify them with the given public key.
         /// </summary>
         /// <param name="data">An array of the signed payload data</param>
         /// <param name="signature">The signature to be verified</param>
-        /// <returns>True if the signature is valid</returns>
+        /// <returns>True if the signature is valid. Otherwise false</returns>
         public bool Verify(byte[] data, byte[] signature) => PubKey.Verify(data, signature);
 
         /// <summary>
-        /// Gets a message string and a signature string nd verify them with the given public key. Returns true if the given signature is valid. 
+        /// Gets a message string and a signature string and verify them with the given public key.
         /// </summary>
         /// <param name="message">String representation of the signed payload data</param>
         /// <param name="signature">The signature to be verified</param>
-        /// <returns>True if the signature is valid</returns>
+        /// <returns>True if the signature is valid. Otherwise false</returns>
         public bool Verify(string message, string signature) => PubKey.Verify(message, signature);
 
         #region static
@@ -104,7 +104,7 @@ namespace Netezos.Keys
         /// Gets a public key and a chain code and returns a Hierarchical Deterministic Public Key.
         /// </summary>
         /// <param name="pubKey">Public Key</param>
-        /// <param name="chainCode">256 bits of entropy added to the public and private keys to help them generate secure child keys</param>
+        /// <param name="chainCode">256 bits of entropy added to the public key to help it generate secure child keys</param>
         /// <returns>Public Hierarchical Deterministic Key</returns>
         public static HDPubKey FromPubKey(PubKey pubKey, byte[] chainCode) => new(pubKey, chainCode);
         #endregion
