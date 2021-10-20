@@ -9,7 +9,7 @@
     <PackageId>Netezos</PackageId>
     <PackageTags>tezos crypto blockchain xtz rpc keys signing forging encoding ledger smart contract</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/baking-bad/netezos</PackageProjectUrl>
+    <PackageProjectUrl>https://netezos.dev</PackageProjectUrl>
 
     <RepositoryUrl>https://github.com/baking-bad/netezos</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -17,7 +17,7 @@
     <Authors>Groxan</Authors>
     <Product>Netezos</Product>
     <Description>.NET SDK for Tezos blockchain (.NET Stansard 2.0)</Description>
-    <Version>2.4.0-rc.1</Version>
+    <Version>2.4.0</Version>
     <Copyright>Copyright © Baking Bad 2019-2021</Copyright>
   </PropertyGroup>
 
