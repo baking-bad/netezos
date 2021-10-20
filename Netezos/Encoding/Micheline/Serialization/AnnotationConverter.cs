@@ -13,6 +13,16 @@ namespace Netezos.Encoding.Serialization
             if (annot.Length < 1)
                 throw new FormatException("Invalid annotation format");
 
+            #region workaround for double quoted annotations in Hangzhou
+            if (annot[0] == '"')
+            {
+                annot = annot.Trim('"');
+
+                if (annot.Length < 1)
+                    throw new FormatException("Invalid annotation format");
+            }
+            #endregion 
+
             switch(annot[0])
             {
                 case '%': return new FieldAnnotation(annot.Substring(1));
