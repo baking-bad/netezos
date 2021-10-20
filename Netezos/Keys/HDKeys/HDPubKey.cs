@@ -4,22 +4,22 @@ using System.Linq;
 namespace Netezos.Keys
 {
     /// <summary>
-    /// Public Hierarchical Deterministic Key
+    /// Extended (hierarchical deterministic) public key
     /// </summary>
     public class HDPubKey
     {
         /// <summary>
-        /// Public Key
+        /// Public key
         /// </summary>
         public PubKey PubKey { get; }
 
         /// <summary>
-        /// Public Key Hash
+        /// Public key hash
         /// </summary>
         public string Address => PubKey.Address;
 
         /// <summary>
-        /// 256 bits of entropy added to the public key to help it generate secure child keys
+        /// 32 bytes of entropy added to the public key to enable deriving secure child keys
         /// </summary>
         public byte[] ChainCode => _ChainCode.Copy();
         
@@ -36,11 +36,11 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Derives a new extended public key in the hierarchy as the given child index.
+        /// Derives an extended child key at the given index
         /// </summary>
-        /// <param name="index">Child index</param>
-        /// <param name="hardened">Hardened key or not (index | 0x80000000 will be performed)</param>
-        /// <returns>Derived child Hierarchical Deterministic Public Key</returns>
+        /// <param name="index">Index of the child key, starting from zero</param>
+        /// <param name="hardened">If true, hardened derivation will be performed</param>
+        /// <returns>Derived extended child key</returns>
         public HDPubKey Derive(int index, bool hardened = false)
         {
             var uind = HDPath.GetIndex(index, hardened);
@@ -52,17 +52,17 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Derives a new extended public key in the hierarchy at the given path string below the current key, by deriving the specified child at each step.
+        /// Derives an extended child key at the given path relative to the current key
         /// </summary>
-        /// <param name="path">The key path formatted like m/44'/1729'/0'/0'</param>
-        /// <returns>Derived child Hierarchical Deterministic Public Key</returns>
+        /// <param name="path">HD key path string, formatted like m/44'/1729'/0/0'</param>
+        /// <returns>Derived extended child key</returns>
         public HDPubKey Derive(string path) => Derive(HDPath.Parse(path));
 
         /// <summary>
-        /// Derives a new extended public key in the hierarchy at the given path object below the current key, by deriving the specified child at each step.
+        /// Derives an extended child key at the given path relative to the current key
         /// </summary>
-        /// <param name="path">HDPath object</param>
-        /// <returns>Derived child Hierarchical Deterministic Public Key</returns>
+        /// <param name="path">HD key path</param>
+        /// <returns>Derived extended child key</returns>
         public HDPubKey Derive(HDPath path)
         {
             if (path == null)
@@ -84,28 +84,28 @@ namespace Netezos.Keys
         }
 
         /// <summary>
-        /// Gets arrays of bytes of data and signature and verify them with the given public key.
+        /// Verifies a signature of the given array of bytes
         /// </summary>
-        /// <param name="data">An array of the signed payload data</param>
-        /// <param name="signature">The signature to be verified</param>
-        /// <returns>True if the signature is valid. Otherwise false</returns>
+        /// <param name="data">Original data bytes</param>
+        /// <param name="signature">Signature to verify</param>
+        /// <returns>True if the signature is valid, otherwise false</returns>
         public bool Verify(byte[] data, byte[] signature) => PubKey.Verify(data, signature);
 
         /// <summary>
-        /// Gets a message string and a signature string and verify them with the given public key.
+        /// Verifies a signature of the given message string
         /// </summary>
-        /// <param name="message">String representation of the signed payload data</param>
-        /// <param name="signature">The signature to be verified</param>
-        /// <returns>True if the signature is valid. Otherwise false</returns>
+        /// <param name="message">Original message string</param>
+        /// <param name="signature">Signature to verify</param>
+        /// <returns>True if the signature is valid, otherwise false</returns>
         public bool Verify(string message, string signature) => PubKey.Verify(message, signature);
 
         #region static
         /// <summary>
-        /// Gets a public key and a chain code and returns a Hierarchical Deterministic Public Key.
+        /// Creates an extended (hierarchical deterministic) public key from the given public key and chain code
         /// </summary>
-        /// <param name="pubKey">Public Key</param>
-        /// <param name="chainCode">256 bits of entropy added to the public key to help it generate secure child keys</param>
-        /// <returns>Public Hierarchical Deterministic Key</returns>
+        /// <param name="pubKey">Public key</param>
+        /// <param name="chainCode">32 bytes of entropy to be added to the public key</param>
+        /// <returns>Extended public key</returns>
         public static HDPubKey FromPubKey(PubKey pubKey, byte[] chainCode) => new(pubKey, chainCode);
         #endregion
     }
