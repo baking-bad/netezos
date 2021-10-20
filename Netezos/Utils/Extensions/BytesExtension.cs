@@ -2,7 +2,7 @@
 
 namespace Netezos
 {
-    public static class BytesExtension
+    static class BytesExtension
     {
         public static byte[] Align(this byte[] src, int length)
         {
