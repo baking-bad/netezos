@@ -257,8 +257,9 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestContextNonces()
         {
+            // Returns 404 for the SmartPy Node
             var query = Rpc.Blocks.Head.Context.Nonces[1234]; // specific block level is required
-            Assert.Equal($"chains/main/blocks/head/context/nonces/{1234}/", query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/nonces/{1234}", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
@@ -267,8 +268,10 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestContextSeed()
         {
+            // Returns 401 for Giganode
+            // Returns 404 for the SmartPy Node
             var query = Rpc.Blocks.Head.Context.Seed; // this is a POST request
-            Assert.Equal($"chains/main/blocks/head/context/seed/", query.ToString());
+            Assert.Equal($"chains/main/blocks/head/context/seed", query.ToString());
 
             var res = await query.PostAsync(query);
             Assert.True(res is DJsonValue);

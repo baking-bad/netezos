@@ -8,12 +8,12 @@
         /// <summary>
         /// Gets the query to the baking rights
         /// </summary>
-        public BakingRightsQuery BakingRights => new BakingRightsQuery(this, "baking_rights/");
+        public BakingRightsQuery BakingRights => new BakingRightsQuery(this, "baking_rights");
 
         /// <summary>
         /// Gets the query to the endorsing rights
         /// </summary>
-        public EndorsingRightsQuery EndorsingRights => new EndorsingRightsQuery(this, "endorsing_rights/");
+        public EndorsingRightsQuery EndorsingRights => new EndorsingRightsQuery(this, "endorsing_rights");
         
         /// <summary>
         /// Gets the query to the forging

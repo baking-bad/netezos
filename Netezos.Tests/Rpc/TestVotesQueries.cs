@@ -17,8 +17,9 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestVotesBallotList()
         {
+            // Returns 404 for the SmartPy Node
             var query = Rpc.Blocks.Head.Votes.BallotList;
-            Assert.Equal("chains/main/blocks/head/votes/ballot_list/", query.ToString());
+            Assert.Equal("chains/main/blocks/head/votes/ballot_list", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
@@ -27,8 +28,9 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestVotesBallots()
         {
+            // Returns 404 for the SmartPy Node
             var query = Rpc.Blocks.Head.Votes.Ballots;
-            Assert.Equal("chains/main/blocks/head/votes/ballots/", query.ToString());
+            Assert.Equal("chains/main/blocks/head/votes/ballots", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
@@ -38,27 +40,30 @@ namespace Netezos.Tests.Rpc
         public async Task TestVotesCurrentPeriodKind()
         {
             var query = Rpc.Blocks.Head.Votes.CurrentPeriodKind;
-            Assert.Equal("chains/main/blocks/head/votes/current_period_kind/", query.ToString());
+            Assert.Equal("chains/main/blocks/head/votes/current_period_kind", query.ToString());
+
+            /*var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);*/
+        }
+
+        [Fact]
+        public async Task TestVotesCurrentProposal()
+        {
+            // Returns 404 for the SmartPy Node
+            //Was the specific level was required but it's not now?
+            var query = Rpc.Blocks.Head.Votes.CurrentProposals; // specific level is required
+            Assert.Equal($"chains/main/blocks/head/votes/current_proposal", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
 
         [Fact]
-        public void TestVotesCurrentProposal()
-        {
-            var query = Rpc.Blocks[123].Votes.CurrentProposals; // specific level is required
-            Assert.Equal($"chains/main/blocks/123/votes/current_proposal/", query.ToString());
-
-            //var res = await query.GetAsync();
-            //Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
         public async Task TestVotesCurrentQuorum()
         {
+            // Returns 404 for the SmartPy Node
             var query = Rpc.Blocks.Head.Votes.CurrentQuorum;
-            Assert.Equal("chains/main/blocks/head/votes/current_quorum/", query.ToString());
+            Assert.Equal("chains/main/blocks/head/votes/current_quorum", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue); ;
@@ -67,8 +72,9 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestVotesListings()
         {
+            // Returns 404 for the SmartPy Node
             var query = Rpc.Blocks.Head.Votes.Listings;
-            Assert.Equal("chains/main/blocks/head/votes/listings/", query.ToString());
+            Assert.Equal("chains/main/blocks/head/votes/listings", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
@@ -77,8 +83,9 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestVotesProposals()
         {
+            // Returns 404 for the SmartPy Node
             var query = Rpc.Blocks.Head.Votes.Proposals;
-            Assert.Equal("chains/main/blocks/head/votes/proposals/", query.ToString());
+            Assert.Equal("chains/main/blocks/head/votes/proposals", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);

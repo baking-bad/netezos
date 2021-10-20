@@ -1,10 +1,13 @@
-﻿namespace Netezos.Rpc.Queries
+﻿using System;
+
+namespace Netezos.Rpc.Queries
 {
     public class RawVotesQuery : DeepRpcObject
     {
         public DeepRpcDictionary<string, RpcObject> Ballots
             => new DeepRpcDictionary<string, RpcObject>(this, "ballots/");
         
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public RpcObject CurrentPeriodKind => new RpcObject(this, "current_period_kind/");
 
         public RpcObject CurrentProposal => new RpcObject(this, "current_proposal/");
