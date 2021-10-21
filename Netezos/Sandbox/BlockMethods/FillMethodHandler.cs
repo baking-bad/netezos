@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Netezos.Forging.Models;
 using Netezos.Rpc;
 using Netezos.Sandbox.Models;
+using Org.BouncyCastle.Security;
 
 namespace Netezos.Sandbox.BlockMethods
 {
@@ -82,7 +83,11 @@ namespace Netezos.Sandbox.BlockMethods
                     proposals.Source = Values.Key.PubKey.Address;
                     return proposals;
                 case ActivationContent activation:
-                    activation.Address = Values.Key.PubKey.Address;
+                    var key = Values.Key as CommitmentKey;
+                    if (key == null) 
+                        throw new InvalidKeyException($"Key {Values.Key.GetBase58()} is not commitment");
+                    activation.Address = key.PubKey.Address;
+                    activation.Secret = key.ActivationCode; 
                     return activation;
                 case DoubleBakingContent doubleBaking:
                     return doubleBaking;

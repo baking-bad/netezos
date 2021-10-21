@@ -49,10 +49,10 @@ namespace Netezos.Sandbox
 
         public async Task<dynamic> BakeBlock(string keyName, string blockId)
         {
-            // lock (this)
-            // {
-                return await BlockHeaderClient.BakeBlock(keyName).Fill(blockId).Work.Sign.InjectBlock.CallAsync();
-            // }
+            lock (this)
+            {
+                return BlockHeaderClient.BakeBlock(keyName).Fill(blockId).Work.Sign.InjectBlock.CallAsync().Result;
+            }
         }
 
         public void Dispose()

@@ -21,6 +21,7 @@ namespace Netezos.Tests.Startup
 
         public TezosRpc Rpc { get; }
         public SandboxService SandboxService { get; }
+        public KeyStore KeyStore { get; }
         public string TestContract { get; }
         public string TestDelegate { get; }
         public string TestInactive { get; }
@@ -40,12 +41,12 @@ namespace Netezos.Tests.Startup
                 {
                     NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
 
-                    var keyStore = LoadKeys(node);
+                    KeyStore = LoadKeys(node);
 
                     SandboxService = new SandboxService(
                         Rpc, 
                         node.header.protocol,
-                        keyStore,
+                        KeyStore,
                         JsonSerializer.Deserialize<ProtocolParametersContent>(
                             node.header.protocolParameters.ToString()),
                         JsonSerializer.Deserialize<SandboxConstants>(

@@ -19,16 +19,14 @@ namespace Netezos.Tests.Sandbox
     {
         readonly TezosRpc Rpc;
         readonly SandboxService SandboxService;
-        // readonly (Key, string) ActiveKey;
-        // readonly Key InitiatorKey;
+        readonly CommitmentKey ActiveKey;
 
         //TODO: ordering for successful completion of tests
         public InjectBlocksQueries(SettingsFixture settings)
         {
             SandboxService = settings.SandboxService;
             Rpc = settings.Rpc;
-            // ActiveKey = (settings., settings.SecretActiveKey);
-            // InitiatorKey = Key.FromBase58("edsk39qAm1fiMjgmPkw1EgQYkMzkJezLNewd7PLNHTkr6w9XA2zdfo");
+            ActiveKey = settings.KeyStore.ActivatorKey;
         }
 
         [Fact]
@@ -45,11 +43,10 @@ namespace Netezos.Tests.Sandbox
             {
                 new ActivationContent()
                 {
-                    // Secret = ActiveKey.Item2
                 }
             };
 
-            // await SandboxService.BlockOperationGroup(ActiveKey.Item1, operationGroup).Fill().Sign.Inject.CallAsync();
+            await SandboxService.BlockOperationGroup(ActiveKey, operationGroup).Fill().Sign.Inject.CallAsync();
             var hash = await SandboxService.BakeBlock("bootstrap1", "head");
 
             var balance = await Rpc.Blocks.Head.Context.Contracts["tz1W86h1XuWy6awbNUTRUgs6nk8q5vqXQwgk"].Balance.GetAsync<string>();
@@ -63,7 +60,7 @@ namespace Netezos.Tests.Sandbox
             {
                 new RevealContent(),
             };
-            // var result = await SandboxService.BlockOperationGroup(ActiveKey.Item1, operationGroup).Fill().Sign.Inject.CallAsync();
+            var result = await SandboxService.BlockOperationGroup(ActiveKey, operationGroup).Fill().Sign.Inject.CallAsync();
             var hash = await SandboxService.BakeBlock("bootstrap1", "head");
 
             Assert.NotNull(hash);
