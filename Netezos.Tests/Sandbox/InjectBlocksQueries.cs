@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Netezos.Forging.Models;
 using Netezos.Keys;
@@ -8,12 +6,13 @@ using Netezos.Rpc;
 using Netezos.Sandbox;
 using Netezos.Tests.Startup;
 using Xunit;
-using Xunit.Abstractions;
-using Xunit.Sdk;
+using Xunit.Extensions.Ordering;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+[assembly: TestCaseOrderer("Xunit.Extensions.Ordering.TestCaseOrderer", "Xunit.Extensions.Ordering")]
+[assembly: TestCollectionOrderer("Xunit.Extensions.Ordering.CollectionOrderer", "Xunit.Extensions.Ordering")]
 namespace Netezos.Tests.Sandbox
 {
-    
     [Collection(SettingsCollection.CollectionName)]
     public class InjectBlocksQueries
     {
@@ -21,7 +20,6 @@ namespace Netezos.Tests.Sandbox
         readonly SandboxService SandboxService;
         readonly CommitmentKey ActiveKey;
 
-        //TODO: ordering for successful completion of tests
         public InjectBlocksQueries(SettingsFixture settings)
         {
             SandboxService = settings.SandboxService;
@@ -29,21 +27,19 @@ namespace Netezos.Tests.Sandbox
             ActiveKey = settings.KeyStore.ActivatorKey;
         }
 
-        [Fact]
-        public async Task Test1ActivateProtocol()
+        [Fact, Order(1)]
+        public async Task TestActivateProtocol()
         {
             var header = await Rpc.Blocks.Head.Header.Shell.GetAsync<ShellHeaderContent>();
             Assert.NotNull(header.Context);
         }
 
-        [Fact]
-        public async Task Test2ActivateAccount()
+        [Fact, Order(2)]
+        public async Task TestActivateAccount()
         {
             var operationGroup = new List<OperationContent>()
             {
-                new ActivationContent()
-                {
-                }
+                new ActivationContent() { }
             };
 
             await SandboxService.BlockOperationGroup(ActiveKey, operationGroup).Fill().Sign.Inject.CallAsync();
@@ -53,8 +49,8 @@ namespace Netezos.Tests.Sandbox
             Assert.Equal("100500000000", balance);
         }
 
-        [Fact]
-        public async Task Test3Reveal()
+        [Fact, Order(3)]
+        public async Task TestReveal()
         {
             var operationGroup = new List<OperationContent>()
             {
@@ -66,8 +62,8 @@ namespace Netezos.Tests.Sandbox
             Assert.NotNull(hash);
         }
 
-        [Fact]
-        public async Task Test4RevealPublicKeyHashSendTez()
+        [Fact, Order(4)]
+        public async Task TestRevealPublicKeyHashSendTez()
         {
             var operationGroup = new List<OperationContent>()
             {
@@ -82,8 +78,8 @@ namespace Netezos.Tests.Sandbox
             Assert.Equal("4000000000023", balance);
         }
 
-        [Fact]
-        public async Task Test5SendMultipleTransactions()
+        [Fact, Order(5)]
+        public async Task TestSendMultipleTransactions()
         {
             var operationGroup = new List<OperationContent>()
             {
@@ -104,8 +100,8 @@ namespace Netezos.Tests.Sandbox
             // Assert.Equal("100500000376", balance);
         }
 
-        [Fact]
-        public async Task Test6ForceBakeBlock()
+        [Fact, Order(6)]
+        public async Task TestForceBakeBlock()
         {
             var hash = await SandboxService.BakeBlock("bootstrap1", "head");
             var pendingOp = await Rpc.Mempool.PendingOperations.GetAsync<MempoolOperations>();

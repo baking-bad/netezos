@@ -44,7 +44,7 @@ namespace Netezos.Sandbox.HeaderMethods
             var header = parameters.BlockHeader;
 
             var predShellHeader = await Rpc.Blocks[BlockId].Header.Shell.GetAsync<ShellHeaderContent>();
-            var timestamp = predShellHeader.Timestamp + TimeSpan.FromSeconds(5);
+            var timestamp = predShellHeader.Timestamp + TimeSpan.FromSeconds(1);
 
             var protocols = await Rpc.Blocks[BlockId].Protocols.GetAsync<Dictionary<string, string>>();
             header.ProtocolData.ProtocolHash = protocols["next_protocol"];
