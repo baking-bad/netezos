@@ -4,10 +4,12 @@ using Netezos.Forging.Models;
 using Netezos.Rpc;
 using Netezos.Tests.Startup;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace Netezos.Tests.Rpc
 {
     [Collection(SettingsCollection.CollectionName)]
+    [Order(2)]
     public class TestBlocksQueries
     {
         readonly TezosRpc Rpc;

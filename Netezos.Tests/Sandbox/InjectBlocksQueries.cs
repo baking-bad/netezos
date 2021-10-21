@@ -8,12 +8,10 @@ using Netezos.Tests.Startup;
 using Xunit;
 using Xunit.Extensions.Ordering;
 
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
-[assembly: TestCaseOrderer("Xunit.Extensions.Ordering.TestCaseOrderer", "Xunit.Extensions.Ordering")]
-[assembly: TestCollectionOrderer("Xunit.Extensions.Ordering.CollectionOrderer", "Xunit.Extensions.Ordering")]
 namespace Netezos.Tests.Sandbox
 {
     [Collection(SettingsCollection.CollectionName)]
+    [Order(1)]
     public class InjectBlocksQueries
     {
         readonly TezosRpc Rpc;

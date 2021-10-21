@@ -3,10 +3,12 @@ using Dynamic.Json;
 using Netezos.Rpc;
 using Netezos.Tests.Startup;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace Netezos.Tests.Rpc
 {
     [Collection(SettingsCollection.CollectionName)]
+    [Order(2)]
     public class TestRawContextQueries
     {
         readonly TezosRpc Rpc;
