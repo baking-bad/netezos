@@ -21,9 +21,6 @@ namespace Netezos.Tests.Startup
 
         public TezosRpc Rpc { get; }
         public SandboxService SandboxService { get; }
-
-        public Key ActiveKey { get; }
-        public string SecretActiveKey { get; }
         public string TestContract { get; }
         public string TestDelegate { get; }
         public string TestInactive { get; }
@@ -43,24 +40,17 @@ namespace Netezos.Tests.Startup
                 {
                     NodeContainer = new NodeContainer(node.imageName, node.tag, node.port);
 
-                    var headerConfig = node.header;
-                    var keys = JsonSerializer.Deserialize<Dictionary<string, string>>(headerConfig.keys);
+                    var keyStore = LoadKeys(node);
 
                     SandboxService = new SandboxService(
                         Rpc, 
-                        headerConfig.protocol,
-                        keys,
+                        node.header.protocol,
+                        keyStore,
                         JsonSerializer.Deserialize<ProtocolParametersContent>(
-                            headerConfig.protocolParameters.ToString()),
+                            node.header.protocolParameters.ToString()),
                         JsonSerializer.Deserialize<SandboxConstants>(
                             node.sandboxConstants.ToString())
                         );
-
-                    ActiveKey = Key.FromMnemonic(
-                        new Mnemonic(JsonSerializer.Deserialize<List<string>>(node.sandboxCommitment.mnemonic)), 
-                        node.sandboxCommitment.email,
-                        node.sandboxCommitment.password);
-                    SecretActiveKey = node.sandboxCommitment.secret.ToString();
 
                     HealthCheckTimeout = node.healthCheckOnStartedTimeout;
                 }
@@ -118,6 +108,17 @@ namespace Netezos.Tests.Startup
             });
 
             return ((dynamic)node)?.config;
+        }
+
+        private KeyStore LoadKeys(dynamic node)
+        {
+            var keys = JsonSerializer.Deserialize<Dictionary<string, string>>(node.header.keys);
+            CommitmentKey commitments = CommitmentKey.FromMnemonic(
+                new Mnemonic(JsonSerializer.Deserialize<List<string>>(node.sandboxCommitment.mnemonic)), 
+                node.sandboxCommitment.email,
+                node.sandboxCommitment.password,
+                node.sandboxCommitment.secret.ToString());
+            return new KeyStore(keys, commitments);
         }
 
         public async Task DisposeAsync()

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Netezos.Encoding;
 using Netezos.Forging;
 using Netezos.Forging.Models;
-using Netezos.Keys;
 using Netezos.Rpc;
 using Netezos.Sandbox.Models;
 using Netezos.Utils.Json;
@@ -18,25 +17,9 @@ namespace Netezos.Sandbox.HeaderMethods
         /// </summary>
         /// <param name="rpc">rpc client</param>
         /// <param name="headerParameters">base parameters</param>
-        /// <param name="keyName">key alias name</param>
-        internal ActivateProtocolMethodHandler(TezosRpc rpc, HeaderParameters headerParameters, string keyName) 
+        internal ActivateProtocolMethodHandler(TezosRpc rpc, HeaderParameters headerParameters) 
             : base(rpc, headerParameters)
         {
-            headerParameters.Key = headerParameters.Keys.TryGetValue(keyName, out var key) 
-                ? key
-                : throw new KeyNotFoundException($"Parameter keyName {keyName} is not found");
-        }
-
-        /// <summary>
-        /// Create call to bake genesis block with specified parameters
-        /// </summary>
-        /// <param name="rpc">rpc client</param>
-        /// <param name="headerParameters">base parameters</param>
-        /// <param name="key">Key</param>
-        internal ActivateProtocolMethodHandler(TezosRpc rpc, HeaderParameters headerParameters, Key key) 
-            : base(rpc, headerParameters)
-        {
-            headerParameters.Key = key.GetBase58();
         }
 
         /// <summary>

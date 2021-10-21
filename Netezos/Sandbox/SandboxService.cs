@@ -16,12 +16,12 @@ namespace Netezos.Sandbox
         public SandboxService(
             TezosRpc rpc,
             string protocolHash,
-            Dictionary<string, string> keys,
+            KeyStore keyStore,
             ProtocolParametersContent parameters = null,
             SandboxConstants constants = null,
             string signature = null)
         {
-            BlockHeaderClient = new BlockHeaderClient(rpc, protocolHash, keys, parameters, signature);
+            BlockHeaderClient = new BlockHeaderClient(rpc, protocolHash, keyStore, parameters, signature);
             BlockOperationsClient = new BlockOperationsClient(rpc, constants);
         }
 
@@ -33,16 +33,11 @@ namespace Netezos.Sandbox
 
         public IBlockHeaderClient Header => BlockHeaderClient;
 
-        public async Task<dynamic> BakeBlock(string keyName, string blockId)
-        {
-            lock (this)
-            {
-                return BlockHeaderClient.BakeBlock(keyName).Fill(blockId).Work.Sign.InjectBlock.CallAsync().Result;
-            }
-        }
-
         public async Task<dynamic> ActivateProtocol(string keyName, string blockId) => 
             await BlockHeaderClient.ActivateProtocol(keyName).Fill(blockId).Sign.InjectBlock.CallAsync();
+
+        public async Task<dynamic> ActivateProtocol(Key key, string blockId) => 
+            await BlockHeaderClient.ActivateProtocol(key).Fill(blockId).Sign.InjectBlock.CallAsync();
 
         public async Task<dynamic> BakeBlock(Key key, string blockId)
         {
@@ -52,8 +47,13 @@ namespace Netezos.Sandbox
             }
         }
 
-        public async Task<dynamic> ActivateProtocol(Key key, string blockId) => 
-            await BlockHeaderClient.ActivateProtocol(key).Fill(blockId).Sign.InjectBlock.CallAsync();
+        public async Task<dynamic> BakeBlock(string keyName, string blockId)
+        {
+            // lock (this)
+            // {
+                return await BlockHeaderClient.BakeBlock(keyName).Fill(blockId).Work.Sign.InjectBlock.CallAsync();
+            // }
+        }
 
         public void Dispose()
         {

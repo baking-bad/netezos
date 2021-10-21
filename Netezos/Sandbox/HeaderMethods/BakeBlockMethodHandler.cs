@@ -18,19 +18,10 @@ namespace Netezos.Sandbox.HeaderMethods
         /// <returns>Header method handler</returns>
         public FillMethodHandler Fill(string blockId = "head") => new FillMethodHandler(Rpc, Values, CallAsync, blockId, true);
 
-        internal BakeBlockMethodHandler(TezosRpc rpc, HeaderParameters parameters, string keyName, int minFee) : base(rpc, parameters)
+        internal BakeBlockMethodHandler(TezosRpc rpc, HeaderParameters parameters) : base(rpc, parameters)
         {
-            parameters.Key = parameters.Keys.TryGetValue(keyName, out var key) 
-                ? key
-                : throw new KeyNotFoundException($"Parameter keyName {keyName} is not found");
-            parameters.MinFee = minFee;
         }
 
-        internal BakeBlockMethodHandler(TezosRpc rpc, HeaderParameters parameters, Key key, int minFee) : base(rpc, parameters)
-        {
-            parameters.Key = key.GetBase58();
-            parameters.MinFee = minFee;
-        }
 
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 

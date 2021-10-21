@@ -62,7 +62,7 @@ namespace Netezos.Sandbox.HeaderMethods
 
             if (FromBakeCall)
             {
-                await FillPriority(header.ProtocolData, data.Key, BlockId);
+                await FillPriority(header.ProtocolData, data.Key.GetBase58(), BlockId);
 
                 var bakeBlockResult = await Rpc
                     .Blocks
