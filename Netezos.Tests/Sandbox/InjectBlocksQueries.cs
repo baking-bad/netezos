@@ -99,11 +99,22 @@ namespace Netezos.Tests.Sandbox
         }
 
         [Fact, Order(6)]
-        public async Task TestForceBakeBlock()
+        public async Task TestBakeEmptyBlock()
         {
-            var hash = await SandboxService.BakeBlock("bootstrap1", "head");
+            await SandboxService.BakeBlock("bootstrap1", "head");
             var pendingOp = await Rpc.Mempool.PendingOperations.GetAsync<MempoolOperations>();
             Assert.Empty(pendingOp.Applied);
+        }
+
+        [Fact, Order(7)]
+        public async Task TestRollback()
+        {
+            await SandboxService
+                .Header.ActivateProtocol("dictator", "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA")
+                .Fill().Sign.InjectBlock.CallAsync();
+            var balance = await Rpc.Blocks.Head.Context.Contracts["edsk3gUfUPyBSfrS9CCgmCiQsTCHGkviBDusMxDJstFtojtc1zcpsh"].Balance.GetAsync<string>();
+            Assert.Equal("4000000000000", balance);
+
         }
     }
 }
