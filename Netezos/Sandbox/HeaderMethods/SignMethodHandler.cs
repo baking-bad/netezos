@@ -30,12 +30,12 @@ namespace Netezos.Sandbox.HeaderMethods
             var chainId = await Rpc.ChainId.GetAsync<string>();
 
             var watermark = new byte[] {1}.Concat(Base58.Parse(chainId, 3));
-            parameters.Signature  = Key.FromBase58(data.Key.GetBase58()).Sign(
-                LocalForge.Concat(
-                    watermark, 
-                    LocalForge.ForgeHeaderValues(parameters.BlockHeader.ShellHeader, parameters.BlockHeader.ProtocolData)
-                    )
-                );
+
+            var bytes = LocalForge.Concat(
+                watermark,
+                LocalForge.ForgeHeaderValues(parameters.BlockHeader.ShellHeader, parameters.BlockHeader.ProtocolData));
+
+            parameters.Signature  = data.Key.Sign(bytes);
 
             return parameters;
 

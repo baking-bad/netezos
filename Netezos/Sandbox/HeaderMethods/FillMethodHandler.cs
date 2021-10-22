@@ -81,8 +81,6 @@ namespace Netezos.Sandbox.HeaderMethods
 
                 parameters.BlockHeader.ShellHeader = bakeBlockResult.ShellHeader;
 
-                parameters.ForgedOperations = Array.Empty<List<PreapplyHashOperation>>().ToList();
-
                 foreach (var operation in bakeBlockResult.Operations)
                 {
                     parameters.ForgedOperations.Add(operation["applied"]);
@@ -118,8 +116,8 @@ namespace Netezos.Sandbox.HeaderMethods
         }
 
         private void FillSeedNonceHash(ProtocolDataContent protocolData, int blocksPerCommitment, int level)
-            => protocolData.SeedNonceHash = level % blocksPerCommitment == 0
-                ? Base58.Convert(new byte[64], Prefix.nce)
+            => protocolData.SeedNonceHash = (level+1) % blocksPerCommitment == 0
+                ? Base58.Convert(new byte[32], Prefix.nce)
                 : string.Empty;
 
         private async Task FillPriority(ProtocolDataContent protocolData, string key, string blockId)

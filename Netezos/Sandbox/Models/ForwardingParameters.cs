@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Netezos.Forging.Models;
 using Netezos.Keys;
 
@@ -9,6 +11,8 @@ namespace Netezos.Sandbox.Models
         public ForwardingParameters()
         {
             Operations = new List<List<MempoolOperation>>();
+            ForgedOperations = Array.Empty<List<PreapplyHashOperation>>().ToList();
+
         }
 
         public BlockHeaderContent BlockHeader { get; set; }

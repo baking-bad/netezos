@@ -43,7 +43,7 @@ namespace Netezos.Forging
                 ForgeInt32(protocolData.Priority, 2),
                 Hex.Parse(protocolData.ProofOfWorkNonce),
                 !string.IsNullOrEmpty(protocolData.SeedNonceHash)
-                    ? new byte[] {255}.Concat(Base58.Parse(protocolData.SeedNonceHash)) 
+                    ? new byte[] {255}.Concat(Base58.Parse(protocolData.SeedNonceHash, 3)) 
                     : new byte[] {0}
                 );
         }

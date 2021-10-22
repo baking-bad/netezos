@@ -112,9 +112,9 @@ namespace Netezos.Sandbox.BlockMethods
                 case TransactionContent transaction:
                     transaction.Source = Values.Key.PubKey.Address;
                     transaction.Counter = counter++;
-                    transaction.GasLimit = transaction.DefaultGasLimit(constants);
-                    transaction.StorageLimit = transaction.DefaultStorageLimit(constants);
-                    transaction.Fee = transaction.DefaultFee(constants);
+                    transaction.GasLimit = 1427;//transaction.DefaultGasLimit(constants);
+                    transaction.StorageLimit = 257;//transaction.DefaultStorageLimit(constants);
+                    transaction.Fee = 407;//transaction.DefaultFee(constants);
                     return transaction;
                 case RevealContent reveal:
                     reveal.PublicKey = Values.Key.PubKey.GetBase58();
