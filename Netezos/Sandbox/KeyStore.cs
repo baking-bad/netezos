@@ -47,7 +47,7 @@ namespace Netezos.Sandbox
     {
         public string ActivationCode { get; }
 
-        internal CommitmentKey(byte[] bytes, ECKind kind, bool flush = false, string activationCode = null)
+        private CommitmentKey(byte[] bytes, ECKind kind, bool flush = false, string activationCode = null)
             : base(bytes, kind, flush)
         {
             ActivationCode = activationCode;

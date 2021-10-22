@@ -81,7 +81,7 @@ namespace Netezos.Sandbox.HeaderMethods
 
                 parameters.BlockHeader.ShellHeader = bakeBlockResult.ShellHeader;
 
-                parameters.ForgedOperations = new List<PreapplyHashOperation>[0].ToList();
+                parameters.ForgedOperations = Array.Empty<List<PreapplyHashOperation>>().ToList();
 
                 foreach (var operation in bakeBlockResult.Operations)
                 {

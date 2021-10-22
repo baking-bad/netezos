@@ -11,7 +11,7 @@ namespace Netezos.Sandbox.Models
         public string ChainId { get; set; }
         public string Protocol { get; set; }
         public int Counter { get; set; }
-        public string Signature { get; set; }
+        public Signature Signature { get; set; }
         public List<OperationContent> Operations { get; set; }
         public bool IsSandbox { get; set; }
         public int? BranchOffset { get; set; }

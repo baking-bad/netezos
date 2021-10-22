@@ -10,12 +10,13 @@ namespace Netezos.Keys
         public abstract byte[] PublicKeyPrefix { get; }
         public abstract byte[] PrivateKeyPrefix { get; }
         public abstract byte[] SignaturePrefix { get; }
+        public abstract byte[] GenericSignaturePrefix { get; }
 
         public abstract byte[] GeneratePrivateKey();
 
         public abstract byte[] GetPublicKey(byte[] privateKey);
 
-        public abstract Signature Sign(byte[] bytes, byte[] prvKey);
+        public abstract Signature Sign(byte[] bytes, byte[] prvKey, bool generic = false);
 
         public abstract bool Verify(byte[] bytes, byte[] signature, byte[] pubKey);
 

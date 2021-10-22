@@ -87,12 +87,6 @@ namespace Netezos.Tests.Startup
                 {
                     Thread.Sleep(TimeSpan.FromSeconds(HealthCheckTimeout));
                 }
-
-                if (SandboxService != null)
-                {
-                    await SandboxService.ActivateProtocol("dictator", "genesis");
-                    await SandboxService.BakeBlock("bootstrap2", "head");
-                }
             }
         }
 
@@ -118,7 +112,7 @@ namespace Netezos.Tests.Startup
                 new Mnemonic(JsonSerializer.Deserialize<List<string>>(node.sandboxCommitment.mnemonic)), 
                 node.sandboxCommitment.email,
                 node.sandboxCommitment.password,
-                node.sandboxCommitment.secret.ToString());
+                node.sandboxCommitment.secret);
             return new KeyStore(keys, commitments);
         }
 
@@ -135,7 +129,7 @@ namespace Netezos.Tests.Startup
     /// Singleton instance between all tests
     /// See https://xunit.net/docs/shared-context#collection-fixture
     /// </summary>
-    [CollectionDefinition(CollectionName)]
+    [CollectionDefinition(CollectionName, DisableParallelization = true)]
     public class SettingsCollection : ICollectionFixture<SettingsFixture>
     {
         public const string CollectionName = nameof(SettingsCollection);

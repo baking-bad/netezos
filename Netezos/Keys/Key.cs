@@ -83,12 +83,13 @@ namespace Netezos.Keys
         /// Prepends forged operation bytes with 0x03 and signs the result
         /// </summary>
         /// <param name="bytes">Forged operation bytes</param>
+        /// <param name="generic">flag for signature generic</param>
         /// <returns></returns>
-        public Signature SignOperation(byte[] bytes)
+        public Signature SignOperation(byte[] bytes, bool generic = false)
         {
             using (Store.Unlock())
             {
-                return Curve.Sign(new byte[] { 3 }.Concat(bytes), Store.Data);
+                return Curve.Sign(new byte[] { 3 }.Concat(bytes), Store.Data, generic);
             }
         }
 

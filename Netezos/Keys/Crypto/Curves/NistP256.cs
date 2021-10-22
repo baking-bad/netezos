@@ -15,6 +15,7 @@ namespace Netezos.Keys
         public override byte[] PublicKeyPrefix => Prefix.p2pk;
         public override byte[] PrivateKeyPrefix => Prefix.p2sk;
         public override byte[] SignaturePrefix => Prefix.p2sig;
+        public override byte[] GenericSignaturePrefix => Prefix.sig;
 
         public override byte[] GeneratePrivateKey()
         {
@@ -37,7 +38,7 @@ namespace Netezos.Keys
             return q.GetEncoded(true);
         }
 
-        public override Signature Sign(byte[] msg, byte[] prvKey)
+        public override Signature Sign(byte[] msg, byte[] prvKey, bool generic = false)
         {
             var curve = SecNamedCurves.GetByName("secp256r1");
             var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
@@ -53,7 +54,7 @@ namespace Netezos.Keys
             var r = rs[0].ToByteArrayUnsigned().Align(32);
             var s = rs[1].ToByteArrayUnsigned().Align(32);
 
-            return new Signature(r.Concat(s), SignaturePrefix);
+            return new Signature(r.Concat(s), generic ? GenericSignaturePrefix : SignaturePrefix);
         }
 
         public override bool Verify(byte[] msg, byte[] sig, byte[] pubKey)

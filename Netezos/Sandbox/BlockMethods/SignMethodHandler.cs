@@ -42,16 +42,15 @@ namespace Netezos.Sandbox.BlockMethods
                 watermark = new byte[] {3};
             }
 
+            // var bytes = await new LocalForge().ForgeOperationGroupAsync(values.Branch, values.Operations);
             var forgedData = await Rpc
                 .Blocks[values.Branch]
                 .Helpers
                 .Forge
                 .Operations
                 .PostAsync<string>(values.Branch, values.Operations.Select(x => (object)x).ToList());
-
-            var message = watermark.Concat(Hex.Parse(forgedData));
-            parameters.Signature = values.Key.SignOperation(message);
-            values.Signature = parameters.Signature.ToBase58();
+            parameters.Signature = values.Key.SignOperation(Hex.Parse(forgedData), true);
+            values.Signature = values.Key.SignOperation(Hex.Parse(forgedData), true);
             return parameters;
         }
     }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Netezos.Encoding;
+using Netezos.Forging;
 using Netezos.Forging.Models;
 using Netezos.Rpc;
 using Netezos.Sandbox.Base;
@@ -21,7 +22,12 @@ namespace Netezos.Sandbox.BlockMethods
         public override async Task<dynamic> CallAsync()
         {
             var parameters = await Function(Values);
+
+            //clear counter after inject
+            Values.Counter = 0;
+
             var binaryPayload = await BinaryPayload();
+            var a = Hex.Convert(binaryPayload);
             return await Rpc.Inject.Operation.PostAsync<dynamic>(binaryPayload, async:false);
         }
 
@@ -40,7 +46,7 @@ namespace Netezos.Sandbox.BlockMethods
             if (Values.Signature == null)
                 throw new NullReferenceException("Not Signed");
 
-            return Hex.Parse(forgedData).Concat(Base58.Parse(Values.Signature, 5));
+            return Hex.Parse(forgedData).Concat(Values.Signature.ToBytes());
         }
 
         internal override Task<ForwardingParameters> CallAsync(BlockParameters values)

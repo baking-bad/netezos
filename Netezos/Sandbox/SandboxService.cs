@@ -41,18 +41,12 @@ namespace Netezos.Sandbox
 
         public async Task<dynamic> BakeBlock(Key key, string blockId)
         {
-            lock (this)
-            {
-                return BlockHeaderClient.BakeBlock(key).Fill(blockId).Work.Sign.InjectBlock.CallAsync().Result;
-            }
+            return await BlockHeaderClient.BakeBlock(key).Fill(blockId).Work.Sign.InjectBlock.CallAsync();
         }
 
         public async Task<dynamic> BakeBlock(string keyName, string blockId)
         {
-            lock (this)
-            {
-                return BlockHeaderClient.BakeBlock(keyName).Fill(blockId).Work.Sign.InjectBlock.CallAsync().Result;
-            }
+            return await BlockHeaderClient.BakeBlock(keyName).Fill(blockId).Work.Sign.InjectBlock.CallAsync();
         }
 
         public void Dispose()

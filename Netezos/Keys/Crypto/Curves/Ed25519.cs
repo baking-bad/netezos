@@ -13,6 +13,7 @@ namespace Netezos.Keys
         public override byte[] PublicKeyPrefix => Prefix.edpk;
         public override byte[] PrivateKeyPrefix => Prefix.edsk;
         public override byte[] SignaturePrefix => Prefix.edsig;
+        public override byte[] GenericSignaturePrefix => Prefix.sig;
 
         public override byte[] GeneratePrivateKey()
         {
@@ -27,7 +28,7 @@ namespace Netezos.Keys
             return publicKey;
         }
 
-        public override Signature Sign(byte[] msg, byte[] prvKey)
+        public override Signature Sign(byte[] msg, byte[] prvKey, bool generic = false)
         {
             var digest = Blake2b.GetDigest(msg);
             var privateKey = new Ed25519PrivateKeyParameters(prvKey, 0);
@@ -36,7 +37,7 @@ namespace Netezos.Keys
             signer.Init(true, privateKey);
             signer.BlockUpdate(digest, 0, digest.Length);
 
-            return new Signature(signer.GenerateSignature(), SignaturePrefix);
+            return new Signature(signer.GenerateSignature(), generic ? GenericSignaturePrefix : SignaturePrefix);
         }
 
         public override bool Verify(byte[] msg, byte[] sig, byte[] pubKey)
