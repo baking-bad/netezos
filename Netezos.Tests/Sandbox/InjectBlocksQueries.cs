@@ -61,7 +61,7 @@ namespace Netezos.Tests.Sandbox
             Assert.Equal("100500000000", balance);
         }
 
-        /*[Fact, Order(4)]
+        [Fact, Order(4)]
         public async Task TestReveal()
         {
             await Task.Delay(TimeSpan.FromSeconds(5));
@@ -74,7 +74,7 @@ namespace Netezos.Tests.Sandbox
             var hash = await SandboxService.BakeBlock("bootstrap1", "head");
 
             Assert.NotNull(hash);
-        }*/
+        }
 
         [Fact, Order(5)]
         public async Task TestRevealPublicKeyHashSendTez()
@@ -118,13 +118,12 @@ namespace Netezos.Tests.Sandbox
             };
 
             var result = await SandboxService.BlockOperationGroup(Key.FromBase58("edsk39qAm1fiMjgmPkw1EgQYkMzkJezLNewd7PLNHTkr6w9XA2zdfo"), operationGroup).Fill().Sign.Inject.CallAsync();
-            var hash = await SandboxService.BakeBlock("bootstrap1", "head");
-
+            var hash = await SandboxService.BakeBlock("bootstrap2", "head");
             // var balance = await Rpc.Blocks.Head.Context.Contracts["edsk4ArLQgBTLWG5FJmnGnT689VKoqhXwmDPBuGx3z4cvwU9MmrPZZ"].Balance.GetAsync<string>();
             // Assert.Equal("100500000376", balance);
         }
 
-        /*[Fact, Order(10)]
+        [Fact, Order(10)]
         public async Task TestBakeEmptyBlock()
         {
             await Task.Delay(TimeSpan.FromSeconds(5));
@@ -132,7 +131,7 @@ namespace Netezos.Tests.Sandbox
             await SandboxService.BakeBlock("bootstrap1", "head");
             var pendingOp = await Rpc.Mempool.PendingOperations.GetAsync<MempoolOperations>();
             Assert.Empty(pendingOp.Applied);
-        }*/
+        }
 
         /*[Fact, Order(8)]
         public async Task TestRollback()

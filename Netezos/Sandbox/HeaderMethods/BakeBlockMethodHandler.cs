@@ -22,7 +22,6 @@ namespace Netezos.Sandbox.HeaderMethods
         {
         }
 
-
         public override async Task<dynamic> CallAsync() => await CallAsync(Values);
 
         internal override async Task<ForwardingParameters> CallAsync(HeaderParameters parameters)

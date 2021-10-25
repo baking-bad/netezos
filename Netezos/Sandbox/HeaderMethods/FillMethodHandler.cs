@@ -44,7 +44,6 @@ namespace Netezos.Sandbox.HeaderMethods
             var header = parameters.BlockHeader;
 
             var predShellHeader = await Rpc.Blocks[BlockId].Header.Shell.GetAsync<ShellHeaderContent>();
-            var timestamp = predShellHeader.Timestamp + TimeSpan.FromSeconds(1);
 
             var protocols = await Rpc.Blocks[BlockId].Protocols.GetAsync<Dictionary<string, string>>();
             header.ProtocolData.ProtocolHash = protocols["next_protocol"];
@@ -55,13 +54,13 @@ namespace Netezos.Sandbox.HeaderMethods
 
             parameters.Signature = new Signature(new byte[64], Prefix.sig);
 
-            FillSeedNonceHash(
-                header.ProtocolData,
-                (int)data.ProtocolParameters.BlocksPerCommitment,
-                predShellHeader.Level);
-
             if (FromBakeCall)
             {
+                FillSeedNonceHash(
+                    header.ProtocolData,
+                    (int)data.ProtocolParameters.BlocksPerCommitment,
+                    predShellHeader.Level);
+
                 await FillPriority(header.ProtocolData, data.Key.GetBase58(), BlockId);
 
                 var bakeBlockResult = await Rpc
@@ -78,7 +77,7 @@ namespace Netezos.Sandbox.HeaderMethods
                         parameters.Operations?.Select(x => x.Select(y => (object)y))
                         ?? new List<List<object>>()
                     );
-
+                Console.WriteLine(bakeBlockResult.ShellHeader.Context);
                 parameters.BlockHeader.ShellHeader = bakeBlockResult.ShellHeader;
 
                 foreach (var operation in bakeBlockResult.Operations)
@@ -91,6 +90,8 @@ namespace Netezos.Sandbox.HeaderMethods
 
             if (header.ProtocolData is ActivationProtocolDataContent protocolData)
             {
+                var timestamp = predShellHeader.Timestamp + TimeSpan.FromSeconds(1);
+
                 var result = await Rpc
                     .Blocks
                     .Head
