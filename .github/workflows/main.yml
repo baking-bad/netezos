@@ -1,30 +1,26 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
+name: GitHub Pages
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push events but only for the master branch
   push:
     branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  hello_world_job:
+  docs_generation_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Build and Publish Documentation
     steps:
     - uses: actions/checkout@v2
-    # ...
+
     - uses: nikeee/docfx-action@v1.0.0
       name: Build Documentation
       with:
         args: docs/docfx.json
 
-    # Publish generated site using GitHub Pages
     - uses: maxheld83/ghpages@master
       name: Publish Documentation on GitHub Pages
       env:
