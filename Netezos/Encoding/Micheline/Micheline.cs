@@ -13,7 +13,7 @@ namespace Netezos.Encoding
     {
         static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions
         {
-            MaxDepth = 1024,
+            MaxDepth = 10240,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 

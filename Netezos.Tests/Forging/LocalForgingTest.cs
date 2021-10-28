@@ -19,7 +19,7 @@ namespace Netezos.Tests.Forging
         public async Task CompareForgedToFile()
         {
             var forge = new LocalForge();
-            var options = new JsonSerializerOptions { MaxDepth = 1024 };
+            var options = new JsonSerializerOptions { MaxDepth = 10240 };
 
             var directories = Directory.GetDirectories("../../../Forging/operations");
             foreach (var directory in directories)
@@ -41,7 +41,7 @@ namespace Netezos.Tests.Forging
             var options = new JsonSerializerOptions
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                MaxDepth = 1024,
+                MaxDepth = 10240,
             };
             options.Converters.Add(new DateTimUtcTimezoneAppender());
 
