@@ -60,14 +60,21 @@ namespace Netezos.Encoding
 
         public static string ToJson(byte[] bytes)
         {
-            using (var mem = new MemoryStream(bytes))
-            using (var reader = new BinaryReader(mem))
-            using (var res = new MemoryStream())
-            using (var writer = new Utf8JsonWriter(res))
+            try
             {
-                ReadToJson(reader, writer);
-                writer.Flush();
-                return Utf8.Convert(res.ToArray());
+                using (var mem = new MemoryStream(bytes))
+                using (var reader = new BinaryReader(mem))
+                using (var res = new MemoryStream())
+                using (var writer = new Utf8JsonWriter(res))
+                {
+                    ReadToJson(reader, writer);
+                    writer.Flush();
+                    return Utf8.Convert(res.ToArray());
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                return FromBytes(bytes).ToJson();
             }
         }
 
