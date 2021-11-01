@@ -1,4 +1,4 @@
-﻿name: publish to nuget
+﻿name: Testsing Netezos SDK
 on: [push]
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
   - name: Setup dotnet
   uses: actions/setup-dotnet@v1.7.2
   with:
-  dotnet-version: 3.1.x
+  dotnet-version: '3.1.x'
 
   - name: Build Netezos Library
     run: dotnet build --no-restore --verbosity normal
