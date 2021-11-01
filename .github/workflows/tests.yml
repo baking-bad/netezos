@@ -11,9 +11,12 @@ jobs:
       uses: actions/setup-dotnet@v1.7.2
       with:
         dotnet-version: '3.1'
-    - name: Install dependencies
+    - name: Install dependencies for Netezos
       run: dotnet restore
       working-directory: Netezos
+    - name: Install dependencies for Netezos.Ledger
+      run: dotnet restore
+      working-directory: Netezos.Ledger
     - name: Build Netezos Library
       run: dotnet build --no-restore --verbosity normal
       working-directory: Netezos
