@@ -15,12 +15,12 @@ jobs:
 
     - name: Build Netezos Library
       run: dotnet build --no-restore --verbosity normal
-        working-directory: Netezos
+      working-directory: Netezos
 
     - name: Build Netezos.Ledger
       run: dotnet test --no-restore --verbosity normal
-        working-directory: Netezos.Ledger
+      working-directory: Netezos.Ledger
 
     - name: Tests for Netezos
       run: dotnet test --no-restore --verbosity normal
-        working-directory: Netezos.Tests
+      working-directory: Netezos.Tests
