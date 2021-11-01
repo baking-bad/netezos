@@ -133,22 +133,28 @@ namespace Netezos.Tests.Sandbox
             Assert.Empty(pendingOp.Applied);
         }
 
-        /*[Fact, Order(8)]
-        public async Task TestRollback()
-        {
-            await Task.Delay(TimeSpan.FromSeconds(5));
+         [Fact, Order(8)]
+         public async Task TestRollback()
+         {
+             await Task.Delay(TimeSpan.FromSeconds(5));
 
-            await SandboxService
-                .Header
-                .ActivateProtocol("dictator", "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA")
-                .Fill()
-                .Sign
-                .InjectBlock
-                .CallAsync();
+             await SandboxService
+                 .Header
+                 .ActivateProtocol("dictator", "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA")
+                 .Fill()
+                 .Sign
+                 .InjectBlock
+                 .CallAsync();
 
-            var balance = await Rpc.Blocks.Head.Context.Contracts["edsk3gUfUPyBSfrS9CCgmCiQsTCHGkviBDusMxDJstFtojtc1zcpsh"].Balance.GetAsync<string>();
-            Assert.Equal("4000000000000", balance);
+             var balance = await Rpc.Blocks.Head.Context.Contracts["edsk3gUfUPyBSfrS9CCgmCiQsTCHGkviBDusMxDJstFtojtc1zcpsh"].Balance.GetAsync<string>();
+             Assert.Equal("4000000000000", balance);
 
-        }*/
+         }
+
+         [Fact, Order(9)]
+         public async Task EmptyErrorTestForWorkflow()
+         {
+             Assert.NotNull(null);
+         }
     }
 }
