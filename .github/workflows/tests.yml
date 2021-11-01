@@ -9,9 +9,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Setup dotnet
-        uses: actions/setup-dotnet@v1.7.2
-        with:
-          dotnet-version: ['3.1.101']
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: ['3.1', '5.0']
     - name: Build Netezos Library
       run: dotnet build --no-restore --verbosity normal
       working-directory: Netezos
