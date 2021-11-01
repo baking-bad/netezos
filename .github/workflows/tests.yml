@@ -11,16 +11,13 @@ jobs:
   - name: Setup dotnet
   uses: actions/setup-dotnet@v1.7.2
   with:
-    - dotnet-version: '3.1.x'
-
+    dotnet-version: '3.1.x'
   - name: Build Netezos Library
     run: dotnet build --no-restore --verbosity normal
     working-directory: Netezos
-
   - name: Build Netezos.Ledger
     run: dotnet test --no-restore --verbosity normal
     working-directory: Netezos.Ledger
-
   - name: Tests for Netezos
     run: dotnet test --no-restore --verbosity normal
     working-directory: Netezos.Tests
