@@ -6,18 +6,18 @@ jobs:
     runs-on: ubuntu-latest
   
   steps:
-  - uses: actions/checkout@v2
-
-  - name: Setup dotnet
-  uses: actions/setup-dotnet@v1.7.2
-  with:
-    dotnet-version: '3.1.101'
-  - name: Build Netezos Library
-    run: dotnet build --no-restore --verbosity normal
-    working-directory: Netezos
-  - name: Build Netezos.Ledger
-    run: dotnet test --no-restore --verbosity normal
-    working-directory: Netezos.Ledger
-  - name: Tests for Netezos
-    run: dotnet test --no-restore --verbosity normal
-    working-directory: Netezos.Tests
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup dotnet
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: ['3.1.101']
+    - name: Build Netezos Library
+      run: dotnet build --no-restore --verbosity normal
+      working-directory: Netezos
+    - name: Build Netezos.Ledger
+      run: dotnet build --no-restore --verbosity normal
+      working-directory: Netezos.Ledger
+    - name: Tests for Netezos
+      run: dotnet test --no-restore --verbosity normal
+      working-directory: Netezos.Tests
