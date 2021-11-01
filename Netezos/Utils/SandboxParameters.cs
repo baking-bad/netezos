@@ -4,6 +4,7 @@ namespace Netezos
 {
     static class SandboxParameters
     {
+        
         #region context default constants
         public static readonly int DEFAULT_BRANCH_OFFSET = 50;
         public static readonly int DEFAULT_BURN_RESERVE = 100;

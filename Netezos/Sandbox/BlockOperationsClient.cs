@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Netezos.Forging.Models;
 using Netezos.Keys;
 using Netezos.Rpc;
-using Netezos.Sandbox.Base;
 using Netezos.Sandbox.BlockMethods;
 using Netezos.Sandbox.Models;
 
@@ -34,7 +33,7 @@ namespace Netezos.Sandbox
 
         public FillMethodHandler Fill => new FillMethodHandler(Rpc, Values);
 
-        public AutoFillMethodHandler AutoFill => new AutoFillMethodHandler(Rpc, Values);
+        // public AutoFillMethodHandler AutoFill => new AutoFillMethodHandler(Rpc, Values);
 
         public void Add(OperationContent operation)
         {
@@ -59,6 +58,6 @@ namespace Netezos.Sandbox
 
         FillMethodHandler IBlockOperationsClient.Fill() => Fill;
 
-        AutoFillMethodHandler IBlockOperationsClient.AutoFill() => AutoFill;
+        // AutoFillMethodHandler IBlockOperationsClient.AutoFill() => AutoFill;
     }
 }
