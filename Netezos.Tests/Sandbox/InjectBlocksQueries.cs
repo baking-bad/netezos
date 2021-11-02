@@ -133,7 +133,7 @@ namespace Netezos.Tests.Sandbox
             Assert.Equal("4000000000011", balance3);
         }
 
-        [Fact, Order(10)]
+        [Fact, Order(7)]
         public async Task TestBakeEmptyBlock()
         {
             await Task.Delay(TimeSpan.FromSeconds(5));
@@ -144,23 +144,6 @@ namespace Netezos.Tests.Sandbox
         }
 
          [Fact, Order(8)]
-         public async Task TestRollback()
-         {
-             await Task.Delay(TimeSpan.FromSeconds(5));
-
-             await SandboxService
-                 .Header
-                 .ActivateProtocol("dictator", "PtEdo2ZkT9oKpimTah6x2embF25oss54njMuPzkJTEi5RqfdZFA")
-                 .Fill()
-                 .Sign
-                 .InjectBlock
-                 .CallAsync();
-
-             var balance = await Rpc.Blocks.Head.Context.Contracts["edsk3gUfUPyBSfrS9CCgmCiQsTCHGkviBDusMxDJstFtojtc1zcpsh"].Balance.GetAsync<string>();
-             Assert.Equal("4000000000000", balance);
-         }
-
-         [Fact, Order(9)]
          public async Task TestAutoFillSendMultipleTransactions()
          {
              await Task.Delay(TimeSpan.FromSeconds(5));
@@ -193,7 +176,7 @@ namespace Netezos.Tests.Sandbox
              Assert.Equal("4000000000013", balance3);
          }
 
-         [Fact, Order(10)]
+         [Fact, Order(9)]
          public async Task TestAutoFillSendSingleTransaction()
          {
              await Task.Delay(TimeSpan.FromSeconds(5));

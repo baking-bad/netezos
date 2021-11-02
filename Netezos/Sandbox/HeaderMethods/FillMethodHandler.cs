@@ -77,7 +77,7 @@ namespace Netezos.Sandbox.HeaderMethods
                         parameters.Operations?.Select(x => x.Select(y => (object)y))
                         ?? new List<List<object>>()
                     );
-                Console.WriteLine(bakeBlockResult.ShellHeader.Context);
+
                 parameters.BlockHeader.ShellHeader = bakeBlockResult.ShellHeader;
 
                 foreach (var operation in bakeBlockResult.Operations)

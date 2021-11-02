@@ -27,10 +27,5 @@ jobs:
       run: dotnet build --no-restore --verbosity normal
       working-directory: Netezos.Ledger
     - name: Tests for Netezos
-      run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+      run: dotnet test
       working-directory: Netezos.Tests
-    - name: Upload dotnet test results
-      uses: actions/upload-artifact@v2
-      with:
-        name: dotnet-results-${{ matrix.dotnet-version }}
-        path: TestResults-${{ matrix.dotnet-version }}
