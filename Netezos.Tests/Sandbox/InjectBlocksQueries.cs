@@ -83,7 +83,6 @@ namespace Netezos.Tests.Sandbox
 
             var operationGroup = new List<OperationContent>()
             {
-                // new RevealContent(),
                 new TransactionContent(){ Destination = "tz1faswCTDciRzE4oJ9jn2Vm2dvjeyA9fUzU", Amount = 42 }
             };
 
@@ -117,10 +116,21 @@ namespace Netezos.Tests.Sandbox
 
             };
 
-            var result = await SandboxService.BlockOperationGroup(Key.FromBase58("edsk39qAm1fiMjgmPkw1EgQYkMzkJezLNewd7PLNHTkr6w9XA2zdfo"), operationGroup).Fill().Sign.Inject.CallAsync();
+            var result = await SandboxService
+                .BlockOperationGroup(Key.FromBase58("edsk39qAm1fiMjgmPkw1EgQYkMzkJezLNewd7PLNHTkr6w9XA2zdfo"), operationGroup)
+                .Fill()
+                .Sign
+                .Inject
+                .CallAsync();
             var hash = await SandboxService.BakeBlock("bootstrap2", "head");
-            // var balance = await Rpc.Blocks.Head.Context.Contracts["edsk4ArLQgBTLWG5FJmnGnT689VKoqhXwmDPBuGx3z4cvwU9MmrPZZ"].Balance.GetAsync<string>();
-            // Assert.Equal("100500000376", balance);
+
+            var balance1 = await Rpc.Blocks.Head.Context.Contracts["tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN"].Balance.GetAsync<string>();
+            var balance2 = await Rpc.Blocks.Head.Context.Contracts["tz1faswCTDciRzE4oJ9jn2Vm2dvjeyA9fUzU"].Balance.GetAsync<string>();
+            var balance3 = await Rpc.Blocks.Head.Context.Contracts["tz1b7tUupMgCNw2cCLpKTkSD1NZzB5TkP2sv"].Balance.GetAsync<string>();
+
+            Assert.Equal("3998975998426", balance1);
+            Assert.Equal("4000000000384", balance2);
+            Assert.Equal("4000000000011", balance3);
         }
 
         [Fact, Order(10)]
@@ -148,13 +158,63 @@ namespace Netezos.Tests.Sandbox
 
              var balance = await Rpc.Blocks.Head.Context.Contracts["edsk3gUfUPyBSfrS9CCgmCiQsTCHGkviBDusMxDJstFtojtc1zcpsh"].Balance.GetAsync<string>();
              Assert.Equal("4000000000000", balance);
-
          }
 
          [Fact, Order(9)]
-         public async Task EmptyErrorTestForWorkflow()
+         public async Task TestAutoFillSendMultipleTransactions()
          {
-             Assert.NotNull(null);
+             await Task.Delay(TimeSpan.FromSeconds(5));
+
+             var operationGroup = new List<OperationContent>()
+             {
+                 new TransactionContent()
+                     {Destination = "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN", Amount = 1},
+                 new TransactionContent()
+                     {Destination = "tz1faswCTDciRzE4oJ9jn2Vm2dvjeyA9fUzU", Amount = 123},
+                 new TransactionContent()
+                     {Destination = "tz1b7tUupMgCNw2cCLpKTkSD1NZzB5TkP2sv", Amount = 2},
+
+             };
+
+             var result = await SandboxService
+                 .BlockOperationGroup(Key.FromBase58("edsk39qAm1fiMjgmPkw1EgQYkMzkJezLNewd7PLNHTkr6w9XA2zdfo"), operationGroup)
+                 .AutoFill()
+                 .Sign
+                 .Inject
+                 .CallAsync();
+             var hash = await SandboxService.BakeBlock("bootstrap2", "head");
+
+             var balance1 = await Rpc.Blocks.Head.Context.Contracts["tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN"].Balance.GetAsync<string>();
+             var balance2 = await Rpc.Blocks.Head.Context.Contracts["tz1faswCTDciRzE4oJ9jn2Vm2dvjeyA9fUzU"].Balance.GetAsync<string>();
+             var balance3 = await Rpc.Blocks.Head.Context.Contracts["tz1b7tUupMgCNw2cCLpKTkSD1NZzB5TkP2sv"].Balance.GetAsync<string>();
+
+             Assert.Equal("3998463997284", balance1);
+             Assert.Equal("4000000000507", balance2);
+             Assert.Equal("4000000000013", balance3);
+         }
+
+         [Fact, Order(10)]
+         public async Task TestAutoFillSendSingleTransaction()
+         {
+             await Task.Delay(TimeSpan.FromSeconds(5));
+
+             var operationGroup = new List<OperationContent>()
+             {
+                 new TransactionContent()
+                     {Destination = "tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN", Amount = 1},
+             };
+
+             var result = await SandboxService
+                 .BlockOperationGroup(Key.FromBase58("edsk39qAm1fiMjgmPkw1EgQYkMzkJezLNewd7PLNHTkr6w9XA2zdfo"), operationGroup)
+                 .AutoFill()
+                 .Sign
+                 .Inject
+                 .CallAsync();
+             var hash = await SandboxService.BakeBlock("bootstrap2", "head");
+
+             var balance1 = await Rpc.Blocks.Head.Context.Contracts["tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN"].Balance.GetAsync<string>();
+
+             Assert.Equal("3997951996881", balance1);
          }
     }
 }

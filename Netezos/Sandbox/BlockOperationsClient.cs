@@ -31,10 +31,6 @@ namespace Netezos.Sandbox
             Values.Operations = operations;
         }
 
-        public FillMethodHandler Fill => new FillMethodHandler(Rpc, Values);
-
-        // public AutoFillMethodHandler AutoFill => new AutoFillMethodHandler(Rpc, Values);
-
         public void Add(OperationContent operation)
         {
             Values.Operations.Add(operation);
@@ -56,8 +52,8 @@ namespace Netezos.Sandbox
             Values?.Operations?.Clear();
         }
 
-        FillMethodHandler IBlockOperationsClient.Fill() => Fill;
+        public FillMethodHandler Fill() => new FillMethodHandler(Rpc, Values);
 
-        // AutoFillMethodHandler IBlockOperationsClient.AutoFill() => AutoFill;
+        public AutoFillMethodHandler AutoFill() => new AutoFillMethodHandler(Rpc, Values);
     }
 }

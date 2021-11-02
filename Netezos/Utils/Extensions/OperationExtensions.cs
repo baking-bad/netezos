@@ -28,7 +28,7 @@ namespace Netezos
         /// <param name="extraSize">size of the additional operation data</param>
         /// <param name="reserve">safe reserve, just in case</param>
         /// <returns>minimal required operation fee</returns>
-        private static int CalculateFee(OperationContent operation, int consumedGas, int extraSize,
+        public static int CalculateFee(OperationContent operation, int consumedGas, int extraSize,
             int reserve = 10)
         {
             var size = LocalForge.ForgeOperation(operation).Length + extraSize;

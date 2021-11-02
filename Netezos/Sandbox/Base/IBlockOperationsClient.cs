@@ -6,6 +6,6 @@ namespace Netezos.Sandbox
     {
         FillMethodHandler Fill();
 
-        // AutoFillMethodHandler AutoFill();
+        AutoFillMethodHandler AutoFill();
     }
 }

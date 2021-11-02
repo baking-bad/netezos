@@ -5,10 +5,9 @@ using Netezos.Sandbox.Models;
 
 namespace Netezos.Sandbox
 {
-    internal class ConstantsBuilder : IConstantsBuilder, IDisposable
+    internal class ConstantsBuilder : IConstantsBuilder
     {
         private SandboxConstants Constants;
-        private readonly RpcClient Rpc;
 
         public ConstantsBuilder()
         {
@@ -66,10 +65,6 @@ namespace Netezos.Sandbox
         public SandboxConstants Build()
         {
             return Constants;
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

@@ -8,7 +8,6 @@ namespace Netezos.Forging.Models
     /// The node maintains a memory pool (“mempool”) to keep track of not-invalid-for-sure operations.
     /// The mempool keeps track of different kinds of operations
     /// </summary>
-    // [JsonConverter(typeof(MempoolConverter))]
     public class MempoolOperations
     {
         [JsonPropertyName("applied")]
