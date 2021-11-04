@@ -6,31 +6,23 @@ namespace Netezos.Encoding.Serialization
 {
     public class AnnotationConverter : JsonConverter<IAnnotation>
     {
+        internal static IAnnotation ParseAnnotation(string annot)
+        {
+            if (annot.Length == 0)
+                return new UnsafeAnnotation(annot);
+
+            return annot[0] switch
+            {
+                '%' => new FieldAnnotation(annot.Substring(1)),
+                ':' => new TypeAnnotation(annot.Substring(1)),
+                '@' => new VariableAnnotation(annot.Substring(1)),
+                _ => new UnsafeAnnotation(annot)
+            };
+        }
+
         public override IAnnotation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var annot = reader.GetString();
-
-            if (annot.Length < 1)
-                throw new FormatException("Invalid annotation format");
-
-            #region workaround for double quoted annotations in Hangzhou
-            if (annot[0] == '"')
-            {
-                annot = annot.Trim('"');
-
-                if (annot.Length < 1)
-                    throw new FormatException("Invalid annotation format");
-            }
-            #endregion 
-
-            switch(annot[0])
-            {
-                case '%': return new FieldAnnotation(annot.Substring(1));
-                case ':': return new TypeAnnotation(annot.Substring(1));
-                case '@': return new VariableAnnotation(annot.Substring(1));
-                default:
-                    throw new FormatException("Invalid annotation prefix");
-            }
+            return ParseAnnotation(reader.GetString());
         }
 
         public override void Write(Utf8JsonWriter writer, IAnnotation value, JsonSerializerOptions options)

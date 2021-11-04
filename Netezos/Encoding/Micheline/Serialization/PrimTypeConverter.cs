@@ -6,165 +6,166 @@ namespace Netezos.Encoding.Serialization
 {
     public class PrimTypeConverter : JsonConverter<PrimType>
     {
+        internal static PrimType ParsePrim(string prim) => prim switch
+        {
+            "parameter" => PrimType.parameter,
+            "storage" => PrimType.storage,
+            "code" => PrimType.code,
+            "False" => PrimType.False,
+            "Elt" => PrimType.Elt,
+            "Left" => PrimType.Left,
+            "None" => PrimType.None,
+            "Pair" => PrimType.Pair,
+            "Right" => PrimType.Right,
+            "Some" => PrimType.Some,
+            "True" => PrimType.True,
+            "Unit" => PrimType.Unit,
+            "PACK" => PrimType.PACK,
+            "UNPACK" => PrimType.UNPACK,
+            "BLAKE2B" => PrimType.BLAKE2B,
+            "SHA256" => PrimType.SHA256,
+            "SHA512" => PrimType.SHA512,
+            "ABS" => PrimType.ABS,
+            "ADD" => PrimType.ADD,
+            "AMOUNT" => PrimType.AMOUNT,
+            "AND" => PrimType.AND,
+            "BALANCE" => PrimType.BALANCE,
+            "CAR" => PrimType.CAR,
+            "CDR" => PrimType.CDR,
+            "CHECK_SIGNATURE" => PrimType.CHECK_SIGNATURE,
+            "COMPARE" => PrimType.COMPARE,
+            "CONCAT" => PrimType.CONCAT,
+            "CONS" => PrimType.CONS,
+            "CREATE_ACCOUNT" => PrimType.CREATE_ACCOUNT,
+            "CREATE_CONTRACT" => PrimType.CREATE_CONTRACT,
+            "IMPLICIT_ACCOUNT" => PrimType.IMPLICIT_ACCOUNT,
+            "DIP" => PrimType.DIP,
+            "DROP" => PrimType.DROP,
+            "DUP" => PrimType.DUP,
+            "EDIV" => PrimType.EDIV,
+            "EMPTY_MAP" => PrimType.EMPTY_MAP,
+            "EMPTY_SET" => PrimType.EMPTY_SET,
+            "EQ" => PrimType.EQ,
+            "EXEC" => PrimType.EXEC,
+            "FAILWITH" => PrimType.FAILWITH,
+            "GE" => PrimType.GE,
+            "GET" => PrimType.GET,
+            "GT" => PrimType.GT,
+            "HASH_KEY" => PrimType.HASH_KEY,
+            "IF" => PrimType.IF,
+            "IF_CONS" => PrimType.IF_CONS,
+            "IF_LEFT" => PrimType.IF_LEFT,
+            "IF_NONE" => PrimType.IF_NONE,
+            "INT" => PrimType.INT,
+            "LAMBDA" => PrimType.LAMBDA,
+            "LE" => PrimType.LE,
+            "LEFT" => PrimType.LEFT,
+            "LOOP" => PrimType.LOOP,
+            "LSL" => PrimType.LSL,
+            "LSR" => PrimType.LSR,
+            "LT" => PrimType.LT,
+            "MAP" => PrimType.MAP,
+            "MEM" => PrimType.MEM,
+            "MUL" => PrimType.MUL,
+            "NEG" => PrimType.NEG,
+            "NEQ" => PrimType.NEQ,
+            "NIL" => PrimType.NIL,
+            "NONE" => PrimType.NONE,
+            "NOT" => PrimType.NOT,
+            "NOW" => PrimType.NOW,
+            "OR" => PrimType.OR,
+            "PAIR" => PrimType.PAIR,
+            "PUSH" => PrimType.PUSH,
+            "RIGHT" => PrimType.RIGHT,
+            "SIZE" => PrimType.SIZE,
+            "SOME" => PrimType.SOME,
+            "SOURCE" => PrimType.SOURCE,
+            "SENDER" => PrimType.SENDER,
+            "SELF" => PrimType.SELF,
+            "STEPS_TO_QUOTA" => PrimType.STEPS_TO_QUOTA,
+            "SUB" => PrimType.SUB,
+            "SWAP" => PrimType.SWAP,
+            "TRANSFER_TOKENS" => PrimType.TRANSFER_TOKENS,
+            "SET_DELEGATE" => PrimType.SET_DELEGATE,
+            "UNIT" => PrimType.UNIT,
+            "UPDATE" => PrimType.UPDATE,
+            "XOR" => PrimType.XOR,
+            "ITER" => PrimType.ITER,
+            "LOOP_LEFT" => PrimType.LOOP_LEFT,
+            "ADDRESS" => PrimType.ADDRESS,
+            "CONTRACT" => PrimType.CONTRACT,
+            "ISNAT" => PrimType.ISNAT,
+            "CAST" => PrimType.CAST,
+            "RENAME" => PrimType.RENAME,
+            "bool" => PrimType.@bool,
+            "contract" => PrimType.contract,
+            "int" => PrimType.@int,
+            "key" => PrimType.key,
+            "key_hash" => PrimType.key_hash,
+            "lambda" => PrimType.lambda,
+            "list" => PrimType.list,
+            "map" => PrimType.map,
+            "big_map" => PrimType.big_map,
+            "nat" => PrimType.nat,
+            "option" => PrimType.option,
+            "or" => PrimType.or,
+            "pair" => PrimType.pair,
+            "set" => PrimType.set,
+            "signature" => PrimType.signature,
+            "string" => PrimType.@string,
+            "bytes" => PrimType.bytes,
+            "mutez" => PrimType.mutez,
+            "timestamp" => PrimType.timestamp,
+            "unit" => PrimType.unit,
+            "operation" => PrimType.operation,
+            "address" => PrimType.address,
+            "SLICE" => PrimType.SLICE,
+            "DIG" => PrimType.DIG,
+            "DUG" => PrimType.DUG,
+            "EMPTY_BIG_MAP" => PrimType.EMPTY_BIG_MAP,
+            "APPLY" => PrimType.APPLY,
+            "chain_id" => PrimType.chain_id,
+            "CHAIN_ID" => PrimType.CHAIN_ID,
+            "LEVEL" => PrimType.LEVEL,
+            "SELF_ADDRESS" => PrimType.SELF_ADDRESS,
+            "never" => PrimType.never,
+            "NEVER" => PrimType.NEVER,
+            "UNPAIR" => PrimType.UNPAIR,
+            "VOTING_POWER" => PrimType.VOTING_POWER,
+            "TOTAL_VOTING_POWER" => PrimType.TOTAL_VOTING_POWER,
+            "KECCAK" => PrimType.KECCAK,
+            "SHA3" => PrimType.SHA3,
+            "PAIRING_CHECK" => PrimType.PAIRING_CHECK,
+            "bls12_381_g1" => PrimType.bls12_381_g1,
+            "bls12_381_g2" => PrimType.bls12_381_g2,
+            "bls12_381_fr" => PrimType.bls12_381_fr,
+            "sapling_state" => PrimType.sapling_state,
+            "sapling_transaction" => PrimType.sapling_transaction,
+            "SAPLING_EMPTY_STATE" => PrimType.SAPLING_EMPTY_STATE,
+            "SAPLING_VERIFY_UPDATE" => PrimType.SAPLING_VERIFY_UPDATE,
+            "ticket" => PrimType.ticket,
+            "TICKET" => PrimType.TICKET,
+            "READ_TICKET" => PrimType.READ_TICKET,
+            "SPLIT_TICKET" => PrimType.SPLIT_TICKET,
+            "JOIN_TICKETS" => PrimType.JOIN_TICKETS,
+            "GET_AND_UPDATE" => PrimType.GET_AND_UPDATE,
+            "chest" => PrimType.chest,
+            "chest_key" => PrimType.chest_key,
+            "OPEN_CHEST" => PrimType.OPEN_CHEST,
+            "VIEW" => PrimType.VIEW,
+            "view" => PrimType.view,
+            "constant" => PrimType.constant,
+            var value => throw new FormatException($"Invalid prim: {value}")
+        };
+
         public override PrimType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            switch (reader.GetString())
-            {
-                case "parameter": return PrimType.parameter;
-                case "storage": return PrimType.storage;
-                case "code": return PrimType.code;
-                case "False": return PrimType.False;
-                case "Elt": return PrimType.Elt;
-                case "Left": return PrimType.Left;
-                case "None": return PrimType.None;
-                case "Pair": return PrimType.Pair;
-                case "Right": return PrimType.Right;
-                case "Some": return PrimType.Some;
-                case "True": return PrimType.True;
-                case "Unit": return PrimType.Unit;
-                case "PACK": return PrimType.PACK;
-                case "UNPACK": return PrimType.UNPACK;
-                case "BLAKE2B": return PrimType.BLAKE2B;
-                case "SHA256": return PrimType.SHA256;
-                case "SHA512": return PrimType.SHA512;
-                case "ABS": return PrimType.ABS;
-                case "ADD": return PrimType.ADD;
-                case "AMOUNT": return PrimType.AMOUNT;
-                case "AND": return PrimType.AND;
-                case "BALANCE": return PrimType.BALANCE;
-                case "CAR": return PrimType.CAR;
-                case "CDR": return PrimType.CDR;
-                case "CHECK_SIGNATURE": return PrimType.CHECK_SIGNATURE;
-                case "COMPARE": return PrimType.COMPARE;
-                case "CONCAT": return PrimType.CONCAT;
-                case "CONS": return PrimType.CONS;
-                case "CREATE_ACCOUNT": return PrimType.CREATE_ACCOUNT;
-                case "CREATE_CONTRACT": return PrimType.CREATE_CONTRACT;
-                case "IMPLICIT_ACCOUNT": return PrimType.IMPLICIT_ACCOUNT;
-                case "DIP": return PrimType.DIP;
-                case "DROP": return PrimType.DROP;
-                case "DUP": return PrimType.DUP;
-                case "EDIV": return PrimType.EDIV;
-                case "EMPTY_MAP": return PrimType.EMPTY_MAP;
-                case "EMPTY_SET": return PrimType.EMPTY_SET;
-                case "EQ": return PrimType.EQ;
-                case "EXEC": return PrimType.EXEC;
-                case "FAILWITH": return PrimType.FAILWITH;
-                case "GE": return PrimType.GE;
-                case "GET": return PrimType.GET;
-                case "GT": return PrimType.GT;
-                case "HASH_KEY": return PrimType.HASH_KEY;
-                case "IF": return PrimType.IF;
-                case "IF_CONS": return PrimType.IF_CONS;
-                case "IF_LEFT": return PrimType.IF_LEFT;
-                case "IF_NONE": return PrimType.IF_NONE;
-                case "INT": return PrimType.INT;
-                case "LAMBDA": return PrimType.LAMBDA;
-                case "LE": return PrimType.LE;
-                case "LEFT": return PrimType.LEFT;
-                case "LOOP": return PrimType.LOOP;
-                case "LSL": return PrimType.LSL;
-                case "LSR": return PrimType.LSR;
-                case "LT": return PrimType.LT;
-                case "MAP": return PrimType.MAP;
-                case "MEM": return PrimType.MEM;
-                case "MUL": return PrimType.MUL;
-                case "NEG": return PrimType.NEG;
-                case "NEQ": return PrimType.NEQ;
-                case "NIL": return PrimType.NIL;
-                case "NONE": return PrimType.NONE;
-                case "NOT": return PrimType.NOT;
-                case "NOW": return PrimType.NOW;
-                case "OR": return PrimType.OR;
-                case "PAIR": return PrimType.PAIR;
-                case "PUSH": return PrimType.PUSH;
-                case "RIGHT": return PrimType.RIGHT;
-                case "SIZE": return PrimType.SIZE;
-                case "SOME": return PrimType.SOME;
-                case "SOURCE": return PrimType.SOURCE;
-                case "SENDER": return PrimType.SENDER;
-                case "SELF": return PrimType.SELF;
-                case "STEPS_TO_QUOTA": return PrimType.STEPS_TO_QUOTA;
-                case "SUB": return PrimType.SUB;
-                case "SWAP": return PrimType.SWAP;
-                case "TRANSFER_TOKENS": return PrimType.TRANSFER_TOKENS;
-                case "SET_DELEGATE": return PrimType.SET_DELEGATE;
-                case "UNIT": return PrimType.UNIT;
-                case "UPDATE": return PrimType.UPDATE;
-                case "XOR": return PrimType.XOR;
-                case "ITER": return PrimType.ITER;
-                case "LOOP_LEFT": return PrimType.LOOP_LEFT;
-                case "ADDRESS": return PrimType.ADDRESS;
-                case "CONTRACT": return PrimType.CONTRACT;
-                case "ISNAT": return PrimType.ISNAT;
-                case "CAST": return PrimType.CAST;
-                case "RENAME": return PrimType.RENAME;
-                case "bool": return PrimType.@bool;
-                case "contract": return PrimType.contract;
-                case "int": return PrimType.@int;
-                case "key": return PrimType.key;
-                case "key_hash": return PrimType.key_hash;
-                case "lambda": return PrimType.lambda;
-                case "list": return PrimType.list;
-                case "map": return PrimType.map;
-                case "big_map": return PrimType.big_map;
-                case "nat": return PrimType.nat;
-                case "option": return PrimType.option;
-                case "or": return PrimType.or;
-                case "pair": return PrimType.pair;
-                case "set": return PrimType.set;
-                case "signature": return PrimType.signature;
-                case "string": return PrimType.@string;
-                case "bytes": return PrimType.bytes;
-                case "mutez": return PrimType.mutez;
-                case "timestamp": return PrimType.timestamp;
-                case "unit": return PrimType.unit;
-                case "operation": return PrimType.operation;
-                case "address": return PrimType.address;
-                case "SLICE": return PrimType.SLICE;
-                case "DIG": return PrimType.DIG;
-                case "DUG": return PrimType.DUG;
-                case "EMPTY_BIG_MAP": return PrimType.EMPTY_BIG_MAP;
-                case "APPLY": return PrimType.APPLY;
-                case "chain_id": return PrimType.chain_id;
-                case "CHAIN_ID": return PrimType.CHAIN_ID;
-                case "LEVEL": return PrimType.LEVEL;
-                case "SELF_ADDRESS": return PrimType.SELF_ADDRESS;
-                case "never": return PrimType.never;
-                case "NEVER": return PrimType.NEVER;
-                case "UNPAIR": return PrimType.UNPAIR;
-                case "VOTING_POWER": return PrimType.VOTING_POWER;
-                case "TOTAL_VOTING_POWER": return PrimType.TOTAL_VOTING_POWER;
-                case "KECCAK": return PrimType.KECCAK;
-                case "SHA3": return PrimType.SHA3;
-                case "PAIRING_CHECK": return PrimType.PAIRING_CHECK;
-                case "bls12_381_g1": return PrimType.bls12_381_g1;
-                case "bls12_381_g2": return PrimType.bls12_381_g2;
-                case "bls12_381_fr": return PrimType.bls12_381_fr;
-                case "sapling_state": return PrimType.sapling_state;
-                case "sapling_transaction": return PrimType.sapling_transaction;
-                case "SAPLING_EMPTY_STATE": return PrimType.SAPLING_EMPTY_STATE;
-                case "SAPLING_VERIFY_UPDATE": return PrimType.SAPLING_VERIFY_UPDATE;
-                case "ticket": return PrimType.ticket;
-                case "TICKET": return PrimType.TICKET;
-                case "READ_TICKET": return PrimType.READ_TICKET;
-                case "SPLIT_TICKET": return PrimType.SPLIT_TICKET;
-                case "JOIN_TICKETS": return PrimType.JOIN_TICKETS;
-                case "GET_AND_UPDATE": return PrimType.GET_AND_UPDATE;
-                case "chest": return PrimType.chest;
-                case "chest_key": return PrimType.chest_key;
-                case "OPEN_CHEST": return PrimType.OPEN_CHEST;
-                case "VIEW": return PrimType.VIEW;
-                case "view": return PrimType.view;
-                case "constant": return PrimType.constant;
-                default:
-                    throw new FormatException("Unknown prim type");
-            }
+            return ParsePrim(reader.GetString());
         }
 
         public override void Write(Utf8JsonWriter writer, PrimType value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(Enum.GetName(typeof(PrimType), value));
+            writer.WriteStringValue(value.ToString());
         }
     }
 }

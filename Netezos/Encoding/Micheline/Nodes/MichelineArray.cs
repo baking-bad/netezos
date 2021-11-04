@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
+using Netezos.Encoding.Serialization;
 
 namespace Netezos.Encoding
 {
@@ -12,7 +13,7 @@ namespace Netezos.Encoding
         public MichelineArray() : base() { }
         public MichelineArray(int capacity) : base(capacity) { }
 
-        public void Write(BinaryWriter writer)
+        public void Write(BinaryWriter writer, int depth = 0)
         {
             if (Count >= 0x1F)
             {
@@ -24,8 +25,16 @@ namespace Netezos.Encoding
                 writer.Write((byte)((int)Type | Count));
             }
 
-            foreach (var item in this)
-                item.Write(writer);
+            if (depth < Micheline.MaxRecursionDepth)
+            {
+                foreach (var item in this)
+                    item.Write(writer, depth + 1);
+            }
+            else
+            {
+                foreach (var item in this)
+                    MichelineBinaryConverter.WriteFlat(writer, item);
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Netezos.Encoding
 
         public MichelineBytes(byte[] value) => Value = value;
 
-        public void Write(BinaryWriter writer)
+        public void Write(BinaryWriter writer, int depth = 0)
         {
             var len = Value.Length;
 

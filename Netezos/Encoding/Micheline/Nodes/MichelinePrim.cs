@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
+using Netezos.Encoding.Serialization;
 
 namespace Netezos.Encoding
 {
@@ -18,7 +19,7 @@ namespace Netezos.Encoding
         [JsonPropertyName("annots")]
         public List<IAnnotation> Annots { get; set; }
 
-        public void Write(BinaryWriter writer)
+        public void Write(BinaryWriter writer, int depth = 0)
         {
             var argsCount = false;
             var annotsCount = false;
@@ -58,8 +59,16 @@ namespace Netezos.Encoding
                 if (argsCount)
                     writer.Write7BitInt(Args.Count);
 
-                foreach (var arg in Args)
-                    arg.Write(writer);
+                if (depth < Micheline.MaxRecursionDepth)
+                {
+                    foreach (var arg in Args)
+                        arg.Write(writer, depth + 1);
+                }
+                else
+                {
+                    foreach (var arg in Args)
+                        MichelineBinaryConverter.WriteFlat(writer, arg);
+                }
             }
 
             if (Annots != null)

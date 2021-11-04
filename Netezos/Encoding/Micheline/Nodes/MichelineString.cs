@@ -13,7 +13,7 @@ namespace Netezos.Encoding
 
         public MichelineString(string value) => Value = value;
 
-        public void Write(BinaryWriter writer)
+        public void Write(BinaryWriter writer, int depth = 0)
         {
             var bytes = Utf8.Parse(Value);
             var len = bytes.Length;

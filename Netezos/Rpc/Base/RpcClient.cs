@@ -21,7 +21,7 @@ namespace Netezos.Rpc
         {
             AllowTrailingCommas = true,
             DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-            MaxDepth = 10240,
+            MaxDepth = 100_000,
             NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString,
             PropertyNamingPolicy = new SnakeCaseNamingPolicy()
         };

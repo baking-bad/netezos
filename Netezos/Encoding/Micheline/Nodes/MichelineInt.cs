@@ -14,7 +14,7 @@ namespace Netezos.Encoding
 
         public MichelineInt(BigInteger value) => Value = value;
 
-        public void Write(BinaryWriter writer)
+        public void Write(BinaryWriter writer, int depth = 0)
         {
             var bytes = Value.ToByteArray();
             var len = bytes.Length;

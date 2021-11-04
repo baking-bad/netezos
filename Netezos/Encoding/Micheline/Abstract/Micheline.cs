@@ -8,7 +8,7 @@ namespace Netezos.Encoding
     {
         MichelineType Type { get; }
 
-        void Write(BinaryWriter writer);
+        void Write(BinaryWriter writer, int depth = 0);
     }
 
     public enum MichelineType : byte
