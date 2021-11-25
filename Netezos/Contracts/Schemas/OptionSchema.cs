@@ -25,7 +25,7 @@ namespace Netezos.Contracts
 
         internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
         {
-            if (!(value is MichelinePrim prim))
+            if (value is not MichelinePrim prim)
                 throw FormatException(value);
 
             if (prim.Prim == PrimType.None)
@@ -37,7 +37,10 @@ namespace Netezos.Contracts
                 if (prim.Args?.Count != 1)
                     throw new FormatException("Invalid 'Some' prim args count");
 
-                return Some.GetTreeView(parent, prim.Args[0], name ?? Name);
+                var treeView = base.GetTreeView(parent, value, name);
+                treeView.Children = new(1);
+                treeView.Children.Add(Some.GetTreeView(treeView, prim.Args[0], name ?? Name));
+                return treeView;
             }
             else
             {

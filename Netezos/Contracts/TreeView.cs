@@ -19,6 +19,9 @@ namespace Netezos.Contracts
                 if (Parent == null)
                     return string.Empty;
 
+                if (Parent.Schema is OptionSchema)
+                    return Parent.Path;
+
                 var path = Parent.Path;
                 return path.Length == 0 ? Name : $"{path}.{Name}";
             }
