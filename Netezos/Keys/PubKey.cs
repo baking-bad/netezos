@@ -71,6 +71,16 @@ namespace Netezos.Keys
             }
         }
 
+        public bool Verify(byte[] data, string signature)
+        {
+            using (Store.Unlock())
+            {
+                
+                return Base58.TryParse(signature, Curve.SignaturePrefix, out var signatureBytes) 
+                    && Curve.Verify(data, signatureBytes, Store.Data);
+            }
+        }
+
         public bool Verify(string message, string signature)
         {
             using (Store.Unlock())

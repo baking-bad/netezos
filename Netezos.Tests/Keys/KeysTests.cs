@@ -13,13 +13,19 @@ namespace Netezos.Tests.Keys
         {
             foreach (var sample in DJson.Read(@"../../../Keys/Samples/ed25519.json"))
             {
-                var key = Key.FromBase58(sample.prv);
+                var key = Key.FromBase58((string)sample.prv);
                 var data = Hex.Parse(sample.data);
 
                 Assert.Equal(sample.pub, key.PubKey.GetBase58());
                 Assert.Equal(sample.pkh, key.PubKey.Address);
                 Assert.Equal(sample.sig, key.Sign(data));
+                Assert.True(key.PubKey.Verify(data, sample.sig));
             }
+
+            var testKey = new Key(ECKind.Ed25519);
+            const string msg = "TestMessage";
+            var sign = testKey.Sign(msg);
+            Assert.True(testKey.PubKey.Verify(msg, sign));
         }
 
         [Fact]
@@ -33,7 +39,13 @@ namespace Netezos.Tests.Keys
                 Assert.Equal(sample.pub, key.PubKey.GetBase58());
                 Assert.Equal(sample.pkh, key.PubKey.Address);
                 Assert.Equal(sample.sig, key.Sign(data));
+                Assert.True(key.PubKey.Verify(data, sample.sig));
             }
+            
+            var testKey = new Key(ECKind.Secp256k1);
+            const string msg = "TestMessage";
+            var sign = testKey.Sign(msg);
+            Assert.True(testKey.PubKey.Verify(msg, sign));
         }
 
         [Fact]
@@ -47,7 +59,13 @@ namespace Netezos.Tests.Keys
                 Assert.Equal(sample.pub, key.PubKey.GetBase58());
                 Assert.Equal(sample.pkh, key.PubKey.Address);
                 Assert.Equal(sample.sig, key.Sign(data));
+                Assert.True(key.PubKey.Verify(data, sample.sig));
             }
+            
+            var testKey = new Key(ECKind.NistP256);
+            const string msg = "TestMessage";
+            var sign = testKey.Sign(msg);
+            Assert.True(testKey.PubKey.Verify(msg, sign));
         }
     }
 }
