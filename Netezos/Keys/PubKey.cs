@@ -71,14 +71,22 @@ namespace Netezos.Keys
             }
         }
 
+        public bool Verify(byte[] data, string signature)
+        {
+            using (Store.Unlock())
+            {
+                return Base58.TryParse(signature, Curve.SignaturePrefix, out var signatureBytes) 
+                    && Curve.Verify(data, signatureBytes, Store.Data);
+            }
+        }
+
         public bool Verify(string message, string signature)
         {
             using (Store.Unlock())
             {
-                var messageBytes = Utf8.Parse(message);
-                var signatureBytes = Base58.Parse(signature, Curve.SignaturePrefix);
-
-                return Curve.Verify(messageBytes, signatureBytes, Store.Data);
+                return Utf8.TryParse(message, out var messageBytes) 
+                    && Base58.TryParse(signature, Curve.SignaturePrefix, out var signatureBytes) 
+                    && Curve.Verify(messageBytes, signatureBytes, Store.Data);
             }
         }
 
