@@ -75,7 +75,6 @@ namespace Netezos.Keys
         {
             using (Store.Unlock())
             {
-                
                 return Base58.TryParse(signature, Curve.SignaturePrefix, out var signatureBytes) 
                     && Curve.Verify(data, signatureBytes, Store.Data);
             }
