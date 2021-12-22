@@ -26,6 +26,10 @@ namespace Netezos.Tests.Keys
             const string msg = "TestMessage";
             var sign = testKey.Sign(msg);
             Assert.True(testKey.PubKey.Verify(msg, sign));
+            Assert.False(testKey.PubKey.Verify(msg, "wrongSignature"));
+            Assert.False(testKey.PubKey.Verify(msg, null));
+            Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
+            Assert.False(testKey.PubKey.Verify((string)null, sign));
         }
 
         [Fact]
@@ -46,6 +50,10 @@ namespace Netezos.Tests.Keys
             const string msg = "TestMessage";
             var sign = testKey.Sign(msg);
             Assert.True(testKey.PubKey.Verify(msg, sign));
+            Assert.False(testKey.PubKey.Verify(msg, "wrongSignature"));
+            Assert.False(testKey.PubKey.Verify(msg, null));
+            Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
+            Assert.False(testKey.PubKey.Verify((string)null, sign));
         }
 
         [Fact]
@@ -66,6 +74,10 @@ namespace Netezos.Tests.Keys
             const string msg = "TestMessage";
             var sign = testKey.Sign(msg);
             Assert.True(testKey.PubKey.Verify(msg, sign));
+            Assert.False(testKey.PubKey.Verify(msg, "wrongSignature"));
+            Assert.False(testKey.PubKey.Verify(msg, null));
+            Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
+            Assert.False(testKey.PubKey.Verify((string)null, sign));
         }
     }
 }
