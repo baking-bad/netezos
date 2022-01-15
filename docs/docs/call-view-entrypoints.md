@@ -40,7 +40,7 @@ Note, by appending `%viewNat` to the contract address we can specify a particula
 {
   "kind": "transaction",
   "source": "...",
-  "destination": "KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg",
+  "destination": "KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F",
   "parameters": {
     "entrypoint": "getBalance",                                    // call view entrypoint
     "value": {
@@ -50,7 +50,7 @@ Note, by appending `%viewNat` to the contract address we can specify a particula
           "string": "tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP"         // with some args
         },
         {
-          "string": "KT1HkNcxk44Jg84fGDCHHwaEUDCBi4LDcKrq%viewNat" // and callback contract
+          "string": "KT1DjH58WumESHhpViiwuRE9ehUY5RGMNcuL%viewNat" // and callback contract
         }
       ]
     }
@@ -59,8 +59,8 @@ Note, by appending `%viewNat` to the contract address we can specify a particula
     "internal_operation_results": [                                // callback transaction
       {
         "kind": "transaction",
-        "source": "KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg",
-        "destination": "KT1HkNcxk44Jg84fGDCHHwaEUDCBi4LDcKrq",     // to callback contract
+        "source": "KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F",
+        "destination": "KT1DjH58WumESHhpViiwuRE9ehUY5RGMNcuL",     // to callback contract
         "parameters": {
           "entrypoint": "viewNat",                                 // to callback entrypoint
           "value": {
@@ -82,7 +82,7 @@ We've just seen how `view` entrypoints work in Tezos: you send a transaction to 
 an internal transaction with result value in its parameters and sends it to the `callback` contract. 
 With Netezos we will do basically the same things.
 
-Let's see, how to get [FA1.2 token](https://edo2net.tzkt.io/KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg/code)
+Let's see, how to get [FA1.2 token](https://hangzhou2net.tzkt.io/KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F/code)
 balance by calling `getBalance` entrypoint.
  
 ### Prepare callback contract
@@ -90,7 +90,7 @@ balance by calling `getBalance` entrypoint.
 First of all, we will need an existing contract that we will use as a `callback`.
 Moreover, the `callback` contract must have an entrypoint with the same parameter type as the type of the `view` entrypoint we are calling.
  
-Here is how the `getBalance` entrypoint of [our contract](https://edo2net.tzkt.io/KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg/code) looks:
+Here is how the `getBalance` entrypoint of [our contract](https://hangzhou2net.tzkt.io/KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F/code) looks:
  
 ```
 (pair %getBalance (address %viewParam) (contract %viewCallbackTo nat))
@@ -100,7 +100,7 @@ So, we will need a `callback` contract with an entrypoint of type `nat`.
  
 Where do we get such a contract? Well, we can either originate a new one or use any of already existing ones that have an entrypoint of the required type.
 
-Let's take [existing one](https://edo2net.tzkt.io/KT1HkNcxk44Jg84fGDCHHwaEUDCBi4LDcKrq/code):
+Let's take [existing one](https://hangzhou2net.tzkt.io/KT1DjH58WumESHhpViiwuRE9ehUY5RGMNcuL/code):
  
 ```
 parameter (or (nat %viewNat) (or (string %viewString) (address %viewAddress)));
@@ -115,18 +115,18 @@ That contract contains the entrypoint `(nat %viewNat)` - that's exactly what we 
 Of course, we don't want to send a transaction just to get some data from the smart contract.
 It would be weird to wait a minute unless a transaction is included into a block and moreover to pay a tx fee.
  
-A common workaround is to use [/run_operation](https://tezos.gitlab.io/008/rpc.html#post-block-id-helpers-scripts-run-operation) RPC endpoint
+A common workaround is to use [/run_operation](https://gitlab.com/tezos/tezos/-/blob/master/docs/api/hangzhou-openapi.json) RPC endpoint
 to simulate the transaction and see its result without injecting it into the blockchain, so we don't have to wait and we don't have to pay a fee.
-By the way, [/run_operation](https://tezos.gitlab.io/008/rpc.html#post-block-id-helpers-scripts-run-operation) ignores signature, so we don't even need to forge and sign the operation, just send its content.
+By the way, [/run_operation](https://gitlab.com/tezos/tezos/-/blob/master/docs/api/hangzhou-openapi.json) ignores signature, so we don't even need to forge and sign the operation, just send its content.
  
 Let's create a transaction:
  
 ```cs
 var sender   = "tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP";
-var fa12     = "KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg";
-var callback = "KT1HkNcxk44Jg84fGDCHHwaEUDCBi4LDcKrq%viewNat";
+var fa12     = "KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F";
+var callback = "KT1DjH58WumESHhpViiwuRE9ehUY5RGMNcuL%viewNat";
             
-var rpc = new TezosRpc("https://rpc.tzkt.io/edo2net/");
+var rpc = new TezosRpc("https://rpc.tzkt.io/hangzhou2net/");
 var counter = await rpc.Blocks.Head.Context.Contracts[sender].Counter.GetAsync<int>();
  
 var tx = new TransactionContent
@@ -225,18 +225,18 @@ var bytes = await new LocalForge().ForgeOperationAsync(head, origination);
 var sig = (byte[])key.SignOperation(bytes);
  
 var op_hash = await rpc.Inject.Operation.PostAsync(bytes.Concat(sig));
-// KT1JX8fTHEekenpN2PJEWgmMxB9jdVHBHG5V
+// KT1T5ctQSQuoVmfgSaqogxzhKdXs5rCPvKUi
 ```
  
-Now we can use `KT1JX8fTHEekenpN2PJEWgmMxB9jdVHBHG5V` as a callback contract (in your case it will be a different address).
+Now we can use `KT1T5ctQSQuoVmfgSaqogxzhKdXs5rCPvKUi` as a callback contract (in your case it will be a different address).
  
 ### Simulate operation
  
 When we have prepared callback contract, we can simulate an operation:
  
 ```cs
-var fa2 = "KT1LjU6xSBRdH7Rwh1aJFWHxGqrpdejZTYJa";
-var callback = "KT1JX8fTHEekenpN2PJEWgmMxB9jdVHBHG5V";
+var fa2 = "KT1X9eKZyo6kQLkJTrjKmVt7MLC33xE6DfZB";
+var callback = "KT1T5ctQSQuoVmfgSaqogxzhKdXs5rCPvKUi";
  
 var script = await rpc.Blocks.Head.Context.Contracts[fa2].Script.GetAsync();
 var code = Micheline.FromJson(script.code);
@@ -333,7 +333,7 @@ So in the end we will get:
       "owner":"tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP",
       "token_id":"0"
     },
-    "balance":"12345678912"
+    "balance":"0"
   }
 ]
 ```

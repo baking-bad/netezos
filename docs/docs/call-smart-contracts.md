@@ -12,10 +12,10 @@ A full working code snippet of calling FA1.2 and FA2 transfers with Netezos SDK 
 ## Prerequisites
 
 First, we need an `Rpc` to interaction. You can find a more detailed description of working with the `Rpc` 
-in the [Tezos Rpc](tezos-rpc.html) section. In our case we use the RPC with the `edo2net` network.
+in the [Tezos Rpc](tezos-rpc.html) section. In our case we use the RPC with the `hangzhou2net` network.
 
 ```cs
-var rpc = new TezosRpc("https://rpc.tzkt.io/edo2net/");
+var rpc = new TezosRpc("https://rpc.tzkt.io/hangzhou2net/");
 ```
 
 Also, we need a wallet to call contracts. You can find a more detailed description of working with the `Key` in the [Get started](get-started.html) section. 
@@ -34,8 +34,8 @@ var recepient = new Key();
 And, of course, we need contracts to call. Let's hardcode them
 
 ```cs
-var FA12 = "KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg";
-var FA2 = "KT1UF15SCkdvqkS6QDA5kJZqov6VGUU6vwFJ";
+var FA12 = "KT1X9eKZyo6kQLkJTrjKmVt7MLC33xE6DfZB";
+var FA2 = "KT1Sn96SbfzsBLrt8aCCHNFt66wQb7JHvjZs";
 ```
 
 ## FA12 Token transfer example
@@ -63,7 +63,7 @@ var cs = new ContractScript(code);
 ```
 
 To build the parameter for your transfer we need to know the entrypoint schema. You can check the parameter schema on the 
-[TzKT Explorer](https://edo2net.tzkt.io/KT1JiQhr9EXHL88U3hjJH6FkPv8wWdVYvwtg/entrypoints) or you can get the schema from the `ContractScript`
+[TzKT Explorer](https://hangzhou2net.tzkt.io/KT1X9eKZyo6kQLkJTrjKmVt7MLC33xE6DfZB/entrypoints) or you can get the schema from the `ContractScript`
 
 ```cs
 var schemaString = cs.Entrypoints["transfer"].Humanize();
@@ -132,7 +132,7 @@ var cs = new ContractScript(code);
 ```
 
 To build the parameter for your transfer we need to know the entrypoint schema. You can check the parameter schema on the 
-[TzKT Explorer](https://edo2net.tzkt.io/KT1UF15SCkdvqkS6QDA5kJZqov6VGUU6vwFJ/entrypoints) or you can get the schema from the `ContractScript`
+[TzKT Explorer](https://hangzhou2net.tzkt.io/KT1Sn96SbfzsBLrt8aCCHNFt66wQb7JHvjZs/entrypoints) or you can get the schema from the `ContractScript`
 
 ```cs
 var schemaString = cs.Entrypoints["transfer"].Humanize();
