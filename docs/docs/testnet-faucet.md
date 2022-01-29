@@ -49,21 +49,17 @@ var mnemonic = new Mnemonic(words);
 var key = Key.FromMnemonic(mnemonic, email, password);
 ```
 
-Now, that we have received the key, we can activate the account. We will use [Netezos.Rpc](../api/Netezos.Rpc.html) package for that purpose. Read all about it in the [Tezos Rpc](tezos-rpc.html) section.
+Now, that we have received the key, we can activate the account. We will use [Netezos.Rpc](../api/Netezos.Rpc.html) for that purpose. Read all about it in the [Tezos Rpc](tezos-rpc.html) section.
 
 ## Account activation
 
-Let’s create a content list for our future operation. The `pkh` and `activation_code` fields are taken from the downloaded JSON file:
+Let’s create the content object for our future operation. The `pkh` and `activation_code` fields are taken from the downloaded JSON file:
 
 ```csharp
-var content = new List<object>
+var activation = new ActivationContent()
 {
-    new
-    {
-        kind = "activate_account",
-        pkh = key.Address,
-        secret = activation_code
-    }
+    Address = key.Address,
+    Secret = activation_code
 };
 ```
 
@@ -72,14 +68,13 @@ Then let’s create an RPC object and get the required data from the chain:
 ```csharp
 var rpc = new TezosRpc("https://rpc.tzkt.io/ithacanet/");
 var branch = await rpc.Blocks.Head.Hash.GetAsync<string>();
-var opBytes = await rpc.Blocks.Head.Helpers.Forge.Operations.PostAsync<string>(branch, content);
+var opBytes = await new LocalForge().ForgeOperationAsync(branch, activation);
 ```
 
 Once we get operation bytes we can sign them with our key and broadcast to the network:
 
 ```csharp
-var signedBytes = key.Sign(Hex.Parse("03" + opBytes));
-var opHash = await rpc.Inject.Operation.PostAsync(opBytes + Hex.Convert(signedBytes));
-Console.WriteLine(opHash);
+var signedBytes = (byte[])key.SignOperation(opBytes);
+var opHash = await rpc.Inject.Operation.PostAsync(opBytes.Concat(signedBytes));
 ```
 
