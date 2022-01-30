@@ -13,10 +13,10 @@
     <RepositoryUrl>https://github.com/dmirgaleev/netezos</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
-    <Authors>Groxan</Authors>
-    <Product>Netezos</Product>
+    <Authors>Vadim</Authors>
+    <Product>SomeTestTest</Product>
     <Description>.NET SDK for Tezos blockchain (.NET Stansard 2.0)</Description>
-    <Version>2.4.7</Version>
+    <Version>0.0.1</Version>
     <Copyright>Copyright © Baking Bad 2019-2021</Copyright>
   </PropertyGroup>
 
