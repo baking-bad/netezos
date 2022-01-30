@@ -6,12 +6,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Netezos</PackageId>
-    <PackageTags>tezos crypto blockchain xtz rpc keys signing forging encoding ledger smart contract</PackageTags>
+    <PackageId>SomeTestPackage123</PackageId>
+    <PackageTags>test</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://netezos.dev</PackageProjectUrl>
 
-    <RepositoryUrl>https://github.com/baking-bad/netezos</RepositoryUrl>
+    <RepositoryUrl>https://github.com/dmirgaleev/netezos</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
     <Authors>Groxan</Authors>
