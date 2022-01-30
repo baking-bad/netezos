@@ -68,13 +68,13 @@ Then let’s create an RPC object and get the required data from the chain:
 ```csharp
 var rpc = new TezosRpc("https://rpc.tzkt.io/ithacanet/");
 var branch = await rpc.Blocks.Head.Hash.GetAsync<string>();
-var opBytes = await new LocalForge().ForgeOperationAsync(branch, activation);
+var bytes = await new LocalForge().ForgeOperationAsync(branch, activation);
 ```
 
 Once we get operation bytes we can sign them with our key and broadcast to the network:
 
 ```csharp
-var signedBytes = (byte[])key.SignOperation(opBytes);
-var opHash = await rpc.Inject.Operation.PostAsync(opBytes.Concat(signedBytes));
+var signature = (byte[])key.SignOperation(bytes);
+var result = await rpc.Inject.Operation.PostAsync(bytes.Concat(signature));
 ```
 
