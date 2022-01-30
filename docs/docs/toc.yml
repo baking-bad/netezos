@@ -3,6 +3,9 @@
   
 - name: Wallet Import
   href: wallet-import.md
+  
+- name: Testnet Faucet
+  href: testnet-faucet.md 
 
 - name: Tezos RPC
   href: tezos-rpc.md
