@@ -22,7 +22,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            Netezos ${{ env.RELEASE_VERSION }} has been released 😻
+            Netezos ${{ env.RELEASE_VERSION }} has been released 😎
             NuGet Package will be available in a few minutes.
             More info at https://github.com/baking-bad/netezos/releases/tag/${{ env.RELEASE_VERSION }}
       - name: Slack notification
@@ -31,6 +31,6 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         with:
           args: |
-            Netezos ${{ env.RELEASE_VERSION }} has been released 😻
+            Netezos ${{ env.RELEASE_VERSION }} has been released 😎
             NuGet Package will be available in a few minutes.
             More info at https://github.com/baking-bad/netezos/releases/tag/${{ env.RELEASE_VERSION }}
