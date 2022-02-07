@@ -23,7 +23,7 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
             Netezos ${{ env.RELEASE_VERSION }} has been released 😻
-            Docker images will be available in a few minutes.
+            NuGet Package will be available in a few minutes.
             More info at https://github.com/baking-bad/netezos/releases/tag/${{ env.RELEASE_VERSION }}
       - name: Slack notification
         uses: Ilshidur/action-slack@master
@@ -32,5 +32,5 @@ jobs:
         with:
           args: |
             Netezos ${{ env.RELEASE_VERSION }} has been released 😻
-            Docker images will be available in a few minutes.
+            NuGet Package will be available in a few minutes.
             More info at https://github.com/baking-bad/netezos/releases/tag/${{ env.RELEASE_VERSION }}
