@@ -11,6 +11,9 @@ jobs:
   publish:
     name: build, pack & publish
     runs-on: ubuntu-latest
+    environment:
+      name: Actions
+      url: https://github.com
     steps:
       - uses: actions/checkout@v2
 
