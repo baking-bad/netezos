@@ -1,31 +1,24 @@
-name: publish to nuget
+name: Publish on NuGet
+
 on:
-  # Triggers the workflow on push events but only for the master branch
   push:
     branches: [ master ]
 
 jobs:
   publish:
-    name: build, pack & publish
+    name: Build and publish package
     runs-on: ubuntu-latest
     environment:
-      name: Actions
+      name: nuget
       url: https://github.com
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.PAT }}
 
-      # Publish
-      - name: publish on version change
-        id: publish_nuget
+      - name: Build and publish package if version changed
         uses: rohith/publish-nuget@v2
         with:
-          # Filepath of the project to be packaged, relative to root of repository
           PROJECT_FILE_PATH: Netezos/Netezos.csproj
-          
-          # NuGet package id, used for version detection & defaults to project name
           PACKAGE_NAME: Netezos
-          
-          # API key to authenticate with NuGet server
-          NUGET_KEY: ${{secrets.NUGET_KEY}}
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
