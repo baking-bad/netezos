@@ -28,7 +28,7 @@ Do not hesitate to use [GitHub issue tracker](https://github.com/baking-bad/nete
 
 ### Support
 
-Feel free to join our Discord: https://discord.gg/aG8XKuwsQd, Telegram chat: https://t.me/baking_bad_chat, or find us in Slack: https://tezos-dev.slack.com #baking-bad.
+Feel free to join our [Discord server](https://discord.gg/aG8XKuwsQd), [Telegram chat](https://t.me/baking_bad_chat), or find us in [Tezos Dev Slack](https://tezos-dev.slack.com/archives/CV5NX7F2L).
 We will be glad to hear any feedback and feature requests and will try to help you with general use cases of the Netezos library.
 
 ## Getting started
