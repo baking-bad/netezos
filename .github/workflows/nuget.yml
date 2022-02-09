@@ -1,0 +1,24 @@
+name: Publish on NuGet
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  publish:
+    name: Build and publish package
+    runs-on: ubuntu-latest
+    environment:
+      name: nuget
+      url: https://github.com
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Build and publish package if version changed
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: Netezos/Netezos.csproj
+          PACKAGE_NAME: Netezos
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}

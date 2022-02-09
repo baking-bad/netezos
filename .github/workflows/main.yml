@@ -1,28 +1,28 @@
-name: GitHub Pages
+name: Publish on GitHub Pages
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push events but only for the master branch
   push:
     branches: [ master ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  docs_generation_job:
+  publish:
+    name: Build and publish documentation
     runs-on: ubuntu-latest
-    name: Build and Publish Documentation
+    environment:
+      name: github-pages
+      url: https://github.com
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - uses: nikeee/docfx-action@v1.0.0
-      name: Build Documentation
-      with:
-        args: docs/docfx.json
+      - name: Build documentation
+        uses: nikeee/docfx-action@v1.0.0
+        with:
+          args: docs/docfx.json
 
-    - uses: maxheld83/ghpages@master
-      name: Publish Documentation on GitHub Pages
-      env:
-        BUILD_DIR: docs/_site # docfx's default output directory is _site
-        GH_PAT: ${{ secrets.TOKEEN }} # See https://github.com/maxheld83/ghpages
+      - name: Publish documentation
+        uses: maxheld83/ghpages@master
+        env:
+          BUILD_DIR: docs/_site
+          GH_PAT: ${{ secrets.PAT }}
