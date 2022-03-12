@@ -18,25 +18,25 @@ namespace Netezos.Forging.Models
             }
 
             sideReader.Read();
-            var kind = sideReader.GetString();
-
-            switch (kind)
+            return sideReader.GetString() switch
             {
-                case "endorsement": return JsonSerializer.Deserialize<EndorsementContent>(ref reader, options);
-                case "endorsement_with_slot": return JsonSerializer.Deserialize<EndorsementWithSlotContent>(ref reader, options);
-                case "ballot": return JsonSerializer.Deserialize<BallotContent>(ref reader, options);
-                case "proposals": return JsonSerializer.Deserialize<ProposalsContent>(ref reader, options);
-                case "activate_account": return JsonSerializer.Deserialize<ActivationContent>(ref reader, options);
-                case "double_baking_evidence": return JsonSerializer.Deserialize<DoubleBakingContent>(ref reader, options);
-                case "double_endorsement_evidence": return JsonSerializer.Deserialize<DoubleEndorsementContent>(ref reader, options);
-                case "seed_nonce_revelation": return JsonSerializer.Deserialize<SeedNonceRevelationContent>(ref reader, options);
-                case "delegation": return JsonSerializer.Deserialize<DelegationContent>(ref reader, options);
-                case "origination": return JsonSerializer.Deserialize<OriginationContent>(ref reader, options);
-                case "transaction": return JsonSerializer.Deserialize<TransactionContent>(ref reader, options);
-                case "reveal": return JsonSerializer.Deserialize<RevealContent>(ref reader, options);
-                case "register_global_constant": return JsonSerializer.Deserialize<RegisterConstantContent>(ref reader, options);
-                default: throw new JsonException("Invalid operation kind");
-            }
+                "endorsement" => JsonSerializer.Deserialize<EndorsementContent>(ref reader, options),
+                "preendorsement" => JsonSerializer.Deserialize<PreendorsementContent>(ref reader, options),
+                "ballot" => JsonSerializer.Deserialize<BallotContent>(ref reader, options),
+                "proposals" => JsonSerializer.Deserialize<ProposalsContent>(ref reader, options),
+                "activate_account" => JsonSerializer.Deserialize<ActivationContent>(ref reader, options),
+                "double_baking_evidence" => JsonSerializer.Deserialize<DoubleBakingContent>(ref reader, options),
+                "double_endorsement_evidence" => JsonSerializer.Deserialize<DoubleEndorsementContent>(ref reader, options),
+                "double_preendorsement_evidence" => JsonSerializer.Deserialize<DoublePreendorsementContent>(ref reader, options),
+                "seed_nonce_revelation" => JsonSerializer.Deserialize<SeedNonceRevelationContent>(ref reader, options),
+                "delegation" => JsonSerializer.Deserialize<DelegationContent>(ref reader, options),
+                "origination" => JsonSerializer.Deserialize<OriginationContent>(ref reader, options),
+                "transaction" => JsonSerializer.Deserialize<TransactionContent>(ref reader, options),
+                "reveal" => JsonSerializer.Deserialize<RevealContent>(ref reader, options),
+                "register_global_constant" => JsonSerializer.Deserialize<RegisterConstantContent>(ref reader, options),
+                "set_deposits_limit" => JsonSerializer.Deserialize<SetDepositsLimitContent>(ref reader, options),
+                _ => throw new JsonException("Invalid operation kind"),
+            };
         }
 
         public override void Write(Utf8JsonWriter writer, OperationContent value, JsonSerializerOptions options)

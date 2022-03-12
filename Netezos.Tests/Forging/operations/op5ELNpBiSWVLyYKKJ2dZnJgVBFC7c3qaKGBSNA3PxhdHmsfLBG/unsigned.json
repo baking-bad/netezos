@@ -1,0 +1,30 @@
+﻿{
+  "branch": "BLuyhUCVEhbjwjpC7RE16sjoVNi1bvQiUdmDndUqM41vnpzqFoH",
+  "contents": [
+    {
+      "kind": "double_preendorsement_evidence",
+      "op1": {
+        "branch": "BLBPGmGahGToPBGsNzwPmV5A3ciqVe5HD5nGRUVHqiJgoyMPH1t",
+        "operations": {
+          "kind": "preendorsement",
+          "slot": 106,
+          "level": 35248,
+          "round": 1,
+          "block_payload_hash": "vh3Bo4msk5C2XeFxebzAbTuTg4utMBWY9j32VpyhouVgGhb5yDtw"
+        },
+        "signature": "sigeqGMpwyoUnp1BhGXtveMJAXgD27kkc1VxCdkgqxLwpEgqc13n9NKaFbgidiPuRb1HaG17DSrNkHNh9WkF5YNf6FNcUSJX"
+      },
+      "op2": {
+        "branch": "BLBPGmGahGToPBGsNzwPmV5A3ciqVe5HD5nGRUVHqiJgoyMPH1t",
+        "operations": {
+          "kind": "preendorsement",
+          "slot": 106,
+          "level": 35248,
+          "round": 1,
+          "block_payload_hash": "vh3HYKL6M4mJw71S5kqJf8gEbWuNSHKn3yGP76yHxZmxjcqdiA4N"
+        },
+        "signature": "sigZFGKNsQuhBEGsAvFJGau92mrSGYyDsStgnHYyqXfL3D4ybzRGpNSGz5hRTNFTukuvTYvq9QqUQab1BUVu9FGmmytnGJ71"
+      }
+    }
+  ]
+}

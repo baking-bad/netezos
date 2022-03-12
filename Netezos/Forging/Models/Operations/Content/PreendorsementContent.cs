@@ -2,10 +2,10 @@
 
 namespace Netezos.Forging.Models
 {
-    public class EndorsementContent : OperationContent
+    public class PreendorsementContent : OperationContent
     {
         [JsonPropertyName("kind")]
-        public override string Kind => "endorsement";
+        public override string Kind => "preendorsement";
 
         [JsonPropertyName("slot")]
         public int Slot { get; set; }

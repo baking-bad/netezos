@@ -116,5 +116,10 @@
         /// Script expression
         /// </summary>
         public static readonly byte[] expr = new byte[] { 13, 44, 64, 27 };
+
+        /// <summary>
+        /// Consensus value hash (e.g. block payload hash)
+        /// </summary>
+        public static readonly byte[] vh = new byte[] { 1, 106, 242 };
     }
 }

@@ -14,6 +14,8 @@ namespace Netezos.Forging
             {
                 case EndorsementContent endorsement:
                     return ForgeEndorsement(endorsement);
+                case PreendorsementContent preendorsement:
+                    return ForgePreendorsement(preendorsement);
                 case BallotContent ballot:
                     return ForgeBallot(ballot);
                 case ProposalsContent proposals:
@@ -24,6 +26,8 @@ namespace Netezos.Forging
                     return ForgeDoubleBaking(doubleBaking);
                 case DoubleEndorsementContent doubleEndorsement:
                     return ForgeDoubleEndorsement(doubleEndorsement);
+                case DoublePreendorsementContent doublePreendorsement:
+                    return ForgeDoublePreendorsement(doublePreendorsement);
                 case SeedNonceRevelationContent seed:
                     return ForgeSeedNonceRevelaion(seed);
                 case DelegationContent delegation:
@@ -36,6 +40,8 @@ namespace Netezos.Forging
                     return ForgeReveal(reveal);
                 case RegisterConstantContent registerConstant:
                     return ForgeRegisterConstant(registerConstant);
+                case SetDepositsLimitContent setDepositsLimit:
+                    return ForgeSetDepositsLimit(setDepositsLimit);
                 default:
                     throw new ArgumentException($"Invalid operation content kind {content.Kind}");
             }
@@ -45,7 +51,20 @@ namespace Netezos.Forging
         {
             return Bytes.Concat(
                 ForgeMicheNat((int)OperationTag.Endorsement),
-                ForgeInt32(operation.Level));
+                ForgeInt32(operation.Slot, 2),
+                ForgeInt32(operation.Level),
+                ForgeInt32(operation.Round),
+                Base58.Parse(operation.PayloadHash, Prefix.vh));
+        }
+
+        static byte[] ForgePreendorsement(PreendorsementContent operation)
+        {
+            return Bytes.Concat(
+                ForgeMicheNat((int)OperationTag.Preendorsement),
+                ForgeInt32(operation.Slot, 2),
+                ForgeInt32(operation.Level),
+                ForgeInt32(operation.Round),
+                Base58.Parse(operation.PayloadHash, Prefix.vh));
         }
 
         static byte[] ForgeBallot(BallotContent operation)
@@ -92,6 +111,14 @@ namespace Netezos.Forging
                 ForgeMicheNat((int)OperationTag.DoubleEndorsement),
                 ForgeArray(ForgeInlinedEndorsement(operation.Op1)),
                 ForgeArray(ForgeInlinedEndorsement(operation.Op2)));
+        }
+
+        static byte[] ForgeDoublePreendorsement(DoublePreendorsementContent operation)
+        {
+            return Bytes.Concat(
+                ForgeMicheNat((int)OperationTag.DoublePreendorsement),
+                ForgeArray(ForgeInlinedPreendorsement(operation.Op1)),
+                ForgeArray(ForgeInlinedPreendorsement(operation.Op2)));
         }
 
         static byte[] ForgeSeedNonceRevelaion(SeedNonceRevelationContent operation)
@@ -166,6 +193,20 @@ namespace Netezos.Forging
                 ForgeArray(ForgeMicheline(operation.Value)));
         }
 
+        static byte[] ForgeSetDepositsLimit(SetDepositsLimitContent operation)
+        {
+            return Bytes.Concat(
+                ForgeMicheNat((int)OperationTag.SetDepositsLimit),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                operation.Limit == null
+                    ? ForgeBool(false)
+                    : Bytes.Concat(ForgeBool(true), ForgeMicheNat(operation.Limit.Value)));
+        }
+
         #region nested
         static byte[] ForgeBlockHeader(BlockHeader header)
         {
@@ -188,8 +229,15 @@ namespace Netezos.Forging
         {
             return Bytes.Concat(
                 Base58.Parse(op.Branch, 2),
-                ForgeMicheNat((int)OperationTag.Endorsement),
-                ForgeInt32(op.Operations.Level),
+                ForgeEndorsement(op.Operations),
+                Base58.Parse(op.Signature, 3));
+        }
+
+        static byte[] ForgeInlinedPreendorsement(InlinedPreendorsement op)
+        {
+            return Bytes.Concat(
+                Base58.Parse(op.Branch, 2),
+                ForgePreendorsement(op.Operations),
                 Base58.Parse(op.Signature, 3));
         }
 

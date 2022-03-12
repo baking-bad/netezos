@@ -1,0 +1,13 @@
+﻿{
+  "branch": "BLMB4NLJpX21bMNUxHMVMxBvmeCYb7wPfCTupRJLFSNVQd2GBqf",
+  "contents": [
+    {
+      "kind": "set_deposits_limit",
+      "source": "tz1cXeGHP8Urj2pQRwpAkCdPGbCdqFUPsQwU",
+      "fee": "335",
+      "counter": "3",
+      "gas_limit": "1100",
+      "storage_limit": "0"
+    }
+  ]
+}

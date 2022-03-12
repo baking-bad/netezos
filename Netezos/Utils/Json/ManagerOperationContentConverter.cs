@@ -18,17 +18,16 @@ namespace Netezos.Forging.Models
             }
 
             sideReader.Read();
-            var kind = sideReader.GetString();
-
-            switch (kind)
+            return sideReader.GetString() switch
             {
-                case "delegation": return JsonSerializer.Deserialize<DelegationContent>(ref reader, options);
-                case "origination": return JsonSerializer.Deserialize<OriginationContent>(ref reader, options);
-                case "transaction": return JsonSerializer.Deserialize<TransactionContent>(ref reader, options);
-                case "reveal": return JsonSerializer.Deserialize<RevealContent>(ref reader, options);
-                case "register_global_constant": return JsonSerializer.Deserialize<RegisterConstantContent>(ref reader, options);
-                default: throw new JsonException("Invalid operation kind");
-            }
+                "delegation" => JsonSerializer.Deserialize<DelegationContent>(ref reader, options),
+                "origination" => JsonSerializer.Deserialize<OriginationContent>(ref reader, options),
+                "transaction" => JsonSerializer.Deserialize<TransactionContent>(ref reader, options),
+                "reveal" => JsonSerializer.Deserialize<RevealContent>(ref reader, options),
+                "register_global_constant" => JsonSerializer.Deserialize<RegisterConstantContent>(ref reader, options),
+                "set_deposits_limit" => JsonSerializer.Deserialize<SetDepositsLimitContent>(ref reader, options),
+                _ => throw new JsonException("Invalid operation kind"),
+            };
         }
 
         public override void Write(Utf8JsonWriter writer, ManagerOperationContent value, JsonSerializerOptions options)

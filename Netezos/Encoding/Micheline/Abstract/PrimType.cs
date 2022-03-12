@@ -152,6 +152,7 @@ namespace Netezos.Encoding
         OPEN_CHEST,
         VIEW,
         view,
-        constant
+        constant,
+        SUB_MUTEZ
     }
 }

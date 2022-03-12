@@ -1,0 +1,14 @@
+﻿{
+  "branch": "BMag6QQPrdxyPmf3cgCVz7xWr3CC3x2eVmheKu2vxYBb43FKjFp",
+  "contents": [
+    {
+      "kind": "set_deposits_limit",
+      "source": "tz1cXeGHP8Urj2pQRwpAkCdPGbCdqFUPsQwU",
+      "fee": "336",
+      "counter": "2",
+      "gas_limit": "1100",
+      "storage_limit": "0",
+      "limit": "0"
+    }
+  ]
+}

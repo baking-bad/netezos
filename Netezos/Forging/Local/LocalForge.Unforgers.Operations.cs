@@ -15,6 +15,8 @@ namespace Netezos.Forging
             {
                 case OperationTag.Endorsement:
                     return UnforgeEndorsement(reader);
+                case OperationTag.Preendorsement:
+                    return UnforgePreendorsement(reader);
                 case OperationTag.Ballot:
                     return UnforgeBallot(reader);
                 case OperationTag.Proposals:
@@ -25,6 +27,8 @@ namespace Netezos.Forging
                     return UnforgeDoubleBaking(reader);
                 case OperationTag.DoubleEndorsement:
                     return UnforgeDoubleEndorsement(reader);
+                case OperationTag.DoublePreendorsement:
+                    return UnforgeDoublePreendorsement(reader);
                 case OperationTag.SeedNonceRevelation:
                     return UnforgeSeedNonceRevelaion(reader);
                 case OperationTag.Delegation:
@@ -37,6 +41,8 @@ namespace Netezos.Forging
                     return UnforgeReveal(reader);
                 case OperationTag.RegisterConstant:
                     return UnforgeRegisterConstant(reader);
+                case OperationTag.SetDepositsLimit:
+                    return UnforgeSetDepositsLimit(reader);
                 default:
                     throw new ArgumentException($"Invalid operation: {operation}");
             }
@@ -46,7 +52,21 @@ namespace Netezos.Forging
         {
             return new EndorsementContent
             {
-                Level = reader.ReadInt32()
+                Slot = reader.ReadInt32(2),
+                Level = reader.ReadInt32(),
+                Round = reader.ReadInt32(),
+                PayloadHash = reader.ReadBase58(32, Prefix.vh)
+            };
+        }
+
+        static PreendorsementContent UnforgePreendorsement(ForgedReader reader)
+        {
+            return new PreendorsementContent
+            {
+                Slot = reader.ReadInt32(2),
+                Level = reader.ReadInt32(),
+                Round = reader.ReadInt32(),
+                PayloadHash = reader.ReadBase58(32, Prefix.vh)
             };
         }
 
@@ -94,7 +114,16 @@ namespace Netezos.Forging
             return new DoubleEndorsementContent
             {
                 Op1 = reader.ReadEnumerableSingle(UnforgeInlinedEndorsement),
-                Op2 = reader.ReadEnumerableSingle(UnforgeInlinedEndorsement),
+                Op2 = reader.ReadEnumerableSingle(UnforgeInlinedEndorsement)
+            };
+        }
+
+        static DoublePreendorsementContent UnforgeDoublePreendorsement(ForgedReader reader)
+        {
+            return new DoublePreendorsementContent
+            {
+                Op1 = reader.ReadEnumerableSingle(UnforgeInlinedPreendorsement),
+                Op2 = reader.ReadEnumerableSingle(UnforgeInlinedPreendorsement)
             };
         }
 
@@ -176,6 +205,19 @@ namespace Netezos.Forging
             };
         }
 
+        static SetDepositsLimitContent UnforgeSetDepositsLimit(ForgedReader reader)
+        {
+            return new SetDepositsLimitContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Limit = reader.ReadBool() ? (long)reader.ReadMichelineInt().Value : null
+            };
+        }
+
         #region nested
 
         static BlockHeader UnforgeBlockHeader(ForgedReader reader)
@@ -203,6 +245,16 @@ namespace Netezos.Forging
             {
                 Branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
                 Operations = (EndorsementContent)UnforgeOperation(reader),
+                Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig)
+            };
+        }
+
+        static InlinedPreendorsement UnforgeInlinedPreendorsement(ForgedReader reader)
+        {
+            return new InlinedPreendorsement
+            {
+                Branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
+                Operations = (PreendorsementContent)UnforgeOperation(reader),
                 Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig)
             };
         }
