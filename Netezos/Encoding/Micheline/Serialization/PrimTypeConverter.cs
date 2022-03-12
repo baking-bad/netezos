@@ -155,6 +155,7 @@ namespace Netezos.Encoding.Serialization
             "VIEW" => PrimType.VIEW,
             "view" => PrimType.view,
             "constant" => PrimType.constant,
+            "SUB_MUTEZ" => PrimType.SUB_MUTEZ,
             var value => throw new FormatException($"Invalid prim: {value}")
         };
 
