@@ -12,6 +12,8 @@ namespace Netezos.Tests.Rpc
         public string TestContract { get; }
         public string TestDelegate { get; }
         public string TestInactive { get; }
+        public string KeyHash { get; }
+        public int BigMapId { get; }
 
         public SettingsFixture()
         {
@@ -23,6 +25,8 @@ namespace Netezos.Tests.Rpc
                 TestContract = settings.TestContract;
                 TestDelegate = settings.TestDelegate;
                 TestInactive = settings.TestInactive;
+                KeyHash = settings.KeyHash;
+                BigMapId = settings.BigMapId;
             }
         }
 

@@ -10,19 +10,23 @@ namespace Netezos.Tests.Rpc
         readonly TezosRpc Rpc;
         readonly string TestContract;
         readonly string TestDelegate;
+        readonly string KeyHash;
+        readonly int BigMapId;
 
         public TestContextQueries(SettingsFixture settings)
         {
             Rpc = settings.Rpc;
             TestContract = settings.TestContract;
             TestDelegate = settings.TestDelegate;
+            KeyHash = settings.KeyHash;
+            BigMapId = settings.BigMapId;
         }
 
         [Fact]
         public async Task TestContextBigMaps()
         {
-            var query = Rpc.Blocks.Head.Context.BigMaps[9563]["exprujtiEkpbwKbqaTSdmCFqQDn7qeupsA1QijNmw2GHfVW5PexFvz"];
-            Assert.Equal("chains/main/blocks/head/context/big_maps/9563/exprujtiEkpbwKbqaTSdmCFqQDn7qeupsA1QijNmw2GHfVW5PexFvz", query.ToString());
+            var query = Rpc.Blocks.Head.Context.BigMaps[BigMapId][KeyHash];
+            Assert.Equal($"chains/main/blocks/head/context/big_maps/{BigMapId}/{KeyHash}", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
@@ -175,10 +179,10 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextDelegateBalance()
+        public async Task TestContextDelegateFullBalance()
         {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].Balance;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/balance/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FullBalance;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/full_balance/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -217,21 +221,42 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestContextDelegateFrozenBalance()
         {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FrozenBalance;
+            /*var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FrozenBalance;
             Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/frozen_balance/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);*/
+        }
+
+        [Fact]
+        public async Task TestContextDelegateFrozenBalanceByCycle()
+        {
+            /*var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FrozenBalanceByCycle;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/frozen_balance_by_cycle/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);*/
+        }
+        
+        [Fact]
+        public async Task TestContextDelegateFrozenDeposits()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FrozenDeposits;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/frozen_deposits/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
 
         [Fact]
-        public async Task TestContextDelegateFrozenBalanceByCycle()
+        public async Task TestContextDelegateFrozenDepositsLimit()
         {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FrozenBalanceByCycle;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/frozen_balance_by_cycle/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FrozenDepositsLimit;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/frozen_deposits_limit/", query.ToString());
 
             var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
+            if (res != null)
+                Assert.True(res is DJsonValue);
         }
 
         [Fact]
