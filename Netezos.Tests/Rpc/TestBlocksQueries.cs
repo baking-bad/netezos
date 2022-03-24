@@ -113,5 +113,15 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
         }
+
+        [Fact]
+        public async Task TestBlockProtocols()
+        {
+            var query = Rpc.Blocks.Head.Protocols;
+            Assert.Equal($"chains/main/blocks/head/protocols/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
     }
 }

@@ -10,8 +10,8 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the protocol's constants
         /// </summary>
-        public RpcSimpleArray<RpcSimpleDictionary<string, RpcObject>> BigMaps
-            => new RpcSimpleArray<RpcSimpleDictionary<string, RpcObject>>(this, "big_maps/");
+        public RpcSimpleArray<RpcSimpleDictionary<string, BigMapsQuery>> BigMaps
+            => new RpcSimpleArray<RpcSimpleDictionary<string, BigMapsQuery>>(this, "big_maps/");
 
         /// <summary>
         /// Gets the query to the protocol's constants

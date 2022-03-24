@@ -57,7 +57,7 @@
         /// </summary>
         /// <param name="key">Key of the object to query</param>
         /// <returns></returns>
-        public TValue this[TKey key] => CreateRpcObject(this, $"{key}");
+        public TValue this[TKey key] => CreateRpcObject(this, $"{key}/");
 
         internal RpcSimpleDictionary(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }
