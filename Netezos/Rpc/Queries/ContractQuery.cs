@@ -16,6 +16,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the value associated with a key in the big map storage of the contract
         /// </summary>
+        [Obsolete("This RPC query is deprecated. Use it on early protocols only.")]
         public BigMapQuery BigMap => new BigMapQuery(this, "big_map_get/");
 
         /// <summary>
@@ -35,6 +36,11 @@ namespace Netezos.Rpc.Queries
         public RpcObject Delegate => new RpcObject(this, "delegate/");
 
         /// <summary>
+        /// Return the list of entrypoints of the contract
+        /// </summary>
+        public EntrypointsQuery Entrypoints => new EntrypointsQuery(this, "entrypoints/");
+
+        /// <summary>
         /// Gets the query to the manager of a contract
         /// </summary>
         [Obsolete("This RPC query was removed. Use it on early protocols only.")]
@@ -48,7 +54,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the code and data of the contract
         /// </summary>
-        public RpcObject Script => new RpcObject(this, "script/");
+        public ScriptQuery Script => new ScriptQuery(this, "script/");
 
         /// <summary>
         /// Gets the query to the flag, indicating if the contract tokens can be spent by the manager
@@ -59,7 +65,7 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the data of the contract's storage
         /// </summary>
-        public RpcObject Storage => new RpcObject(this, "storage/");
+        public StorageQuery Storage => new StorageQuery(this, "storage/");
 
         internal ContractQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

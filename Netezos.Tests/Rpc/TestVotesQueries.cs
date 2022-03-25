@@ -50,12 +50,14 @@ namespace Netezos.Tests.Rpc
         public async Task TestVotesCurrentProposal()
         {
             // Returns 404 for the SmartPy Node
-            //Was the specific level was required but it's not now?
-            var query = Rpc.Blocks.Head.Votes.CurrentProposals; // specific level is required
+            var query = Rpc.Blocks.Head.Votes.CurrentProposals;
             Assert.Equal($"chains/main/blocks/head/votes/current_proposal", query.ToString());
 
             var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
+            if (res != null)
+            {
+                Assert.True(res is DJsonValue);
+            }
         }
 
         [Fact]

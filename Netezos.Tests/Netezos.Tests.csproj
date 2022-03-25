@@ -21,4 +21,10 @@
     <Reference Include="../libs/System.Text.Json/net5.0/System.Text.Json.dll" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Rpc\settings_ithaca.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

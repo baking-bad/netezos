@@ -35,6 +35,7 @@ namespace Netezos.Rpc.Queries
         // TODO: describe this
         public DeepRpcObject RampUp => new DeepRpcObject(this, "ramp_up/");
 
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public RawRollsQuery Rolls => new RawRollsQuery(this, "rolls/");
 
         public RawVotesQuery Votes => new RawVotesQuery(this, "votes/");

@@ -20,6 +20,11 @@ namespace Netezos.Rpc.Queries
         public RunOperationQuery RunOperation => new RunOperationQuery(this, "run_operation/");
 
         /// <summary>
+        /// Gets the query to the operation simulation
+        /// </summary>
+        public SimulateOperationQuery SimulateOperation => new SimulateOperationQuery(this, "simulate_operation/");
+
+        /// <summary>
         /// Gets the query to the code trace
         /// </summary>
         public TraceCodeQuery TraceCode => new TraceCodeQuery(this, "trace_code/");

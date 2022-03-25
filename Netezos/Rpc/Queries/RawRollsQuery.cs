@@ -1,5 +1,8 @@
-﻿namespace Netezos.Rpc.Queries
+﻿using System;
+
+namespace Netezos.Rpc.Queries
 {
+    [Obsolete("This RPC query was removed. Use it on early protocols only.")]
     public class RawRollsQuery : DeepRpcObject
     {
         public RpcObject Limbo => new RpcObject(this, "limbo/");

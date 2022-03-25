@@ -8,10 +8,12 @@ namespace Netezos.Tests.Rpc
     public class TestHelpersQueries : IClassFixture<SettingsFixture>
     {
         readonly TezosRpc Rpc;
+        readonly string TestDelegate;
 
         public TestHelpersQueries(SettingsFixture settings)
         {
             Rpc = settings.Rpc;
+            TestDelegate = settings.TestDelegate;
         }
 
         [Fact]
@@ -22,6 +24,16 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
+        public async Task TestHelpersCurrentLevel()
+        {
+            var query = Rpc.Blocks.Head.Helpers.CurrentLevel;
+            Assert.Equal($"chains/main/blocks/head/helpers/current_level", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]
@@ -53,6 +65,16 @@ namespace Netezos.Tests.Rpc
         {
             var query = Rpc.Blocks.Head.Helpers.Forge.Operations;
             Assert.Equal("chains/main/blocks/head/helpers/forge/operations/", query.ToString());
+        }
+
+        [Fact]
+        public async Task TestHelpersLevelsInCurrentCycle()
+        {
+            var query = Rpc.Blocks.Head.Helpers.LevelsInCurrentCycle;
+            Assert.Equal("chains/main/blocks/head/helpers/levels_in_current_cycle", query.ToString());
+            
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]
@@ -105,6 +127,13 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public void TestHelpersScriptsSimulateOperation()
+        {
+            var query = Rpc.Blocks.Head.Helpers.Scripts.SimulateOperation;
+            Assert.Equal("chains/main/blocks/head/helpers/scripts/simulate_operation/", query.ToString());
+        }
+
+        [Fact]
         public void TestHelpersScriptsTraceCode()
         {
             var query = Rpc.Blocks.Head.Helpers.Scripts.TraceCode;
@@ -123,6 +152,16 @@ namespace Netezos.Tests.Rpc
         {
             var query = Rpc.Blocks.Head.Helpers.Scripts.TypeCheckData;
             Assert.Equal("chains/main/blocks/head/helpers/scripts/typecheck_data/", query.ToString());
+        }
+
+        [Fact]
+        public async Task TestHelpersValidators()
+        {
+            var query = Rpc.Blocks.Head.Helpers.Validators;
+            Assert.Equal("chains/main/blocks/head/helpers/validators", query.ToString());
+            
+            var res = await query.GetAsync(TestDelegate);
+            Assert.True(res is DJsonArray);
         }
     }
 }

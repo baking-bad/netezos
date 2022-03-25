@@ -10,8 +10,11 @@ namespace Netezos.Tests.Rpc
 
         public TezosRpc Rpc { get; }
         public string TestContract { get; }
+        public string TestEntrypoint { get; }
         public string TestDelegate { get; }
         public string TestInactive { get; }
+        public string KeyHash { get; }
+        public int BigMapId { get; }
 
         public SettingsFixture()
         {
@@ -21,8 +24,11 @@ namespace Netezos.Tests.Rpc
 
                 Rpc = new TezosRpc(settings.node, 60);
                 TestContract = settings.TestContract;
+                TestEntrypoint = settings.TestEntrypoint;
                 TestDelegate = settings.TestDelegate;
                 TestInactive = settings.TestInactive;
+                KeyHash = settings.KeyHash;
+                BigMapId = settings.BigMapId;
             }
         }
 
