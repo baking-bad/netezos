@@ -17,13 +17,13 @@
     <Authors>Groxan</Authors>
     <Product>Netezos</Product>
     <Description>.NET SDK for Tezos blockchain (.NET Stansard 2.0)</Description>
-    <Version>2.5.1</Version>
+    <Version>2.5.2</Version>
     <Copyright>Copyright © Baking Bad 2019-2022</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dynamic.Json" Version="1.3.0" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
   </ItemGroup>
 
 </Project>

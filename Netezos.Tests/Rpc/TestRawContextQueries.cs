@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using System.Threading.Tasks;
-using System.Threading.Tasks;
 using Dynamic.Json;
 using Netezos.Rpc;
 using Xunit;
@@ -369,16 +367,6 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
-        }
-
-        [Fact]
-        public async Task TestRawContextVotesCurrentPeriodKind()
-        {
-            var query = Rpc.Blocks.Head.Context.Raw.Votes.CurrentPeriodKind;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/votes/current_period_kind/", query.ToString());
-
-            /*var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);*/
         }
 
         [Fact]

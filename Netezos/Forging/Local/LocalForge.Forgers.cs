@@ -128,6 +128,25 @@ namespace Netezos.Forging
             return res.ToArray();
         }
 
+        public static byte[] ForgeMicheNat(BigInteger value)
+        {
+            if (value < 0)
+                throw new ArgumentException("Nat cannot be negative");
+
+            var res = new List<byte>(9);
+            res.Add((byte)(value & 0x7F));
+            value >>= 7;
+
+            while (value > 0)
+            {
+                res[res.Count - 1] |= 0x80;
+                res.Add((byte)(value & 0x7F));
+                value >>= 7;
+            }
+
+            return res.ToArray();
+        }
+
         public static byte[] ForgeMicheInt(BigInteger value)
         {
             var abs = BigInteger.Abs(value);

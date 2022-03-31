@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
@@ -8,7 +9,7 @@ namespace Netezos.Forging.Models
         public override string Kind => "set_deposits_limit";
 
         [JsonPropertyName("limit")]
-        [JsonConverter(typeof(Int64NullableStringConverter))]
-        public long? Limit { get; set; }
+        [JsonConverter(typeof(BigIntegerNullableStringConverter))]
+        public BigInteger? Limit { get; set; }
     }
 }
