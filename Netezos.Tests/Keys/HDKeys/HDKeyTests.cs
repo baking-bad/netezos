@@ -174,7 +174,8 @@ namespace Netezos.Tests.Keys
         {
             foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\kukai.json"))
             {
-                var hdKey = HDKey.FromMnemonic(Mnemonic.Parse((string)sample.mnemonic))
+                var password = string.IsNullOrEmpty(sample.password) ? "" : sample.password;
+                var hdKey = HDKey.FromMnemonic(Mnemonic.Parse((string)sample.mnemonic), password)
                     .Derive((string)sample.path);
             
                 Assert.Equal(sample.address, hdKey.Address);
