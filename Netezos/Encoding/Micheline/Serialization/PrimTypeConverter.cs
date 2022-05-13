@@ -140,7 +140,7 @@ namespace Netezos.Encoding.Serialization
             "bls12_381_g2" => PrimType.bls12_381_g2,
             "bls12_381_fr" => PrimType.bls12_381_fr,
             "sapling_state" => PrimType.sapling_state,
-            "sapling_transaction" => PrimType.sapling_transaction,
+            "sapling_transaction_deprecated" => PrimType.sapling_transaction_deprecated,
             "SAPLING_EMPTY_STATE" => PrimType.SAPLING_EMPTY_STATE,
             "SAPLING_VERIFY_UPDATE" => PrimType.SAPLING_VERIFY_UPDATE,
             "ticket" => PrimType.ticket,
@@ -156,6 +156,9 @@ namespace Netezos.Encoding.Serialization
             "view" => PrimType.view,
             "constant" => PrimType.constant,
             "SUB_MUTEZ" => PrimType.SUB_MUTEZ,
+            "tx_rollup_l2_address" => PrimType.tx_rollup_l2_address,
+            "MIN_BLOCK_TIME" => PrimType.MIN_BLOCK_TIME,
+            "sapling_transaction" => PrimType.sapling_transaction,
             var value => throw new FormatException($"Invalid prim: {value}")
         };
 

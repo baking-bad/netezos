@@ -48,6 +48,11 @@
         public static readonly byte[] tz3 = new byte[] { 6, 161, 164 };
 
         /// <summary>
+        /// Address prefix for TX Rollup L2 address
+        /// </summary>
+        public static readonly byte[] tz4 = new byte[] { 6, 161, 166 };
+
+        /// <summary>
         /// Address prefix for originated contract
         /// </summary>
         public static readonly byte[] KT1 = new byte[] { 2, 90, 121 };

@@ -32,6 +32,7 @@ namespace Netezos.Encoding.Serialization
                 case PrimType.contract:
                 case PrimType.lambda:
                 case PrimType.sapling_state:
+                case PrimType.sapling_transaction_deprecated:
                 case PrimType.sapling_transaction:
                 case PrimType.ticket:
                     return true;

@@ -41,11 +41,13 @@ namespace Netezos.Contracts
                 case PrimType.pair: return new PairSchema(micheline);
                 case PrimType.sapling_state: return new SaplingStateSchema(micheline);
                 case PrimType.sapling_transaction: return new SaplingTransactionSchema(micheline);
+                case PrimType.sapling_transaction_deprecated: return new SaplingTransactionDeprecatedSchema(micheline);
                 case PrimType.set: return new SetSchema(micheline);
                 case PrimType.signature: return new SignatureSchema(micheline);
                 case PrimType.@string: return new StringSchema(micheline);
                 case PrimType.ticket: return new TicketSchema(micheline);
                 case PrimType.timestamp: return new TimestampSchema(micheline);
+                case PrimType.tx_rollup_l2_address: return new TxRollupL2AddressSchema(micheline);
                 case PrimType.unit: return new UnitSchema(micheline);
                 case PrimType.operation: return new OperationSchema(micheline);
                 case PrimType.view: return new ViewSchema(micheline);
