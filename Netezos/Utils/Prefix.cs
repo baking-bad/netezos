@@ -58,6 +58,11 @@
         public static readonly byte[] KT1 = new byte[] { 2, 90, 121 };
 
         /// <summary>
+        /// Address prefix for originated tx rollup
+        /// </summary>
+        public static readonly byte[] txr1 = new byte[] { 1, 128, 120, 31 };
+
+        /// <summary>
         /// Public key prefix for Ed25519 (tz1)
         /// </summary>
         public static readonly byte[] edpk = new byte[] { 13, 15, 37, 217 };

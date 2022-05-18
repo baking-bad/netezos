@@ -78,12 +78,12 @@ namespace Netezos.Forging
 
         public MichelineBytes ReadMichelineBytes()
         {
-            return new MichelineBytes(ReadArrayData());
+            return new MichelineBytes(ReadArray());
         }
 
         public MichelineArray ReadMichelineArray()
         {
-            var arrayData = ReadArrayData();
+            var arrayData = ReadArray();
 
             var res = new MichelineArray();
 
@@ -190,6 +190,7 @@ namespace Netezos.Forging
             {
                 case 0: return ReadTzAddress();
                 case 1: return ReadKtAddress();
+                case 2: return ReadTxrAddress();
                 default: throw new ArgumentException($"Invalid address prefix {type}");
             }
         }
@@ -214,6 +215,13 @@ namespace Netezos.Forging
         public string ReadKtAddress()
         {
             var address = ReadBase58(Lengths.KT1.Decoded, Prefix.KT1);
+            ReadByte(); // Consume padded 0
+            return address;
+        }
+
+        public string ReadTxrAddress()
+        {
+            var address = ReadBase58(Lengths.txr1.Decoded, Prefix.txr1);
             ReadByte(); // Consume padded 0
             return address;
         }
@@ -422,10 +430,10 @@ namespace Netezos.Forging
             return Base58.Convert(b58bytes, prefix);
         }
 
-        private byte[] ReadArrayData()
+        public byte[] ReadArray()
         {
-            var arrLen = ReadInt32();
-            return ReadBytes(arrLen);
+            var count = ReadInt32();
+            return ReadBytes(count);
         }
     }
 }

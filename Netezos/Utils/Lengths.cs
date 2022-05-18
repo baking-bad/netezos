@@ -57,6 +57,15 @@
         }
 
         /// <summary>
+        /// Originated TX Rollup
+        /// </summary>
+        public static class txr1
+        {
+            public const int Encdoed = 37;
+            public const int Decoded = 20;
+        }
+
+        /// <summary>
         /// generic signature
         /// </summary>
         public static class sig
@@ -71,6 +80,15 @@
         public static class nce
         {
             public const int Encdoed = 53;
+            public const int Decoded = 32;
+        }
+
+        /// <summary>
+        /// vh
+        /// </summary>
+        public static class vh
+        {
+            public const int Encdoed = 52;
             public const int Decoded = 32;
         }
     }

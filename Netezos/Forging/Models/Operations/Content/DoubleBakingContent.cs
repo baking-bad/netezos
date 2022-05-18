@@ -42,8 +42,11 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("context")]
         public string Context { get; set; }
 
-        [JsonPropertyName("priority")]
-        public int Priority { get; set; }
+        [JsonPropertyName("payload_hash")]
+        public string PayloadHash { get; set; }
+
+        [JsonPropertyName("payload_round")]
+        public int PayloadRound { get; set; }
 
         [JsonPropertyName("proof_of_work_nonce")]
         public string ProofOfWorkNonce { get; set; }
@@ -51,7 +54,18 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("seed_nonce_hash")]
         public string SeedNonceHash { get; set; }
 
+        [JsonPropertyName("liquidity_baking_toggle_vote")]
+        public LBToggle LiquidityBakingToggleVote { get; set; }
+
         [JsonPropertyName("signature")]
         public string Signature { get; set; }
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum LBToggle
+    {
+        On = 0,
+        Off = 1,
+        Pass = 2
     }
 }

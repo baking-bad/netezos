@@ -1,4 +1,5 @@
 ﻿using Netezos.Encoding;
+using Netezos.Forging.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,11 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
+        public static byte[] ForgeTag(OperationTag tag)
+        {
+            return new[] { (byte)tag };
+        }
+
         public static byte[] ForgeBool(bool value)
         {
             return value ? new byte[] { 255 } : new byte[] { 0 };
@@ -65,6 +71,7 @@ namespace Netezos.Forging
                 case "tz2": return new byte[] { 0, 1 }.Concat(res);
                 case "tz3": return new byte[] { 0, 2 }.Concat(res);
                 case "KT1": return new byte[] { 1 }.Concat(res).Concat(new byte[] { 0 });
+                case "txr1": return new byte[] { 2 }.Concat(res).Concat(new byte[] { 0 });
                 default:
                     throw new ArgumentException($"Invalid address prefix {prefix}");
             }
@@ -85,7 +92,7 @@ namespace Netezos.Forging
             }
         }
 
-        public static byte[] ForgeTz1Address(string value)
+        public static byte[] ForgePkh(string value)
         {
             return Base58.Parse(value, 3);
         }

@@ -9,9 +9,9 @@ namespace Netezos.Forging
     {
         static OperationContent UnforgeOperation(ForgedReader reader)
         {
-            var operation = (int)reader.ReadUBigInt();
+            var operation = (OperationTag)reader.ReadByte();
 
-            switch ((OperationTag)operation)
+            switch (operation)
             {
                 case OperationTag.Endorsement:
                     return UnforgeEndorsement(reader);
@@ -43,6 +43,8 @@ namespace Netezos.Forging
                     return UnforgeRegisterConstant(reader);
                 case OperationTag.SetDepositsLimit:
                     return UnforgeSetDepositsLimit(reader);
+                case OperationTag.FailingNoop:
+                    return UnforgeFailingNoop(reader);
                 default:
                     throw new ArgumentException($"Invalid operation: {operation}");
             }
@@ -218,6 +220,14 @@ namespace Netezos.Forging
             };
         }
 
+        static FailingNoopContent UnforgeFailingNoop(ForgedReader reader)
+        {
+            return new FailingNoopContent
+            {
+                Bytes = reader.ReadArray()
+            };
+        }
+
         #region nested
 
         static BlockHeader UnforgeBlockHeader(ForgedReader reader)
@@ -232,9 +242,11 @@ namespace Netezos.Forging
                 OperationsHash = reader.ReadBase58(Lengths.LLo.Decoded, Prefix.LLo),
                 Fitness = reader.ReadEnumerable(r => r.ReadHexString()).ToList(),
                 Context = reader.ReadBase58(Lengths.Co.Decoded, Prefix.Co),
-                Priority = reader.ReadInt32(2),
+                PayloadHash = reader.ReadBase58(Lengths.vh.Decoded, Prefix.vh),
+                PayloadRound = reader.ReadInt32(2),
                 ProofOfWorkNonce = Hex.Convert(reader.ReadBytes(8)),
                 SeedNonceHash = UnforgeSeedNonce(reader),
+                LiquidityBakingToggleVote = (LBToggle)reader.ReadByte(),
                 Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig),
             };
         }

@@ -35,6 +35,7 @@ namespace Netezos.Forging.Models
                 "reveal" => JsonSerializer.Deserialize<RevealContent>(ref reader, options),
                 "register_global_constant" => JsonSerializer.Deserialize<RegisterConstantContent>(ref reader, options),
                 "set_deposits_limit" => JsonSerializer.Deserialize<SetDepositsLimitContent>(ref reader, options),
+                "failing_noop" => JsonSerializer.Deserialize<FailingNoopContent>(ref reader, options),
                 _ => throw new JsonException("Invalid operation kind"),
             };
         }
