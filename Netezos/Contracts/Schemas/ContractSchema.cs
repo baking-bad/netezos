@@ -54,6 +54,13 @@ namespace Netezos.Contracts
                     else
                         return Hex.Convert(micheBytes.Value);
                 }
+                else if (micheBytes.Value[0] == 2)
+                {
+                    if (micheBytes.Value[21] == 0)
+                        prefix = Prefix.txr1;
+                    else
+                        return Hex.Convert(micheBytes.Value);
+                }
                 else
                 {
                     return Hex.Convert(micheBytes.Value);
@@ -101,49 +108,67 @@ namespace Netezos.Contracts
 
         public override IMicheline Optimize(IMicheline value)
         {
-            if (value is MichelineString micheStr)
+            if (value is not MichelineString micheStr)
+                return value;
+
+            string address;
+            byte[] addressBytes;
+            byte[] entrypointBytes;
+
+            if (micheStr.Value.StartsWith("txr1"))
             {
-                var address = micheStr.Value.Substring(0, 36);
-                var addressBytes = Base58.Parse(address, 3);
-                var entrypointBytes = micheStr.Value.Length > 37
+                address = micheStr.Value.Substring(0, 37);
+                addressBytes = Base58.Parse(address, 4);
+                entrypointBytes = micheStr.Value.Length > 38
+                    ? Utf8.Parse(micheStr.Value.Substring(38))
+                    : null;
+            }
+            else
+            {
+                address = micheStr.Value.Substring(0, 36);
+                addressBytes = Base58.Parse(address, 3);
+                entrypointBytes = micheStr.Value.Length > 37
                     ? Utf8.Parse(micheStr.Value.Substring(37))
                     : null;
-
-                var res = new byte[22 + (entrypointBytes?.Length ?? 0)];
-
-                switch (address.Substring(0, 3))
-                {
-                    case "tz1":
-                        addressBytes.CopyTo(res, 2);
-                        res[0] = 0;
-                        res[1] = 0;
-                        break;
-                    case "tz2":
-                        addressBytes.CopyTo(res, 2);
-                        res[0] = 0;
-                        res[1] = 1;
-                        break;
-                    case "tz3":
-                        addressBytes.CopyTo(res, 2);
-                        res[0] = 0;
-                        res[1] = 2;
-                        break;
-                    case "KT1":
-                        addressBytes.CopyTo(res, 1);
-                        res[0] = 1;
-                        res[21] = 0;
-                        break;
-                    default:
-                        throw FormatException(value);
-                }
-
-                if (entrypointBytes != null)
-                    entrypointBytes.CopyTo(res, 22);
-
-                return new MichelineBytes(res);
             }
 
-            return value;
+            var res = new byte[22 + (entrypointBytes?.Length ?? 0)];
+
+            switch (address.Substring(0, 3))
+            {
+                case "tz1":
+                    addressBytes.CopyTo(res, 2);
+                    res[0] = 0;
+                    res[1] = 0;
+                    break;
+                case "tz2":
+                    addressBytes.CopyTo(res, 2);
+                    res[0] = 0;
+                    res[1] = 1;
+                    break;
+                case "tz3":
+                    addressBytes.CopyTo(res, 2);
+                    res[0] = 0;
+                    res[1] = 2;
+                    break;
+                case "KT1":
+                    addressBytes.CopyTo(res, 1);
+                    res[0] = 1;
+                    res[21] = 0;
+                    break;
+                case "txr" when address.StartsWith("txr1"):
+                    addressBytes.CopyTo(res, 1);
+                    res[0] = 2;
+                    res[21] = 0;
+                    break;
+                default:
+                    throw FormatException(value);
+            }
+
+            if (entrypointBytes != null)
+                entrypointBytes.CopyTo(res, 22);
+
+            return new MichelineBytes(res);
         }
     }
 }
