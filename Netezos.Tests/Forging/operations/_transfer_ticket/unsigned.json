@@ -1,0 +1,19 @@
+﻿{
+  "branch": "BMKm3wHVT9jU9xEWnRYuH9bXCmvS91gwtjK9NknDSM4CNyhnRZw",
+  "contents": [
+    {
+      "kind": "transfer_ticket",
+      "ticket_contents": { "string": "ttt" },
+      "ticket_ty": { "prim": "string" },
+      "ticket_ticketer": "KT1S1F4EFaTnuMnvzoVNLsx2RsCLodxaXuPJ",
+      "ticket_amount": "9223372036854775807",
+      "destination": "KT1UZeSfPZbtPUBvzsMu9iJGBWbrNzatuXvp",
+      "entrypoint": "default",
+      "source": "tz1KqTpEZ7Yob7QbPE4Hy4Wo8fHG8LhKxZSx",
+      "fee": "2631",
+      "counter": "22",
+      "gas_limit": "5107",
+      "storage_limit": "1883"
+    }
+  ]
+}

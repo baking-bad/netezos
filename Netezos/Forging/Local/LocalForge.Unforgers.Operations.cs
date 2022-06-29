@@ -45,6 +45,24 @@ namespace Netezos.Forging
                     return UnforgeSetDepositsLimit(reader);
                 case OperationTag.FailingNoop:
                     return UnforgeFailingNoop(reader);
+                case OperationTag.TransferTicket:
+                    return UnforgeTransferTicket(reader);
+                case OperationTag.TxRollupCommit:
+                    return UnforgeTxRollupCommit(reader);
+                case OperationTag.TxRollupDispatchTickets:
+                    return UnforgeTxRollupDispatchTickets(reader);
+                case OperationTag.TxRollupFinalizeCommitment:
+                    return UnforgeTxRollupFinalizeCommitment(reader);
+                case OperationTag.TxRollupOrigination:
+                    return UnforgeTxRollupOrigination(reader);
+                case OperationTag.TxRollupRejection:
+                    return UnforgeTxRollupRejection(reader);
+                case OperationTag.TxRollupRemoveCommitment:
+                    return UnforgeTxRollupRemoveCommitment(reader);
+                case OperationTag.TxRollupReturnBond:
+                    return UnforgeTxRollupReturnBond(reader);
+                case OperationTag.TxRollupSubmitBatch:
+                    return UnforgeTxRollupSubmitBatch(reader);
                 default:
                     throw new ArgumentException($"Invalid operation: {operation}");
             }
@@ -224,7 +242,143 @@ namespace Netezos.Forging
         {
             return new FailingNoopContent
             {
-                Bytes = reader.ReadArray()
+                Message = Utf8.Convert(reader.ReadArray())
+            };
+        }
+
+        static TransferTicketContent UnforgeTransferTicket(ForgedReader reader)
+        {
+            return new TransferTicketContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                TicketContent = reader.ReadEnumerableSingle(UnforgeMicheline),
+                TicketType = reader.ReadEnumerableSingle(UnforgeMicheline),
+                TicketTicketer = reader.ReadAddress(),
+                TicketAmount = reader.ReadUBigInt(),
+                Destination = reader.ReadAddress(),
+                Entrypoint = reader.ReadString()
+            };
+        }
+
+        static TxRollupCommitContent UnforgeTxRollupCommit(ForgedReader reader)
+        {
+            return new TxRollupCommitContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = Base58.Convert(reader.ReadBytes(20), Prefix.txr1),
+                Commitment = new TxRollupCommitment
+                {
+                    Level = reader.ReadInt32(),
+                    Messages = reader.ReadEnumerable(r => r.ReadBase58(32, Prefix.txmr)).ToList(),
+                    Predecessor = reader.ReadByte() == 1
+                        ? Base58.Convert(reader.ReadBytes(32), Prefix.txc)
+                        : null,
+                    InboxMerkleRoot = Base58.Convert(reader.ReadBytes(32), Prefix.txi)
+                }
+            };
+        }
+
+        static TxRollupDispatchTicketsContent UnforgeTxRollupDispatchTickets(ForgedReader reader)
+        {
+            return new TxRollupDispatchTicketsContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = Base58.Convert(reader.ReadBytes(20), Prefix.txr1),
+                Level = reader.ReadInt32(),
+                ContextHash = Base58.Convert(reader.ReadBytes(32), Prefix.Co),
+                MessageIndex = reader.ReadInt32(),
+                MessageResultPath = reader.ReadEnumerable(r => r.ReadBase58(32, Prefix.txM)).ToList(),
+                TicketsInfo = reader.ReadEnumerable(r => new TxRollupTicketsInfo
+                {
+                    Contents = r.ReadEnumerableSingle(UnforgeMicheline),
+                    Type = r.ReadEnumerableSingle(UnforgeMicheline),
+                    Ticketer = r.ReadAddress(),
+                    Amount = r.ReadInt64(1 << r.ReadByte()),
+                    Claimer = r.ReadTzAddress()
+                }).ToList()
+            };
+        }
+
+        static TxRollupFinalizeCommitmentContent UnforgeTxRollupFinalizeCommitment(ForgedReader reader)
+        {
+            return new TxRollupFinalizeCommitmentContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = Base58.Convert(reader.ReadBytes(20), Prefix.txr1)
+            };
+        }
+
+        static TxRollupOriginationContent UnforgeTxRollupOrigination(ForgedReader reader)
+        {
+            return new TxRollupOriginationContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt()
+            };
+        }
+
+        static TxRollupRejectionContent UnforgeTxRollupRejection(ForgedReader reader)
+        {
+            throw new NotImplementedException("Due to lack of examples no one knows how to handle it");
+        }
+
+        static TxRollupRemoveCommitmentContent UnforgeTxRollupRemoveCommitment(ForgedReader reader)
+        {
+            return new TxRollupRemoveCommitmentContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = Base58.Convert(reader.ReadBytes(20), Prefix.txr1)
+            };
+        }
+
+        static TxRollupReturnBondContent UnforgeTxRollupReturnBond(ForgedReader reader)
+        {
+            return new TxRollupReturnBondContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = Base58.Convert(reader.ReadBytes(20), Prefix.txr1)
+            };
+        }
+
+        static TxRollupSubmitBatchContent UnforgeTxRollupSubmitBatch(ForgedReader reader)
+        {
+            return new TxRollupSubmitBatchContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = Base58.Convert(reader.ReadBytes(20), Prefix.txr1),
+                Content = reader.ReadArray(),
+                BurnLimit = reader.ReadBool() ? (long)reader.ReadUBigInt() : null
             };
         }
 

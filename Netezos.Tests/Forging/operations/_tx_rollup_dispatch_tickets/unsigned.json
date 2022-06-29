@@ -1,0 +1,27 @@
+﻿{
+  "branch": "BMVf4KpcAt5txDj9yduztEDei9t5HfP7P4UJuofgND6K4qDXyDF",
+  "contents": [
+    {
+      "kind": "tx_rollup_dispatch_tickets",
+      "tx_rollup": "txr1YMZxstAHqQ9V313sYjLBCHBXsvSmDZuTs",
+      "level": 4,
+      "context_hash": "CoV7iqRirVx7sZa5TAK9ymoEJBrW6z4hwwrzMhz6YLeHYXrQwRWG",
+      "message_index": 0,
+      "message_result_path": [ "txM2eYt63gJ98tv3z4nj3aWPMzpjLnW9xpUdmz4ftMnbvNG34Y4wB" ],
+      "TicketsInfo": [
+        {
+          "contents": { "string": "qwerty" },
+          "ty": { "prim": "string" },
+          "ticketer": "KT1EMQxfYVvhTJTqMiVs2ho2dqjbYfYKk6BY",
+          "amount": "2",
+          "claimer": "tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM"
+        }
+      ],
+      "source": "tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM",
+      "fee": "735",
+      "counter": "252414",
+      "gas_limit": "3838",
+      "storage_limit": "0"
+    }
+  ]
+}

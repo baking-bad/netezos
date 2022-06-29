@@ -131,5 +131,35 @@
         /// Consensus value hash (e.g. block payload hash)
         /// </summary>
         public static readonly byte[] vh = new byte[] { 1, 106, 242 };
+
+        /// <summary>
+        /// Tx Rollup inbox hash
+        /// </summary>
+        public static readonly byte[] txi = new byte[] { 79, 148, 196 };
+
+        /// <summary>
+        /// Tx Rollup message hash
+        /// </summary>
+        public static readonly byte[] txm = new byte[] { 79, 149, 30 };
+
+        /// <summary>
+        /// Tx Rollup commitment hash
+        /// </summary>
+        public static readonly byte[] txc = new byte[] { 79, 148, 17 };
+
+        /// <summary>
+        /// Tx Rollup message result hash
+        /// </summary>
+        public static readonly byte[] txmr = new byte[] { 18, 7, 206, 87 };
+
+        /// <summary>
+        /// Tx Rollup message result list hash
+        /// </summary>
+        public static readonly byte[] txM = new byte[] { 79, 146, 82 };
+
+        /// <summary>
+        /// Tx Rollup withdraw list hash
+        /// </summary>
+        public static readonly byte[] txw = new byte[] { 79, 150, 72 };
     }
 }

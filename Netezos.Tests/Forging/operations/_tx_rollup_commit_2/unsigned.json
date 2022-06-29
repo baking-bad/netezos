@@ -1,0 +1,20 @@
+﻿{
+  "branch": "BKyM5mpa24kTUnJ7bBwwnAKAUcnqa4ge9o6c74nBrU7xM2T2WyJ",
+  "contents": [
+    {
+      "kind": "tx_rollup_commit",
+      "rollup": "txr1YMZxstAHqQ9V313sYjLBCHBXsvSmDZuTs",
+      "commitment": {
+        "level": 0,
+        "messages": [ "txmr2KMAvN2aV7YGXm2EQ6SXo1HRo3RLei6nZXNR9oFnUDXGfuxhpY" ],
+        "predecessor": null,
+        "inbox_merkle_root": "txi21EUdnhYcN2UufWovdBGUfxVx9VvvJAaHosY4YC8zrj5HKCnJp"
+      },
+      "source": "tz1inuxjXxKhd9e4b97N1Wgz7DwmZSxFcDpM",
+      "fee": "735",
+      "counter": "252414",
+      "gas_limit": "3838",
+      "storage_limit": "0"
+    }
+  ]
+}

@@ -42,7 +42,8 @@ namespace Netezos.Forging
 
         public static byte[] ForgeString(string value, int len = 4)
         {
-            return ForgeInt32(value.Length, len).Concat(Utf8.Parse(value));
+            var bytes = Utf8.Parse(value);
+            return ForgeInt32(bytes.Length, len).Concat(bytes);
         }
 
         public static byte[] ForgePublicKey(string value)
@@ -71,7 +72,7 @@ namespace Netezos.Forging
                 case "tz2": return new byte[] { 0, 1 }.Concat(res);
                 case "tz3": return new byte[] { 0, 2 }.Concat(res);
                 case "KT1": return new byte[] { 1 }.Concat(res).Concat(new byte[] { 0 });
-                case "txr1": return new byte[] { 2 }.Concat(res).Concat(new byte[] { 0 });
+                case "txr" when value.StartsWith("txr1"): return new byte[] { 2 }.Concat(res).Concat(new byte[] { 0 });
                 default:
                     throw new ArgumentException($"Invalid address prefix {prefix}");
             }

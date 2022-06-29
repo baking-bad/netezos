@@ -36,6 +36,15 @@ namespace Netezos.Forging.Models
                 "register_global_constant" => JsonSerializer.Deserialize<RegisterConstantContent>(ref reader, options),
                 "set_deposits_limit" => JsonSerializer.Deserialize<SetDepositsLimitContent>(ref reader, options),
                 "failing_noop" => JsonSerializer.Deserialize<FailingNoopContent>(ref reader, options),
+                "transfer_ticket" => JsonSerializer.Deserialize<TransferTicketContent>(ref reader, options),
+                "tx_rollup_commit" => JsonSerializer.Deserialize<TxRollupCommitContent>(ref reader, options),
+                "tx_rollup_dispatch_tickets" => JsonSerializer.Deserialize<TxRollupDispatchTicketsContent>(ref reader, options),
+                "tx_rollup_finalize_commitment" => JsonSerializer.Deserialize<TxRollupFinalizeCommitmentContent>(ref reader, options),
+                "tx_rollup_origination" => JsonSerializer.Deserialize<TxRollupOriginationContent>(ref reader, options),
+                "tx_rollup_rejection" => JsonSerializer.Deserialize<TxRollupRejectionContent>(ref reader, options),
+                "tx_rollup_remove_commitment" => JsonSerializer.Deserialize<TxRollupRemoveCommitmentContent>(ref reader, options),
+                "tx_rollup_return_bond" => JsonSerializer.Deserialize<TxRollupReturnBondContent>(ref reader, options),
+                "tx_rollup_submit_batch" => JsonSerializer.Deserialize<TxRollupSubmitBatchContent>(ref reader, options),
                 _ => throw new JsonException("Invalid operation kind"),
             };
         }
