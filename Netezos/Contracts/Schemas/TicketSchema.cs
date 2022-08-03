@@ -72,6 +72,11 @@ namespace Netezos.Contracts
             Data.WriteValue(writer, prim);
         }
 
+        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            (Data as PairSchema).WriteJsonSchema(writer, Prim.ToString());
+        }
+
         protected override List<IMicheline> GetArgs()
         {
             var type = ((Data as PairSchema).Right as PairSchema).Left;
