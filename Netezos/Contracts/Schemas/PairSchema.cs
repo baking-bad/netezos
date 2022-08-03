@@ -219,7 +219,7 @@ namespace Netezos.Contracts
             }
         }
 
-        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        internal void WriteJsonSchema(Utf8JsonWriter writer, string comment)
         {
             writer.WriteString("type", "object");
 
@@ -238,7 +238,12 @@ namespace Netezos.Contracts
             writer.WriteEndArray();
 
             writer.WriteBoolean("additionalProperties", false);
-            writer.WriteString("$comment", Prim.ToString());
+            writer.WriteString("$comment", comment);
+        }
+
+        internal override void WriteJsonSchema(Utf8JsonWriter writer)
+        {
+            WriteJsonSchema(writer, Prim.ToString());
         }
 
         protected override List<IMicheline> GetArgs()
