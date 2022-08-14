@@ -33,14 +33,13 @@ If you pass a result of type `a` to a callback of type `b` you will get a runtim
  
 Let's see how it works in a real example.
  
-This is a transaction that calls `getBalance` view entrypoint with parameter `tz1io...BtJKUP` and callback contract `KT1Hk...LDcKrq`.
-Note, by appending `%viewNat` to the contract address we can specify a particular entrypoint of the contract that should be used as a callback.
+This is a transaction that calls `getBalance` view entrypoint with parameter `tz1io...BtJKUP` and callback contract `KT1Md...XUhn1`.
  
 ```json
 {
   "kind": "transaction",
   "source": "...",
-  "destination": "KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F",
+  "destination": "KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5",
   "parameters": {
     "entrypoint": "getBalance",                                    // call view entrypoint
     "value": {
@@ -50,7 +49,7 @@ Note, by appending `%viewNat` to the contract address we can specify a particula
           "string": "tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP"         // with some args
         },
         {
-          "string": "KT1DjH58WumESHhpViiwuRE9ehUY5RGMNcuL%viewNat" // and callback contract
+          "string": "KT1MdfSC8xwRvxmd1UHANt158YtoFn4XUhn1%viewNat" // and callback contract
         }
       ]
     }
@@ -59,14 +58,14 @@ Note, by appending `%viewNat` to the contract address we can specify a particula
     "internal_operation_results": [                                // callback transaction
       {
         "kind": "transaction",
-        "source": "KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F",
-        "destination": "KT1DjH58WumESHhpViiwuRE9ehUY5RGMNcuL",     // to callback contract
+        "source": "KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5",
+        "destination": "KT1MdfSC8xwRvxmd1UHANt158YtoFn4XUhn1",     // to callback contract
         "parameters": {
           "entrypoint": "viewNat",                                 // to callback entrypoint
           "value": {
-            "int": "98770"                                         // with `getBalance` result
+            "int": "37037036736"                                   // with `getBalance` result
           }
-        },
+        }
       }
     ]
   }
@@ -82,7 +81,7 @@ We've just seen how `view` entrypoints work in Tezos: you send a transaction to 
 an internal transaction with result value in its parameters and sends it to the `callback` contract. 
 With Netezos we will do basically the same things.
 
-Let's see, how to get [FA1.2 token](https://hangzhou2net.tzkt.io/KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F/code)
+Let's see, how to get [FA1.2 token](https://ghostnet.tzkt.io/KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5/code)
 balance by calling `getBalance` entrypoint.
  
 ### Prepare callback contract
@@ -90,17 +89,17 @@ balance by calling `getBalance` entrypoint.
 First of all, we will need an existing contract that we will use as a `callback`.
 Moreover, the `callback` contract must have an entrypoint with the same parameter type as the type of the `view` entrypoint we are calling.
  
-Here is how the `getBalance` entrypoint of [our contract](https://hangzhou2net.tzkt.io/KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F/code) looks:
+Here is how the `getBalance` entrypoint of [our contract](https://ghostnet.tzkt.io/KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5/code) looks:
  
 ```
-(pair %getBalance (address %viewParam) (contract %viewCallbackTo nat))
+(pair %getBalance address (contract nat)))
 ```
 As we can see, it takes an `address` and returns `nat`, that is passed to the callback contract.
 So, we will need a `callback` contract with an entrypoint of type `nat`.
  
 Where do we get such a contract? Well, we can either originate a new one or use any of already existing ones that have an entrypoint of the required type.
 
-Let's take [existing one](https://hangzhou2net.tzkt.io/KT1DjH58WumESHhpViiwuRE9ehUY5RGMNcuL/code):
+Let's take [existing one](https://ghostnet.tzkt.io/KT1MdfSC8xwRvxmd1UHANt158YtoFn4XUhn1/code):
  
 ```
 parameter (or (nat %viewNat) (or (string %viewString) (address %viewAddress)));
@@ -115,18 +114,18 @@ That contract contains the entrypoint `(nat %viewNat)` - that's exactly what we 
 Of course, we don't want to send a transaction just to get some data from the smart contract.
 It would be weird to wait a minute unless a transaction is included into a block and moreover to pay a tx fee.
  
-A common workaround is to use [/run_operation](https://gitlab.com/tezos/tezos/-/blob/master/docs/api/hangzhou-openapi.json) RPC endpoint
+A common workaround is to use [/run_operation](https://gitlab.com/tezos/tezos/-/blob/master/docs/api/jakarta-openapi.json) RPC endpoint
 to simulate the transaction and see its result without injecting it into the blockchain, so we don't have to wait and we don't have to pay a fee.
-By the way, [/run_operation](https://gitlab.com/tezos/tezos/-/blob/master/docs/api/hangzhou-openapi.json) ignores signature, so we don't even need to forge and sign the operation, just send its content.
+By the way, [/run_operation](https://gitlab.com/tezos/tezos/-/blob/master/docs/api/jakarta-openapi.json) ignores signature, so we don't even need to forge and sign the operation, just send its content.
  
 Let's create a transaction:
  
 ```cs
 var sender   = "tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP";
-var fa12     = "KT1WUnvcNAnahbuNizZaaAvkpNAEF43KHV7F";
-var callback = "KT1DjH58WumESHhpViiwuRE9ehUY5RGMNcuL%viewNat";
+var fa12     = "KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5";
+var callback = "KT1MdfSC8xwRvxmd1UHANt158YtoFn4XUhn1%viewNat";
             
-var rpc = new TezosRpc("https://rpc.tzkt.io/hangzhou2net/");
+var rpc = new TezosRpc("https://rpc.tzkt.io/ghostnet/");
 var counter = await rpc.Blocks.Head.Context.Contracts[sender].Counter.GetAsync<int>();
  
 var tx = new TransactionContent
@@ -170,7 +169,7 @@ var balance = operation
     .value
     .@int;
  
-// 98770
+// 37037036736
 ```
  
 That's it. In a similar way we can call any other `view` entrypoints.
@@ -225,18 +224,18 @@ var bytes = await new LocalForge().ForgeOperationAsync(head, origination);
 var sig = (byte[])key.SignOperation(bytes);
  
 var op_hash = await rpc.Inject.Operation.PostAsync(bytes.Concat(sig));
-// KT1T5ctQSQuoVmfgSaqogxzhKdXs5rCPvKUi
+// KT1Cm94oSUbLUZasuZo285uuw9YDzuZEJUY6
 ```
  
-Now we can use `KT1T5ctQSQuoVmfgSaqogxzhKdXs5rCPvKUi` as a callback contract (in your case it will be a different address).
+Now we can use `KT1Cm94oSUbLUZasuZo285uuw9YDzuZEJUY6` as a callback contract (in your case it will be a different address).
  
 ### Simulate operation
  
 When we have prepared callback contract, we can simulate an operation:
  
 ```cs
-var fa2 = "KT1X9eKZyo6kQLkJTrjKmVt7MLC33xE6DfZB";
-var callback = "KT1T5ctQSQuoVmfgSaqogxzhKdXs5rCPvKUi";
+var fa2 = "KT1DYk1XDzHredJq1EyNkDindiWDqZyekXGj";
+var callback = "KT1Cm94oSUbLUZasuZo285uuw9YDzuZEJUY6";
  
 var script = await rpc.Blocks.Head.Context.Contracts[fa2].Script.GetAsync();
 var code = Micheline.FromJson(script.code);
@@ -333,7 +332,7 @@ So in the end we will get:
       "owner":"tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP",
       "token_id":"0"
     },
-    "balance":"0"
+    "balance":"12345678912"
   }
 ]
 ```
