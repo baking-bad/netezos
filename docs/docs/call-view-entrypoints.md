@@ -34,7 +34,8 @@ If you pass a result of type `a` to a callback of type `b` you will get a runtim
 Let's see how it works in a real example.
  
 This is a transaction that calls `getBalance` view entrypoint with parameter `tz1io...BtJKUP` and callback contract `KT1Md...XUhn1`.
- 
+Note, by appending `%viewNat` to the contract address we can specify a particular entrypoint of the contract that should be used as a callback.
+
 ```json
 {
   "kind": "transaction",
