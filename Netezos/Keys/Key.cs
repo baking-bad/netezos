@@ -117,9 +117,17 @@ namespace Netezos.Keys
 
         public static Key FromBase58(string base58)
         {
+            if (base58.Length != 54 && base58.Length != 98)
+            {
+                throw new ArgumentException($"Base58 string must be 54 or 98 characters length");
+            }
+            
             var curve = Curve.FromPrefix(base58.Substring(0, 4));
             var bytes = Base58.Parse(base58, curve.PrivateKeyPrefix);
-            return new Key(bytes.GetBytes(0,32), curve.Kind, true);
+
+            return base58.Length == 54 
+                ? new Key(bytes, curve.Kind, true) 
+                : new Key(bytes.GetBytes(0,32), curve.Kind, true);
         }
 
         public static Key FromMnemonic(Mnemonic mnemonic)
