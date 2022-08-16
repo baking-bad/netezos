@@ -119,7 +119,7 @@ namespace Netezos.Keys
         {
             var curve = Curve.FromPrefix(base58.Substring(0, 4));
             var bytes = Base58.Parse(base58, curve.PrivateKeyPrefix);
-            return new Key(bytes, curve.Kind, true);
+            return new Key(bytes.GetBytes(0,32), curve.Kind, true);
         }
 
         public static Key FromMnemonic(Mnemonic mnemonic)

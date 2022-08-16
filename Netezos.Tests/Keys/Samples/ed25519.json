@@ -691,5 +691,12 @@
     "pkh": "tz1PuZW3TeSu7DEKgDuryqRyrMb5EAwwKXmY",
     "data": "03f265006be7d2f678d4ca8cae9f1877b40a76a21f8b05e73254043af01f3638786c002ed075ed1ab560c9c6a8bccec2abe47ea21d0979880ec8d02ac350f403c0843d00008384a29947e81770a1586cb268552a25ee81fb7a00",
     "sig": "edsigtyVPtRtjPFdUofWJQLbE2vE3QUQu9VPLuKuCEN6H5p9LLvph2z4Retq4YJq6gwBs5SfnvSHZ2a3LfRaS1pvNf4tskq3Pqj"
+  },
+  {
+    "prv": "edskRhtXby1TcVoFb9m1pw2cXYZzPnmqXvbQQuXLsU2vX3XBBANepsaJiNuEmmjUwKjWC6fgQy3sPEasgtm3fstFueGCmGRHv5",
+    "pub": "edpkup3JJb9xA2MJAMAV7VuMnsrLr85WSAoBX9icXpbtUfWHikxZ5q",
+    "pkh": "tz1czC9JoHfTkBTzLVebHgBjPB5pUGytKAaE",
+    "data": "03f265006be7d2f678d4ca8cae9f1877b40a76a21f8b05e73254043af01f3638786c002ed075ed1ab560c9c6a8bccec2abe47ea21d0979880ec8d02ac350f403c0843d00008384a29947e81770a1586cb268552a25ee81fb7a00",
+    "sig": "edsigtsYeSLHTvv4zBZdR6ZuPCUN5W23Ej9mc5Bv3g7xWTzDXy2xctYYQhNgumaC87jQdroSbuNko56yTruk9U9m87fKyNLiAT4"
   }
 ]
