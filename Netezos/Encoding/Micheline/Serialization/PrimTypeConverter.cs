@@ -159,6 +159,7 @@ namespace Netezos.Encoding.Serialization
             "tx_rollup_l2_address" => PrimType.tx_rollup_l2_address,
             "MIN_BLOCK_TIME" => PrimType.MIN_BLOCK_TIME,
             "sapling_transaction" => PrimType.sapling_transaction,
+            "EMIT" => PrimType.EMIT,
             var value => throw new FormatException($"Invalid prim: {value}")
         };
 
