@@ -9,6 +9,7 @@
         Proposals           = 5,
         Ballot              = 6,
         DoublePreendorsement= 7,
+        VdfRevelation       = 8,
         FailingNoop         = 17,
         Preendorsement      = 20,
         Endorsement         = 21,
@@ -19,6 +20,7 @@
         Delegation          = 110,
         RegisterConstant    = 111,
         SetDepositsLimit    = 112,
+        IncreasePaidStorage = 113,
 
         TxRollupOrigination         = 150,
         TxRollupSubmitBatch         = 151,

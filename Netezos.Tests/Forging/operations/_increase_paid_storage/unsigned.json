@@ -1,0 +1,15 @@
+﻿{
+  "branch": "BKj7wMot1maMQW7v1TojTpejZR4vhXcmMmW6SMQ8r2QYsutQd6w",
+  "contents": [
+    {
+      "kind": "increase_paid_storage",
+      "source": "tz1cjyja1TU6fiyiFav3mFAdnDsCReJ12hPD",
+      "fee": "348",
+      "counter": "10",
+      "gas_limit": "1000",
+      "storage_limit": "0",
+      "amount": "200",
+      "destination": "KT1SqUeay8FiBfukVJHsLbiN3n8BZeo4BBwd"
+    }
+  ]
+}

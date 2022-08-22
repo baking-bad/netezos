@@ -31,6 +31,8 @@ namespace Netezos.Forging
                     return UnforgeDoublePreendorsement(reader);
                 case OperationTag.SeedNonceRevelation:
                     return UnforgeSeedNonceRevelaion(reader);
+                case OperationTag.VdfRevelation:
+                    return UnforgeVdfRevelaion(reader);
                 case OperationTag.Delegation:
                     return UnforgeDelegation(reader);
                 case OperationTag.Origination:
@@ -43,6 +45,8 @@ namespace Netezos.Forging
                     return UnforgeRegisterConstant(reader);
                 case OperationTag.SetDepositsLimit:
                     return UnforgeSetDepositsLimit(reader);
+                case OperationTag.IncreasePaidStorage:
+                    return UnforgeIncreasePaidStorage(reader);
                 case OperationTag.FailingNoop:
                     return UnforgeFailingNoop(reader);
                 case OperationTag.TransferTicket:
@@ -156,6 +160,18 @@ namespace Netezos.Forging
             };
         }
 
+        static VdfRevelationContent UnforgeVdfRevelaion(ForgedReader reader)
+        {
+            return new VdfRevelationContent
+            {
+                Solution = new(2)
+                {
+                    Hex.Convert(reader.ReadBytes(100)),
+                    Hex.Convert(reader.ReadBytes(100))
+                }
+            };
+        }
+
         static DelegationContent UnforgeDelegation(ForgedReader reader)
         {
             return new DelegationContent
@@ -235,6 +251,20 @@ namespace Netezos.Forging
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
                 Limit = reader.ReadBool() ? reader.ReadUBigInt() : null
+            };
+        }
+
+        static IncreasePaidStorageContent UnforgeIncreasePaidStorage(ForgedReader reader)
+        {
+            return new IncreasePaidStorageContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Amount = reader.ReadMichelineInt().Value,
+                Destination = reader.ReadAddress()
             };
         }
 

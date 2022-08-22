@@ -30,6 +30,8 @@ namespace Netezos.Forging
                     return ForgeDoublePreendorsement(op);
                 case SeedNonceRevelationContent op:
                     return ForgeSeedNonceRevelaion(op);
+                case VdfRevelationContent op:
+                    return ForgeVdfRevelaion(op);
                 case DelegationContent op:
                     return ForgeDelegation(op);
                 case OriginationContent op:
@@ -42,6 +44,8 @@ namespace Netezos.Forging
                     return ForgeRegisterConstant(op);
                 case SetDepositsLimitContent op:
                     return ForgeSetDepositsLimit(op);
+                case IncreasePaidStorageContent op:
+                    return ForgeIncreasePaidStorage(op);
                 case FailingNoopContent op:
                     return ForgeFailingNoop(op);
                 case TransferTicketContent op:
@@ -149,6 +153,14 @@ namespace Netezos.Forging
                 Hex.Parse(operation.Nonce));
         }
 
+        static byte[] ForgeVdfRevelaion(VdfRevelationContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.VdfRevelation),
+                Hex.Parse(operation.Solution[0]),
+                Hex.Parse(operation.Solution[1]));
+        }
+
         static byte[] ForgeDelegation(DelegationContent operation)
         {
             return Bytes.Concat(
@@ -225,6 +237,19 @@ namespace Netezos.Forging
                 operation.Limit == null
                     ? ForgeBool(false)
                     : Bytes.Concat(ForgeBool(true), ForgeMicheNat(operation.Limit.Value)));
+        }
+
+        static byte[] ForgeIncreasePaidStorage(IncreasePaidStorageContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.IncreasePaidStorage),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeMicheInt(operation.Amount),
+                ForgeAddress(operation.Destination));
         }
 
         static byte[] ForgeFailingNoop(FailingNoopContent operation)
