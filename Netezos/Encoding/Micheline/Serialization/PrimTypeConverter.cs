@@ -144,7 +144,7 @@ namespace Netezos.Encoding.Serialization
             "SAPLING_EMPTY_STATE" => PrimType.SAPLING_EMPTY_STATE,
             "SAPLING_VERIFY_UPDATE" => PrimType.SAPLING_VERIFY_UPDATE,
             "ticket" => PrimType.ticket,
-            "TICKET" => PrimType.TICKET,
+            "TICKET_DEPRECATED" => PrimType.TICKET_DEPRECATED,
             "READ_TICKET" => PrimType.READ_TICKET,
             "SPLIT_TICKET" => PrimType.SPLIT_TICKET,
             "JOIN_TICKETS" => PrimType.JOIN_TICKETS,
@@ -160,6 +160,9 @@ namespace Netezos.Encoding.Serialization
             "MIN_BLOCK_TIME" => PrimType.MIN_BLOCK_TIME,
             "sapling_transaction" => PrimType.sapling_transaction,
             "EMIT" => PrimType.EMIT,
+            "Lambda_rec" => PrimType.Lambda_rec,
+            "LAMBDA_REC" => PrimType.LAMBDA_REC,
+            "TICKET" => PrimType.TICKET,
             var value => throw new FormatException($"Invalid prim: {value}")
         };
 

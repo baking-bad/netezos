@@ -142,7 +142,7 @@ namespace Netezos.Encoding
         SAPLING_EMPTY_STATE,
         SAPLING_VERIFY_UPDATE,
         ticket,
-        TICKET,
+        TICKET_DEPRECATED,
         READ_TICKET,
         SPLIT_TICKET,
         JOIN_TICKETS,
@@ -157,6 +157,9 @@ namespace Netezos.Encoding
         tx_rollup_l2_address,
         MIN_BLOCK_TIME,
         sapling_transaction,
-        EMIT
+        EMIT,
+        Lambda_rec,
+        LAMBDA_REC,
+        TICKET
     }
 }
