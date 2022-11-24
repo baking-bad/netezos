@@ -30,6 +30,7 @@ namespace Netezos.Forging.Models
                 "double_preendorsement_evidence" => JsonSerializer.Deserialize<DoublePreendorsementContent>(ref reader, options),
                 "seed_nonce_revelation" => JsonSerializer.Deserialize<SeedNonceRevelationContent>(ref reader, options),
                 "vdf_revelation" => JsonSerializer.Deserialize<VdfRevelationContent>(ref reader, options),
+                "drain_delegate" => JsonSerializer.Deserialize<DrainDelegateContent>(ref reader, options),
                 "delegation" => JsonSerializer.Deserialize<DelegationContent>(ref reader, options),
                 "origination" => JsonSerializer.Deserialize<OriginationContent>(ref reader, options),
                 "transaction" => JsonSerializer.Deserialize<TransactionContent>(ref reader, options),
@@ -47,6 +48,7 @@ namespace Netezos.Forging.Models
                 "tx_rollup_remove_commitment" => JsonSerializer.Deserialize<TxRollupRemoveCommitmentContent>(ref reader, options),
                 "tx_rollup_return_bond" => JsonSerializer.Deserialize<TxRollupReturnBondContent>(ref reader, options),
                 "tx_rollup_submit_batch" => JsonSerializer.Deserialize<TxRollupSubmitBatchContent>(ref reader, options),
+                "update_consensus_key" => JsonSerializer.Deserialize<UpdateConsensusKeyContent>(ref reader, options),
                 _ => throw new JsonException("Invalid operation kind"),
             };
         }

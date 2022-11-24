@@ -179,7 +179,7 @@ namespace Netezos.Forging
                 default: throw new ArgumentException($"Invalid public key prefix {id}");
             };
 
-            return ReadBase58(32, prefix);
+            return ReadBase58(id == 0 ? 32 : 33, prefix);
         }
 
         public string ReadAddress()

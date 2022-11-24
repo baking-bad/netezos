@@ -33,6 +33,8 @@ namespace Netezos.Forging
                     return UnforgeSeedNonceRevelaion(reader);
                 case OperationTag.VdfRevelation:
                     return UnforgeVdfRevelaion(reader);
+                case OperationTag.DrainDelegate:
+                    return UnforgeDrainDelegate(reader);
                 case OperationTag.Delegation:
                     return UnforgeDelegation(reader);
                 case OperationTag.Origination:
@@ -67,6 +69,8 @@ namespace Netezos.Forging
                     return UnforgeTxRollupReturnBond(reader);
                 case OperationTag.TxRollupSubmitBatch:
                     return UnforgeTxRollupSubmitBatch(reader);
+                case OperationTag.UpdateConsensusKey:
+                    return UnforgeUpdateConsensusKey(reader);
                 default:
                     throw new ArgumentException($"Invalid operation: {operation}");
             }
@@ -159,7 +163,7 @@ namespace Netezos.Forging
                 Nonce = Hex.Convert(reader.ReadBytes(Lengths.nce.Decoded))
             };
         }
-
+        
         static VdfRevelationContent UnforgeVdfRevelaion(ForgedReader reader)
         {
             return new VdfRevelationContent
@@ -169,6 +173,16 @@ namespace Netezos.Forging
                     Hex.Convert(reader.ReadBytes(100)),
                     Hex.Convert(reader.ReadBytes(100))
                 }
+            };
+        }
+
+        static DrainDelegateContent UnforgeDrainDelegate(ForgedReader reader)
+        {
+            return new DrainDelegateContent
+            {
+                ConsensusKey = reader.ReadTzAddress(),
+                Delegate = reader.ReadTzAddress(),
+                Destination = reader.ReadTzAddress()
             };
         }
 
@@ -409,6 +423,19 @@ namespace Netezos.Forging
                 Rollup = Base58.Convert(reader.ReadBytes(20), Prefix.txr1),
                 Content = reader.ReadArray(),
                 BurnLimit = reader.ReadBool() ? (long)reader.ReadUBigInt() : null
+            };
+        }
+
+        static UpdateConsensusKeyContent UnforgeUpdateConsensusKey(ForgedReader reader)
+        {
+            return new UpdateConsensusKeyContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                PublicKey = reader.ReadPublicKey()
             };
         }
 

@@ -10,7 +10,10 @@
         Ballot              = 6,
         DoublePreendorsement= 7,
         VdfRevelation       = 8,
+        DrainDelegate       = 9,
+
         FailingNoop         = 17,
+
         Preendorsement      = 20,
         Endorsement         = 21,
 
@@ -21,6 +24,7 @@
         RegisterConstant    = 111,
         SetDepositsLimit    = 112,
         IncreasePaidStorage = 113,
+        UpdateConsensusKey  = 114,
 
         TxRollupOrigination         = 150,
         TxRollupSubmitBatch         = 151,

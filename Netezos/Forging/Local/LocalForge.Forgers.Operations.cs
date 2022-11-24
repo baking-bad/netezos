@@ -32,6 +32,8 @@ namespace Netezos.Forging
                     return ForgeSeedNonceRevelaion(op);
                 case VdfRevelationContent op:
                     return ForgeVdfRevelaion(op);
+                case DrainDelegateContent op:
+                    return ForgeDrainDelegate(op);
                 case DelegationContent op:
                     return ForgeDelegation(op);
                 case OriginationContent op:
@@ -66,6 +68,8 @@ namespace Netezos.Forging
                     return ForgeTxRollupReturnBond(op);
                 case TxRollupSubmitBatchContent op:
                     return ForgeTxRollupSubmitBatch(op);
+                case UpdateConsensusKeyContent op:
+                    return ForgeUpdateConsensusKey(op);
                 default:
                     throw new ArgumentException($"Invalid operation content kind {content.Kind}");
             }
@@ -159,6 +163,15 @@ namespace Netezos.Forging
                 ForgeTag(OperationTag.VdfRevelation),
                 Hex.Parse(operation.Solution[0]),
                 Hex.Parse(operation.Solution[1]));
+        }
+
+        static byte[] ForgeDrainDelegate(DrainDelegateContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.DrainDelegate),
+                ForgeTzAddress(operation.ConsensusKey),
+                ForgeTzAddress(operation.Delegate),
+                ForgeTzAddress(operation.Destination));
         }
 
         static byte[] ForgeDelegation(DelegationContent operation)
@@ -389,6 +402,18 @@ namespace Netezos.Forging
                 operation.BurnLimit is long value
                     ? Bytes.Concat(ForgeBool(true), ForgeMicheNat(value))
                     : ForgeBool(false));
+        }
+
+        static byte[] ForgeUpdateConsensusKey(UpdateConsensusKeyContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.UpdateConsensusKey),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgePublicKey(operation.PublicKey));
         }
 
         #region nested

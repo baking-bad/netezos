@@ -1,0 +1,11 @@
+﻿{
+  "branch": "BLysJ66KSv1Ggz6qsMcyBogwwdiZPt5muWMPhX49pzZvi2zXFUc",
+  "contents": [
+    {
+      "kind": "drain_delegate",
+      "consensus_key": "tz1fPT1LeQJboJ3jA4gwQ4r1xqbHgW1pS2jf",
+      "delegate": "tz1XfNWYxfKRskaEZxytFJ3WXagcb7XJ6g76",
+      "destination": "tz1foxFdz2ieSj8P9YxKYBTEqYbgFXXEeiQY"
+    }
+  ]
+}
