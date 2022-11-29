@@ -121,7 +121,8 @@ namespace Netezos.Contracts
             if (!Entrypoints.TryGetValue(entrypoint, out var schema))
                 throw new ArgumentException("Entrypoint doesn't exist");
 
-            return !(schema is OrSchema or && or.Children().All(x => x.Field?.Length > 0));
+            return schema.Field == entrypoint &&
+                !(schema is OrSchema or && or.Children().All(x => x.Field?.Length > 0));
         }
 
         void ExtractEntrypoints(Schema schema)
