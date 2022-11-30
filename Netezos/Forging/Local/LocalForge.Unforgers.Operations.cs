@@ -515,6 +515,7 @@ namespace Netezos.Forging
                 case 2: return "do";
                 case 3: return "set_delegate";
                 case 4: return "remove_delegate";
+                case 5: return "deposit";
                 case 255: return reader.ReadString(1);
                 default: throw new ArgumentException($"Unrecognized endpoint type {ep}");
             }

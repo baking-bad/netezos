@@ -182,6 +182,7 @@ namespace Netezos.Forging
                 case "do": return new byte[] { 2 };
                 case "set_delegate": return new byte[] { 3 };
                 case "remove_delegate": return new byte[] { 4 };
+                case "deposit": return new byte[] { 5 };
                 default:
                     return new byte[] { 255 }.Concat(ForgeString(value, 1));
             }
