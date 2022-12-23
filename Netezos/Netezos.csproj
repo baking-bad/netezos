@@ -10,6 +10,8 @@
     <PackageTags>tezos crypto blockchain xtz rpc keys signing forging encoding ledger smart contract</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://netezos.dev</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>packageIcon.png</PackageIcon>
 
     <RepositoryUrl>https://github.com/baking-bad/netezos</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -20,6 +22,10 @@
     <Version>2.7.2</Version>
     <Copyright>Copyright © Baking Bad 2019-2022</Copyright>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="packageIcon.png" Pack="true" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Dynamic.Json" Version="1.3.0" />
