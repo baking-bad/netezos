@@ -11,7 +11,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://netezos.dev</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>packageIcon.png</PackageIcon>
+    <PackageIcon>icon.png</PackageIcon>
 
     <RepositoryUrl>https://github.com/baking-bad/netezos</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -19,12 +19,13 @@
     <Authors>Groxan</Authors>
     <Product>Netezos</Product>
     <Description>.NET SDK for Tezos blockchain (.NET Stansard 2.0)</Description>
-    <Version>2.7.2</Version>
-    <Copyright>Copyright © Baking Bad 2019-2022</Copyright>
+    <Version>2.7.3</Version>
+    <Copyright>Copyright © Baking Bad 2019-2023</Copyright>
   </PropertyGroup>
+	
   <ItemGroup>
-    <None Include="packageIcon.png" Pack="true" PackagePath="\" />
-    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="../icon.png" Pack="true" PackagePath="/" />
+    <None Include="../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
   <ItemGroup>
