@@ -19,8 +19,10 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="source">Source (optional)</param>
         /// <param name="payer">Payer (optional)</param>
         /// <param name="gas">Gas limit (optional)</param>
+        /// <param name="now">Now (optional)</param>
+        /// <param name="level">Level (optional)</param>
         /// <returns></returns>
-        public Task<dynamic> PostAsync(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
+        public Task<dynamic> PostAsync(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null, int? now = null, int? level = null)
             => PostAsync(new
             {
                 script,
@@ -29,7 +31,9 @@ namespace Netezos.Rpc.Queries.Post
                 amount = amount.ToString(),
                 source,
                 payer,
-                gas = gas?.ToString()
+                gas = gas?.ToString(),
+                now = now?.ToString(),
+                level = level?.ToString()
             });
 
         /// <summary>
@@ -43,8 +47,10 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="source">Source (optional)</param>
         /// <param name="payer">Payer (optional)</param>
         /// <param name="gas">Gas limit (optional)</param>
+        /// <param name="now">Now (optional)</param>
+        /// <param name="level">Level (optional)</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
+        public Task<T> PostAsync<T>(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null, int? now = null, int? level = null)
             => PostAsync<T>(new
             {
                 script,
@@ -53,7 +59,9 @@ namespace Netezos.Rpc.Queries.Post
                 amount = amount.ToString(),
                 source,
                 payer,
-                gas = gas?.ToString()
+                gas = gas?.ToString(),
+                now = now?.ToString(),
+                level = level?.ToString()
             });
     }
 }

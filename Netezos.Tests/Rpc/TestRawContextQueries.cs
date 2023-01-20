@@ -31,25 +31,6 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestRawContextActiveDelegates()
-        {
-            var query = Rpc.Blocks.Head.Context.Raw.ActiveDelegates;
-            Assert.Equal("chains/main/blocks/head/context/raw/json/active_delegates_with_rolls/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
-            
-            if (res.Count == 0)
-                return;
-
-            var query2 = Rpc.Blocks.Head.Context.Raw.ActiveDelegates[res[0]];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/active_delegates_with_rolls/{res[0]}/", query2.ToString());
-
-            var res2 = await query2.GetAsync();
-            Assert.True(res2 is DJsonValue);
-        }
-
-        [Fact]
         public async Task TestRawContextBigMaps()
         {
             var query = Rpc.Blocks.Head.Context.Raw.BigMaps;
@@ -314,32 +295,6 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestRawContextDelegatesWithFrozenBalance()
-        {
-            var query = Rpc.Blocks.Head.Context.Raw.DelegatesWithFrozenBalance;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
-            
-            if (res.Count == 0)
-                return;
-
-            var cycleQuery = Rpc.Blocks.Head.Context.Raw.DelegatesWithFrozenBalance[res[0]];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/{res[0]}/", cycleQuery.ToString());
-
-            var cycleRes = await cycleQuery.GetAsync();
-            Assert.True(cycleRes is DJsonArray);
-
-            var delegateQuery = Rpc.Blocks.Head.Context.Raw.DelegatesWithFrozenBalance[res[0]][cycleRes[0]];
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/delegates_with_frozen_balance/{res[0]}/{cycleRes[0]}/", delegateQuery.ToString());
-
-            var delegateRes = await delegateQuery.GetAsync();
-            Assert.True(delegateRes is DJsonValue);
-
-        }
-
-        [Fact]
         public async Task TestRawContextRampUp()
         {
             var query = Rpc.Blocks.Head.Context.Raw.RampUp;
@@ -388,17 +343,7 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
         }
-
-        [Fact]
-        public async Task TestRawContextVotesListingsSize()
-        {
-            var query = Rpc.Blocks.Head.Context.Raw.Votes.ListingsSize;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/votes/listings_size/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
+        
         [Fact]
         public async Task TestRawContextVotesProposals()
         {

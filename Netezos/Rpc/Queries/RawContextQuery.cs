@@ -4,6 +4,7 @@ namespace Netezos.Rpc.Queries
 {
     public class RawContextQuery : DeepRpcObject
     {
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public DeepRpcDictionary<string, RpcObject> ActiveDelegates
             => new DeepRpcDictionary<string, RpcObject>(this, "active_delegates_with_rolls/");
 
@@ -25,6 +26,7 @@ namespace Netezos.Rpc.Queries
         public DeepRpcDictionary<string, RpcObject> Delegates
             => new DeepRpcDictionary<string, RpcObject>(this, "delegates/");
 
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public DeepRpcDictionary<int, RpcDictionary<string, RpcObject>> DelegatesWithFrozenBalance
             => new DeepRpcDictionary<int, RpcDictionary<string, RpcObject>>(this, "delegates_with_frozen_balance/");
 
