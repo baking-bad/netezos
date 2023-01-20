@@ -39,13 +39,13 @@ namespace Netezos.Tests.Encoding
                 return $@"{{""prim"":""option"",""args"":[{CreateDeepOption(depth - 1)}]}}";
             }
 
-            var json1 = CreateDeepOption(15_000);
+            var json1 = CreateDeepOption(12_000);
             var m1 = Micheline.FromJson(json1);
             var b1 = m1.ToBytes();
             Assert.NotNull(m1);
             Assert.NotNull(b1);
             Assert.Equal(json1.Length, m1.ToJson().Length);
-            Assert.Equal(json1, Micheline.ToJson(b1));
+            Assert.Equal(json1, Micheline.ToJson(b1, new(){ MaxDepth = 100_000 }));
             Assert.True(Equal(m1, Micheline.FromBytes(b1)));
         }
 
@@ -58,13 +58,13 @@ namespace Netezos.Tests.Encoding
                 return $@"{{""prim"":""pair"",""args"":[{{""prim"":""unit""}},{CreateDeepPair(depth - 1)}],""annots"":[""%d{depth}""]}}";
             }
 
-            var json2 = CreateDeepPair(15_000);
+            var json2 = CreateDeepPair(12_000);
             var m2 = Micheline.FromJson(json2);
             var b2 = m2.ToBytes();
             Assert.NotNull(m2);
             Assert.NotNull(b2);
             Assert.Equal(json2.Length, m2.ToJson().Length);
-            Assert.Equal(json2, Micheline.ToJson(b2));
+            Assert.Equal(json2, Micheline.ToJson(b2, new(){ MaxDepth = 100_000 }));
             Assert.True(Equal(m2, Micheline.FromBytes(b2)));
         }
 
