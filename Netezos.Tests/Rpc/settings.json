@@ -1,5 +1,5 @@
 {
-  "node": "https://mainnet-tezos.giganode.io/",
+  "node": "https://rpc.tzkt.io/mainnet/",
   "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
   "testEntrypoint": "Action",
   "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",

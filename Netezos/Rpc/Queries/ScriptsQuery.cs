@@ -18,6 +18,11 @@ namespace Netezos.Rpc.Queries
         /// Gets the query to the operation run
         /// </summary>
         public RunOperationQuery RunOperation => new RunOperationQuery(this, "run_operation/");
+        
+        /// <summary>
+        /// Gets the query to the script view run
+        /// </summary>
+        public RunScriptViewQuery RunScriptView => new RunScriptViewQuery(this, "run_script_view/");
 
         /// <summary>
         /// Gets the query to the operation simulation

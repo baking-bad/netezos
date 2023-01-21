@@ -17,6 +17,7 @@ namespace Netezos.Rpc.Queries
         public DeepRpcDictionary<string, RpcObject> Listings
             => new DeepRpcDictionary<string, RpcObject>(this, "listings/");
 
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public RpcObject ListingsSize => new RpcObject(this, "listings_size/");
 
         public DeepRpcDictionary<string, DeepRpcDictionary<string, RpcObject>> Proposals
