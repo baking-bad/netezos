@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Numerics;
 using System.Text.Json.Serialization;
+using Netezos.Forging.Models;
 
 namespace Netezos.Encoding
 {
@@ -10,6 +11,7 @@ namespace Netezos.Encoding
         public MichelineType Type => MichelineType.Int;
 
         [JsonPropertyName("int")]
+        [JsonConverter(typeof(BigIntegerStringConverter))]
         public BigInteger Value { get; set; }
 
         public MichelineInt(BigInteger value) => Value = value;
