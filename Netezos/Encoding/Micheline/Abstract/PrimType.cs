@@ -160,6 +160,8 @@ namespace Netezos.Encoding
         EMIT,
         Lambda_rec,
         LAMBDA_REC,
-        TICKET
+        TICKET,
+        BYTES,
+        NAT
     }
 }

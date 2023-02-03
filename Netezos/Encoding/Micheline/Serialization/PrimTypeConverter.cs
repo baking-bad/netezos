@@ -163,6 +163,8 @@ namespace Netezos.Encoding.Serialization
             "Lambda_rec" => PrimType.Lambda_rec,
             "LAMBDA_REC" => PrimType.LAMBDA_REC,
             "TICKET" => PrimType.TICKET,
+            "BYTES" => PrimType.BYTES,
+            "NAT" => PrimType.NAT,
             var value => throw new FormatException($"Invalid prim: {value}")
         };
 
