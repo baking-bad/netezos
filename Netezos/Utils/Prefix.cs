@@ -48,7 +48,7 @@
         public static readonly byte[] tz3 = new byte[] { 6, 161, 164 };
 
         /// <summary>
-        /// Address prefix for TX Rollup L2 address
+        /// Address prefix for BLS-MinPk
         /// </summary>
         public static readonly byte[] tz4 = new byte[] { 6, 161, 166 };
 
@@ -61,6 +61,21 @@
         /// Address prefix for originated tx rollup
         /// </summary>
         public static readonly byte[] txr1 = new byte[] { 1, 128, 120, 31 };
+
+        /// <summary>
+        /// Address prefix for originated smart rollup
+        /// </summary>
+        public static readonly byte[] sr1 = new byte[] { 6, 124, 117 };
+
+        /// <summary>
+        /// Smart rollup state hash prefix
+        /// </summary>
+        public static readonly byte[] srs1 = new byte[] { 17, 165, 235, 240 };
+
+        /// <summary>
+        /// Smart rollup commitment hash prefix
+        /// </summary>
+        public static readonly byte[] src1 = new byte[] { 17, 165, 134, 138 };
 
         /// <summary>
         /// Public key prefix for Ed25519 (tz1)

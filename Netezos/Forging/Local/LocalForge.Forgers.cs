@@ -71,8 +71,10 @@ namespace Netezos.Forging
                 case "tz1": return new byte[] { 0, 0 }.Concat(res);
                 case "tz2": return new byte[] { 0, 1 }.Concat(res);
                 case "tz3": return new byte[] { 0, 2 }.Concat(res);
+                case "tz4": return new byte[] { 0, 3 }.Concat(res);
                 case "KT1": return new byte[] { 1 }.Concat(res).Concat(new byte[] { 0 });
                 case "txr" when value.StartsWith("txr1"): return new byte[] { 2 }.Concat(res).Concat(new byte[] { 0 });
+                case "sr1": return new byte[] { 3 }.Concat(res).Concat(new byte[] { 0 });
                 default:
                     throw new ArgumentException($"Invalid address prefix {prefix}");
             }
@@ -88,6 +90,7 @@ namespace Netezos.Forging
                 case "tz1": return new byte[] { 0 }.Concat(res);
                 case "tz2": return new byte[] { 1 }.Concat(res);
                 case "tz3": return new byte[] { 2 }.Concat(res);
+                case "tz4": return new byte[] { 3 }.Concat(res);
                 default:
                     throw new ArgumentException($"Invalid source prefix {prefix}");
             }

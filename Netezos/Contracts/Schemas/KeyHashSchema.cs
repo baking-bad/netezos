@@ -25,13 +25,14 @@ namespace Netezos.Contracts
                 if (micheBytes.Value.Length != 21)
                     return Hex.Convert(micheBytes.Value);
 
-                var prefix = micheBytes.Value[0] == 0
-                    ? Prefix.tz1
-                    : micheBytes.Value[0] == 1
-                        ? Prefix.tz2
-                        : micheBytes.Value[0] == 2
-                            ? Prefix.tz3
-                            : null;
+                var prefix = micheBytes.Value[0] switch
+                {
+                    0 => Prefix.tz1,
+                    1 => Prefix.tz2,
+                    2 => Prefix.tz3,
+                    3 => Prefix.tz4,
+                    _ => null
+                };
 
                 if (prefix == null)
                     return Hex.Convert(micheBytes.Value);
@@ -70,20 +71,14 @@ namespace Netezos.Contracts
                 var bytes = Base58.Parse(micheStr.Value, 3);
                 var res = new byte[21];
 
-                switch (micheStr.Value.Substring(0, 3))
+                res[0] = micheStr.Value.Substring(0, 3) switch
                 {
-                    case "tz1":
-                        res[0] = 0;
-                        break;
-                    case "tz2":
-                        res[0] = 1;
-                        break;
-                    case "tz3":
-                        res[0] = 2;
-                        break;
-                    default:
-                        throw FormatException(value);
-                }
+                    "tz1" => 0,
+                    "tz2" => 1,
+                    "tz3" => 2,
+                    "tz4" => 3,
+                    _ => throw FormatException(value)
+                };
 
                 bytes.CopyTo(res, 1);
                 return new MichelineBytes(res);

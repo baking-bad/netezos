@@ -191,6 +191,7 @@ namespace Netezos.Forging
                 case 0: return ReadTzAddress();
                 case 1: return ReadKtAddress();
                 case 2: return ReadTxrAddress();
+                case 3: return ReadSrAddress();
                 default: throw new ArgumentException($"Invalid address prefix {type}");
             }
         }
@@ -205,6 +206,7 @@ namespace Netezos.Forging
                 case 0: prefix = Prefix.tz1; break;
                 case 1: prefix = Prefix.tz2; break;
                 case 2: prefix = Prefix.tz3; break;
+                case 3: prefix = Prefix.tz4; break;
                 default:
                     throw new ArgumentException($"Invalid source prefix {tzType}");
             }
@@ -222,6 +224,13 @@ namespace Netezos.Forging
         public string ReadTxrAddress()
         {
             var address = ReadBase58(Lengths.txr1.Decoded, Prefix.txr1);
+            ReadByte(); // Consume padded 0
+            return address;
+        }
+
+        public string ReadSrAddress()
+        {
+            var address = ReadBase58(Lengths.sr1.Decoded, Prefix.sr1);
             ReadByte(); // Consume padded 0
             return address;
         }

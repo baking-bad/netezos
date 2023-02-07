@@ -44,6 +44,8 @@ namespace Netezos.Contracts
                         prefix = Prefix.tz2;
                     else if (micheBytes.Value[1] == 2)
                         prefix = Prefix.tz3;
+                    else if (micheBytes.Value[1] == 3)
+                        prefix = Prefix.tz4;
                     else
                         return Hex.Convert(micheBytes.Value);
                 }
@@ -58,6 +60,13 @@ namespace Netezos.Contracts
                 {
                     if (micheBytes.Value[21] == 0)
                         prefix = Prefix.txr1;
+                    else
+                        return Hex.Convert(micheBytes.Value);
+                }
+                else if (micheBytes.Value[0] == 3)
+                {
+                    if (micheBytes.Value[21] == 0)
+                        prefix = Prefix.sr1;
                     else
                         return Hex.Convert(micheBytes.Value);
                 }
@@ -151,6 +160,11 @@ namespace Netezos.Contracts
                     res[0] = 0;
                     res[1] = 2;
                     break;
+                case "tz4":
+                    addressBytes.CopyTo(res, 2);
+                    res[0] = 0;
+                    res[1] = 3;
+                    break;
                 case "KT1":
                     addressBytes.CopyTo(res, 1);
                     res[0] = 1;
@@ -159,6 +173,11 @@ namespace Netezos.Contracts
                 case "txr" when address.StartsWith("txr1"):
                     addressBytes.CopyTo(res, 1);
                     res[0] = 2;
+                    res[21] = 0;
+                    break;
+                case "sr1":
+                    addressBytes.CopyTo(res, 1);
+                    res[0] = 3;
                     res[21] = 0;
                     break;
                 default:

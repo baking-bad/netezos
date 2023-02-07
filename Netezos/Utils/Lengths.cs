@@ -66,6 +66,15 @@
         }
 
         /// <summary>
+        /// Originated smart rollup
+        /// </summary>
+        public static class sr1
+        {
+            public const int Encdoed = 36;
+            public const int Decoded = 20;
+        }
+
+        /// <summary>
         /// generic signature
         /// </summary>
         public static class sig
