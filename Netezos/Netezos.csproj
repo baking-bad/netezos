@@ -19,7 +19,7 @@
     <Authors>Groxan</Authors>
     <Product>Netezos</Product>
     <Description>.NET SDK for Tezos blockchain (.NET Stansard 2.0)</Description>
-    <Version>2.7.6</Version>
+    <Version>2.7.7</Version>
     <Copyright>Copyright © Baking Bad 2019-2023</Copyright>
   </PropertyGroup>
 	
