@@ -56,6 +56,7 @@ namespace Netezos.Forging
                 case "edpk": return new byte[] { 0 }.Concat(res);
                 case "sppk": return new byte[] { 1 }.Concat(res);
                 case "p2pk": return new byte[] { 2 }.Concat(res);
+                case "BLpk": return new byte[] { 3 }.Concat(res);
                 default:
                     throw new ArgumentException($"Invalid public key prefix {prefix}");
             }

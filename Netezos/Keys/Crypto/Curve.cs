@@ -21,41 +21,23 @@ namespace Netezos.Keys
         public abstract bool Verify(byte[] bytes, byte[] signature, byte[] pubKey);
 
         #region static
-        public static Curve FromKind(ECKind kind)
+        public static Curve FromKind(ECKind kind) => kind switch
         {
-            return kind == ECKind.Ed25519
-                ? new Ed25519()
-                : kind == ECKind.NistP256
-                    ? (Curve)new NistP256()
-                    : new Secp256k1();
-        }
+            ECKind.Ed25519 => new Ed25519(),
+            ECKind.Secp256k1 => new Secp256k1(),
+            ECKind.NistP256 => new NistP256(),
+            ECKind.Bls12381 => new Bls12381(),
+            _ => throw new ArgumentException("Invalid EC kind")
+        };
 
-        public static Curve FromPrefix(string prefix)
+        public static Curve FromPrefix(string prefix) => prefix switch
         {
-            switch (prefix)
-            {
-                case "edpk":
-                case "edsk":
-                case "tz1":
-                case "edesk":
-                case "edsig":
-                    return new Ed25519();
-                case "sppk":
-                case "spsk":
-                case "tz2":
-                case "spesk":
-                case "spsig":
-                    return new Secp256k1();
-                case "p2pk":
-                case "p2sk":
-                case "tz3":
-                case "p2esk":
-                case "p2sig":
-                    return new NistP256();
-                default:
-                    throw new ArgumentException("Invalid prefix");
-            }
-        }
+            "edpk" or "edsk" or "tz1" or "edesk" or "edsig" => new Ed25519(),
+            "sppk" or "spsk" or "tz2" or "spesk" or "spsig" => new Secp256k1(),
+            "p2pk" or "p2sk" or "tz3" or "p2esk" or "p2sig" => new NistP256(),
+            "BLpk" or "BLsk" or "tz4" or "BLesk" or "BLsig" => new Bls12381(),
+            _ => throw new ArgumentException("Invalid prefix"),
+        };
         #endregion
     }
 }

@@ -28,7 +28,10 @@ namespace Netezos.Keys
 
         internal PubKey(byte[] bytes, ECKind kind, bool flush = false)
         {
-            if (kind == ECKind.Ed25519 && bytes.Length != 32 || kind != ECKind.Ed25519 && bytes.Length != 33)
+            if (kind == ECKind.Ed25519 && bytes.Length != 32 ||
+                kind == ECKind.Secp256k1 && bytes.Length != 33 ||
+                kind == ECKind.NistP256 && bytes.Length != 33 ||
+                kind == ECKind.Bls12381 && bytes.Length != 48)
                 throw new ArgumentException("Invalid public key length", nameof(bytes));
 
             Curve = Curve.FromKind(kind);

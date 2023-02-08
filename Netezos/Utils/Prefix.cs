@@ -48,7 +48,7 @@
         public static readonly byte[] tz3 = new byte[] { 6, 161, 164 };
 
         /// <summary>
-        /// Address prefix for BLS-MinPk
+        /// Address prefix for BLS12-381
         /// </summary>
         public static readonly byte[] tz4 = new byte[] { 6, 161, 166 };
 
@@ -93,6 +93,11 @@
         public static readonly byte[] p2pk = new byte[] { 3, 178, 139, 127 };
 
         /// <summary>
+        /// Public key prefix for BLS12-381 (tz4)
+        /// </summary>
+        public static readonly byte[] BLpk = new byte[] { 6, 149, 135, 204 };
+
+        /// <summary>
         /// Private key prefix for Ed25519 (tz1)
         /// </summary>
         public static readonly byte[] edsk = { 13, 15, 58, 7 };
@@ -108,6 +113,11 @@
         public static readonly byte[] p2sk = { 16, 81, 238, 189 };
 
         /// <summary>
+        /// Private key prefix for BLS12-381 (tz4)
+        /// </summary>
+        public static readonly byte[] BLsk = { 3, 150, 192, 40 };
+
+        /// <summary>
         /// Signature prefix for Ed25519 (tz1)
         /// </summary>
         public static readonly byte[] edsig = { 9, 245, 205, 134, 18 };
@@ -121,6 +131,11 @@
         /// Signature prefix for Nistp256 (tz3)
         /// </summary>
         public static readonly byte[] p2sig = { 54, 240, 44, 52 };
+
+        /// <summary>
+        /// Signature prefix for BLS12-381 (tz4)
+        /// </summary>
+        public static readonly byte[] BLsig = { 40, 171, 64, 207 };
 
         /// <summary>
         /// Signature prefix

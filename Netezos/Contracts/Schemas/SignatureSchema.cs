@@ -63,6 +63,7 @@ namespace Netezos.Contracts
                         res = Base58.Parse(micheStr.Value, 5);
                         break;
                     case "p2s":
+                    case "BLs":
                         res = Base58.Parse(micheStr.Value, 4);
                         break;
                     case "sig":

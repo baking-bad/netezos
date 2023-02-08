@@ -12,6 +12,9 @@ namespace Netezos.Keys
     {
         public override (byte[], byte[]) GenerateMasterKey(Curve curve, byte[] seed)
         {
+            if (curve.Kind == ECKind.Bls12381)
+                throw new NotSupportedException("BLS12-381 curve is not supported by the SLIP-0010 standard");
+
             using var hmacSha512 = new HMACSHA512(curve.SeedKey);
             while (true)
             {
@@ -45,6 +48,9 @@ namespace Netezos.Keys
 
         public override (byte[], byte[]) GetChildPrivateKey(Curve curve, byte[] privateKey, byte[] chainCode, uint index)
         {
+            if (curve.Kind == ECKind.Bls12381)
+                throw new NotSupportedException("BLS12-381 curve is not supported by the SLIP-0010 standard");
+
             byte[] l;
             
             if ((index & 0x80000000) != 0) // hardened
@@ -104,10 +110,15 @@ namespace Netezos.Keys
 
         public override (byte[], byte[]) GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index)
         {
+            if (curve.Kind == ECKind.Bls12381)
+                throw new NotSupportedException("BLS12-381 curve is not supported by the SLIP-0010 standard");
+
             if (curve.Kind == ECKind.Ed25519)
                 throw new NotSupportedException("Ed25519 public key derivation not supported by slip-10");
+            
             if (pubKey.Length != 33)
                 throw new NotSupportedException("Invalid public key size (expected 33 bytes)");
+            
             if ((index & 0x80000000) != 0)
                 throw new InvalidOperationException("Can't derive a hardened child key from a public key");
 

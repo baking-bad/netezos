@@ -176,6 +176,7 @@ namespace Netezos.Forging
                 case 0: prefix = Prefix.edpk; break;
                 case 1: prefix = Prefix.sppk; break;
                 case 2: prefix = Prefix.p2pk; break;
+                case 3: prefix = Prefix.BLpk; break;
                 default: throw new ArgumentException($"Invalid public key prefix {id}");
             };
 

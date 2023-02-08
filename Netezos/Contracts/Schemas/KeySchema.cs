@@ -22,13 +22,14 @@ namespace Netezos.Contracts
             }
             else if (value is MichelineBytes micheBytes)
             {
-                var prefix = micheBytes.Value[0] == 0 && micheBytes.Value.Length == 33
-                    ? Prefix.edpk
-                    : micheBytes.Value[0] == 1 && micheBytes.Value.Length == 34
-                        ? Prefix.sppk
-                        : micheBytes.Value[0] == 2 && micheBytes.Value.Length == 34
-                            ? Prefix.p2pk
-                            : null;
+                var prefix = (micheBytes.Value[0], micheBytes.Value.Length) switch
+                {
+                    (0, 33) => Prefix.edpk,
+                    (1, 34) => Prefix.sppk,
+                    (2, 34) => Prefix.p2pk,
+                    (3, 49) => Prefix.BLpk,
+                    _ => null
+                };
 
                 if (prefix == null)
                     return Hex.Convert(micheBytes.Value);
@@ -80,6 +81,10 @@ namespace Netezos.Contracts
                     case "p2pk":
                         res = new byte[34];
                         res[0] = 2;
+                        break;
+                    case "BLpk":
+                        res = new byte[49];
+                        res[0] = 3;
                         break;
                     default:
                         throw FormatException(value);

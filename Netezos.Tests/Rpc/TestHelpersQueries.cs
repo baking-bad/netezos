@@ -127,7 +127,7 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestHelpersScriptsRunScriptView()
+        public void TestHelpersScriptsRunScriptView()
         {
             var query = Rpc.Blocks.Head.Helpers.Scripts.RunScriptView;
             Assert.Equal("chains/main/blocks/head/helpers/scripts/run_script_view/", query.ToString());
