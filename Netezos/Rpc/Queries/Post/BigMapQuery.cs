@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -44,7 +41,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="type">Type of the key (micheline michelson expression)</param>
         /// <param name="prim">Primitive michelson type</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(object key, string type, string prim)
+        public Task<T?> PostAsync<T>(object key, string type, string prim)
             => PostAsync<T>(new
             {
                 key = new Dictionary<string, object> { { type, key } },
@@ -58,7 +55,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="key">Key (micheline michelson expression)</param>
         /// <param name="type">Type of the key (micheline michelson expression)</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(object key, object type)
+        public Task<T?> PostAsync<T>(object key, object type)
             => PostAsync<T>(new
             {
                 key,

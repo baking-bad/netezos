@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
     public class Operation
     {
         [JsonPropertyName("hash")]
-        public string Hash { get; set; }
+        public string Hash { get; set; } = null!;
 
         [JsonPropertyName("branch")]
-        public string Branch { get; set; }
+        public string Branch { get; set; } = null!;
 
         [JsonPropertyName("contents")]
-        public List<OperationContent> Contents { get; set; }
+        public List<OperationContent> Contents { get; set; } = null!;
 
         [JsonPropertyName("signature")]
-        public string Signature { get; set; }
+        public string Signature { get; set; } = null!;
     }
 }

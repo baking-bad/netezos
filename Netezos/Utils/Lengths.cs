@@ -1,4 +1,5 @@
-﻿namespace Netezos
+﻿#pragma warning disable IDE1006
+namespace Netezos
 {
     static class Lengths
     {
@@ -7,7 +8,7 @@
         /// </summary>
         public static class B
         {
-            public const int Encdoed = 51;
+            public const int Encoded = 51;
             public const int Decoded = 32;
         }
 
@@ -16,7 +17,7 @@
         /// </summary>
         public static class LLo
         {
-            public const int Encdoed = 53;
+            public const int Encoded = 53;
             public const int Decoded = 32;
         }
 
@@ -25,7 +26,7 @@
         /// </summary>
         public static class P
         {
-            public const int Encdoed = 51;
+            public const int Encoded = 51;
             public const int Decoded = 32;
         }
 
@@ -34,7 +35,7 @@
         /// </summary>
         public static class Co
         {
-            public const int Encdoed = 52;
+            public const int Encoded = 52;
             public const int Decoded = 32;
         }
 
@@ -43,7 +44,7 @@
         /// </summary>
         public static class tz1
         {
-            public const int Encdoed = 36;
+            public const int Encoded = 36;
             public const int Decoded = 20;
         }
 
@@ -52,7 +53,7 @@
         /// </summary>
         public static class KT1
         {
-            public const int Encdoed = 36;
+            public const int Encoded = 36;
             public const int Decoded = 20;
         }
 
@@ -61,7 +62,7 @@
         /// </summary>
         public static class txr1
         {
-            public const int Encdoed = 37;
+            public const int Encoded = 37;
             public const int Decoded = 20;
         }
 
@@ -70,7 +71,7 @@
         /// </summary>
         public static class sr1
         {
-            public const int Encdoed = 36;
+            public const int Encoded = 36;
             public const int Decoded = 20;
         }
 
@@ -79,7 +80,7 @@
         /// </summary>
         public static class sig
         {
-            public const int Encdoed = 96;
+            public const int Encoded = 96;
             public const int Decoded = 64;
         }
 
@@ -88,7 +89,7 @@
         /// </summary>
         public static class nce
         {
-            public const int Encdoed = 53;
+            public const int Encoded = 53;
             public const int Decoded = 32;
         }
 
@@ -97,8 +98,9 @@
         /// </summary>
         public static class vh
         {
-            public const int Encdoed = 52;
+            public const int Encoded = 52;
             public const int Decoded = 32;
         }
     }
 }
+#pragma warning restore IDE1006

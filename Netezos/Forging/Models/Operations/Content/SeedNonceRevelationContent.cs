@@ -11,6 +11,6 @@ namespace Netezos.Forging.Models
         public int Level { get; set; }
 
         [JsonPropertyName("nonce")]
-        public string Nonce { get; set; }
+        public string Nonce { get; set; } = null!;
     }
 }

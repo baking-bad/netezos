@@ -10,22 +10,22 @@ namespace Netezos.Forging.Models
         public override string Kind => "transfer_ticket";
 
         [JsonPropertyName("ticket_contents")]
-        public IMicheline TicketContent { get; set; }
+        public IMicheline TicketContent { get; set; } = null!;
 
         [JsonPropertyName("ticket_ty")]
-        public IMicheline TicketType { get; set; }
+        public IMicheline TicketType { get; set; } = null!;
 
         [JsonPropertyName("ticket_ticketer")]
-        public string TicketTicketer { get; set; }
+        public string TicketTicketer { get; set; } = null!;
 
         [JsonPropertyName("ticket_amount")]
         [JsonConverter(typeof(BigIntegerStringConverter))]
         public BigInteger TicketAmount { get; set; }
 
         [JsonPropertyName("destination")]
-        public string Destination { get; set; }
+        public string Destination { get; set; } = null!;
 
         [JsonPropertyName("entrypoint")]
-        public string Entrypoint { get; set; }
+        public string Entrypoint { get; set; } = null!;
     }
 }

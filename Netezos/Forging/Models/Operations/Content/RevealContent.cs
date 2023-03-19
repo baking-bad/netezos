@@ -8,6 +8,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "reveal";
 
         [JsonPropertyName("public_key")]
-        public string PublicKey { get; set; }
+        public string PublicKey { get; set; } = null!;
     }
 }

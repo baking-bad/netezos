@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Netezos.Utils;
+﻿using Netezos.Utils;
 
 namespace Netezos.Keys
 {
@@ -35,7 +33,7 @@ namespace Netezos.Keys
         public string Address => Key.Address;
 
         readonly byte[] _ChainCode;
-        HDPubKey _HDPubKey;
+        HDPubKey? _HDPubKey;
         Curve Curve => Key.Curve;
         HDStandard HD => HDStandard.Slip10;
         ISecretStore Store => Key.Store;
@@ -65,10 +63,10 @@ namespace Netezos.Keys
         /// <returns>Derived extended child key</returns>
         public HDKey Derive(int index, bool hardened = false)
         {
-            var uind = HDPath.GetIndex(index, hardened);
+            var ind = HDPath.GetIndex(index, hardened);
             using (Store.Unlock())
             {
-                var (prvKey, chainCode) = HD.GetChildPrivateKey(Curve, Store.Data, _ChainCode, uind);
+                var (prvKey, chainCode) = HD.GetChildPrivateKey(Curve, Store.Data, _ChainCode, ind);
                 return new(new(prvKey, Curve.Kind, true), chainCode);
             }
         }
@@ -98,8 +96,8 @@ namespace Netezos.Keys
                 var prvKey = Store.Data;
                 var chainCode = _ChainCode;
 
-                foreach (var uind in path)
-                    (prvKey, chainCode) = HD.GetChildPrivateKey(Curve, prvKey, chainCode, uind);
+                foreach (var ind in path)
+                    (prvKey, chainCode) = HD.GetChildPrivateKey(Curve, prvKey, chainCode, ind);
 
                 return new(new(prvKey, Curve.Kind, true), chainCode);
             }
@@ -113,7 +111,7 @@ namespace Netezos.Keys
         public Signature Sign(byte[] bytes) => Key.Sign(bytes);
 
         /// <summary>
-        /// Signs a UTF-8 endcoded string
+        /// Signs a UTF-8 encoded string
         /// </summary>
         /// <param name="message">String to sign</param>
         /// <returns>Signature object</returns>

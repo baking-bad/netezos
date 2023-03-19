@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Netezos.Encoding;
+﻿using Netezos.Encoding;
 using Netezos.Forging.Models;
 using Netezos.Rpc;
 
@@ -28,7 +24,9 @@ namespace Netezos.Forging
 
         async Task<byte[]> ForgeAsync(List<object> contents)
         {
-            var branch = await Rpc.Blocks.Head.Hash.GetAsync<string>();
+            var branch = await Rpc.Blocks.Head.Hash.GetAsync<string>()
+                ?? throw new InvalidOperationException("Branch cannot be null");
+
             return await ForgeAsync(branch, contents);
         }
 
@@ -40,7 +38,8 @@ namespace Netezos.Forging
                 .Helpers
                 .Forge
                 .Operations
-                .PostAsync<string>(branch, contents);
+                .PostAsync<string>(branch, contents)
+                ?? throw new InvalidOperationException("Forged bytes cannot be null");
 
             return Hex.Parse(result);
         }

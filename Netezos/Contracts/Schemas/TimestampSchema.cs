@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -42,7 +41,7 @@ namespace Netezos.Contracts
                 if (DateTimeOffset.TryParse(micheString.Value, out var datetime))
                     return datetime.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
-                if (micheString.Value?.Length == 0)
+                if (micheString.Value.Length == 0)
                     return new DateTime(1970, 1, 1).ToString("yyyy-MM-ddTHH:mm:ssZ");
 
                 return micheString.Value;
@@ -55,27 +54,16 @@ namespace Netezos.Contracts
 
         protected override IMicheline MapValue(object value)
         {
-            switch (value)
+            return value switch
             {
-                case DateTime dt:
-                    // TODO: optimization
-                    return new MichelineString(dt.ToString("yyyy-MM-ddTHH:mm:ssZ"));
-                case int i:
-                    return new MichelineInt(new BigInteger(i));
-                case long l:
-                    return new MichelineInt(new BigInteger(l));
-                case string s:
-                    // TODO: validation & optimization
-                    return new MichelineString(s);
-                case JsonElement json when json.ValueKind == JsonValueKind.Number:
-                    // TODO: validation
-                    return new MichelineInt(new BigInteger(json.GetInt64()));
-                case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    // TODO: validation & optimization
-                    return new MichelineString(json.GetString());
-                default:
-                    throw MapFailedException("invalid value");
-            }
+                DateTime dt => new MichelineString(dt.ToString("yyyy-MM-ddTHH:mm:ssZ")),
+                int i => new MichelineInt(i),
+                long l => new MichelineInt(l),
+                string s => new MichelineString(s),
+                JsonElement { ValueKind: JsonValueKind.Number } json => new MichelineInt(new BigInteger(json.GetInt64())),
+                JsonElement { ValueKind: JsonValueKind.String } json => new MichelineString(json.GetString()!),
+                _ => throw MapFailedException("invalid value")
+            };
         }
 
         public override IMicheline Optimize(IMicheline value)

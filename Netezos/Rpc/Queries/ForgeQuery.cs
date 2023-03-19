@@ -10,17 +10,17 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the block header forging
         /// </summary>
-        public ForgeBlockHeaderQuery BlockHeader => new ForgeBlockHeaderQuery(Base, "forge_block_header/");
+        public ForgeBlockHeaderQuery BlockHeader => new(Base!, "forge_block_header/");
 
         /// <summary>
         /// Gets the query to the protocol data forging
         /// </summary>
-        public ForgeProtocolDataQuery ProtocolData => new ForgeProtocolDataQuery(this, "protocol_data/");
+        public ForgeProtocolDataQuery ProtocolData => new(this, "protocol_data/");
 
         /// <summary>
         /// Gets the query to the operations forging
         /// </summary>
-        public ForgeOperationsQuery Operations => new ForgeOperationsQuery(this, "operations/");
+        public ForgeOperationsQuery Operations => new(this, "operations/");
 
         internal ForgeQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

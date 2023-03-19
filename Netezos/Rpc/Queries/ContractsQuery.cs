@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="address">Address of the contract</param>
         /// <returns></returns>
-        public ContractQuery this[string address] => new ContractQuery(this, $"{address}/");
+        public ContractQuery this[string address] => new(this, $"{address}/");
 
         internal ContractsQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

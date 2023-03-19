@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Netezos.Encoding
+﻿namespace Netezos.Encoding
 {
     public static class Hex
     {
@@ -89,7 +85,7 @@ namespace Netezos.Encoding
 
         public static bool TryParse(string hex, out byte[] bytes)
         {
-            bytes = null;
+            bytes = null!;
 
             if (hex == null)
                 return false;

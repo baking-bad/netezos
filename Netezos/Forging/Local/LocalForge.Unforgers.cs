@@ -1,5 +1,4 @@
 ﻿using Netezos.Encoding;
-using System;
 
 namespace Netezos.Forging
 {

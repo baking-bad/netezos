@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Text.Json;
 using Netezos.Encoding;
 using Netezos.Forging;
@@ -23,20 +21,20 @@ namespace Netezos.Contracts
         public BigMapSchema(MichelinePrim micheline) : base(micheline)
         {
             if (micheline.Args?.Count != 2
-                || !(micheline.Args[0] is MichelinePrim key)
-                || !(micheline.Args[1] is MichelinePrim value))
+                || micheline.Args[0] is not MichelinePrim key
+                || micheline.Args[1] is not MichelinePrim value)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             Key = Create(key);
             Value = Create(value);
         }
 
-        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        internal override TreeView GetTreeView(TreeView? parent, IMicheline value, string? name = null, Schema? schema = null)
         {
             if (value is MichelineInt)
                 return base.GetTreeView(parent, value, name, schema);
 
-            if (!(value is MichelineArray micheArray))
+            if (value is not MichelineArray micheArray)
                 throw FormatException(value);
 
             var treeView = base.GetTreeView(parent, value, name, schema);
@@ -46,7 +44,7 @@ namespace Netezos.Contracts
             {
                 foreach (var item in micheArray)
                 {
-                    if (!(item is MichelinePrim elt) || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
+                    if (item is not MichelinePrim elt || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
                         throw new FormatException($"Invalid map item {(item as MichelinePrim)?.Prim.ToString() ?? item.Type.ToString()}");
 
                     treeView.Children.Add(Value.GetTreeView(treeView, elt.Args[1], key.Flatten(elt.Args[0])));
@@ -56,7 +54,7 @@ namespace Netezos.Contracts
             {
                 foreach (var item in micheArray)
                 {
-                    if (!(item is MichelinePrim elt) || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
+                    if (item is not MichelinePrim elt || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
                         throw new FormatException($"Invalid map item {(item as MichelinePrim)?.Prim.ToString() ?? item.Type.ToString()}");
 
                     var keyStr = Key.Humanize(elt.Args[0], new JsonWriterOptions { Indented = false });
@@ -114,7 +112,7 @@ namespace Netezos.Contracts
 
             foreach (var item in items)
             {
-                if (!(item is MichelinePrim elt) || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
+                if (item is not MichelinePrim elt || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
                     throw new FormatException($"Invalid big_map item {(item as MichelinePrim)?.Prim.ToString() ?? item.Type.ToString()}");
 
                 writer.WritePropertyName(key.Flatten(elt.Args[0]));
@@ -132,7 +130,7 @@ namespace Netezos.Contracts
             {
                 writer.WriteStartObject();
 
-                if (!(item is MichelinePrim elt) || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
+                if (item is not MichelinePrim elt || elt.Prim != PrimType.Elt || elt.Args?.Count != 2)
                     throw new FormatException($"Invalid big_map item {(item as MichelinePrim)?.Prim.ToString() ?? item.Type.ToString()}");
 
                 writer.WritePropertyName("key");
@@ -294,9 +292,11 @@ namespace Netezos.Contracts
             {
                 foreach (var item in micheArray)
                 {
-                    var elt = item as MichelinePrim;
-                    elt.Args[0] = Key.Optimize(elt.Args[0]);
-                    elt.Args[1] = Value.Optimize(elt.Args[1]);
+                    if (item is MichelinePrim { Prim: PrimType.Elt, Args.Count: 2 } elt)
+                    {
+                        elt.Args[0] = Key.Optimize(elt.Args[0]);
+                        elt.Args[1] = Value.Optimize(elt.Args[1]);
+                    }
                 }
             }
 

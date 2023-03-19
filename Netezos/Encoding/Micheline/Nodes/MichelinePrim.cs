@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Netezos.Encoding.Serialization;
 
 namespace Netezos.Encoding
@@ -14,10 +12,10 @@ namespace Netezos.Encoding
         public PrimType Prim { get; set; }
 
         [JsonPropertyName("args")]
-        public List<IMicheline> Args { get; set; }
+        public List<IMicheline>? Args { get; set; }
 
         [JsonPropertyName("annots")]
-        public List<IAnnotation> Annots { get; set; }
+        public List<IAnnotation>? Annots { get; set; }
 
         public void Write(BinaryWriter writer, int depth = 0)
         {

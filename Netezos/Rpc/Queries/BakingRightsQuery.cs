@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Netezos.Rpc.Queries
+﻿namespace Netezos.Rpc.Queries
 {
     /// <summary>
     /// Rpc query to get baking rights
@@ -98,7 +96,7 @@ namespace Netezos.Rpc.Queries
         /// </summary>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetAsync<T>(bool all = false)
+        public Task<T?> GetAsync<T>(bool all = false)
             => Client.GetJson<T>($"{Query}?all={all}");
 
         /// <summary>
@@ -107,7 +105,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="baker">Delegate whose baking rights are to be returned</param>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetAsync<T>(string baker, bool all = false)
+        public Task<T?> GetAsync<T>(string baker, bool all = false)
             => Client.GetJson<T>($"{Query}?delegate={baker}&all={all}");
 
         /// <summary>
@@ -116,7 +114,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="maxPriority">Maximum priority of baking rights to be returned</param>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetAsync<T>(int maxPriority, bool all = false)
+        public Task<T?> GetAsync<T>(int maxPriority, bool all = false)
             => Client.GetJson<T>($"{Query}?max_priority={maxPriority}&all={all}");
 
         /// <summary>
@@ -125,7 +123,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="level">Level of the block at which the baking rights are to be returned</param>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetFromLevelAsync<T>(int level, bool all = false)
+        public Task<T?> GetFromLevelAsync<T>(int level, bool all = false)
             => Client.GetJson<T>($"{Query}?level={level}&all={all}");
 
         /// <summary>
@@ -135,7 +133,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="baker">Delegate whose baking rights are to be returned</param>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetFromLevelAsync<T>(int level, string baker, bool all = false)
+        public Task<T?> GetFromLevelAsync<T>(int level, string baker, bool all = false)
             => Client.GetJson<T>($"{Query}?level={level}&delegate={baker}&all={all}");
 
         /// <summary>
@@ -145,7 +143,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="maxPriority">Maximum priority of baking rights to be returned</param>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetFromLevelAsync<T>(int level, int maxPriority, bool all = false)
+        public Task<T?> GetFromLevelAsync<T>(int level, int maxPriority, bool all = false)
             => Client.GetJson<T>($"{Query}?level={level}&max_priority={maxPriority}&all={all}");
 
         /// <summary>
@@ -154,7 +152,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="cycle">Cycle at which the baking rights are to be returned</param>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetFromCycleAsync<T>(int cycle, bool all = false)
+        public Task<T?> GetFromCycleAsync<T>(int cycle, bool all = false)
             => Client.GetJson<T>($"{Query}?cycle={cycle}&all={all}");
 
         /// <summary>
@@ -164,7 +162,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="baker">Delegate whose baking rights are to be returned</param>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetFromCycleAsync<T>(int cycle, string baker, bool all = false)
+        public Task<T?> GetFromCycleAsync<T>(int cycle, string baker, bool all = false)
             => Client.GetJson<T>($"{Query}?cycle={cycle}&delegate={baker}&all={all}");
 
         /// <summary>
@@ -174,7 +172,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="maxPriority">Maximum priority of baking rights to be returned</param>
         /// <param name="all">Specifies whether all baking opportunities for each baker will be returned or only the first one</param>
         /// <returns></returns>
-        public Task<T> GetFromCycleAsync<T>(int cycle, int maxPriority, bool all = false)
+        public Task<T?> GetFromCycleAsync<T>(int cycle, int maxPriority, bool all = false)
             => Client.GetJson<T>($"{Query}?cycle={cycle}&max_priority={maxPriority}&all={all}");
     }
 }

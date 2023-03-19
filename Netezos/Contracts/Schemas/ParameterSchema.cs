@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -16,7 +14,7 @@ namespace Netezos.Contracts
         public ParameterSchema(MichelinePrim micheline) : base(micheline)
         {
             if (micheline.Args?.Count != 1
-                || !(micheline.Args[0] is MichelinePrim parameter))
+                || micheline.Args[0] is not MichelinePrim parameter)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             Schema = Create(parameter);

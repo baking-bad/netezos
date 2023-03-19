@@ -17,6 +17,6 @@ namespace Netezos.Forging.Models
         public int Round { get; set; }
 
         [JsonPropertyName("block_payload_hash")]
-        public string PayloadHash { get; set; }
+        public string PayloadHash { get; set; } = null!;
     }
 }

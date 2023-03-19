@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -23,8 +21,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="now">Now (optional)</param>
         /// <param name="level">Level (optional)</param>
         /// <returns></returns>
-        public Task<dynamic> PostAsync(string contract, string view, object input, string chainId = "NetXdQprcVkpaWU", string source = null,
-            string payer = null, long? gas = null, UnparsingMode mode = UnparsingMode.Readable, int? now = null, int? level = null)
+        public Task<dynamic> PostAsync(string contract, string view, object input, string chainId = "NetXdQprcVkpaWU", string? source = null,
+            string? payer = null, long? gas = null, UnparsingMode mode = UnparsingMode.Readable, int? now = null, int? level = null)
             => PostAsync(new
             {
                 contract,
@@ -54,8 +52,8 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="now">Now (optional)</param>
         /// <param name="level">Level (optional)</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(string contract, string view, object input, string chainId = "NetXdQprcVkpaWU", string source = null,
-            string payer = null, long? gas = null, UnparsingMode mode = UnparsingMode.Readable, int? now = null, int? level = null)
+        public Task<T?> PostAsync<T>(string contract, string view, object input, string chainId = "NetXdQprcVkpaWU", string? source = null,
+            string? payer = null, long? gas = null, UnparsingMode mode = UnparsingMode.Readable, int? now = null, int? level = null)
             => PostAsync<T>(new
             {
                 contract,

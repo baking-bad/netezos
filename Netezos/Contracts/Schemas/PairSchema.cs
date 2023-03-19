@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -11,7 +8,7 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.pair;
 
-        public override string Name => Annot;
+        public override string? Name => Annot;
 
         public override string Signature => "object";
 
@@ -42,8 +39,8 @@ namespace Netezos.Contracts
             #endregion
 
             if (micheline.Args?.Count != 2
-                || !(micheline.Args[0] is MichelinePrim left)
-                || !(micheline.Args[1] is MichelinePrim right))
+                || micheline.Args[0] is not MichelinePrim left
+                || micheline.Args[1] is not MichelinePrim right)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             Left = left.Prim == PrimType.pair
@@ -65,7 +62,7 @@ namespace Netezos.Contracts
                 var children = Children();
                 foreach (var child in children)
                 {
-                    var name = child.Name;
+                    var name = child.Name!;
                     if (fields.ContainsKey(name))
                         child.Index = ++fields[name];
                     else
@@ -76,7 +73,7 @@ namespace Netezos.Contracts
             }
         }
 
-        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        internal override TreeView GetTreeView(TreeView? parent, IMicheline value, string? name = null, Schema? schema = null)
         {
             var treeView = base.GetTreeView(parent, value, name, schema);
 
@@ -104,7 +101,7 @@ namespace Netezos.Contracts
                             throw MapFailedException($"enumerable is over");
                         return MapPair(enumerator.Current);
                     case JsonElement json:
-                        if (!json.TryGetProperty(Name, out var jsonProp))
+                        if (!json.TryGetProperty(Name!, out var jsonProp))
                             throw MapFailedException($"no such property");
                         return MapPair(jsonProp);
                     default:
@@ -152,7 +149,7 @@ namespace Netezos.Contracts
         {
             value = Uncomb(value);
 
-            if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
+            if (value is not MichelinePrim { Prim: PrimType.Pair } pair)
                 throw FormatException(value);
 
             if (pair.Args?.Count != 2)
@@ -160,7 +157,7 @@ namespace Netezos.Contracts
 
             if (Kind == PairKind.Object)
             {
-                writer.WritePropertyName(Name);
+                writer.WritePropertyName(Name!);
                 writer.WriteStartObject();
 
                 Left.WriteProperty(writer, pair.Args[0]);
@@ -197,7 +194,7 @@ namespace Netezos.Contracts
         {
             value = Uncomb(value);
 
-            if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
+            if (value is not MichelinePrim { Prim: PrimType.Pair } pair)
                 throw FormatException(value);
 
             if (pair.Args?.Count != 2)
@@ -226,7 +223,7 @@ namespace Netezos.Contracts
             writer.WriteStartObject("properties");
             foreach (var child in Children())
             {
-                writer.WriteStartObject(child.Name);
+                writer.WriteStartObject(child.Name!);
                 child.WriteJsonSchema(writer);
                 writer.WriteEndObject();
             }
@@ -308,7 +305,7 @@ namespace Netezos.Contracts
         {
             value = Uncomb(value);
 
-            if (!(value is MichelinePrim pair) || pair.Prim != PrimType.Pair)
+            if (value is not MichelinePrim { Prim: PrimType.Pair } pair)
                 throw FormatException(value);
 
             if (pair.Args?.Count != 2)
@@ -338,7 +335,7 @@ namespace Netezos.Contracts
         public override IMicheline Optimize(IMicheline value)
         {
             value = Uncomb(value);
-            if (value is MichelinePrim prim)
+            if (value is MichelinePrim { Args.Count: 2 } prim)
             {
                 prim.Args[0] = Left.Optimize(prim.Args[0]);
                 prim.Args[1] = Right.Optimize(prim.Args[1]);

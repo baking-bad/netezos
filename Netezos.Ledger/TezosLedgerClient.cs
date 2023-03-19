@@ -13,8 +13,8 @@ namespace Netezos.Ledger
 {
     public class TezosLedgerClient : LedgerClientBase
     {
-        byte TezosWalletCLA = 0x80;
-        byte[] KeyPath;
+        readonly byte TezosWalletCLA = 0x80;
+        readonly byte[] KeyPath;
         
         enum Instruction { // taken from https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md
             InsVersion = 0x00,

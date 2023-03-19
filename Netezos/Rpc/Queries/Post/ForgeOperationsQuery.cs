@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -30,7 +27,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="contents">List of operation contents</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(string branch, List<object> contents)
+        public Task<T?> PostAsync<T>(string branch, List<object> contents)
             => PostAsync<T>(new
             {
                 branch,

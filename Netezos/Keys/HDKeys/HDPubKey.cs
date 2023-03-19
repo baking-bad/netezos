@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Netezos.Keys
+﻿namespace Netezos.Keys
 {
     /// <summary>
     /// Extended (hierarchical deterministic) public key
@@ -43,10 +40,10 @@ namespace Netezos.Keys
         /// <returns>Derived extended child key</returns>
         public HDPubKey Derive(int index, bool hardened = false)
         {
-            var uind = HDPath.GetIndex(index, hardened);
+            var ind = HDPath.GetIndex(index, hardened);
             using (Store.Unlock())
             {
-                var (pubKey, chainCode) = HD.GetChildPublicKey(Curve, Store.Data, _ChainCode, uind);
+                var (pubKey, chainCode) = HD.GetChildPublicKey(Curve, Store.Data, _ChainCode, ind);
                 return new(new(pubKey, Curve.Kind, true), chainCode);
             }
         }
@@ -76,8 +73,8 @@ namespace Netezos.Keys
                 var pubKey = Store.Data;
                 var chainCode = _ChainCode;
 
-                foreach (var uind in path)
-                    (pubKey, chainCode) = HD.GetChildPublicKey(Curve, pubKey, chainCode, uind);
+                foreach (var ind in path)
+                    (pubKey, chainCode) = HD.GetChildPublicKey(Curve, pubKey, chainCode, ind);
 
                 return new(new(pubKey, Curve.Kind, true), chainCode);
             }

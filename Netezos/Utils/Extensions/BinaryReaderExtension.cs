@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Netezos
+﻿namespace Netezos
 {
     static class BinaryReaderExtension
     {
@@ -9,7 +6,7 @@ namespace Netezos
         {
             var res = 0;
             var bits = 0;
-            byte b = 0;
+            byte b;
 
             while (bits < 28)
             {

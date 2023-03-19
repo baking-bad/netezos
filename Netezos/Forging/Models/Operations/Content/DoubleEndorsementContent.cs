@@ -8,21 +8,21 @@ namespace Netezos.Forging.Models
         public override string Kind => "double_endorsement_evidence";
 
         [JsonPropertyName("op1")]
-        public InlinedEndorsement Op1 { get; set; }
+        public InlineEndorsement Op1 { get; set; } = null!;
 
         [JsonPropertyName("op2")]
-        public InlinedEndorsement Op2 { get; set; }
+        public InlineEndorsement Op2 { get; set; } = null!;
     }
 
-    public class InlinedEndorsement
+    public class InlineEndorsement
     {
         [JsonPropertyName("branch")]
-        public string Branch { get; set; }
+        public string Branch { get; set; } = null!;
 
         [JsonPropertyName("operations")]
-        public EndorsementContent Operations { get; set; }
+        public EndorsementContent Operations { get; set; } = null!;
 
         [JsonPropertyName("signature")]
-        public string Signature { get; set; }
+        public string Signature { get; set; } = null!;
     }
 }

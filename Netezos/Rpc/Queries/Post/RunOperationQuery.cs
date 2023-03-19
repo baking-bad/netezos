@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Netezos.Forging.Models;
 
 namespace Netezos.Rpc.Queries.Post
@@ -37,7 +36,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="contents">Operation content</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(params OperationContent[] contents)
+        public Task<T?> PostAsync<T>(params OperationContent[] contents)
             => PostAsync<T>(new
             {
                 operation = new
@@ -76,7 +75,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="branch">Branch</param>
         /// <param name="contents">List of operation contents</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(string chain_id, string branch, params OperationContent[] contents)
+        public Task<T?> PostAsync<T>(string chain_id, string branch, params OperationContent[] contents)
             => PostAsync<T>(new
             {
                 operation = new

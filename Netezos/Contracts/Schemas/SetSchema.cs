@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -18,15 +16,15 @@ namespace Netezos.Contracts
 
         public SetSchema(MichelinePrim micheline) : base(micheline)
         {
-            if (micheline.Args?.Count != 1 || !(micheline.Args[0] is MichelinePrim item))
+            if (micheline.Args?.Count != 1 || micheline.Args[0] is not MichelinePrim item)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             Item = Create(item);
         }
 
-        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        internal override TreeView GetTreeView(TreeView? parent, IMicheline value, string? name = null, Schema? schema = null)
         {
-            if (!(value is MichelineArray micheArray))
+            if (value is not MichelineArray micheArray)
                 throw FormatException(value);
 
             var treeView = base.GetTreeView(parent, value, name, schema);

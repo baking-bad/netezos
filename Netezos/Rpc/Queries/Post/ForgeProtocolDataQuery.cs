@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -32,7 +30,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="powNonce">Proof of work nonce (optional)</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(int priority, string nonceHash, string powNonce)
+        public Task<T?> PostAsync<T>(int priority, string nonceHash, string powNonce)
             => PostAsync<T>(new
             {
                 priority,

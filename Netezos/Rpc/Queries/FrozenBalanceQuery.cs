@@ -8,17 +8,17 @@
         /// <summary>
         /// Gets the query to the frozen deposits
         /// </summary>
-        public BlockQuery Deposits => new BlockQuery(this, "deposits/");
+        public BlockQuery Deposits => new(this, "deposits/");
 
         /// <summary>
         /// Gets the query to the frozen fees
         /// </summary>
-        public BlockQuery Fees => new BlockQuery(this, "fees/");
+        public BlockQuery Fees => new(this, "fees/");
 
         /// <summary>
         /// Gets the query to the frozen rewards
         /// </summary>
-        public BlockQuery Rewards => new BlockQuery(this, "rewards/");
+        public BlockQuery Rewards => new(this, "rewards/");
 
         internal FrozenBalanceQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

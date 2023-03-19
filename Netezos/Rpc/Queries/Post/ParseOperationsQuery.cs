@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -30,7 +27,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="operations">List of operation</param>
         /// <param name="checkSignature">Check signature (optional)</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(List<object> operations, bool? checkSignature = null)
+        public Task<T?> PostAsync<T>(List<object> operations, bool? checkSignature = null)
             => PostAsync<T>(new
             {
                 operations,

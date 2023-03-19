@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
@@ -10,10 +8,10 @@ namespace Netezos.Forging.Models
         public override string Kind => "double_baking_evidence";
 
         [JsonPropertyName("bh1")]
-        public BlockHeader BlockHeader1 { get; set; }
+        public BlockHeader BlockHeader1 { get; set; } = null!;
 
         [JsonPropertyName("bh2")]
-        public BlockHeader BlockHeader2 { get; set; }
+        public BlockHeader BlockHeader2 { get; set; } = null!;
     }
 
     public class BlockHeader
@@ -25,7 +23,7 @@ namespace Netezos.Forging.Models
         public int Proto { get; set; }
 
         [JsonPropertyName("predecessor")]
-        public string Predecessor { get; set; }
+        public string Predecessor { get; set; } = null!;
 
         [JsonPropertyName("timestamp")]
         public DateTime Timestamp { get; set; }
@@ -34,31 +32,31 @@ namespace Netezos.Forging.Models
         public int ValidationPass { get; set; }
 
         [JsonPropertyName("operations_hash")]
-        public string OperationsHash { get; set; }
+        public string OperationsHash { get; set; } = null!;
 
         [JsonPropertyName("fitness")]
-        public List<string> Fitness { get; set; }
+        public List<string> Fitness { get; set; } = null!;
 
         [JsonPropertyName("context")]
-        public string Context { get; set; }
+        public string Context { get; set; } = null!;
 
         [JsonPropertyName("payload_hash")]
-        public string PayloadHash { get; set; }
+        public string PayloadHash { get; set; } = null!;
 
         [JsonPropertyName("payload_round")]
         public int PayloadRound { get; set; }
 
         [JsonPropertyName("proof_of_work_nonce")]
-        public string ProofOfWorkNonce { get; set; }
+        public string ProofOfWorkNonce { get; set; } = null!;
 
         [JsonPropertyName("seed_nonce_hash")]
-        public string SeedNonceHash { get; set; }
+        public string? SeedNonceHash { get; set; }
 
         [JsonPropertyName("liquidity_baking_toggle_vote")]
         public LBToggle LiquidityBakingToggleVote { get; set; }
 
         [JsonPropertyName("signature")]
-        public string Signature { get; set; }
+        public string Signature { get; set; } = null!;
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

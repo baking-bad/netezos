@@ -8,11 +8,11 @@ namespace Netezos.Forging.Models
         public override string Kind => "tx_rollup_submit_batch";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; }
+        public string Rollup { get; set; } = null!;
 
         [JsonPropertyName("content")]
         [JsonConverter(typeof(HexConverter))]
-        public byte[] Content { get; set; }
+        public byte[] Content { get; set; } = null!;
 
         [JsonPropertyName("burn_limit")]
         [JsonConverter(typeof(Int64StringConverter))]

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
@@ -9,6 +8,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "vdf_revelation";
 
         [JsonPropertyName("solution")]
-        public List<string> Solution { get; set; }
+        public List<string> Solution { get; set; } = null!;
     }
 }

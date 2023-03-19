@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -10,7 +8,7 @@ namespace Netezos.Rpc.Queries.Post
         internal TypeCheckCodeQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Typechecks a piece of code in the current context and returns the type map
+        /// Typecheck a piece of code in the current context and returns the type map
         /// </summary>
         /// <param name="program">Program michelson expression</param>
         /// <param name="gas">Gas limit (optional)</param>
@@ -23,13 +21,13 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// Typechecks a piece of code in the current context and returns the type map
+        /// Typecheck a piece of code in the current context and returns the type map
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="program">Program michelson expression</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(object program, long? gas = null)
+        public Task<T?> PostAsync<T>(object program, long? gas = null)
             => base.PostAsync<T>(new
             {
                 program,

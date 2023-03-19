@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json.Serialization;
 using Netezos.Forging.Models;
 

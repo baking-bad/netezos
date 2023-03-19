@@ -8,12 +8,12 @@
         /// <summary>
         /// Gets the query to the protocol data
         /// </summary>
-        public RpcObjectRaw ProtocolData => new RpcObjectRaw(this, "protocol_data/");
+        public RpcObjectRaw ProtocolData => new(this, "protocol_data/");
 
         /// <summary>
         /// Gets the query to the shell data
         /// </summary>
-        public RpcObject Shell => new RpcObject(this, "shell/");
+        public RpcObject Shell => new(this, "shell/");
 
         internal BlockHeaderQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

@@ -13,18 +13,18 @@ namespace Netezos.Forging.Models
         public long Balance { get; set; }
 
         [JsonPropertyName("delegate")]
-        public string Delegate { get; set; }
+        public string? Delegate { get; set; }
 
         [JsonPropertyName("script")]
-        public Script Script { get; set; }
+        public Script Script { get; set; } = null!;
     }
 
     public class Script
     {
         [JsonPropertyName("code")]
-        public MichelineArray Code { get; set; }
+        public MichelineArray Code { get; set; } = null!;
 
         [JsonPropertyName("storage")]
-        public IMicheline Storage { get; set; }
+        public IMicheline Storage { get; set; } = null!;
     }
 }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-
 using Dynamic.Json;
 using Dynamic.Json.Extensions;
 
@@ -17,13 +12,12 @@ namespace Netezos.Rpc
         #region static
         static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
 
-        static readonly JsonSerializerOptions DefaultOptions = new JsonSerializerOptions
+        static readonly JsonSerializerOptions DefaultOptions = new()
         {
             AllowTrailingCommas = true,
             DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
             MaxDepth = 100_000,
-            NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString,
-            PropertyNamingPolicy = new SnakeCaseNamingPolicy()
+            NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
         };
         #endregion
 
@@ -31,7 +25,7 @@ namespace Netezos.Rpc
         TimeSpan RequestTimeout { get; }
         DateTime Expiration;
 
-        HttpClient _HttpClient;
+        HttpClient? _HttpClient;
         protected HttpClient HttpClient
         {
             get
@@ -42,9 +36,7 @@ namespace Netezos.Rpc
                     if (DateTime.UtcNow > Expiration)
                     {
                         _HttpClient?.Dispose();
-                        _HttpClient = new HttpClient();
-
-                        _HttpClient.BaseAddress = BaseAddress;
+                        _HttpClient = new() { BaseAddress = BaseAddress };
                         _HttpClient.DefaultRequestHeaders.Accept.Add(
                             new MediaTypeWithQualityHeaderValue("application/json"));
                         _HttpClient.DefaultRequestHeaders.UserAgent.Add(
@@ -55,7 +47,7 @@ namespace Netezos.Rpc
                     }
                 }
 
-                return _HttpClient;
+                return _HttpClient!;
             }
         }
 
@@ -73,9 +65,9 @@ namespace Netezos.Rpc
 
         public RpcClient(HttpClient client)
         {
+            BaseAddress = client.BaseAddress;
             _HttpClient = client ?? throw new ArgumentNullException(nameof(client));
-            _HttpClient.DefaultRequestHeaders.UserAgent.Add(
-                new ProductInfoHeaderValue("Netezos", Version));
+            _HttpClient.DefaultRequestHeaders.UserAgent.Add(new("Netezos", Version));
 
             Expiration = DateTime.MaxValue;
         }
@@ -85,12 +77,10 @@ namespace Netezos.Rpc
             return HttpClient.GetJsonAsync(path, DefaultOptions, cancellationToken);
         }
 
-        public async Task<T> GetJson<T>(string path, CancellationToken cancellationToken = default)
+        public async Task<T?> GetJson<T>(string path, CancellationToken cancellationToken = default)
         {
-            using (var stream = await HttpClient.GetStreamAsync(path))
-            {
-                return await JsonSerializer.DeserializeAsync<T>(stream, DefaultOptions, cancellationToken);
-            }
+            using var stream = await HttpClient.GetStreamAsync(path);
+            return await JsonSerializer.DeserializeAsync<T>(stream, DefaultOptions, cancellationToken);
         }
 
         public Task<dynamic> PostJson(string path, object data, CancellationToken cancellationToken = default)
@@ -102,29 +92,25 @@ namespace Netezos.Rpc
         public async Task<dynamic> PostJson(string path, string content, CancellationToken cancellationToken = default)
         {
             var response = await HttpClient.PostAsync(path, new JsonContent(content), cancellationToken);
-            await EnsureResponceSuccessfull(response);
+            await EnsureResponseSuccessful(response);
 
-            using (var stream = await response.Content.ReadAsStreamAsync())
-            {
-                return await DJson.ParseAsync(stream, DefaultOptions, cancellationToken);
-            }
+            using var stream = await response.Content.ReadAsStreamAsync();
+            return await DJson.ParseAsync(stream, DefaultOptions, cancellationToken);
         }
 
-        public Task<T> PostJson<T>(string path, object data, CancellationToken cancellationToken = default)
+        public Task<T?> PostJson<T>(string path, object data, CancellationToken cancellationToken = default)
         {
             var content = JsonSerializer.Serialize(data, DefaultOptions);
             return PostJson<T>(path, content, cancellationToken);
         }
 
-        public async Task<T> PostJson<T>(string path, string content, CancellationToken cancellationToken = default)
+        public async Task<T?> PostJson<T>(string path, string content, CancellationToken cancellationToken = default)
         {
             var response = await HttpClient.PostAsync(path, new JsonContent(content), cancellationToken);
-            await EnsureResponceSuccessfull(response);
+            await EnsureResponseSuccessful(response);
 
-            using (var stream = await response.Content.ReadAsStreamAsync())
-            {
-                return await JsonSerializer.DeserializeAsync<T>(stream, DefaultOptions, cancellationToken);
-            }
+            using var stream = await response.Content.ReadAsStreamAsync();
+            return await JsonSerializer.DeserializeAsync<T>(stream, DefaultOptions, cancellationToken);
         }
 
         public void Dispose()
@@ -132,7 +118,7 @@ namespace Netezos.Rpc
             _HttpClient?.Dispose();
         }
 
-        private async Task EnsureResponceSuccessfull(HttpResponseMessage response)
+        private async Task EnsureResponseSuccessful(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {
@@ -140,15 +126,12 @@ namespace Netezos.Rpc
                     ? await response.Content.ReadAsStringAsync()
                     : string.Empty;
 
-                switch (response.StatusCode)
+                throw response.StatusCode switch
                 {
-                    case HttpStatusCode.BadRequest:
-                        throw new BadRequestException(message);
-                    case HttpStatusCode.InternalServerError:
-                        throw new InternalErrorException(message);
-                    default:
-                        throw new RpcException(response.StatusCode, message);
-                }
+                    HttpStatusCode.BadRequest => new BadRequestException(message),
+                    HttpStatusCode.InternalServerError => new InternalErrorException(message),
+                    _ => new RpcException(response.StatusCode, message)
+                };
             }
         }
     }

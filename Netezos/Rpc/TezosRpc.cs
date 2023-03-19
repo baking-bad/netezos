@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Netezos.Rpc.Queries;
+﻿using Netezos.Rpc.Queries;
 
 namespace Netezos.Rpc
 {
@@ -24,7 +21,7 @@ namespace Netezos.Rpc
         RpcClient Client { get; }
 
         /// <summary>
-        /// Creates the instanse of TezosRpc
+        /// Creates the instance of TezosRpc
         /// </summary>
         /// <param name="uri">Base URI of the node</param>
         /// <param name="chain">Chain to work with.
@@ -40,7 +37,7 @@ namespace Netezos.Rpc
         }
 
         /// <summary>
-        /// Creates the instanse of TezosRpc
+        /// Creates the instance of TezosRpc
         /// </summary>
         /// <param name="uri">Base URI of the node</param>
         /// <param name="timeout">Timeout in seconds for the requests</param>
@@ -57,9 +54,9 @@ namespace Netezos.Rpc
         }
 
         /// <summary>
-        /// Creates the instanse of TezosRpc
+        /// Creates the instance of TezosRpc
         /// </summary>
-        /// <param name="client">HttpClient instanse that will be used for sending RPC requests.</param>
+        /// <param name="client">HttpClient instance that will be used for sending RPC requests.</param>
         /// <param name="chain">Chain to work with.
         /// Note: this is not a network (mainnet or testnet), but a chain of the network.
         /// In 99.99% cases you likely want to use Chain.Main, because Chain.Test is only relevant during the testing phase of the Tezos voting process.</param>
@@ -85,10 +82,10 @@ namespace Netezos.Rpc
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="query">Relative path to the RPC method</param>
         /// <returns></returns>
-        public Task<T> GetAsync<T>(string query) => Client.GetJson<T>(query);
+        public Task<T?> GetAsync<T>(string query) => Client.GetJson<T>(query);
 
         /// <summary>
-        /// Releases the unmanaged resourses and disposes of the managed resources used by the <c>TezosRpc</c>
+        /// Releases the unmanaged resources and disposes of the managed resources used by the <c>TezosRpc</c>
         /// </summary>
         public void Dispose() => Client?.Dispose();
     }

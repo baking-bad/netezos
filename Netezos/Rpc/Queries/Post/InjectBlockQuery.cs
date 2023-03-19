@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -34,7 +31,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="chain">Chain (optional)</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(string data, List<List<object>> operations, bool async = false, bool force = false, Chain chain = Chain.Main)
+        public Task<T?> PostAsync<T>(string data, List<List<object>> operations, bool async = false, bool force = false, Chain chain = Chain.Main)
             => Client.PostJson<T>(
                 $"{Query}?async={async}&force={force}&chain={chain.ToString().ToLower()}",
                 new { data, operations });

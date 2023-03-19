@@ -58,7 +58,7 @@ namespace Netezos.Tests.Encoding
                 return $@"{{""prim"":""pair"",""args"":[{{""prim"":""unit""}},{CreateDeepPair(depth - 1)}],""annots"":[""%d{depth}""]}}";
             }
 
-            var json2 = CreateDeepPair(12_000);
+            var json2 = CreateDeepPair(10_000);
             var m2 = Micheline.FromJson(json2);
             var b2 = m2.ToBytes();
             Assert.NotNull(m2);

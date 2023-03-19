@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Netezos.Keys
+﻿namespace Netezos.Keys
 {
     class PlainSecretStore : ISecretStore
     {
@@ -14,6 +12,6 @@ namespace Netezos.Keys
 
         public void Lock() { }
 
-        public StoreLocker Unlock() => new StoreLocker(this);
+        public StoreLocker Unlock() => new(this);
     }
 }

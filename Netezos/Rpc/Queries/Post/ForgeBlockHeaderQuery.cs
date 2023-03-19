@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -53,7 +49,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="protocolData">Protocol data hexadecimal string</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(int level, int proto, string predecessor, DateTime timestamp,
+        public Task<T?> PostAsync<T>(int level, int proto, string predecessor, DateTime timestamp,
             int validationPass, string operationsHash, List<string> fitness, string context, string protocolData)
                 => PostAsync<T>(new
                 {

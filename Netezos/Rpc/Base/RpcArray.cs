@@ -7,17 +7,8 @@
     public class RpcArray<T> : RpcObject where T : RpcObject
     {
         #region static
-        static Creator<T> _CreateRpcObject = null;
-        static Creator<T> CreateRpcObject
-        {
-            get
-            {
-                if (_CreateRpcObject == null)
-                    _CreateRpcObject = GetCreator<T>();
-
-                return _CreateRpcObject;
-            }
-        }
+        static Creator<T>? _CreateRpcObject = null;
+        static Creator<T> CreateRpcObject => _CreateRpcObject ??= GetCreator<T>();
         #endregion
 
         /// <summary>
@@ -37,17 +28,8 @@
     public class RpcSimpleArray<T> : RpcQuery where T : RpcQuery
     {
         #region static
-        static RpcObject.Creator<T> _CreateRpcObject = null;
-        static RpcObject.Creator<T> CreateRpcObject
-        {
-            get
-            {
-                if (_CreateRpcObject == null)
-                    _CreateRpcObject = RpcObject.GetCreator<T>();
-
-                return _CreateRpcObject;
-            }
-        }
+        static RpcObject.Creator<T>? _CreateRpcObject = null;
+        static RpcObject.Creator<T> CreateRpcObject => _CreateRpcObject ??= RpcObject.GetCreator<T>();
         #endregion
 
         /// <summary>

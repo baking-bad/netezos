@@ -1,7 +1,5 @@
 ﻿using Netezos.Encoding;
 using Netezos.Forging.Models;
-using System;
-using System.Linq;
 
 namespace Netezos.Forging
 {
@@ -9,71 +7,39 @@ namespace Netezos.Forging
     {
         static OperationContent UnforgeOperation(ForgedReader reader)
         {
-            var operation = (OperationTag)reader.ReadByte();
-
-            switch (operation)
+            return (OperationTag)reader.ReadByte() switch
             {
-                case OperationTag.Endorsement:
-                    return UnforgeEndorsement(reader);
-                case OperationTag.Preendorsement:
-                    return UnforgePreendorsement(reader);
-                case OperationTag.Ballot:
-                    return UnforgeBallot(reader);
-                case OperationTag.Proposals:
-                    return UnforgeProposals(reader);
-                case OperationTag.Activation:
-                    return UnforgeActivation(reader);
-                case OperationTag.DoubleBaking:
-                    return UnforgeDoubleBaking(reader);
-                case OperationTag.DoubleEndorsement:
-                    return UnforgeDoubleEndorsement(reader);
-                case OperationTag.DoublePreendorsement:
-                    return UnforgeDoublePreendorsement(reader);
-                case OperationTag.SeedNonceRevelation:
-                    return UnforgeSeedNonceRevelaion(reader);
-                case OperationTag.VdfRevelation:
-                    return UnforgeVdfRevelaion(reader);
-                case OperationTag.DrainDelegate:
-                    return UnforgeDrainDelegate(reader);
-                case OperationTag.Delegation:
-                    return UnforgeDelegation(reader);
-                case OperationTag.Origination:
-                    return UnforgeOrigination(reader);
-                case OperationTag.Transaction:
-                    return UnforgeTransaction(reader);
-                case OperationTag.Reveal:
-                    return UnforgeReveal(reader);
-                case OperationTag.RegisterConstant:
-                    return UnforgeRegisterConstant(reader);
-                case OperationTag.SetDepositsLimit:
-                    return UnforgeSetDepositsLimit(reader);
-                case OperationTag.IncreasePaidStorage:
-                    return UnforgeIncreasePaidStorage(reader);
-                case OperationTag.FailingNoop:
-                    return UnforgeFailingNoop(reader);
-                case OperationTag.TransferTicket:
-                    return UnforgeTransferTicket(reader);
-                case OperationTag.TxRollupCommit:
-                    return UnforgeTxRollupCommit(reader);
-                case OperationTag.TxRollupDispatchTickets:
-                    return UnforgeTxRollupDispatchTickets(reader);
-                case OperationTag.TxRollupFinalizeCommitment:
-                    return UnforgeTxRollupFinalizeCommitment(reader);
-                case OperationTag.TxRollupOrigination:
-                    return UnforgeTxRollupOrigination(reader);
-                case OperationTag.TxRollupRejection:
-                    return UnforgeTxRollupRejection(reader);
-                case OperationTag.TxRollupRemoveCommitment:
-                    return UnforgeTxRollupRemoveCommitment(reader);
-                case OperationTag.TxRollupReturnBond:
-                    return UnforgeTxRollupReturnBond(reader);
-                case OperationTag.TxRollupSubmitBatch:
-                    return UnforgeTxRollupSubmitBatch(reader);
-                case OperationTag.UpdateConsensusKey:
-                    return UnforgeUpdateConsensusKey(reader);
-                default:
-                    throw new ArgumentException($"Invalid operation: {operation}");
-            }
+                OperationTag.Endorsement => UnforgeEndorsement(reader),
+                OperationTag.Preendorsement => UnforgePreendorsement(reader),
+                OperationTag.Ballot => UnforgeBallot(reader),
+                OperationTag.Proposals => UnforgeProposals(reader),
+                OperationTag.Activation => UnforgeActivation(reader),
+                OperationTag.DoubleBaking => UnforgeDoubleBaking(reader),
+                OperationTag.DoubleEndorsement => UnforgeDoubleEndorsement(reader),
+                OperationTag.DoublePreendorsement => UnforgeDoublePreendorsement(reader),
+                OperationTag.SeedNonceRevelation => UnforgeSeedNonceRevelation(reader),
+                OperationTag.VdfRevelation => UnforgeVdfRevelation(reader),
+                OperationTag.DrainDelegate => UnforgeDrainDelegate(reader),
+                OperationTag.Delegation => UnforgeDelegation(reader),
+                OperationTag.Origination => UnforgeOrigination(reader),
+                OperationTag.Transaction => UnforgeTransaction(reader),
+                OperationTag.Reveal => UnforgeReveal(reader),
+                OperationTag.RegisterConstant => UnforgeRegisterConstant(reader),
+                OperationTag.SetDepositsLimit => UnforgeSetDepositsLimit(reader),
+                OperationTag.IncreasePaidStorage => UnforgeIncreasePaidStorage(reader),
+                OperationTag.FailingNoop => UnforgeFailingNoop(reader),
+                OperationTag.TransferTicket => UnforgeTransferTicket(reader),
+                OperationTag.TxRollupCommit => UnforgeTxRollupCommit(reader),
+                OperationTag.TxRollupDispatchTickets => UnforgeTxRollupDispatchTickets(reader),
+                OperationTag.TxRollupFinalizeCommitment => UnforgeTxRollupFinalizeCommitment(reader),
+                OperationTag.TxRollupOrigination => UnforgeTxRollupOrigination(reader),
+                OperationTag.TxRollupRejection => UnforgeTxRollupRejection(reader),
+                OperationTag.TxRollupRemoveCommitment => UnforgeTxRollupRemoveCommitment(reader),
+                OperationTag.TxRollupReturnBond => UnforgeTxRollupReturnBond(reader),
+                OperationTag.TxRollupSubmitBatch => UnforgeTxRollupSubmitBatch(reader),
+                OperationTag.UpdateConsensusKey => UnforgeUpdateConsensusKey(reader),
+                var operation => throw new ArgumentException($"Invalid operation: {operation}")
+            };
         }
 
         static EndorsementContent UnforgeEndorsement(ForgedReader reader)
@@ -141,8 +107,8 @@ namespace Netezos.Forging
         {
             return new DoubleEndorsementContent
             {
-                Op1 = reader.ReadEnumerableSingle(UnforgeInlinedEndorsement),
-                Op2 = reader.ReadEnumerableSingle(UnforgeInlinedEndorsement)
+                Op1 = reader.ReadEnumerableSingle(UnforgeInlineEndorsement),
+                Op2 = reader.ReadEnumerableSingle(UnforgeInlineEndorsement)
             };
         }
 
@@ -150,12 +116,12 @@ namespace Netezos.Forging
         {
             return new DoublePreendorsementContent
             {
-                Op1 = reader.ReadEnumerableSingle(UnforgeInlinedPreendorsement),
-                Op2 = reader.ReadEnumerableSingle(UnforgeInlinedPreendorsement)
+                Op1 = reader.ReadEnumerableSingle(UnforgeInlinePreendorsement),
+                Op2 = reader.ReadEnumerableSingle(UnforgeInlinePreendorsement)
             };
         }
 
-        static SeedNonceRevelationContent UnforgeSeedNonceRevelaion(ForgedReader reader)
+        static SeedNonceRevelationContent UnforgeSeedNonceRevelation(ForgedReader reader)
         {
             return new SeedNonceRevelationContent
             {
@@ -164,7 +130,7 @@ namespace Netezos.Forging
             };
         }
         
-        static VdfRevelationContent UnforgeVdfRevelaion(ForgedReader reader)
+        static VdfRevelationContent UnforgeVdfRevelation(ForgedReader reader)
         {
             return new VdfRevelationContent
             {
@@ -462,9 +428,9 @@ namespace Netezos.Forging
             };
         }
 
-        static InlinedEndorsement UnforgeInlinedEndorsement(ForgedReader reader)
+        static InlineEndorsement UnforgeInlineEndorsement(ForgedReader reader)
         {
-            return new InlinedEndorsement
+            return new InlineEndorsement
             {
                 Branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
                 Operations = (EndorsementContent)UnforgeOperation(reader),
@@ -472,9 +438,9 @@ namespace Netezos.Forging
             };
         }
 
-        static InlinedPreendorsement UnforgeInlinedPreendorsement(ForgedReader reader)
+        static InlinePreendorsement UnforgeInlinePreendorsement(ForgedReader reader)
         {
-            return new InlinedPreendorsement
+            return new InlinePreendorsement
             {
                 Branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
                 Operations = (PreendorsementContent)UnforgeOperation(reader),
@@ -482,17 +448,17 @@ namespace Netezos.Forging
             };
         }
 
-        static string UnforgeSeedNonce(ForgedReader reader)
+        static string? UnforgeSeedNonce(ForgedReader reader)
         {
             return UnforgeConditional(reader, () => reader.ReadBase58(Lengths.nce.Decoded, Prefix.nce));
         }
 
-        static string UnforgeDelegate(ForgedReader reader)
+        static string? UnforgeDelegate(ForgedReader reader)
         {
             return UnforgeConditional(reader, () => reader.ReadTzAddress());
         }
 
-        static Parameters UnforgeParameters(ForgedReader reader)
+        static Parameters? UnforgeParameters(ForgedReader reader)
         {
             return UnforgeConditional(reader, () =>
             {
@@ -506,19 +472,17 @@ namespace Netezos.Forging
 
         static string UnforgeEntrypoint(ForgedReader reader)
         {
-            var ep = reader.ReadInt32(1);
-
-            switch (ep)
+            return reader.ReadInt32(1) switch
             {
-                case 0: return "default";
-                case 1: return "root";
-                case 2: return "do";
-                case 3: return "set_delegate";
-                case 4: return "remove_delegate";
-                case 5: return "deposit";
-                case 255: return reader.ReadString(1);
-                default: throw new ArgumentException($"Unrecognized endpoint type {ep}");
-            }
+                0 => "default",
+                1 => "root",
+                2 => "do",
+                3 => "set_delegate",
+                4 => "remove_delegate",
+                5 => "deposit",
+                255 => reader.ReadString(1),
+                var ep => throw new ArgumentException($"Unrecognized endpoint type {ep}")
+            };
         }
 
         static Script UnforgeScript(ForgedReader reader)
@@ -530,7 +494,7 @@ namespace Netezos.Forging
             };
         }
 
-        static T UnforgeConditional<T>(ForgedReader reader, Func<T> tb, Func<T> fb = null)
+        static T? UnforgeConditional<T>(ForgedReader reader, Func<T> tb, Func<T>? fb = null)
             where T : class
         {
             return reader.ReadBool() ? tb() : fb?.Invoke();

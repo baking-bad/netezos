@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -13,7 +11,7 @@ namespace Netezos.Contracts
 
         public ContractSchema(MichelinePrim micheline) : base(micheline)
         {
-            if (micheline.Args?.Count != 1 || !(micheline.Args[0] is MichelinePrim type))
+            if (micheline.Args?.Count != 1 || micheline.Args[0] is not MichelinePrim type)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             Parameters = Create(type);
@@ -99,20 +97,13 @@ namespace Netezos.Contracts
 
         protected override IMicheline MapValue(object value)
         {
-            switch (value)
+            return value switch
             {
-                case string str:
-                    // TODO: validation & optimization
-                    return new MichelineString(str);
-                case byte[] bytes:
-                    // TODO: validation
-                    return new MichelineBytes(bytes);
-                case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    // TODO: validation & optimization
-                    return new MichelineString(json.GetString());
-                default:
-                    throw MapFailedException("invalid value");
-            }
+                string str => new MichelineString(str),
+                byte[] bytes => new MichelineBytes(bytes),
+                JsonElement { ValueKind: JsonValueKind.String } json => new MichelineString(json.GetString()!),
+                _ => throw MapFailedException("invalid value"),
+            };
         }
 
         public override IMicheline Optimize(IMicheline value)
@@ -122,7 +113,7 @@ namespace Netezos.Contracts
 
             string address;
             byte[] addressBytes;
-            byte[] entrypointBytes;
+            byte[]? entrypointBytes;
 
             if (micheStr.Value.StartsWith("txr1"))
             {
@@ -184,8 +175,7 @@ namespace Netezos.Contracts
                     throw FormatException(value);
             }
 
-            if (entrypointBytes != null)
-                entrypointBytes.CopyTo(res, 22);
+            entrypointBytes?.CopyTo(res, 22);
 
             return new MichelineBytes(res);
         }

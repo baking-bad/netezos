@@ -8,12 +8,12 @@ namespace Netezos.Forging.Models
         public override string Kind => "drain_delegate";
 
         [JsonPropertyName("consensus_key")]
-        public string ConsensusKey { get; set; }
+        public string ConsensusKey { get; set; } = null!;
 
         [JsonPropertyName("delegate")]
-        public string Delegate { get; set; }
+        public string Delegate { get; set; } = null!;
 
         [JsonPropertyName("destination")]
-        public string Destination { get; set; }
+        public string Destination { get; set; } = null!;
     }
 }

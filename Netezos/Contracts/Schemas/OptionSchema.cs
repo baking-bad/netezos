@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -17,13 +15,13 @@ namespace Netezos.Contracts
 
         public OptionSchema(MichelinePrim micheline) : base(micheline)
         {
-            if (micheline.Args?.Count != 1 || !(micheline.Args[0] is MichelinePrim some))
+            if (micheline.Args?.Count != 1 || micheline.Args[0] is not MichelinePrim some)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             Some = Create(some);
         }
 
-        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        internal override TreeView GetTreeView(TreeView? parent, IMicheline value, string? name = null, Schema? schema = null)
         {
             if (value is not MichelinePrim prim)
                 throw FormatException(value);
@@ -38,8 +36,7 @@ namespace Netezos.Contracts
                     throw new FormatException("Invalid 'Some' prim args count");
 
                 var treeView = base.GetTreeView(parent, value, name);
-                treeView.Children = new(1);
-                treeView.Children.Add(Some.GetTreeView(treeView, prim.Args[0], name ?? Name));
+                treeView.Children = new(1) { Some.GetTreeView(treeView, prim.Args[0], name ?? Name) };
                 return treeView;
             }
             else
@@ -56,7 +53,7 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
-            if (!(value is MichelinePrim prim))
+            if (value is not MichelinePrim prim)
                 throw FormatException(value);
 
             if (prim.Prim == PrimType.None)
@@ -117,7 +114,7 @@ namespace Netezos.Contracts
 
         public override IMicheline Optimize(IMicheline value)
         {
-            if (value is MichelinePrim prim && prim.Prim == PrimType.Some)
+            if (value is MichelinePrim { Prim: PrimType.Some, Args.Count: 1 } prim)
             {
                 prim.Args[0] = Some.Optimize(prim.Args[0]);
             }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Netezos
+﻿namespace Netezos
 {
     static class BytesExtension
     {

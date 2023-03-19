@@ -1,7 +1,4 @@
-﻿using System;
-using System.Security;
-
-namespace Netezos
+﻿namespace Netezos
 {
     static class StringExtension
     {
@@ -28,17 +25,7 @@ namespace Netezos
                 if (buf[i] != str[i]) changed = true;
             }
 
-            return changed ? new string(buf) : str;
-        }
-
-        public static SecureString Secure(this string plainString)
-        {
-            var secureString = new SecureString();
-
-            foreach (var c in plainString ?? throw new NullReferenceException())
-                secureString.AppendChar(c);
-
-            return secureString;
+            return changed ? new(buf) : str;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "update_consensus_key";
 
         [JsonPropertyName("pk")]
-        public string PublicKey { get; set; }
+        public string PublicKey { get; set; } = null!;
     }
 }

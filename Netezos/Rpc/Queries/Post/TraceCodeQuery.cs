@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -20,7 +18,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="payer">Payer (optional)</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public Task<dynamic> PostAsync(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
+        public Task<dynamic> PostAsync(object script, object storage, object input, long amount, string? source = null, string? payer = null, long? gas = null)
             => PostAsync(new
             {
                 script,
@@ -44,7 +42,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="payer">Payer (optional)</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(object script, object storage, object input, long amount, string source = null, string payer = null, long? gas = null)
+        public Task<T?> PostAsync<T>(object script, object storage, object input, long amount, string? source = null, string? payer = null, long? gas = null)
             => PostAsync<T>(new
             {
                 script,

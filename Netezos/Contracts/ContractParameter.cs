@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -14,10 +11,10 @@ namespace Netezos.Contracts
 
         public ContractParameter(IMicheline parameter)
         {
-            if ((parameter as MichelinePrim)?.Prim != PrimType.parameter)
+            if (parameter is not MichelinePrim { Prim: PrimType.parameter } prim)
                 throw new ArgumentException("Invalid micheline: expected prim parameter");
 
-            var root = new ParameterSchema(parameter as MichelinePrim);
+            var root = new ParameterSchema(prim);
             Entrypoints = new Dictionary<string, Schema> { { "default", root.Schema } };
 
             if (root.Field?.Length > 0)

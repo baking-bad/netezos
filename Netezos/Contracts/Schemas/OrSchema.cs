@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -16,8 +13,8 @@ namespace Netezos.Contracts
         public OrSchema(MichelinePrim micheline, bool nested = false) : base(micheline)
         {
             if (micheline.Args?.Count != 2
-                || !(micheline.Args[0] is MichelinePrim left)
-                || !(micheline.Args[1] is MichelinePrim right))
+                || micheline.Args[0] is not MichelinePrim left
+                || micheline.Args[1] is not MichelinePrim right)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             Left = left.Prim == PrimType.or
@@ -34,7 +31,7 @@ namespace Netezos.Contracts
                 var children = Children();
                 foreach (var child in children.Where(x => x.Name != null))
                 {
-                    var name = child.Name;
+                    var name = child.Name!;
                     if (fields.ContainsKey(name))
                         child.Index = ++fields[name];
                     else
@@ -45,7 +42,7 @@ namespace Netezos.Contracts
             }
         }
 
-        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        internal override TreeView GetTreeView(TreeView? parent, IMicheline value, string? name = null, Schema? schema = null)
         {
             var (endSchema, endValue, endPath) = JumpToEnd(this, value);
             var path = endSchema.Annot != null
@@ -182,7 +179,7 @@ namespace Netezos.Contracts
 
             while (currentSchema is OrSchema currentOr)
             {
-                if (!(currentValue is MichelinePrim prim) || prim.Args?.Count != 1)
+                if (currentValue is not MichelinePrim { Args.Count: 1 } prim)
                     throw FormatException(value);
 
                 if (prim.Prim == PrimType.Left)
@@ -264,7 +261,7 @@ namespace Netezos.Contracts
 
         public override IMicheline Optimize(IMicheline value)
         {
-            if (value is MichelinePrim prim)
+            if (value is MichelinePrim { Args.Count: 1 } prim)
             {
                 if (prim.Prim == PrimType.Left)
                     prim.Args[0] = Left.Optimize(prim.Args[0]);

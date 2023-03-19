@@ -11,7 +11,7 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
-            if (!(value is MichelinePrim michePrim)
+            if (value is not MichelinePrim michePrim
                 || (michePrim.Prim != PrimType.True && michePrim.Prim != PrimType.False))
                 throw FormatException(value);
             
@@ -35,17 +35,13 @@ namespace Netezos.Contracts
 
         protected override IMicheline MapValue(object value)
         {
-            switch (value)
+            return value switch
             {
-                case bool b:
-                    return new MichelinePrim { Prim = b ? PrimType.True : PrimType.False };
-                case JsonElement json when json.ValueKind == JsonValueKind.True:
-                    return new MichelinePrim { Prim = PrimType.True };
-                case JsonElement json when json.ValueKind == JsonValueKind.False:
-                    return new MichelinePrim { Prim = PrimType.False };
-                default:
-                    throw MapFailedException("invalid value");
-            }
+                bool b => new MichelinePrim { Prim = b ? PrimType.True : PrimType.False },
+                JsonElement { ValueKind: JsonValueKind.True } json => new MichelinePrim { Prim = PrimType.True },
+                JsonElement { ValueKind: JsonValueKind.False } json => new MichelinePrim { Prim = PrimType.False },
+                _ => throw MapFailedException("invalid value")
+            };
         }
     }
 }

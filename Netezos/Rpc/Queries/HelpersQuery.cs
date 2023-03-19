@@ -8,47 +8,47 @@
         /// <summary>
         /// Gets the query to the baking rights
         /// </summary>
-        public BakingRightsQuery BakingRights => new BakingRightsQuery(this, "baking_rights");
+        public BakingRightsQuery BakingRights => new(this, "baking_rights");
         
         /// <summary>
         /// Returns the level of the interrogated block.
         /// </summary>
-        public RpcObject CurrentLevel => new RpcObject(this, "current_level");
+        public RpcObject CurrentLevel => new(this, "current_level");
 
         /// <summary>
         /// Gets the query to the endorsing rights
         /// </summary>
-        public EndorsingRightsQuery EndorsingRights => new EndorsingRightsQuery(this, "endorsing_rights");
+        public EndorsingRightsQuery EndorsingRights => new(this, "endorsing_rights");
         
         /// <summary>
         /// Gets the query to the forging
         /// </summary>
-        public ForgeQuery Forge => new ForgeQuery(this, "forge/");
+        public ForgeQuery Forge => new(this, "forge/");
         
         /// <summary>
         /// Levels of a cycle
         /// </summary>
-        public RpcObject LevelsInCurrentCycle => new RpcObject(this, "levels_in_current_cycle");
+        public RpcObject LevelsInCurrentCycle => new(this, "levels_in_current_cycle");
         
         /// <summary>
         /// Gets the query to the parsing
         /// </summary>
-        public ParseQuery Parse => new ParseQuery(this, "parse/");
+        public ParseQuery Parse => new(this, "parse/");
 
         /// <summary>
-        /// Gets the query to the preapplying
+        /// Gets the query to the pre-applying
         /// </summary>
-        public PreapplyQuery Preapply => new PreapplyQuery(this, "preapply/");  
+        public PreapplyQuery Preapply => new(this, "preapply/");  
         
         /// <summary>
         /// Gets the query to scripts
         /// </summary>
-        public ScriptsQuery Scripts => new ScriptsQuery(this, "scripts/");
+        public ScriptsQuery Scripts => new(this, "scripts/");
         
         /// <summary>
         /// Gets the query to validators
         /// </summary>
-        public ValidatorsQuery Validators => new ValidatorsQuery(this, "validators");
+        public ValidatorsQuery Validators => new(this, "validators");
         
         internal HelpersQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="entrypoint">Entrypoint of the contract</param>
         /// <returns></returns>
-        public RpcObject this[string entrypoint] => new RpcObject(this, $"{entrypoint}/");
+        public RpcObject this[string entrypoint] => new(this, $"{entrypoint}/");
 
         internal EntrypointsQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

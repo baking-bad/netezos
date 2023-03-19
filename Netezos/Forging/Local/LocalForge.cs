@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Netezos.Encoding;
+﻿using Netezos.Encoding;
 using Netezos.Forging.Models;
 using Netezos.Utils;
 
@@ -27,18 +24,17 @@ namespace Netezos.Forging
 
         public Task<(string, IEnumerable<OperationContent>)> UnforgeOperationAsync(byte[] bytes)
         {
-            using (var reader = new ForgedReader(bytes))
+            using var reader = new ForgedReader(bytes);
+            
+            var branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
+            var content = new List<OperationContent>();
+
+            while (!reader.EndOfStream)
             {
-                var branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
-                var content = new List<OperationContent>();
-
-                while (!reader.EndOfStream)
-                {
-                    content.Add(UnforgeOperation(reader));
-                }
-
-                return Task.FromResult((branch, (IEnumerable<OperationContent>)content));
+                content.Add(UnforgeOperation(reader));
             }
+
+            return Task.FromResult((branch, (IEnumerable<OperationContent>)content));
         }
     }
 }

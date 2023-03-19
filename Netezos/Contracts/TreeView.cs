@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using Netezos.Encoding;
+﻿using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
     public class TreeView
     {
-        public string Name { get; set; }
-        public Schema Schema { get; set; }
-        public IMicheline Value { get; set; }
+        public string Name { get; set; } = null!;
+        public Schema Schema { get; set; } = null!;
+        public IMicheline Value { get; set; } = null!;
 
-        public TreeView Parent { get; set; }
-        public List<TreeView> Children { get; set; }
+        public TreeView? Parent { get; set; }
+        public List<TreeView>? Children { get; set; }
 
         public string Path
         {

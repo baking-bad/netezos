@@ -86,17 +86,13 @@ namespace Netezos.Encoding.Serialization
             if (cnt == 0x3F) cnt = reader.Read7BitInt();
             var str = Utf8.Convert(reader.ReadBytes(cnt));
 
-            switch (tag & 0b_1100_0000)
+            return (tag & 0b_1100_0000) switch
             {
-                case (int)AnnotationType.Field:
-                    return new FieldAnnotation(str);
-                case (int)AnnotationType.Type:
-                    return new TypeAnnotation(str);
-                case (int)AnnotationType.Variable:
-                    return new VariableAnnotation(str);
-                default:
-                    return new UnsafeAnnotation(str);
-            }
+                (int)AnnotationType.Field => new FieldAnnotation(str),
+                (int)AnnotationType.Type => new TypeAnnotation(str),
+                (int)AnnotationType.Variable => new VariableAnnotation(str),
+                _ => new UnsafeAnnotation(str)
+            };
         }
 
         public static void ReadToJson(BinaryReader reader, Utf8JsonWriter writer, int depth = 0)
@@ -284,7 +280,7 @@ namespace Netezos.Encoding.Serialization
             top = stack.Peek();
             if (top is MichelinePrim p)
             {
-                p.Args.Add(node);
+                p.Args!.Add(node);
                 if (p.Args.Count < p.Args.Capacity)
                     goto start;
                 if (p.Annots != null)
@@ -303,7 +299,7 @@ namespace Netezos.Encoding.Serialization
 
         static void ReadAnnots(BinaryReader reader, MichelinePrim prim)
         {
-            while (prim.Annots.Count != prim.Annots.Capacity)
+            while (prim.Annots!.Count != prim.Annots.Capacity)
             {
                 var tag = reader.ReadByte();
 

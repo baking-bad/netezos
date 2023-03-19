@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -15,8 +13,8 @@ namespace Netezos.Contracts
         public LambdaSchema(MichelinePrim micheline) : base(micheline)
         {
             if (micheline.Args?.Count != 2
-                || !(micheline.Args[0] is MichelinePrim input)
-                || !(micheline.Args[1] is MichelinePrim output))
+                || micheline.Args[0] is not MichelinePrim input
+                || micheline.Args[1] is not MichelinePrim output)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             In = Create(input);
@@ -36,19 +34,13 @@ namespace Netezos.Contracts
 
         protected override IMicheline MapValue(object value)
         {
-            switch (value)
+            return value switch
             {
-                case IMicheline m:
-                    return m;
-                case string s:
-                    // TODO: validation
-                    return Micheline.FromJson(s);
-                case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    // TODO: validation
-                    return Micheline.FromJson(json.GetString());
-                default:
-                    throw MapFailedException("invalid value");
-            }
+                IMicheline miche => miche,
+                string str => Micheline.FromJson(str) ?? throw MapFailedException("invalid value"),
+                JsonElement { ValueKind: JsonValueKind.String } json => Micheline.FromJson(json.GetString()!) ?? throw MapFailedException("invalid value"),
+                _ => throw MapFailedException("invalid value")
+            };
         }
     }
 }

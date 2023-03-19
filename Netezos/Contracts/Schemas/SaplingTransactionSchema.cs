@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -16,7 +14,7 @@ namespace Netezos.Contracts
 
         public SaplingTransactionSchema(MichelinePrim micheline) : base(micheline)
         {
-            if (micheline.Args?.Count != 1 || !(micheline.Args[0] is MichelineInt micheInt))
+            if (micheline.Args?.Count != 1 || micheline.Args[0] is not MichelineInt micheInt)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             MemoSize = micheInt.Value;
@@ -51,7 +49,7 @@ namespace Netezos.Contracts
                         throw MapFailedException($"invalid hex string");
                     return new MichelineBytes(b1);
                 case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    if (!Hex.TryParse(json.GetString(), out var b2))
+                    if (!Hex.TryParse(json.GetString()!, out var b2))
                         throw MapFailedException($"invalid hex string");
                     return new MichelineBytes(b2);
                 default:

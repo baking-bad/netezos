@@ -1,9 +1,6 @@
-﻿using Netezos.Encoding;
+﻿using System.Numerics;
+using Netezos.Encoding;
 using Netezos.Forging.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
 
 namespace Netezos.Forging
 {
@@ -51,15 +48,14 @@ namespace Netezos.Forging
             var prefix = value.Substring(0, 4);
             var res = Base58.Parse(value, 4);
 
-            switch (prefix)
+            return prefix switch
             {
-                case "edpk": return new byte[] { 0 }.Concat(res);
-                case "sppk": return new byte[] { 1 }.Concat(res);
-                case "p2pk": return new byte[] { 2 }.Concat(res);
-                case "BLpk": return new byte[] { 3 }.Concat(res);
-                default:
-                    throw new ArgumentException($"Invalid public key prefix {prefix}");
-            }
+                "edpk" => new byte[] { 0 }.Concat(res),
+                "sppk" => new byte[] { 1 }.Concat(res),
+                "p2pk" => new byte[] { 2 }.Concat(res),
+                "BLpk" => new byte[] { 3 }.Concat(res),
+                _ => throw new ArgumentException($"Invalid public key prefix {prefix}")
+            };
         }
 
         public static byte[] ForgeAddress(string value)
@@ -67,18 +63,17 @@ namespace Netezos.Forging
             var prefix = value.Substring(0, 3);
             var res = Base58.Parse(value, 3);
 
-            switch (prefix)
+            return prefix switch
             {
-                case "tz1": return new byte[] { 0, 0 }.Concat(res);
-                case "tz2": return new byte[] { 0, 1 }.Concat(res);
-                case "tz3": return new byte[] { 0, 2 }.Concat(res);
-                case "tz4": return new byte[] { 0, 3 }.Concat(res);
-                case "KT1": return new byte[] { 1 }.Concat(res).Concat(new byte[] { 0 });
-                case "txr" when value.StartsWith("txr1"): return new byte[] { 2 }.Concat(res).Concat(new byte[] { 0 });
-                case "sr1": return new byte[] { 3 }.Concat(res).Concat(new byte[] { 0 });
-                default:
-                    throw new ArgumentException($"Invalid address prefix {prefix}");
-            }
+                "tz1" => new byte[] { 0, 0 }.Concat(res),
+                "tz2" => new byte[] { 0, 1 }.Concat(res),
+                "tz3" => new byte[] { 0, 2 }.Concat(res),
+                "tz4" => new byte[] { 0, 3 }.Concat(res),
+                "KT1" => new byte[] { 1 }.Concat(res).Concat(new byte[] { 0 }),
+                "txr" when value.StartsWith("txr1") => new byte[] { 2 }.Concat(res).Concat(new byte[] { 0 }),
+                "sr1" => new byte[] { 3 }.Concat(res).Concat(new byte[] { 0 }),
+                _ => throw new ArgumentException($"Invalid address prefix {prefix}")
+            };
         }
 
         public static byte[] ForgeTzAddress(string value)
@@ -86,15 +81,14 @@ namespace Netezos.Forging
             var prefix = value.Substring(0, 3);
             var res = Base58.Parse(value, 3);
 
-            switch (prefix)
+            return prefix switch
             {
-                case "tz1": return new byte[] { 0 }.Concat(res);
-                case "tz2": return new byte[] { 1 }.Concat(res);
-                case "tz3": return new byte[] { 2 }.Concat(res);
-                case "tz4": return new byte[] { 3 }.Concat(res);
-                default:
-                    throw new ArgumentException($"Invalid source prefix {prefix}");
-            }
+                "tz1" => new byte[] { 0 }.Concat(res),
+                "tz2" => new byte[] { 1 }.Concat(res),
+                "tz3" => new byte[] { 2 }.Concat(res),
+                "tz4" => new byte[] { 3 }.Concat(res),
+                _ => throw new ArgumentException($"Invalid source prefix {prefix}")
+            };
         }
 
         public static byte[] ForgePkh(string value)
@@ -107,8 +101,7 @@ namespace Netezos.Forging
             if (value < 0)
                 throw new ArgumentException("Nat cannot be negative");
 
-            var res = new List<byte>(9);
-            res.Add((byte)(value & 0x7F));
+            var res = new List<byte>(9) { (byte)(value & 0x7F) };
             value >>= 7;
 
             while (value > 0)
@@ -126,8 +119,7 @@ namespace Netezos.Forging
             if (value < 0)
                 throw new ArgumentException("Nat cannot be negative");
 
-            var res = new List<byte>(9);
-            res.Add((byte)(value & 0x7F));
+            var res = new List<byte>(9) { (byte)(value & 0x7F) };
             value >>= 7;
 
             while (value > 0)
@@ -145,8 +137,7 @@ namespace Netezos.Forging
             if (value < 0)
                 throw new ArgumentException("Nat cannot be negative");
 
-            var res = new List<byte>(9);
-            res.Add((byte)(value & 0x7F));
+            var res = new List<byte>(9) { (byte)(value & 0x7F) };
             value >>= 7;
 
             while (value > 0)
@@ -162,9 +153,7 @@ namespace Netezos.Forging
         public static byte[] ForgeMicheInt(BigInteger value)
         {
             var abs = BigInteger.Abs(value);
-            var res = new List<byte>();
-
-            res.Add((byte)(value.Sign < 0 ? (abs & 0x3F | 0x40) : (abs & 0x3F)));
+            var res = new List<byte>() { (byte)(value.Sign < 0 ? (abs & 0x3F | 0x40) : (abs & 0x3F)) };
             abs >>= 6;
 
             while (abs > 0)
@@ -179,17 +168,16 @@ namespace Netezos.Forging
 
         public static byte[] ForgeEntrypoint(string value)
         {
-            switch (value)
+            return value switch
             {
-                case "default": return new byte[] { 0 };
-                case "root": return new byte[] { 1 };
-                case "do": return new byte[] { 2 };
-                case "set_delegate": return new byte[] { 3 };
-                case "remove_delegate": return new byte[] { 4 };
-                case "deposit": return new byte[] { 5 };
-                default:
-                    return new byte[] { 255 }.Concat(ForgeString(value, 1));
-            }
+                "default" => new byte[] { 0 },
+                "root" => new byte[] { 1 },
+                "do" => new byte[] { 2 },
+                "set_delegate" => new byte[] { 3 },
+                "remove_delegate" => new byte[] { 4 },
+                "deposit" => new byte[] { 5 },
+                _ => new byte[] { 255 }.Concat(ForgeString(value, 1))
+            };
         }
 
         public static byte[] ForgeMicheline(IMicheline micheline)

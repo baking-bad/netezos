@@ -1,19 +1,16 @@
 using Netezos.Forging.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
-    /// Rpc query to access operations preapplying
+    /// Rpc query to access operations pre-applying
     /// </summary>
     public class PreapplyOperationQuery : RpcMethod
     {
         internal PreapplyOperationQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
         /// <summary>
-        /// Simulates the validation of an operation and returns the preapplied data
+        /// Simulates the validation of an operation and returns the pre-applied data
         /// </summary>
         /// <param name="operations">Operations</param>
         /// <returns></returns>
@@ -26,7 +23,7 @@ namespace Netezos.Rpc.Queries.Post
             }));
 
         /// <summary>
-        /// Simulates the validation of an operation and returns the preapplied data
+        /// Simulates the validation of an operation and returns the pre-applied data
         /// </summary>
         /// <param name="branch">Branch</param>
         /// <param name="protocol">Protocol hash</param>
@@ -46,7 +43,7 @@ namespace Netezos.Rpc.Queries.Post
             });
 
         /// <summary>
-        /// Simulates the validation of an operation and returns the preapplied data
+        /// Simulates the validation of an operation and returns the pre-applied data
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="branch">Branch</param>
@@ -54,7 +51,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="signature">Signature</param>
         /// <param name="contents">List of contents</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(string protocol, string signature, string branch, List<OperationContent> contents)
+        public Task<T?> PostAsync<T>(string protocol, string signature, string branch, List<OperationContent> contents)
             => PostAsync<T>(new[]
             {
                 new

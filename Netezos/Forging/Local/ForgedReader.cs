@@ -1,21 +1,17 @@
-﻿using Netezos.Encoding;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Numerics;
+﻿using System.Numerics;
+using Netezos.Encoding;
 
 namespace Netezos.Forging
 {
     public class ForgedReader : IDisposable
     {
-        private BinaryReader _reader;
+        readonly BinaryReader Reader;
 
         public bool EndOfStream
         {
             get
             {
-                return _reader.BaseStream.Position == _reader.BaseStream.Length;
+                return Reader.BaseStream.Position == Reader.BaseStream.Length;
             }
         }
 
@@ -23,7 +19,7 @@ namespace Netezos.Forging
         {
             get
             {
-                return _reader.BaseStream.Position;
+                return Reader.BaseStream.Position;
             }
         }
 
@@ -37,33 +33,31 @@ namespace Netezos.Forging
 
         private ForgedReader(Stream stream, bool leaveOpen)
         {
-            _reader = new BinaryReader(stream, System.Text.Encoding.UTF8, leaveOpen);
+            Reader = new BinaryReader(stream, System.Text.Encoding.UTF8, leaveOpen);
         }
 
         public void Dispose()
         {
-            _reader?.Dispose();
+            Reader?.Dispose();
         }
 
         public IMicheline ReadMicheline()
         {
-            var tag = ReadByte();
-
-            switch (tag)
+            return ReadByte() switch
             {
-                case 0: return ReadMichelineInt();
-                case 1: return ReadMichelineString();
-                case 2: return ReadMichelineArray();
-                case 3: return ReadMichelinePrimitive(0, false);
-                case 4: return ReadMichelinePrimitive(0, true);
-                case 5: return ReadMichelinePrimitive(1, false);
-                case 6: return ReadMichelinePrimitive(1, true);
-                case 7: return ReadMichelinePrimitive(2, false);
-                case 8: return ReadMichelinePrimitive(2, true);
-                case 9: return ReadMichelinePrimitive(3, true);
-                case 10: return ReadMichelineBytes();
-                default: throw new InvalidOperationException($"Unknown tag {tag} at position {_reader.BaseStream.Position}");
-            }
+                0 => ReadMichelineInt(),
+                1 => ReadMichelineString(),
+                2 => ReadMichelineArray(),
+                3 => ReadMichelinePrimitive(0, false),
+                4 => ReadMichelinePrimitive(0, true),
+                5 => ReadMichelinePrimitive(1, false),
+                6 => ReadMichelinePrimitive(1, true),
+                7 => ReadMichelinePrimitive(2, false),
+                8 => ReadMichelinePrimitive(2, true),
+                9 => ReadMichelinePrimitive(3, true),
+                10 => ReadMichelineBytes(),
+                var tag => throw new InvalidOperationException($"Unknown tag {tag} at position {Reader.BaseStream.Position}")
+            };
         }
 
         public MichelineInt ReadMichelineInt()
@@ -135,29 +129,14 @@ namespace Netezos.Forging
                         .Split(' ')
                         .Select(a =>
                         {
-                            var annotVal = a.Substring(1);
-
-                            IAnnotation annotation;
-
-                            switch (a[0])
+                            var annot = a.Substring(1);
+                            return a[0] switch
                             {
-                                case FieldAnnotation.Prefix:
-                                    annotation = new FieldAnnotation(annotVal);
-                                    break;
-
-                                case TypeAnnotation.Prefix:
-                                    annotation = new TypeAnnotation(annotVal);
-                                    break;
-
-                                case VariableAnnotation.Prefix:
-                                    annotation = new VariableAnnotation(annotVal);
-                                    break;
-
-                                default:
-                                    throw new InvalidOperationException($"Unknown annotation type: {a[0]}");
-                            }
-
-                            return annotation;
+                                FieldAnnotation.Prefix => (IAnnotation)new FieldAnnotation(annot),
+                                TypeAnnotation.Prefix => new TypeAnnotation(annot),
+                                VariableAnnotation.Prefix => new VariableAnnotation(annot),
+                                _ => throw new InvalidOperationException($"Unknown annotation type: {a[0]}")
+                            };
                         })
                         .ToList();
                 }
@@ -168,50 +147,40 @@ namespace Netezos.Forging
 
         public string ReadPublicKey()
         {
-            var id = ReadByte();
-
-            byte[] prefix;
-            switch (id)
+            var (prefix, len) = ReadByte() switch
             {
-                case 0: prefix = Prefix.edpk; break;
-                case 1: prefix = Prefix.sppk; break;
-                case 2: prefix = Prefix.p2pk; break;
-                case 3: prefix = Prefix.BLpk; break;
-                default: throw new ArgumentException($"Invalid public key prefix {id}");
+                0 => (Prefix.edpk, 32),
+                1 => (Prefix.sppk, 33),
+                2 => (Prefix.p2pk, 33),
+                3 => (Prefix.BLpk, 48),
+                var type => throw new ArgumentException($"Invalid public key prefix {type}")
             };
 
-            return ReadBase58(id == 0 ? 32 : 33, prefix);
+            return ReadBase58(len, prefix);
         }
 
         public string ReadAddress()
         {
-            var type = ReadByte();
-
-            switch (type)
+            return ReadByte() switch
             {
-                case 0: return ReadTzAddress();
-                case 1: return ReadKtAddress();
-                case 2: return ReadTxrAddress();
-                case 3: return ReadSrAddress();
-                default: throw new ArgumentException($"Invalid address prefix {type}");
-            }
+                0 => ReadTzAddress(),
+                1 => ReadKtAddress(),
+                2 => ReadTxrAddress(),
+                3 => ReadSrAddress(),
+                var type => throw new ArgumentException($"Invalid address prefix {type}")
+            };
         }
 
         public string ReadTzAddress()
         {
-            var tzType = ReadByte();
-
-            byte[] prefix;
-            switch (tzType)
+            var prefix = ReadByte() switch
             {
-                case 0: prefix = Prefix.tz1; break;
-                case 1: prefix = Prefix.tz2; break;
-                case 2: prefix = Prefix.tz3; break;
-                case 3: prefix = Prefix.tz4; break;
-                default:
-                    throw new ArgumentException($"Invalid source prefix {tzType}");
-            }
-
+                0 => Prefix.tz1,
+                1 => Prefix.tz2,
+                2 => Prefix.tz3,
+                3 => Prefix.tz4,
+                var type => throw new ArgumentException($"Invalid source prefix {type}")
+            };
             return ReadBase58(20, prefix);
         }
 
@@ -298,19 +267,17 @@ namespace Netezos.Forging
 
         public string ReadEntrypoint()
         {
-            var epType = ReadByte();
-
-            switch (epType)
+            return ReadByte() switch
             {
-                case 0: return "default";
-                case 1: return "root";
-                case 2: return "do";
-                case 3: return "set_delegate";
-                case 4: return "remove_delegate";
-                case 5: return "deposit";
-                case 255: return ReadString();
-                default: throw new ArgumentException($"Invalid entrypoint prefix {epType}");
-            }
+                0 => "default",
+                1 => "root",
+                2 => "do",
+                3 => "set_delegate",
+                4 => "remove_delegate",
+                5 => "deposit",
+                255 => ReadString(),
+                var ep => throw new ArgumentException($"Invalid entrypoint prefix {ep}")
+            };
         }
 
         public bool ReadBool()
@@ -320,12 +287,12 @@ namespace Netezos.Forging
 
         public byte ReadByte()
         {
-            return _reader.ReadByte();
+            return Reader.ReadByte();
         }
 
         public byte[] ReadBytes(int count)
         {
-            return _reader.ReadBytes(count);
+            return Reader.ReadBytes(count);
         }
 
         public int ReadInt32(int len = 4)
@@ -387,19 +354,17 @@ namespace Netezos.Forging
                 var arrLen = ReadInt32();
                 var arrData = ReadBytes(arrLen);
 
-                using (var reader = new ForgedReader(arrData))
+                using var reader = new ForgedReader(arrData);
+                var result = readData(reader);
+
+                if (!reader.EndOfStream)
                 {
-                    var result = readData(reader);
-
-                    if (!reader.EndOfStream)
-                    {
-                        throw new InvalidOperationException("Expected end of stream but not reached");
-                    }
-
-                    return result;
+                    throw new InvalidOperationException("Expected end of stream but not reached");
                 }
+
+                return result;
             }
-            return default(T);
+            throw new InvalidOperationException("Cannot read from end of stream");
         }
 
         public IEnumerable<T> ReadEnumerable<T>(Func<ForgedReader, T> readData)
@@ -409,12 +374,10 @@ namespace Netezos.Forging
                 var arrLen = ReadInt32();
                 var arrData = ReadBytes(arrLen);
 
-                using (var reader = new ForgedReader(arrData))
+                using var reader = new ForgedReader(arrData);
+                while (!reader.EndOfStream)
                 {
-                    while (!reader.EndOfStream)
-                    {
-                        yield return readData(reader);
-                    }
+                    yield return readData(reader);
                 }
             }
             yield break;

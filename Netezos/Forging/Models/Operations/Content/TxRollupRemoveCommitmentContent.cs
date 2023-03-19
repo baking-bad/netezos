@@ -8,6 +8,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "tx_rollup_remove_commitment";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; }
+        public string Rollup { get; set; } = null!;
     }
 }

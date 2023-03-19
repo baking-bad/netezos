@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Netezos.Encoding.Serialization
@@ -22,7 +21,7 @@ namespace Netezos.Encoding.Serialization
 
         public override IAnnotation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return ParseAnnotation(reader.GetString());
+            return ParseAnnotation(reader.GetString() ?? throw new FormatException("Cannot read from null"));
         }
 
         public override void Write(Utf8JsonWriter writer, IAnnotation value, JsonSerializerOptions options)

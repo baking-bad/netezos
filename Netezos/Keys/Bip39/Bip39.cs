@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Netezos.Encoding;
 using Netezos.Utils;
 
@@ -9,7 +6,7 @@ namespace Netezos.Keys
 {
     static class Bip39
     {
-        static readonly List<string> WordList = new List<string>
+        static readonly List<string> WordList = new()
         {
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",
             "accident", "account", "accuse", "achieve", "acid", "acoustic", "acquire", "across", "act", "action",
@@ -253,7 +250,7 @@ namespace Netezos.Keys
                     concatBits[(i * 8) + 7] << 0);
             }
 
-            byte[] hashBits = null;
+            byte[] hashBits;
             using (var sha256 = SHA256.Create())
             {
                 var hash = sha256.ComputeHash(entropy);
@@ -269,7 +266,7 @@ namespace Netezos.Keys
 
         public static byte[] GetSeed(string words, string passphrase = "")
         {
-            if (string.IsNullOrWhiteSpace(words))
+            if (string.IsNullOrEmpty(words))
                 throw new ArgumentNullException(nameof(words));
 
             var pass = Utf8.Parse(words);
@@ -285,7 +282,7 @@ namespace Netezos.Keys
             else if (entropy.Length % 4 > 0)
                 throw new ArgumentException("Entropy length is not a multiple of 4");
 
-            byte[] hashBits = null;
+            byte[] hashBits;
             using (var sha256 = SHA256.Create())
             {
                 var hash = sha256.ComputeHash(entropy);

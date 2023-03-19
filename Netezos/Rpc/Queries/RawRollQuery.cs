@@ -2,7 +2,7 @@
 {
     public class RawRollQuery : RpcObject
     {
-        public RpcObject Successor => new RpcObject(this, "successor/");
+        public RpcObject Successor => new(this, "successor/");
 
         internal RawRollQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

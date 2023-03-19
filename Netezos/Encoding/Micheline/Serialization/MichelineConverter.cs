@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -22,12 +20,13 @@ namespace Netezos.Encoding.Serialization
                     reader.Read();
                     if (reader.TokenType != JsonTokenType.PropertyName)
                         throw new FormatException("Empty Micheline node");
-                    prop = reader.GetString();
+                    prop = reader.GetString()!;
                     reader.Read();
                     switch (prop)
                     {
                         case "prim":
-                            stack.Push(new MichelinePrim { Prim = PrimTypeConverter.ParsePrim(reader.GetString()) });
+                            stack.Push(new MichelinePrim { Prim = PrimTypeConverter.ParsePrim(reader.GetString()
+                                ?? throw new FormatException("Cannot read from null")) });
                             reader.Read();
                             goto start;
                         case "args":
@@ -48,18 +47,17 @@ namespace Netezos.Encoding.Serialization
                             reader.Read();
                             goto start;
                         case "annots":
-                            List<IAnnotation> annots = null;
+                            List<IAnnotation>? annots = null;
                             if (reader.TokenType == JsonTokenType.StartArray)
                             {
                                 reader.Read();
                                 if (reader.TokenType == JsonTokenType.String)
                                 {
-                                    annots = new(2);
-                                    annots.Add(AnnotationConverter.ParseAnnotation(reader.GetString()));
+                                    annots = new(2) { AnnotationConverter.ParseAnnotation(reader.GetString()!) };
                                     reader.Read();
                                     while (reader.TokenType == JsonTokenType.String)
                                     {
-                                        annots.Add(AnnotationConverter.ParseAnnotation(reader.GetString()));
+                                        annots.Add(AnnotationConverter.ParseAnnotation(reader.GetString()!));
                                         reader.Read();
                                     }
                                 }
@@ -76,12 +74,12 @@ namespace Netezos.Encoding.Serialization
                         case "bytes":
                             if (reader.TokenType != JsonTokenType.String)
                                 throw new FormatException("Invalid Micheline bytes node");
-                            node = new MichelineBytes(Hex.Parse(reader.GetString()));
+                            node = new MichelineBytes(Hex.Parse(reader.GetString()!));
                             break;
                         case "string":
                             if (reader.TokenType != JsonTokenType.String)
                                 throw new FormatException("Invalid Micheline string node");
-                            node = new MichelineString(reader.GetString());
+                            node = new MichelineString(reader.GetString()!);
                             break;
                         case "int":
                             if (reader.TokenType != JsonTokenType.String)
@@ -97,12 +95,12 @@ namespace Netezos.Encoding.Serialization
                     goto endNode;
                 case JsonTokenType.PropertyName:
                     prim = (MichelinePrim)stack.Peek();
-                    prop = reader.GetString();
+                    prop = reader.GetString()!;
                     reader.Read();
                     switch (prop)
                     {
                         case "prim":
-                            prim.Prim = PrimTypeConverter.ParsePrim(reader.GetString());
+                            prim.Prim = PrimTypeConverter.ParsePrim(reader.GetString() ?? throw new FormatException("Cannot read from null"));
                             reader.Read();
                             goto start;
                         case "args":
@@ -122,18 +120,17 @@ namespace Netezos.Encoding.Serialization
                             reader.Read();
                             goto start;
                         case "annots":
-                            List<IAnnotation> annots = null;
+                            List<IAnnotation>? annots = null;
                             if (reader.TokenType == JsonTokenType.StartArray)
                             {
                                 reader.Read();
                                 if (reader.TokenType == JsonTokenType.String)
                                 {
-                                    annots = new(2);
-                                    annots.Add(AnnotationConverter.ParseAnnotation(reader.GetString()));
+                                    annots = new(2) { AnnotationConverter.ParseAnnotation(reader.GetString()!) };
                                     reader.Read();
                                     while (reader.TokenType == JsonTokenType.String)
                                     {
-                                        annots.Add(AnnotationConverter.ParseAnnotation(reader.GetString()));
+                                        annots.Add(AnnotationConverter.ParseAnnotation(reader.GetString()!));
                                         reader.Read();
                                     }
                                 }

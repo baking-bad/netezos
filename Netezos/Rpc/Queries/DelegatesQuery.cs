@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Netezos.Rpc.Queries
+﻿namespace Netezos.Rpc.Queries
 {
     /// <summary>
     /// Rpc query to access all registered delegates
@@ -12,7 +10,7 @@ namespace Netezos.Rpc.Queries
         /// </summary>
         /// <param name="address">Address of the delegate</param>
         /// <returns></returns>
-        public DelegateQuery this[string address] => new DelegateQuery(this, $"{address}/");
+        public DelegateQuery this[string address] => new(this, $"{address}/");
 
         internal DelegatesQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
 
@@ -35,7 +33,7 @@ namespace Netezos.Rpc.Queries
         /// Executes the query and returns all registered delegates
         /// </summary>
         /// <returns></returns>
-        public new Task<T> GetAsync<T>()
+        public new Task<T?> GetAsync<T>()
             => Client.GetJson<T>($"{Query}?active=true&inactive=true");
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace Netezos.Rpc.Queries
         /// </summary>
         /// <param name="status">Status of the delegates to return</param>
         /// <returns></returns>
-        public Task<T> GetAsync<T>(DelegateStatus status)
+        public Task<T?> GetAsync<T>(DelegateStatus status)
             => Client.GetJson<T>($"{Query}?{status.ToString().ToLower()}=true");
     }
 }

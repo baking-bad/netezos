@@ -25,26 +25,16 @@ namespace Netezos.Contracts
 
         protected override IMicheline MapValue(object value)
         {
-            switch (value)
+            return value switch
             {
-                case BigInteger b:
-                    return new MichelineInt(b);
-                case int i:
-                    return new MichelineInt(new BigInteger(i));
-                case long l:
-                    return new MichelineInt(new BigInteger(l));
-                case string s:
-                    // TODO: validation
-                    return new MichelineInt(BigInteger.Parse(s));
-                case JsonElement json when json.ValueKind == JsonValueKind.Number:
-                    // TODO: validation
-                    return new MichelineInt(new BigInteger(json.GetInt64()));
-                case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    // TODO: validation
-                    return new MichelineInt(BigInteger.Parse(json.GetString()));
-                default:
-                    throw MapFailedException("invalid value");
-            }
+                BigInteger b => new MichelineInt(b),
+                int i => new MichelineInt(i),
+                long l => new MichelineInt(l),
+                string s => new MichelineInt(BigInteger.Parse(s)),
+                JsonElement { ValueKind: JsonValueKind.Number } json => new MichelineInt(new BigInteger(json.GetInt64())),
+                JsonElement { ValueKind: JsonValueKind.String } json => new MichelineInt(BigInteger.Parse(json.GetString()!)),
+                _ => throw MapFailedException("invalid value")
+            };
         }
     }
 }

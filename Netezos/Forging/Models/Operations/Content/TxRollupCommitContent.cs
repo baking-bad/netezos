@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
@@ -9,10 +8,10 @@ namespace Netezos.Forging.Models
         public override string Kind => "tx_rollup_commit";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; }
+        public string Rollup { get; set; } = null!;
 
         [JsonPropertyName("commitment")]
-        public TxRollupCommitment Commitment { get; set; }
+        public TxRollupCommitment Commitment { get; set; } = null!;
     }
 
     public class TxRollupCommitment
@@ -21,13 +20,13 @@ namespace Netezos.Forging.Models
         public int Level { get; set; }
 
         [JsonPropertyName("messages")]
-        public List<string> Messages { get; set; }
+        public List<string> Messages { get; set; } = null!;
 
         [JsonPropertyName("predecessor")]
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        public string Predecessor { get; set; }
+        public string? Predecessor { get; set; }
 
         [JsonPropertyName("inbox_merkle_root")]
-        public string InboxMerkleRoot { get; set; }
+        public string InboxMerkleRoot { get; set; } = null!;
     }
 }

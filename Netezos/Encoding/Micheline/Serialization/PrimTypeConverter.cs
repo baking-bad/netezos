@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Netezos.Encoding.Serialization
@@ -170,7 +169,7 @@ namespace Netezos.Encoding.Serialization
 
         public override PrimType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return ParsePrim(reader.GetString());
+            return ParsePrim(reader.GetString() ?? throw new FormatException("Cannot read from null"));
         }
 
         public override void Write(Utf8JsonWriter writer, PrimType value, JsonSerializerOptions options)

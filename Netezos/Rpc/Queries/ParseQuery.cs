@@ -10,12 +10,12 @@ namespace Netezos.Rpc.Queries
         /// <summary>
         /// Gets the query to the block parsing
         /// </summary>
-        public ParseBlockQuery Block => new ParseBlockQuery(this, "block/");
+        public ParseBlockQuery Block => new(this, "block/");
 
         /// <summary>
         /// Gets the query to the operations parsing
         /// </summary>
-        public ParseOperationsQuery Operations => new ParseOperationsQuery(this, "operations/");
+        public ParseOperationsQuery Operations => new(this, "operations/");
 
         internal ParseQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

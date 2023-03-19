@@ -1,9 +1,9 @@
-﻿using System.IO;
+﻿using System.Text.Json.Serialization;
 using Netezos.Encoding.Serialization;
 
 namespace Netezos.Encoding
 {
-    [InterfaceJsonConverter(typeof(MichelineConverter))]
+    [JsonConverter(typeof(MichelineConverter))]
     public interface IMicheline
     {
         MichelineType Type { get; }

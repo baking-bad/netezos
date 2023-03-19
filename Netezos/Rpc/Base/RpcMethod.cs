@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Netezos.Rpc
+﻿namespace Netezos.Rpc
 {
     /// <summary>
     /// RPC query to POST a json object
@@ -29,7 +27,7 @@ namespace Netezos.Rpc
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="content">Json content to send</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(string content) => Client.PostJson<T>(Query, content);
+        public Task<T?> PostAsync<T>(string content) => Client.PostJson<T>(Query, content);
 
         /// <summary>
         /// Send a POST request with specified json object content and returns the json object, deserialized to the specified type
@@ -37,6 +35,6 @@ namespace Netezos.Rpc
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="content">Object to send</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(object content) => Client.PostJson<T>(Query, content);
+        public Task<T?> PostAsync<T>(object content) => Client.PostJson<T>(Query, content);
     }
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Netezos.Encoding.Serialization
 {
     public static class MichelsonFormatter
@@ -15,30 +11,28 @@ namespace Netezos.Encoding.Serialization
 
         static bool IsFramed(MichelinePrim prim)
         {
-            switch (prim.Prim)
+            return prim.Prim switch
             {
-                case PrimType.Pair:
-                case PrimType.Left:
-                case PrimType.Right:
-                case PrimType.Some:
-                case PrimType.Elt:
-                case PrimType.pair:
-                case PrimType.or:
-                case PrimType.option:
-                case PrimType.map:
-                case PrimType.big_map:
-                case PrimType.list:
-                case PrimType.set:
-                case PrimType.contract:
-                case PrimType.lambda:
-                case PrimType.sapling_state:
-                case PrimType.sapling_transaction_deprecated:
-                case PrimType.sapling_transaction:
-                case PrimType.ticket:
-                    return true;
-                default:
-                    return prim.Annots?.Any(x => x.Type != AnnotationType.Variable) ?? false;
-            }
+                PrimType.Pair => true,
+                PrimType.Left => true,
+                PrimType.Right => true,
+                PrimType.Some => true,
+                PrimType.Elt => true,
+                PrimType.pair => true,
+                PrimType.or => true,
+                PrimType.option => true,
+                PrimType.map => true,
+                PrimType.big_map => true,
+                PrimType.list => true,
+                PrimType.set => true,
+                PrimType.contract => true,
+                PrimType.lambda => true,
+                PrimType.sapling_state => true,
+                PrimType.sapling_transaction_deprecated => true,
+                PrimType.sapling_transaction => true,
+                PrimType.ticket => true,
+                _ => prim.Annots?.Any(x => x.Type != AnnotationType.Variable) ?? false
+            };
         }
         
         static bool IsInline(MichelinePrim prim)
@@ -81,8 +75,8 @@ namespace Netezos.Encoding.Serialization
                     {
                         var argIndent = $"{indent}{new string(' ', 2)}";
                         var items = args.Select(x => FormatNode(x, argIndent, inline)).ToList();
-                        var lenght = indent.Length + expr.Length + items.Sum(x => x.Length) + items.Count() + 1;
-                        if (inline || lenght < LineSize)
+                        var length = indent.Length + expr.Length + items.Sum(x => x.Length) + items.Count() + 1;
+                        if (inline || length < LineSize)
                             expr = $"{expr} {string.Join(" ", items)}";
                         else
                         {
@@ -101,8 +95,8 @@ namespace Netezos.Encoding.Serialization
                         foreach (var arg in args)
                         {
                             var item = FormatNode(arg, argIndent, inline);
-                            var lenght = indent.Length + expr.Length + item.Length + 1;
-                            if (inline || IsInline(prim) || lenght < LineSize)
+                            var length = indent.Length + expr.Length + item.Length + 1;
+                            if (inline || IsInline(prim) || length < LineSize)
                             {
                                 argIndent = altIndent;
                                 expr = $"{expr} {item}";

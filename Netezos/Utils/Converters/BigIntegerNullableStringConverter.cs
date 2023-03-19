@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,10 +17,10 @@ namespace Netezos.Forging.Models
 
         public override void Write(Utf8JsonWriter writer, BigInteger? value, JsonSerializerOptions options)
         {
-            if (value != null)
-                writer.WriteStringValue(value.ToString());
-            else
+            if (value == null)
                 writer.WriteNullValue();
+            else
+                writer.WriteStringValue(value.ToString());
         }
     }
 }

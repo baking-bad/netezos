@@ -9,7 +9,7 @@
         
         public static bool TryParse(string text, out byte[] bytes)
         {
-            bytes = null;
+            bytes = null!;
 
             if (string.IsNullOrEmpty(text))
                 return false;

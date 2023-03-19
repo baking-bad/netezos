@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Netezos.Rpc
 {
@@ -16,13 +14,11 @@ namespace Netezos.Rpc
         internal static Creator<T> GetCreator<T>() where T : RpcQuery
         {
             var ctor = typeof(T).GetConstructor(
-                   BindingFlags.NonPublic | BindingFlags.Instance,
-                   null,
-                   new[] { typeof(RpcQuery), typeof(string) },
-                   null);
-
-            if (ctor == null)
-                throw new Exception($"Can't find apropriate constructor in {typeof(T)}");
+                BindingFlags.NonPublic | BindingFlags.Instance,
+                null,
+                new[] { typeof(RpcQuery), typeof(string) },
+                null)
+                ?? throw new Exception($"Can't find appropriate constructor in {typeof(T)}");
 
             var args = new[]
             {
@@ -54,6 +50,6 @@ namespace Netezos.Rpc
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public Task<T> GetAsync<T>() => Client.GetJson<T>(Query);
+        public Task<T?> GetAsync<T>() => Client.GetJson<T>(Query);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using Netezos.Forging.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Netezos.Forging
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -10,10 +9,10 @@ namespace Netezos.Contracts
 
         public ContractStorage(IMicheline storage)
         {
-            if ((storage as MichelinePrim)?.Prim != PrimType.storage)
+            if (storage is not MichelinePrim { Prim: PrimType.storage } prim)
                 throw new ArgumentException("Invalid micheline: expected prim storage");
 
-            Schema = new StorageSchema(storage as MichelinePrim).Schema;
+            Schema = new StorageSchema(prim).Schema;
         }
 
         public IMicheline Optimize(IMicheline value, bool immutable = true)

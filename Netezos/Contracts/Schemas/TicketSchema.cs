@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -9,16 +7,14 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.ticket;
 
-        public Schema Data { get; }
+        public PairSchema Data { get; }
 
         public TicketSchema(MichelinePrim micheline) : base(micheline)
         {
-            if (micheline.Args?.Count != 1 || !(micheline.Args[0] is MichelinePrim type))
+            if (micheline.Args?.Count != 1 || micheline.Args[0] is not MichelinePrim type)
                 throw new FormatException($"Invalid {Prim} schema format");
 
-            if (type.Annots == null)
-                type.Annots = new List<IAnnotation>(1);
-
+            type.Annots ??= new List<IAnnotation>(1);
             if (type.Annots.Count == 0)
                 type.Annots.Add(new FieldAnnotation("data"));
 
@@ -48,12 +44,12 @@ namespace Netezos.Contracts
                 }
             };
 
-            Data = Create(data);
+            Data = new PairSchema(data);
         }
 
-        internal override TreeView GetTreeView(TreeView parent, IMicheline value, string name = null, Schema schema = null)
+        internal override TreeView GetTreeView(TreeView? parent, IMicheline value, string? name = null, Schema? schema = null)
         {
-            if (!(value is MichelinePrim prim) || prim.Prim != PrimType.Pair)
+            if (value is not MichelinePrim { Prim: PrimType.Pair } prim)
                 throw FormatException(value);
 
             return Data.GetTreeView(parent, value, name ?? Name, this);
@@ -66,7 +62,7 @@ namespace Netezos.Contracts
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
-            if (!(value is MichelinePrim prim) || prim.Prim != PrimType.Pair)
+            if (value is not MichelinePrim { Prim: PrimType.Pair } prim)
                 throw FormatException(value);
 
             Data.WriteValue(writer, prim);
@@ -74,12 +70,12 @@ namespace Netezos.Contracts
 
         internal override void WriteJsonSchema(Utf8JsonWriter writer)
         {
-            (Data as PairSchema).WriteJsonSchema(writer, Prim.ToString());
+            Data.WriteJsonSchema(writer, Prim.ToString());
         }
 
         protected override List<IMicheline> GetArgs()
         {
-            var type = ((Data as PairSchema).Right as PairSchema).Left;
+            var type = (Data.Right as PairSchema)!.Left;
             return new List<IMicheline>(1) { type.ToMicheline() };
         }
 

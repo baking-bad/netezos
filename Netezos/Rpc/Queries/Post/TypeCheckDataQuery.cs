@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Netezos.Rpc.Queries.Post
 {
     /// <summary>
@@ -32,7 +30,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="type">Data expression type</param>
         /// <param name="gas">Gas limit (optional)</param>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(object data, object type, long? gas = null)
+        public Task<T?> PostAsync<T>(object data, object type, long? gas = null)
             => PostAsync<T>(new
             {
                 data,

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Netezos.Rpc
+﻿namespace Netezos.Rpc
 {
     /// <summary>
     /// Rpc query to get a json object
@@ -19,11 +17,11 @@ namespace Netezos.Rpc
         public Task<dynamic> GetAsync(int depth) => Client.GetJson($"{Query}?depth={depth}");
 
         /// <summary>
-        /// Executes the query and returns the json object, deserealized to the specified type
+        /// Executes the query and returns the json object, deserialized to the specified type
         /// </summary>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <param name="depth">Depth</param>
         /// <returns></returns>
-        public Task<T> GetAsync<T>(int depth) => Client.GetJson<T>($"{Query}?depth={depth}");
+        public Task<T?> GetAsync<T>(int depth) => Client.GetJson<T>($"{Query}?depth={depth}");
     }
 }

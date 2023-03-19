@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Netezos.Encoding;
 
 namespace Netezos.Rpc.Queries.Post
@@ -31,7 +29,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="chain">Chain (optional)</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(byte[] data, bool async = false, Chain chain = Chain.Main)
+        public Task<T?> PostAsync<T>(byte[] data, bool async = false, Chain chain = Chain.Main)
             => Client.PostJson<T>(
                 $"{Query}?async={async}&chain={chain.ToString().ToLower()}",
                 $"\"{Hex.Convert(data)}\"");
@@ -56,7 +54,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="chain">Chain (optional)</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(IEnumerable<byte> data, bool async = false, Chain chain = Chain.Main)
+        public Task<T?> PostAsync<T>(IEnumerable<byte> data, bool async = false, Chain chain = Chain.Main)
             => Client.PostJson<T>(
                 $"{Query}?async={async}&chain={chain.ToString().ToLower()}",
                 $"\"{Hex.Convert(data)}\"");
@@ -81,7 +79,7 @@ namespace Netezos.Rpc.Queries.Post
         /// <param name="chain">Chain (optional)</param>
         /// <typeparam name="T">Type of the object to deserialize to</typeparam>
         /// <returns></returns>
-        public Task<T> PostAsync<T>(string data, bool async = false, Chain chain = Chain.Main)
+        public Task<T?> PostAsync<T>(string data, bool async = false, Chain chain = Chain.Main)
             => Client.PostJson<T>(
                 $"{Query}?async={async}&chain={chain.ToString().ToLower()}",
                 $"\"{data}\"");

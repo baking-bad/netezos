@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Netezos.Keys
+﻿namespace Netezos.Keys
 {
     abstract class Curve
     {

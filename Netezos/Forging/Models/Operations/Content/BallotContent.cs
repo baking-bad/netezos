@@ -8,13 +8,13 @@ namespace Netezos.Forging.Models
         public override string Kind => "ballot";
         
         [JsonPropertyName("source")]
-        public string Source { get; set; }
+        public string Source { get; set; } = null!;
 
         [JsonPropertyName("period")]
         public int Period { get; set; }
 
         [JsonPropertyName("proposal")]
-        public string Proposal { get; set; }
+        public string Proposal { get; set; } = null!;
 
         [JsonPropertyName("ballot")]
         public Ballot Ballot { get; set; }

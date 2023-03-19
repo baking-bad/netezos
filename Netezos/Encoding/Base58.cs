@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Security.Cryptography;
 
 namespace Netezos.Encoding
@@ -29,12 +28,10 @@ namespace Netezos.Encoding
 
         static byte[] CheckSum(byte[] data)
         {
-            using (var shA256 = new SHA256Managed())
-            {
-                var hash1 = shA256.ComputeHash(data);
-                var hash2 = shA256.ComputeHash(hash1);
-                return new[] { hash2[0], hash2[1], hash2[2], hash2[3] };
-            }
+            using var shA256 = new SHA256Managed();
+            var hash1 = shA256.ComputeHash(data);
+            var hash2 = shA256.ComputeHash(hash1);
+            return new[] { hash2[0], hash2[1], hash2[2], hash2[3] };
         }
 
         static byte[] VerifyAndRemoveCheckSum(byte[] bytes)
@@ -53,7 +50,7 @@ namespace Netezos.Encoding
 
         static bool TryVerifyAndRemoveCheckSum(byte[] bytes, out byte[] res)
         {
-            res = null;
+            res = null!;
             if (bytes.Length < 4)
                 return false;
             
@@ -113,7 +110,7 @@ namespace Netezos.Encoding
         static bool TryDecodePlain(string base58, out byte[] res)
         {
             BigInteger bigInt = 0;
-            res = null;
+            res = null!;
 
             for (int i = 0; i < base58.Length; ++i)
             {
@@ -152,7 +149,7 @@ namespace Netezos.Encoding
 
         public static bool TryParse(string base58, out byte[] bytes)
         {
-            bytes = null;
+            bytes = null!;
 
             if (string.IsNullOrEmpty(base58))
                 return false;
@@ -163,7 +160,7 @@ namespace Netezos.Encoding
         
         public static bool TryParse(string base58, byte[] prefix, out byte[] bytes)
         {
-            bytes = null;
+            bytes = null!;
             
             if (!TryParse(base58, out var data))
                 return false;

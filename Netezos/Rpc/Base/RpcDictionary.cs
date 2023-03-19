@@ -8,17 +8,8 @@
     public class RpcDictionary<TKey, TValue> : RpcObject where TValue : RpcObject
     {
         #region static
-        static Creator<TValue> _CreateRpcObject = null;
-        static Creator<TValue> CreateRpcObject
-        {
-            get
-            {
-                if (_CreateRpcObject == null)
-                    _CreateRpcObject = GetCreator<TValue>();
-
-                return _CreateRpcObject;
-            }
-        }
+        static Creator<TValue>? _CreateRpcObject = null;
+        static Creator<TValue> CreateRpcObject => _CreateRpcObject ??= GetCreator<TValue>();
         #endregion
 
         /// <summary>
@@ -39,17 +30,8 @@
     public class RpcSimpleDictionary<TKey, TValue> : RpcQuery where TValue : RpcQuery
     {
         #region static
-        static RpcObject.Creator<TValue> _CreateRpcObject = null;
-        static RpcObject.Creator<TValue> CreateRpcObject
-        {
-            get
-            {
-                if (_CreateRpcObject == null)
-                    _CreateRpcObject = RpcObject.GetCreator<TValue>();
-
-                return _CreateRpcObject;
-            }
-        }
+        static RpcObject.Creator<TValue>? _CreateRpcObject = null;
+        static RpcObject.Creator<TValue> CreateRpcObject => _CreateRpcObject ??= RpcObject.GetCreator<TValue>();
         #endregion
 
         /// <summary>

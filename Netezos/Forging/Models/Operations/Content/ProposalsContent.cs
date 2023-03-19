@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
@@ -9,12 +8,12 @@ namespace Netezos.Forging.Models
         public override string Kind => "proposals";
         
         [JsonPropertyName("source")]
-        public string Source { get; set; }
+        public string Source { get; set; } = null!;
 
         [JsonPropertyName("period")]
         public int Period { get; set; }
 
         [JsonPropertyName("proposals")]
-        public List<string> Proposals { get; set; }
+        public List<string> Proposals { get; set; } = null!;
     }
 }

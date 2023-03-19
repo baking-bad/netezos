@@ -1,12 +1,11 @@
-﻿using System;
-using Netezos.Encoding;
+﻿using Netezos.Encoding;
 using Netezos.Utils;
 
 namespace Netezos.Keys
 {
     public class PubKey
     {
-        string _Address;
+        string? _Address;
         public string Address
         {
             get
@@ -97,13 +96,13 @@ namespace Netezos.Keys
 
         #region static
         public static PubKey FromBytes(byte[] bytes, ECKind kind = ECKind.Ed25519)
-            => new PubKey(bytes, kind);
+            => new(bytes, kind);
 
         public static PubKey FromHex(string hex, ECKind kind = ECKind.Ed25519)
-            => new PubKey(Hex.Parse(hex), kind, true);
+            => new(Hex.Parse(hex), kind, true);
 
         public static PubKey FromBase64(string base64, ECKind kind = ECKind.Ed25519)
-            => new PubKey(Base64.Parse(base64), kind, true);
+            => new(Base64.Parse(base64), kind, true);
 
         public static PubKey FromBase58(string base58)
         {

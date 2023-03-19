@@ -1,5 +1,4 @@
-﻿using System;
-using Netezos.Encoding;
+﻿using Netezos.Encoding;
 
 namespace Netezos.Keys
 {
@@ -21,7 +20,7 @@ namespace Netezos.Keys
                 return _PubKey;
             }
         }
-        PubKey _PubKey;
+        PubKey? _PubKey;
 
         internal readonly Curve Curve;
         internal readonly ISecretStore Store;
@@ -107,13 +106,13 @@ namespace Netezos.Keys
 
         #region static
         public static Key FromBytes(byte[] bytes, ECKind kind = ECKind.Ed25519)
-            => new Key(bytes, kind);
+            => new(bytes, kind);
 
         public static Key FromHex(string hex, ECKind kind = ECKind.Ed25519)
-            => new Key(Hex.Parse(hex), kind, true);
+            => new(Hex.Parse(hex), kind, true);
 
         public static Key FromBase64(string base64, ECKind kind = ECKind.Ed25519)
-            => new Key(Base64.Parse(base64), kind, true);
+            => new(Base64.Parse(base64), kind, true);
 
         public static Key FromBase58(string base58)
         {

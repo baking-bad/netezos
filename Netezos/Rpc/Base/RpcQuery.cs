@@ -5,7 +5,7 @@
     /// </summary>
     public class RpcQuery
     {
-        internal RpcQuery Base;
+        internal RpcQuery? Base;
         internal RpcClient Client;
         internal string Query;
 

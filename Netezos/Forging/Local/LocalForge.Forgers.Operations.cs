@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Netezos.Encoding;
+﻿using Netezos.Encoding;
 using Netezos.Forging.Models;
 using Netezos.Utils;
 
@@ -10,69 +8,39 @@ namespace Netezos.Forging
     {
         static byte[] ForgeOperation(OperationContent content)
         {
-            switch (content)
+            return content switch
             {
-                case EndorsementContent op:
-                    return ForgeEndorsement(op);
-                case PreendorsementContent op:
-                    return ForgePreendorsement(op);
-                case BallotContent op:
-                    return ForgeBallot(op);
-                case ProposalsContent op:
-                    return ForgeProposals(op);
-                case ActivationContent op:
-                    return ForgeActivation(op);
-                case DoubleBakingContent op:
-                    return ForgeDoubleBaking(op);
-                case DoubleEndorsementContent op:
-                    return ForgeDoubleEndorsement(op);
-                case DoublePreendorsementContent op:
-                    return ForgeDoublePreendorsement(op);
-                case SeedNonceRevelationContent op:
-                    return ForgeSeedNonceRevelaion(op);
-                case VdfRevelationContent op:
-                    return ForgeVdfRevelaion(op);
-                case DrainDelegateContent op:
-                    return ForgeDrainDelegate(op);
-                case DelegationContent op:
-                    return ForgeDelegation(op);
-                case OriginationContent op:
-                    return ForgeOrigination(op);
-                case TransactionContent op:
-                    return ForgeTransaction(op);
-                case RevealContent op:
-                    return ForgeReveal(op);
-                case RegisterConstantContent op:
-                    return ForgeRegisterConstant(op);
-                case SetDepositsLimitContent op:
-                    return ForgeSetDepositsLimit(op);
-                case IncreasePaidStorageContent op:
-                    return ForgeIncreasePaidStorage(op);
-                case FailingNoopContent op:
-                    return ForgeFailingNoop(op);
-                case TransferTicketContent op:
-                    return ForgeTransferTicket(op);
-                case TxRollupCommitContent op:
-                    return ForgeTxRollupCommit(op);
-                case TxRollupDispatchTicketsContent op:
-                    return ForgeTxRollupDispatchTickets(op);
-                case TxRollupFinalizeCommitmentContent op:
-                    return ForgeTxRollupFinalizeCommitment(op);
-                case TxRollupOriginationContent op:
-                    return ForgeTxRollupOrigination(op);
-                case TxRollupRejectionContent op:
-                    return ForgeTxRollupRejection(op);
-                case TxRollupRemoveCommitmentContent op:
-                    return ForgeTxRollupRemoveCommitment(op);
-                case TxRollupReturnBondContent op:
-                    return ForgeTxRollupReturnBond(op);
-                case TxRollupSubmitBatchContent op:
-                    return ForgeTxRollupSubmitBatch(op);
-                case UpdateConsensusKeyContent op:
-                    return ForgeUpdateConsensusKey(op);
-                default:
-                    throw new ArgumentException($"Invalid operation content kind {content.Kind}");
-            }
+                EndorsementContent op => ForgeEndorsement(op),
+                PreendorsementContent op => ForgePreendorsement(op),
+                BallotContent op => ForgeBallot(op),
+                ProposalsContent op => ForgeProposals(op),
+                ActivationContent op => ForgeActivation(op),
+                DoubleBakingContent op => ForgeDoubleBaking(op),
+                DoubleEndorsementContent op => ForgeDoubleEndorsement(op),
+                DoublePreendorsementContent op => ForgeDoublePreendorsement(op),
+                SeedNonceRevelationContent op => ForgeSeedNonceRevelation(op),
+                VdfRevelationContent op => ForgeVdfRevelation(op),
+                DrainDelegateContent op => ForgeDrainDelegate(op),
+                DelegationContent op => ForgeDelegation(op),
+                OriginationContent op => ForgeOrigination(op),
+                TransactionContent op => ForgeTransaction(op),
+                RevealContent op => ForgeReveal(op),
+                RegisterConstantContent op => ForgeRegisterConstant(op),
+                SetDepositsLimitContent op => ForgeSetDepositsLimit(op),
+                IncreasePaidStorageContent op => ForgeIncreasePaidStorage(op),
+                FailingNoopContent op => ForgeFailingNoop(op),
+                TransferTicketContent op => ForgeTransferTicket(op),
+                TxRollupCommitContent op => ForgeTxRollupCommit(op),
+                TxRollupDispatchTicketsContent op => ForgeTxRollupDispatchTickets(op),
+                TxRollupFinalizeCommitmentContent op => ForgeTxRollupFinalizeCommitment(op),
+                TxRollupOriginationContent op => ForgeTxRollupOrigination(op),
+                TxRollupRejectionContent op => ForgeTxRollupRejection(op),
+                TxRollupRemoveCommitmentContent op => ForgeTxRollupRemoveCommitment(op),
+                TxRollupReturnBondContent op => ForgeTxRollupReturnBond(op),
+                TxRollupSubmitBatchContent op => ForgeTxRollupSubmitBatch(op),
+                UpdateConsensusKeyContent op => ForgeUpdateConsensusKey(op),
+                _ => throw new ArgumentException($"Invalid operation content kind {content.Kind}")
+            };
         }
 
         static byte[] ForgeEndorsement(EndorsementContent operation)
@@ -137,19 +105,19 @@ namespace Netezos.Forging
         {
             return Bytes.Concat(
                 ForgeTag(OperationTag.DoubleEndorsement),
-                ForgeArray(ForgeInlinedEndorsement(operation.Op1)),
-                ForgeArray(ForgeInlinedEndorsement(operation.Op2)));
+                ForgeArray(ForgeInlineEndorsement(operation.Op1)),
+                ForgeArray(ForgeInlineEndorsement(operation.Op2)));
         }
 
         static byte[] ForgeDoublePreendorsement(DoublePreendorsementContent operation)
         {
             return Bytes.Concat(
                 ForgeTag(OperationTag.DoublePreendorsement),
-                ForgeArray(ForgeInlinedPreendorsement(operation.Op1)),
-                ForgeArray(ForgeInlinedPreendorsement(operation.Op2)));
+                ForgeArray(ForgeInlinePreendorsement(operation.Op1)),
+                ForgeArray(ForgeInlinePreendorsement(operation.Op2)));
         }
 
-        static byte[] ForgeSeedNonceRevelaion(SeedNonceRevelationContent operation)
+        static byte[] ForgeSeedNonceRevelation(SeedNonceRevelationContent operation)
         {
             return Bytes.Concat(
                 ForgeTag(OperationTag.SeedNonceRevelation),
@@ -157,7 +125,7 @@ namespace Netezos.Forging
                 Hex.Parse(operation.Nonce));
         }
 
-        static byte[] ForgeVdfRevelaion(VdfRevelationContent operation)
+        static byte[] ForgeVdfRevelation(VdfRevelationContent operation)
         {
             return Bytes.Concat(
                 ForgeTag(OperationTag.VdfRevelation),
@@ -436,7 +404,7 @@ namespace Netezos.Forging
                 Base58.Parse(header.Signature, 3));
         }
 
-        static byte[] ForgeInlinedEndorsement(InlinedEndorsement op)
+        static byte[] ForgeInlineEndorsement(InlineEndorsement op)
         {
             return Bytes.Concat(
                 Base58.Parse(op.Branch, 2),
@@ -444,7 +412,7 @@ namespace Netezos.Forging
                 Base58.Parse(op.Signature, 3));
         }
 
-        static byte[] ForgeInlinedPreendorsement(InlinedPreendorsement op)
+        static byte[] ForgeInlinePreendorsement(InlinePreendorsement op)
         {
             return Bytes.Concat(
                 Base58.Parse(op.Branch, 2),
@@ -452,21 +420,21 @@ namespace Netezos.Forging
                 Base58.Parse(op.Signature, 3));
         }
 
-        static byte[] ForgeSeedNonce(string nonce)
+        static byte[] ForgeSeedNonce(string? nonce)
         {
             return nonce == null ? ForgeBool(false) : Bytes.Concat(
                 ForgeBool(true),
                 Base58.Parse(nonce, 3));
         }
 
-        static byte[] ForgeDelegate(string delegat)
+        static byte[] ForgeDelegate(string? baker)
         {
-            return delegat == null ? ForgeBool(false) : Bytes.Concat(
+            return baker == null ? ForgeBool(false) : Bytes.Concat(
                 ForgeBool(true),
-                ForgeTzAddress(delegat));
+                ForgeTzAddress(baker));
         }
 
-        static byte[] ForgeParameters(Parameters param)
+        static byte[] ForgeParameters(Parameters? param)
         {
             return param == null ? ForgeBool(false) : Bytes.Concat(
                 ForgeBool(true),

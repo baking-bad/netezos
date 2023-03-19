@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -16,7 +14,7 @@ namespace Netezos.Contracts
 
         public SaplingStateSchema(MichelinePrim micheline) : base(micheline)
         {
-            if (micheline.Args?.Count != 1 || !(micheline.Args[0] is MichelineInt micheInt))
+            if (micheline.Args?.Count != 1 || micheline.Args[0] is not MichelineInt micheInt)
                 throw new FormatException($"Invalid {Prim} schema format");
 
             MemoSize = micheInt.Value;

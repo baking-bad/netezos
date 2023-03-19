@@ -6,7 +6,7 @@ namespace Netezos.Tests.Rpc
 {
     public class SettingsFixture : IDisposable
     {
-        static readonly object Crit = new object();
+        static readonly object Crit = new();
 
         public TezosRpc Rpc { get; }
         public string TestContract { get; }
@@ -32,6 +32,10 @@ namespace Netezos.Tests.Rpc
             }
         }
 
-        public void Dispose() => Rpc.Dispose();
+        public void Dispose()
+        {
+            Rpc.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

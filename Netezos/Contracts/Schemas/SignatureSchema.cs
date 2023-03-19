@@ -35,43 +35,26 @@ namespace Netezos.Contracts
 
         protected override IMicheline MapValue(object value)
         {
-            switch (value)
+            return value switch
             {
-                case string str:
-                    // TODO: validation & optimization
-                    return new MichelineString(str);
-                case byte[] bytes:
-                    // TODO: validation
-                    return new MichelineBytes(bytes);
-                case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    // TODO: validation & optimization
-                    return new MichelineString(json.GetString());
-                default:
-                    throw MapFailedException("invalid value");
-            }
+                string str => new MichelineString(str),
+                byte[] bytes => new MichelineBytes(bytes),
+                JsonElement { ValueKind: JsonValueKind.String } json => new MichelineString(json.GetString()!),
+                _ => throw MapFailedException("invalid value"),
+            };
         }
 
         public override IMicheline Optimize(IMicheline value)
         {
             if (value is MichelineString micheStr)
             {
-                byte[] res;
-                switch (micheStr.Value.Substring(0, 3))
+                var res = micheStr.Value.Substring(0, 3) switch
                 {
-                    case "eds":
-                    case "sps":
-                        res = Base58.Parse(micheStr.Value, 5);
-                        break;
-                    case "p2s":
-                    case "BLs":
-                        res = Base58.Parse(micheStr.Value, 4);
-                        break;
-                    case "sig":
-                        res = Base58.Parse(micheStr.Value, 3);
-                        break;
-                    default:
-                        throw FormatException(value);
-                }
+                    "eds" or "sps" => Base58.Parse(micheStr.Value, 5),
+                    "p2s" or "BLs" => Base58.Parse(micheStr.Value, 4),
+                    "sig" => Base58.Parse(micheStr.Value, 3),
+                    _ => throw FormatException(value)
+                };
                 return new MichelineBytes(res);
             }
 

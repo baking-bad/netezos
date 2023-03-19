@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Netezos.Encoding.Serialization;
@@ -17,16 +15,16 @@ namespace Netezos.Encoding
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        public static IMicheline FromJson(string json)
+        public static IMicheline? FromJson(string json)
             => JsonSerializer.Deserialize<IMicheline>(json, SerializerOptions);
 
-        public static IMicheline FromJson(string json, JsonSerializerOptions options)
+        public static IMicheline? FromJson(string json, JsonSerializerOptions options)
             => JsonSerializer.Deserialize<IMicheline>(json, options);
 
-        public static IMicheline FromJson(JsonElement json)
+        public static IMicheline? FromJson(JsonElement json)
             => JsonSerializer.Deserialize<IMicheline>(json.GetRawText(), SerializerOptions);
 
-        public static IMicheline FromJson(JsonElement json, JsonSerializerOptions options)
+        public static IMicheline? FromJson(JsonElement json, JsonSerializerOptions options)
             => JsonSerializer.Deserialize<IMicheline>(json.GetRawText(), options);
 
         public static IMicheline FromBytes(byte[] bytes)

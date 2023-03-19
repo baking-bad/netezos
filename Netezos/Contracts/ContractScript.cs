@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Netezos.Encoding;
 
 namespace Netezos.Contracts
@@ -15,13 +12,13 @@ namespace Netezos.Contracts
 
         public ContractScript(IMicheline script)
         {
-            if (!(script is MichelineArray array) || array.Count < 3)
+            if (script is not MichelineArray array || array.Count < 3)
                 throw new FormatException("Invalid micheline");
 
-            var parameter = array.FirstOrDefault(x => (x as MichelinePrim)?.Prim == PrimType.parameter) as MichelinePrim
+            var parameter = array.FirstOrDefault(x => x is MichelinePrim { Prim: PrimType.parameter }) as MichelinePrim
                 ?? throw new FormatException("Invalid micheline parameters");
 
-            var storage = array.FirstOrDefault(x => (x as MichelinePrim)?.Prim == PrimType.storage) as MichelinePrim
+            var storage = array.FirstOrDefault(x => x is MichelinePrim { Prim: PrimType.storage }) as MichelinePrim
                 ?? throw new FormatException("Invalid micheline storage");
 
             Parameter = new ContractParameter(parameter);

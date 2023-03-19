@@ -8,7 +8,7 @@ namespace Netezos.Contracts
     {
         public override PrimType Prim => PrimType.bls12_381_fr;
 
-        BigInteger Order => new BigInteger(new byte[]
+        BigInteger Order => new(new byte[]
         {
             1, 0, 0, 0, 255, 255, 255, 255, 254, 91, 254, 255, 2, 164, 189, 83,
             5, 216, 161, 9, 8, 216, 57, 51, 72, 125, 157, 41, 83, 167, 237, 115
@@ -48,7 +48,7 @@ namespace Netezos.Contracts
                         throw MapFailedException($"invalid hex string");
                     return new MichelineBytes(b1);
                 case JsonElement json when json.ValueKind == JsonValueKind.String:
-                    if (!Hex.TryParse(json.GetString(), out var b2))
+                    if (!Hex.TryParse(json.GetString()!, out var b2))
                         throw MapFailedException($"invalid hex string");
                     return new MichelineBytes(b2);
                 default:

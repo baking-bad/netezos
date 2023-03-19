@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Netezos
+﻿namespace Netezos
 {
     static class BinaryWriterExtension
     {

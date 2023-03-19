@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
+﻿using System.Text.RegularExpressions;
 using Netezos.Utils;
 
 namespace Netezos.Keys
@@ -9,13 +7,12 @@ namespace Netezos.Keys
     {
         readonly string Sentence;
 
-        public Mnemonic() : this(MnemonicSize.M15) { }
+        public Mnemonic() : this(MnemonicSize.M24) { }
         
         public Mnemonic(MnemonicSize size)
         {
-            var entropy = RNG.GetNonZeroBytes((int)size * 4 / 3);
+            var entropy = RNG.GetNonZeroBytes((int)size);
             var words = Bip39.GetMnemonic(entropy);
-
             Sentence = string.Join(" ", words);
         }
 
@@ -30,18 +27,18 @@ namespace Netezos.Keys
         public override string ToString() => Sentence;
 
         #region static
-        public static Mnemonic Parse(string mnemonic) => new Mnemonic(mnemonic);
+        public static Mnemonic Parse(string mnemonic) => new(mnemonic);
 
-        public static Mnemonic Parse(IEnumerable<string> words) => new Mnemonic(words);
+        public static Mnemonic Parse(IEnumerable<string> words) => new(words);
         #endregion
     }
 
     public enum MnemonicSize
     {
-        M12 = 12,
-        M15 = 15,
-        M18 = 18,
-        M21 = 21,
-        M24 = 24,
+        M12 = 16,
+        M15 = 20,
+        M18 = 24,
+        M21 = 28,
+        M24 = 32,
     }
 }

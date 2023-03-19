@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
@@ -9,7 +8,7 @@ namespace Netezos.Forging.Models
         public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return reader.TokenType == JsonTokenType.String
-                ? int.Parse(reader.GetString())
+                ? int.Parse(reader.GetString() ?? throw new FormatException("Cannot read from null"))
                 : reader.GetInt32();
         }
 

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Netezos.Rpc.Queries
+﻿namespace Netezos.Rpc.Queries
 {
     /// <summary>
     /// Retrieves the delegates allowed to endorse a block.
@@ -45,7 +43,7 @@ namespace Netezos.Rpc.Queries
         /// Executes the query and returns the endorsing rights
         /// </summary>
         /// <returns></returns>
-        public new Task<T> GetAsync<T>()
+        public new Task<T?> GetAsync<T>()
             => Client.GetJson<T>(Query);
 
         /// <summary>
@@ -53,7 +51,7 @@ namespace Netezos.Rpc.Queries
         /// </summary>
         /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
         /// <returns></returns>
-        public Task<T> GetAsync<T>(string baker)
+        public Task<T?> GetAsync<T>(string baker)
             => Client.GetJson<T>($"{Query}?delegate={baker}");
 
         /// <summary>
@@ -61,7 +59,7 @@ namespace Netezos.Rpc.Queries
         /// </summary>
         /// <param name="level">Level of the block at which the endorsing rights are to be returned</param>
         /// <returns></returns>
-        public Task<T> GetFromLevelAsync<T>(int level)
+        public Task<T?> GetFromLevelAsync<T>(int level)
             => Client.GetJson<T>($"{Query}?level={level}");
 
         /// <summary>
@@ -70,7 +68,7 @@ namespace Netezos.Rpc.Queries
         /// <param name="level">Level of the block at which the endorsing rights are to be returned</param>
         /// <param name="baker">Delegate whose endorsing rights are to be returned</param>
         /// <returns></returns>
-        public Task<T> GetFromLevelAsync<T>(int level, string baker)
+        public Task<T?> GetFromLevelAsync<T>(int level, string baker)
             => Client.GetJson<T>($"{Query}?level={level}&delegate={baker}");
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 
 namespace Netezos.Keys
 {
@@ -93,7 +90,7 @@ namespace Netezos.Keys
         /// <returns>True if the HDPath is parsed successfully, otherwise false</returns>
         public static bool TryParse(string path, out HDPath res)
         {
-            res = null;
+            res = null!;
             if (path == null) return false;
 
             path = path.TrimStart('m').Trim('/');

@@ -8,6 +8,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "delegation";
 
         [JsonPropertyName("delegate")]
-        public string Delegate { get; set; }
+        public string? Delegate { get; set; }
     }
 }

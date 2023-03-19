@@ -1,8 +1,9 @@
-﻿using Netezos.Encoding.Serialization;
+﻿using System.Text.Json.Serialization;
+using Netezos.Encoding.Serialization;
 
 namespace Netezos.Encoding
 {
-    [InterfaceJsonConverter(typeof(AnnotationConverter))]
+    [JsonConverter(typeof(AnnotationConverter))]
     public interface IAnnotation
     {
         AnnotationType Type { get; }

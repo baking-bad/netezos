@@ -16,7 +16,7 @@
             }
             catch
             {
-                bytes = null;
+                bytes = null!;
                 return false;
             }
         }
