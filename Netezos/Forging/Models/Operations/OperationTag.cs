@@ -35,5 +35,13 @@
         TxRollupRejection           = 156,
         TxRollupDispatchTickets     = 157,
         TransferTicket              = 158,
+        
+        SrAddMessages = 201,
+        SrCement = 202,
+        SrPublish = 203,
+        SrRefute = 204,
+        // SrTimeout = 205,
+        SrExecute = 206,
+        SrRecoverBond = 207
     }
 }

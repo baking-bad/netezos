@@ -36,6 +36,13 @@ namespace Netezos.Forging.Models
                 "tx_rollup_return_bond" => JsonSerializer.Deserialize<TxRollupReturnBondContent>(ref reader, options),
                 "tx_rollup_submit_batch" => JsonSerializer.Deserialize<TxRollupSubmitBatchContent>(ref reader, options),
                 "update_consensus_key" => JsonSerializer.Deserialize<UpdateConsensusKeyContent>(ref reader, options),
+                "smart_rollup_add_messages" => JsonSerializer.Deserialize<SrAddMessagesContent>(ref reader, options),
+                "smart_rollup_cement" => JsonSerializer.Deserialize<SrCementContent>(ref reader, options),
+                "smart_rollup_execute_outbox_message" => JsonSerializer.Deserialize<SrExecuteContent>(ref reader, options),
+                "smart_rollup_originate" => JsonSerializer.Deserialize<SrOriginateContent>(ref reader, options),
+                "smart_rollup_publish" => JsonSerializer.Deserialize<SrPublishContent>(ref reader, options),
+                "smart_rollup_recover_bond" => JsonSerializer.Deserialize<SrRecoverBondContent>(ref reader, options),
+                "smart_rollup_refute" => JsonSerializer.Deserialize<SrRefuteContent>(ref reader, options),
                 _ => throw new JsonException("Invalid operation kind"),
             };
         }

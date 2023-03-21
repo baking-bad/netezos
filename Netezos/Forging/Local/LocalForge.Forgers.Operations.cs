@@ -39,6 +39,7 @@ namespace Netezos.Forging
                 TxRollupReturnBondContent op => ForgeTxRollupReturnBond(op),
                 TxRollupSubmitBatchContent op => ForgeTxRollupSubmitBatch(op),
                 UpdateConsensusKeyContent op => ForgeUpdateConsensusKey(op),
+                SrAddMessagesContent op => ForgeSrAddMessages(op),
                 _ => throw new ArgumentException($"Invalid operation content kind {content.Kind}")
             };
         }
@@ -382,6 +383,30 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
                 ForgePublicKey(operation.PublicKey));
+        }
+
+        static byte[] ForgeSrAddMessages(SrAddMessagesContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrAddMessages),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeArray(operation.Message.Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray()));
+        }
+
+        static byte[] ForgeSrCement(SrAddMessagesContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrAddMessages),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeArray(operation.Message.Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray()));
         }
 
         #region nested

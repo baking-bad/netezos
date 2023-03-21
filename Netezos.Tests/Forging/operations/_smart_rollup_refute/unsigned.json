@@ -1,0 +1,20 @@
+﻿{
+  "branch": "BKj7wMot1maMQW7v1TojTpejZR4vhXcmMmW6SMQ8r2QYsutQd6w",
+  "contents": [
+    {
+      "kind": "smart_rollup_refute",
+      "source": "tz1TecRhYLVV9bTKRKU9g1Hhpb1Ymw3ynzWS",
+      "fee": "943",
+      "counter": "23046",
+      "gas_limit": "6109",
+      "storage_limit": "0",
+      "rollup": "sr1QZkk1swognQW3dmiXvga3wVkEgBq7QFjE",
+      "opponent": "tz1iFnSQ6V2d8piVMPMjtDNdkYNMaUfKwsoy",
+      "refutation": {
+        "refutation_kind": "start",
+        "player_commitment_hash": "src13G8tXdSirtPDGRuAjzc5JxxH1zHHkuBgNMFSHnybRt38UjnzTQ",
+        "opponent_commitment_hash": "src147QJ7DFSJxvFTvZtW1k6QxVKp2KuddVc639T6rAqd1jC39pYiz"
+      }
+    }
+  ]
+}

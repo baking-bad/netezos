@@ -38,6 +38,7 @@ namespace Netezos.Forging
                 OperationTag.TxRollupReturnBond => UnforgeTxRollupReturnBond(reader),
                 OperationTag.TxRollupSubmitBatch => UnforgeTxRollupSubmitBatch(reader),
                 OperationTag.UpdateConsensusKey => UnforgeUpdateConsensusKey(reader),
+                OperationTag.SrAddMessages => UnforgeSrAddMessages(reader),
                 var operation => throw new ArgumentException($"Invalid operation: {operation}")
             };
         }
@@ -405,6 +406,115 @@ namespace Netezos.Forging
             };
         }
 
+        static SrAddMessagesContent UnforgeSrAddMessages(ForgedReader reader)
+        {
+            return new SrAddMessagesContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Message = reader.ReadEnumerable(r => r.ReadHexString()).ToList(),
+
+            };
+        }
+
+        static SrCementContent UnforgeSrCement(ForgedReader reader)
+        {
+            return new SrCementContent()
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadSrAddress(),
+                Commitment = reader.ReadBase58(Lengths.src1.Decoded, Prefix.src1)
+            };
+        }
+
+        static SrExecuteContent UnforgeSrExecute(ForgedReader reader)
+        {
+            return new SrExecuteContent()
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadSrAddress(),
+                CementedCommitment = reader.ReadBase58(Lengths.src1.Decoded, Prefix.src1),
+                OutputProof = reader.ReadHexString()
+            };
+        }
+
+        static SrOriginateContent UnforgeSrOriginate(ForgedReader reader)
+        {
+            return new SrOriginateContent()
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                PvmKind = reader.ReadString(),
+                Kernel = reader.ReadHexString(),
+                OriginationProof = reader.ReadHexString(),
+                ParametersTy = reader.ReadMicheline()
+            };
+        }
+
+        static SrPublishContent UnforgeSrPublish(ForgedReader reader)
+        {
+            return new SrPublishContent()
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadSrAddress(),
+                Commitment = UnforgeCommitment(reader)
+            };
+        }
+
+        static SrRecoverBondContent UnforgeSrRecoverBond(ForgedReader reader)
+        {
+            return new SrRecoverBondContent()
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadSrAddress(),
+                Staker = reader.ReadTzAddress()
+            };
+        }
+
+        static SrRefuteContent UnforgeSrRefute(ForgedReader reader)
+        {
+            return new SrRefuteContent()
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadSrAddress(),
+                Opponent = reader.ReadTzAddress(),
+                Refutation = 
+                
+                "opponent": "tz1iFnSQ6V2d8piVMPMjtDNdkYNMaUfKwsoy",
+                "refutation": {
+                "refutation_kind": "start",
+                "player_commitment_hash": "src13G8tXdSirtPDGRuAjzc5JxxH1zHHkuBgNMFSHnybRt38UjnzTQ",
+                "opponent_commitment_hash": "src147QJ7DFSJxvFTvZtW1k6QxVKp2KuddVc639T6rAqd1jC39pYiz"
+            }
+            };
+        }
+
         #region nested
 
         static BlockHeader UnforgeBlockHeader(ForgedReader reader)
@@ -492,6 +602,25 @@ namespace Netezos.Forging
                 Code = (MichelineArray)reader.ReadEnumerableSingle(UnforgeMicheline),
                 Storage = reader.ReadEnumerableSingle(UnforgeMicheline)
             };
+        }
+
+        static Commitment UnforgeCommitment(ForgedReader reader)
+        {
+            return new Commitment()
+            {
+                CompressedState = reader.ReadBase58(Lengths.srs1.Decoded, Prefix.srs1),
+                InboxLevel = reader.ReadInt32(),
+                Predecessor = reader.ReadBase58(Lengths.src1.Decoded, Prefix.src1),
+                NumberOfTicks = reader.ReadInt64()
+            };
+        }
+
+        static Refutation UnforgeRefutation(ForgedReader reader)
+        {
+            return new Refutation()
+            {
+                OpponentCommitmentHash = 
+            }
         }
 
         static T? UnforgeConditional<T>(ForgedReader reader, Func<T> tb, Func<T>? fb = null)

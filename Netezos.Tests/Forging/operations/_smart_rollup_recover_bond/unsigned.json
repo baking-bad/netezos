@@ -1,0 +1,15 @@
+﻿{
+  "branch": "BKj7wMot1maMQW7v1TojTpejZR4vhXcmMmW6SMQ8r2QYsutQd6w",
+  "contents": [
+    {
+      "kind": "smart_rollup_recover_bond",
+      "source": "tz1RjLoaHdVkKHnPoafiKRJtMphMbnPKVrvE",
+      "fee": "669",
+      "counter": "24965",
+      "gas_limit": "4016",
+      "storage_limit": "0",
+      "rollup": "sr1TrWqgdAkuENnUVmox89LX7UqhthC3FCYp",
+      "staker": "tz1RjLoaHdVkKHnPoafiKRJtMphMbnPKVrvE"
+    }
+  ]
+}

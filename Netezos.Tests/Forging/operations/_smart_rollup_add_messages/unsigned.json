@@ -1,0 +1,16 @@
+﻿{
+  "branch": "BKj7wMot1maMQW7v1TojTpejZR4vhXcmMmW6SMQ8r2QYsutQd6w",
+  "contents": [
+    {
+      "kind": "smart_rollup_add_messages",
+      "source": "tz2DcMcDhBb6Rd26GigyZ147u1Xq68ANPHoC",
+      "fee": "579",
+      "counter": "219",
+      "gas_limit": "1100",
+      "storage_limit": "0",
+      "message": [
+        "0000000031010000000b48656c6c6f20776f726c6401cc9e352a850d7475bf9b6cf103aa17ca404bc9dd000000000764656661756c74"
+      ]
+    }
+  ]
+}
