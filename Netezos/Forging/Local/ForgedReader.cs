@@ -201,7 +201,14 @@ namespace Netezos.Forging
         public string ReadSrAddress()
         {
             var address = ReadBase58(Lengths.sr1.Decoded, Prefix.sr1);
-            ReadByte(); // Consume padded 0
+            // ReadByte(); // Consume padded 0
+            return address;
+        }
+
+        public string ReadCommitmentAddress()
+        {
+            var address = ReadBase58(Lengths.src1.Decoded, Prefix.src1);
+            // ReadByte(); // Consume padded 0
             return address;
         }
 
@@ -386,6 +393,12 @@ namespace Netezos.Forging
         public string ReadHexString()
         {
             var stringLength = ReadInt32();
+            return Hex.Convert(ReadBytes(stringLength));
+        }
+
+        public string ReadHexString(int len)
+        {
+            var stringLength = ReadInt32(len);
             return Hex.Convert(ReadBytes(stringLength));
         }
 

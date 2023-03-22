@@ -30,6 +30,8 @@ namespace Netezos.Tests.Forging
                     ? await forge.ForgeOperationAsync(op.Branch, op.Contents[0])
                     : await forge.ForgeOperationGroupAsync(op.Branch, op.Contents.Select(x => x as ManagerOperationContent));
 
+                var a = Hex.Convert(localBytes);
+                
                 Assert.True(opBytes == Hex.Convert(localBytes), directory);
             }
         }
@@ -64,16 +66,31 @@ namespace Netezos.Tests.Forging
                 var opBytes = Hex.Parse(File.ReadAllText($"{directory}/forged.hex"));
 
                 // Unforge the op bytes
+
                 var op = await forge.UnforgeOperationAsync(opBytes);
 
                 // Serialize/deserialize each operation for the purpose of conversion to JsonElement for comparison
                 var deserOps = op.Item2.Select(toJsonElement);
 
+                if (directory == "../../../Forging/operations/_smart_rollup_refute")
+                {
+                    var a = "test";
+                }
+                
                 // Assert branch
                 Assert.Equal(json.branch, op.Item1);
                 // Assert equivalent JSON operations
                 Assert.Equal(json.contents.count, op.Item2.Count());
-                Assert.True(((JsonElement)json.contents).EnumerateArray().SequenceEqual(deserOps, jsonComparer));
+                try
+                {
+                    Assert.True(((JsonElement)json.contents).EnumerateArray().SequenceEqual(deserOps, jsonComparer), directory);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(directory);
+                    throw;
+                }
+                Assert.True(((JsonElement)json.contents).EnumerateArray().SequenceEqual(deserOps, jsonComparer), directory);
             }
         }
     }

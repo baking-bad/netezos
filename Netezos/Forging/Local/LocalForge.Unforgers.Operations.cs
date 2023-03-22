@@ -39,6 +39,12 @@ namespace Netezos.Forging
                 OperationTag.TxRollupSubmitBatch => UnforgeTxRollupSubmitBatch(reader),
                 OperationTag.UpdateConsensusKey => UnforgeUpdateConsensusKey(reader),
                 OperationTag.SrAddMessages => UnforgeSrAddMessages(reader),
+                OperationTag.SrCement => UnforgeSrCement(reader),
+                OperationTag.SrExecute => UnforgeSrExecute(reader),
+                OperationTag.SrOriginate=> UnforgeSrOriginate(reader),
+                OperationTag.SrPublish=> UnforgeSrPublish(reader),
+                OperationTag.SrRecoverBond=> UnforgeSrRecoverBond(reader),
+                OperationTag.SrRefute => UnforgeSrRefute(reader),
                 var operation => throw new ArgumentException($"Invalid operation: {operation}")
             };
         }
@@ -430,7 +436,7 @@ namespace Netezos.Forging
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
                 Rollup = reader.ReadSrAddress(),
-                Commitment = reader.ReadBase58(Lengths.src1.Decoded, Prefix.src1)
+                Commitment = reader.ReadCommitmentAddress()
             };
         }
 
@@ -444,7 +450,7 @@ namespace Netezos.Forging
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
                 Rollup = reader.ReadSrAddress(),
-                CementedCommitment = reader.ReadBase58(Lengths.src1.Decoded, Prefix.src1),
+                CementedCommitment = reader.ReadCommitmentAddress(),
                 OutputProof = reader.ReadHexString()
             };
         }
@@ -458,10 +464,14 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                PvmKind = reader.ReadString(),
+                PvmKind = reader.ReadByte() switch
+                {
+                    0 => "arith",
+                    1 => "wasm_2_0_0"
+                },
                 Kernel = reader.ReadHexString(),
                 OriginationProof = reader.ReadHexString(),
-                ParametersTy = reader.ReadMicheline()
+                ParametersTy = reader.ReadEnumerableSingle(UnforgeMicheline)
             };
         }
 
@@ -504,14 +514,7 @@ namespace Netezos.Forging
                 StorageLimit = (int)reader.ReadUBigInt(),
                 Rollup = reader.ReadSrAddress(),
                 Opponent = reader.ReadTzAddress(),
-                Refutation = 
-                
-                "opponent": "tz1iFnSQ6V2d8piVMPMjtDNdkYNMaUfKwsoy",
-                "refutation": {
-                "refutation_kind": "start",
-                "player_commitment_hash": "src13G8tXdSirtPDGRuAjzc5JxxH1zHHkuBgNMFSHnybRt38UjnzTQ",
-                "opponent_commitment_hash": "src147QJ7DFSJxvFTvZtW1k6QxVKp2KuddVc639T6rAqd1jC39pYiz"
-            }
+                Refutation = UnforgeRefutation(reader)
             };
         }
 
@@ -617,10 +620,72 @@ namespace Netezos.Forging
 
         static Refutation UnforgeRefutation(ForgedReader reader)
         {
-            return new Refutation()
+            return reader.ReadInt32(1) switch
             {
-                OpponentCommitmentHash = 
-            }
+                0 => new RefutationStart()
+                {
+                  PlayerCommitmentHash = reader.ReadCommitmentAddress(),
+                  OpponentCommitmentHash = reader.ReadCommitmentAddress()
+                },
+                1 => new RefutationMove()
+                {
+                    Choice = reader.ReadInt64(),
+                    Step = reader.ReadInt32(1) switch
+                    {
+                        0 => new DissectionStep()
+                        {
+                            Dissections = reader.ReadEnumerable(UnforgeDissection).ToList(),
+                        },
+                        1 => UnforgeProof(reader)
+                    }
+                },
+                var ep => throw new ArgumentException($"Unrecognized refutation type {ep}")
+            };
+        }
+
+        static Dissection UnforgeDissection(ForgedReader reader)
+        {
+            return new Dissection()
+            {
+                State = reader.ReadCommitmentAddress(),
+                Tick = reader.ReadInt64()
+            };
+        }
+
+        static ProofStep UnforgeProof(ForgedReader reader)
+        {
+            return new ProofStep()
+            {
+                PvmStep = reader.ReadHexString(),
+                InputProof = UnforgeConditional<InputProof>(reader, () =>
+                {
+                    return reader.ReadInt32(1) switch
+                    {
+                        0 => new InboxProof()
+                        {
+                            Level = reader.ReadInt32(),
+                            MessageCounter = reader.ReadInt64(),
+                            SerializedProof = reader.ReadHexString()
+                        },
+                        1 => new RevealProof()
+                        {
+                            RevealProofData = reader.ReadInt32(1) switch
+                            {
+                                0 => new RawDataProof()
+                                {
+                                    RawData = reader.ReadHexString(2),
+                                },
+                                 1 => new MetadataProof(),
+                                2 => new DalPageProof()
+                                {
+                                    DalProof = reader.ReadHexString()
+                                }
+                            }
+                        },
+
+                    };
+                })
+            };
         }
 
         static T? UnforgeConditional<T>(ForgedReader reader, Func<T> tb, Func<T>? fb = null)

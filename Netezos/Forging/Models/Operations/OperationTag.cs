@@ -36,6 +36,7 @@
         TxRollupDispatchTickets     = 157,
         TransferTicket              = 158,
         
+        SrOriginate = 200,
         SrAddMessages = 201,
         SrCement = 202,
         SrPublish = 203,
