@@ -593,11 +593,15 @@ namespace Netezos.Forging
         static byte[] ForgeRefutationDissectionMove(RefutationDissectionMove move)
         {
             return Bytes.Concat(
-                new byte[] {1},
+                new byte[] { 1 },
                 ForgeMicheNat(move.Choice),
+                new byte[] { 0 },
                 ForgeArray(move.Step.Select(x =>
                     Bytes.Concat(
-                        ForgeCommitmentAddress(x.State),
+                         x.State == null 
+                             ? ForgeBool(false) 
+                             : ForgeBool(true).Concat(
+                                 ForgeCommitmentAddress(x.State)),
                         ForgeMicheNat(x.Tick))
                 ).SelectMany(x => x).ToArray()));
         }
