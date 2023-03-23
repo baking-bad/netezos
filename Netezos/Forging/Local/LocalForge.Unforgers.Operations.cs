@@ -620,35 +620,48 @@ namespace Netezos.Forging
 
         static Refutation UnforgeRefutation(ForgedReader reader)
         {
-            return reader.ReadInt32(1) switch
+            switch (reader.ReadByte())
             {
-                0 => new RefutationStart()
-                {
-                  PlayerCommitmentHash = reader.ReadCommitmentAddress(),
-                  OpponentCommitmentHash = reader.ReadCommitmentAddress()
-                },
-                1 => new RefutationMove()
-                {
-                    Choice = reader.ReadInt64(),
-                    Step = reader.ReadInt32(1) switch
+                case 0:
+                    return new RefutationStart()
                     {
-                        0 => new DissectionStep()
+                        PlayerCommitmentHash = reader.ReadCommitmentAddress(),
+                        OpponentCommitmentHash = reader.ReadCommitmentAddress()
+                    };
+                case 1:
+                    var choice = (long)reader.ReadUBigInt();
+                    return reader.ReadByte() switch
+                    {
+                        0 => new RefutationDissectionMove()
                         {
-                            Dissections = reader.ReadEnumerable(UnforgeDissection).ToList(),
+                            Choice = choice,
+                            Step = reader.ReadEnumerable(UnforgeDissection).ToList(),
                         },
-                        1 => UnforgeProof(reader)
-                    }
-                },
-                var ep => throw new ArgumentException($"Unrecognized refutation type {ep}")
+                        1 => new RefutationProofMove()
+                        {
+                            Choice = choice,
+                            Step = UnforgeProof(reader)
+                        },
+                        var ep => throw new ArgumentException($"Unrecognized refutation move step {ep}")
+                    };
+                default:
+                    throw new ArgumentException("Unrecognized refutation type");
             };
         }
 
         static Dissection UnforgeDissection(ForgedReader reader)
         {
+            var s = UnforgeConditional(reader, () => reader.ReadBase58(Lengths.src1.Decoded, Prefix.srs1));
+            var t = (long) reader.ReadUBigInt();
             return new Dissection()
             {
-                State = reader.ReadCommitmentAddress(),
-                Tick = reader.ReadInt64()
+                State = s,
+                Tick = t
+            };
+            return new Dissection()
+            {
+                State = reader.ReadBase58(Lengths.src1.Decoded, Prefix.srs1),
+                Tick = (long)reader.ReadUBigInt()
             };
         }
 
@@ -659,12 +672,12 @@ namespace Netezos.Forging
                 PvmStep = reader.ReadHexString(),
                 InputProof = UnforgeConditional<InputProof>(reader, () =>
                 {
-                    return reader.ReadInt32(1) switch
+                    return reader.ReadByte() switch
                     {
                         0 => new InboxProof()
                         {
                             Level = reader.ReadInt32(),
-                            MessageCounter = reader.ReadInt64(),
+                            MessageCounter = (long)reader.ReadUBigInt(),
                             SerializedProof = reader.ReadHexString()
                         },
                         1 => new RevealProof()

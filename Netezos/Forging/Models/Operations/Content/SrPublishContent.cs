@@ -32,6 +32,7 @@ public class Commitment
     [JsonPropertyName("predecessor")]
     public string Predecessor { get; set; }
     
+    [JsonConverter(typeof(Int64StringConverter))]
     [JsonPropertyName("number_of_ticks")]
     public long NumberOfTicks { get; set; }
 }

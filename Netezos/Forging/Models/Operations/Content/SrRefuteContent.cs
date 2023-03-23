@@ -37,7 +37,7 @@ public class RefutationStart : Refutation
     public string OpponentCommitmentHash { get; set; }
 }
 
-public class RefutationMove : Refutation
+public class RefutationDissectionMove : Refutation
 {
     [JsonPropertyName("refutation_kind")] 
     public override string RefutationKind => "move";
@@ -47,14 +47,20 @@ public class RefutationMove : Refutation
     public long Choice { get; set; }
     
     [JsonPropertyName("step")]
-    public IStep Step { get; set; }
+    public List<Dissection> Step { get; set; }
 }
 
-public interface IStep{}
-
-public class DissectionStep : IStep
+public class RefutationProofMove : Refutation
 {
-    public List<Dissection> Dissections { get; set; }
+    [JsonPropertyName("refutation_kind")] 
+    public override string RefutationKind => "move";
+    
+    [JsonPropertyName("choice")]
+    [JsonConverter(typeof(Int64StringConverter))]
+    public long Choice { get; set; }
+    
+    [JsonPropertyName("step")]
+    public ProofStep Step { get; set; }
 }
 
 public class Dissection
@@ -67,24 +73,32 @@ public class Dissection
     public long Tick { get; set; }
 }
 
-public class ProofStep : IStep
+public class ProofStep
 {
     [JsonPropertyName("pvm_step")]
     public string PvmStep { get; set; }
     
+    [JsonPropertyName("input_proof")]
     public InputProof InputProof { get; set;}
 }
 
-public class InputProof
+[JsonConverter(typeof(InputProofConverter))]
+public abstract class InputProof
 {
     [JsonPropertyName("input_proof_kind")]
-    public string InputProofKind { get; set; }
+    public abstract string InputProofKind { get; }
+}
+
+public class FirstInput : InputProof
+{
+    [JsonPropertyName("input_proof_kind")]
+    public override string InputProofKind => "first_input";
 }
 
 public class InboxProof : InputProof
 {
     [JsonPropertyName("input_proof_kind")]
-    public string InputProofKind { get; set; } = "inbox_proof";
+    public override string InputProofKind => "inbox_proof";
     
     [JsonPropertyName("level")]
     public int Level { get; set; }
@@ -100,7 +114,7 @@ public class InboxProof : InputProof
 public class RevealProof : InputProof
 {
     [JsonPropertyName("input_proof_kind")]
-    public string InputProofKind { get; set; } = "reveal_proof";
+    public override string InputProofKind => "reveal_proof";
     
     [JsonPropertyName("reveal_proof")]
     public RevealProofData RevealProofData { get; set; }
@@ -134,10 +148,4 @@ public class DalPageProof : RevealProofData
     
     [JsonPropertyName("dal_proof")]
     public string DalProof { get; set; }
-}
-
-public class FirstInput : InputProof
-{
-    [JsonPropertyName("input_proof_kind")]
-    public string InputProofKind { get; set; } = "first_input";
 }

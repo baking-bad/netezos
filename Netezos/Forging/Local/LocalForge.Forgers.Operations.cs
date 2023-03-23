@@ -406,78 +406,73 @@ namespace Netezos.Forging
         static byte[] ForgeSrCement(SrCementContent operation)
         {
             return Bytes.Concat(
-                ForgeTag(OperationTag.SrAddMessages),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit));
-        }
-
-        static byte[] ForgeSrExecute(SrExecuteContent operation)
-        {
-            var a = Hex.Convert(ForgeTzAddress(operation.Source));
-            var b = Hex.Convert(ForgeMicheNat(operation.Fee));
-            var c = Hex.Convert(ForgeMicheNat(operation.Counter));
-            var d = Hex.Convert(ForgeMicheNat(operation.GasLimit));
-            var e = Hex.Convert(ForgeMicheNat(operation.StorageLimit));
-            var f = Hex.Convert(ForgeAddress(operation.Rollup));
-            return Bytes.Concat(
-                ForgeTag(OperationTag.SrAddMessages),
+                ForgeTag(OperationTag.SrCement),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeAddress(operation.Rollup));
+                ForgeSr(operation.Rollup),
+                ForgeCommitmentAddress(operation.Commitment));
+        }
+
+        static byte[] ForgeSrExecute(SrExecuteContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrExecute),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeSr(operation.Rollup),
+                ForgeCommitmentAddress(operation.CementedCommitment),
+                ForgeArray(Hex.Parse(operation.OutputProof)));
         }
 
         static byte[] ForgeSrOriginate(SrOriginateContent operation)
         {
-            var a = Hex.Convert(ForgeTzAddress(operation.Source));
-            var b = Hex.Convert(ForgeMicheNat(operation.Fee));
-            var c = Hex.Convert(ForgeMicheNat(operation.Counter));
-            var d = Hex.Convert(ForgeMicheNat(operation.GasLimit));
-            var e = Hex.Convert(ForgeMicheNat(operation.StorageLimit));
             return Bytes.Concat(
-                ForgeTag(OperationTag.SrAddMessages),
+                ForgeTag(OperationTag.SrOriginate),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit));
+                ForgeMicheNat(operation.StorageLimit),
+                operation.PvmKind switch
+                    {
+                        "arith" => new byte[] { 0 },
+                        "wasm_2_0_0" => new byte[] { 1 }
+                    },
+                ForgeArray(Hex.Parse(operation.Kernel)),
+                ForgeArray(Hex.Parse(operation.OriginationProof)),
+                ForgeArray(ForgeMicheline(operation.ParametersTy)));
         }
 
         static byte[] ForgeSrPublish(SrPublishContent operation)
         {
-            var a = Hex.Convert(ForgeTzAddress(operation.Source));
-            var b = Hex.Convert(ForgeMicheNat(operation.Fee));
-            var c = Hex.Convert(ForgeMicheNat(operation.Counter));
-            var d = Hex.Convert(ForgeMicheNat(operation.GasLimit));
-            var e = Hex.Convert(ForgeMicheNat(operation.StorageLimit));
             return Bytes.Concat(
-                ForgeTag(OperationTag.SrAddMessages),
+                ForgeTag(OperationTag.SrPublish),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit));
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeSr(operation.Rollup),
+                ForgeCommitment(operation.Commitment));
         }
 
         static byte[] ForgeSrRecoverBond(SrRecoverBondContent operation)
         {
-            var a = Hex.Convert(ForgeTzAddress(operation.Source));
-            var b = Hex.Convert(ForgeMicheNat(operation.Fee));
-            var c = Hex.Convert(ForgeMicheNat(operation.Counter));
-            var d = Hex.Convert(ForgeMicheNat(operation.GasLimit));
-            var e = Hex.Convert(ForgeMicheNat(operation.StorageLimit));
             return Bytes.Concat(
-                ForgeTag(OperationTag.SrAddMessages),
+                ForgeTag(OperationTag.SrRecoverBond),
                 ForgeTzAddress(operation.Source),
                 ForgeMicheNat(operation.Fee),
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit));
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeSr(operation.Rollup),
+                ForgeTzAddress(operation.Staker));
         }
 
         static byte[] ForgeSrRefute(SrRefuteContent operation)
@@ -567,58 +562,68 @@ namespace Netezos.Forging
             return new byte[] { 3 }.Concat(ForgeInt64(value, 8));
         }
 
+        static byte[] ForgeCommitment(Commitment commitment)
+        {
+            return Bytes.Concat(
+                ForgeCommitmentAddress(commitment.CompressedState),
+                ForgeInt32(commitment.InboxLevel),
+                ForgeCommitmentAddress(commitment.Predecessor),
+                ForgeInt64(commitment.NumberOfTicks));
+        }
+
         static byte[] ForgeRefutation(Refutation refutation)
         {
             return refutation switch
             {
                 RefutationStart start => ForgeRefutationStart(start),
-                RefutationMove move => ForgeRefutationMove(move)
+                RefutationDissectionMove move => ForgeRefutationDissectionMove(move),
+                RefutationProofMove move => ForgeRefutationProofMove(move)
             };
         }
 
         static byte[] ForgeRefutationStart(RefutationStart start)
         {
             return Bytes.Concat(
-                new byte[] {0},
+                new byte[] { 0 },
                 ForgeCommitmentAddress(start.PlayerCommitmentHash),
                 ForgeCommitmentAddress(start.OpponentCommitmentHash)
             );
         }
         
-        static byte[] ForgeRefutationMove(RefutationMove move)
+        static byte[] ForgeRefutationDissectionMove(RefutationDissectionMove move)
         {
             return Bytes.Concat(
                 new byte[] {1},
-                ForgeInt64(move.Choice),
-                move.Step switch
-                {
-                    DissectionStep dissection => ForgeDissection(dissection),
-                    ProofStep proof => ForgeProof(proof)
-                }
-            );
+                ForgeMicheNat(move.Choice),
+                ForgeArray(move.Step.Select(x =>
+                    Bytes.Concat(
+                        ForgeCommitmentAddress(x.State),
+                        ForgeMicheNat(x.Tick))
+                ).SelectMany(x => x).ToArray()));
         }
-
-        static byte[] ForgeDissection(DissectionStep dissection)
+        
+        static byte[] ForgeRefutationProofMove(RefutationProofMove move)
         {
-            return ForgeArray(dissection.Dissections.Select(x =>
-                Bytes.Concat(
-        ForgeCommitmentAddress(x.State),
-                    ForgeInt64(x.Tick))
-            ).SelectMany(x => x).ToArray());
-        }
 
-        static byte[] ForgeProof(ProofStep proof)
-        {
+            var a = Hex.Convert(ForgeArray(Hex.Parse(move.Step.PvmStep)));
+            var ab = Hex.Convert(ForgeArray(Hex.Parse(((InboxProof)move.Step.InputProof).SerializedProof)));
+            var choice = Hex.Convert(ForgeMicheNat(move.Choice));
+            
             return Bytes.Concat(
-    ForgeArray(Hex.Parse(proof.PvmStep)),
-                proof.InputProof == null ? ForgeBool(false) : proof.InputProof switch
-                    {
-                        InboxProof inbox => Bytes.Concat(
-                            ForgeInt32(inbox.Level),
-                            ForgeInt64(inbox.MessageCounter),
-                            ForgeArray(Hex.Parse(inbox.SerializedProof))),
-                        RevealProof => throw new NotImplementedException()
-                    }
+                new byte[] { 1 },
+                ForgeMicheNat(move.Choice),
+                new byte[] { 1 },
+                ForgeArray(Hex.Parse(move.Step.PvmStep)),
+                move.Step.InputProof == null ? ForgeBool(false) : move.Step.InputProof switch
+                {
+                    InboxProof inbox => Bytes.Concat(
+                        ForgeBool(true),
+                        new byte[] { 0 },
+                        ForgeInt32(inbox.Level),
+                        ForgeMicheNat(inbox.MessageCounter),
+                        ForgeArray(Hex.Parse(inbox.SerializedProof))),
+                    RevealProof => throw new NotImplementedException()
+                }
             );
         }
         #endregion
