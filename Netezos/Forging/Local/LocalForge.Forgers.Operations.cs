@@ -412,7 +412,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeSr(operation.Rollup),
+                ForgeRollup(operation.Rollup),
                 ForgeCommitmentAddress(operation.Commitment));
         }
 
@@ -425,7 +425,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeSr(operation.Rollup),
+                ForgeRollup(operation.Rollup),
                 ForgeCommitmentAddress(operation.CementedCommitment),
                 ForgeArray(Hex.Parse(operation.OutputProof)));
         }
@@ -458,7 +458,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeSr(operation.Rollup),
+                ForgeRollup(operation.Rollup),
                 ForgeCommitment(operation.Commitment));
         }
 
@@ -471,7 +471,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeSr(operation.Rollup),
+                ForgeRollup(operation.Rollup),
                 ForgeTzAddress(operation.Staker));
         }
 
@@ -484,7 +484,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeSr(operation.Rollup),
+                ForgeRollup(operation.Rollup),
                 ForgeTzAddress(operation.Opponent),
                 ForgeRefutation(operation.Refutation));
         }
@@ -608,11 +608,6 @@ namespace Netezos.Forging
         
         static byte[] ForgeRefutationProofMove(RefutationProofMove move)
         {
-
-            var a = Hex.Convert(ForgeArray(Hex.Parse(move.Step.PvmStep)));
-            var ab = Hex.Convert(ForgeArray(Hex.Parse(((InboxProof)move.Step.InputProof).SerializedProof)));
-            var choice = Hex.Convert(ForgeMicheNat(move.Choice));
-            
             return Bytes.Concat(
                 new byte[] { 1 },
                 ForgeMicheNat(move.Choice),

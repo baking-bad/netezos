@@ -76,7 +76,7 @@ namespace Netezos
         }
 
         /// <summary>
-        /// Cemented smart rollup commitment
+        /// Smart rollup commitment
         /// </summary>
         public static class src1
         {

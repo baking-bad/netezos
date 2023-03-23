@@ -208,7 +208,6 @@ namespace Netezos.Forging
         public string ReadCommitmentAddress()
         {
             var address = ReadBase58(Lengths.src1.Decoded, Prefix.src1);
-            // ReadByte(); // Consume padded 0
             return address;
         }
 

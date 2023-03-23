@@ -428,7 +428,7 @@ namespace Netezos.Forging
 
         static SrCementContent UnforgeSrCement(ForgedReader reader)
         {
-            return new SrCementContent()
+            return new SrCementContent
             {
                 Source = reader.ReadTzAddress(),
                 Fee = (long)reader.ReadUBigInt(),
@@ -442,7 +442,7 @@ namespace Netezos.Forging
 
         static SrExecuteContent UnforgeSrExecute(ForgedReader reader)
         {
-            return new SrExecuteContent()
+            return new SrExecuteContent
             {
                 Source = reader.ReadTzAddress(),
                 Fee = (long)reader.ReadUBigInt(),
@@ -457,7 +457,7 @@ namespace Netezos.Forging
 
         static SrOriginateContent UnforgeSrOriginate(ForgedReader reader)
         {
-            return new SrOriginateContent()
+            return new SrOriginateContent
             {
                 Source = reader.ReadTzAddress(),
                 Fee = (long)reader.ReadUBigInt(),
@@ -477,7 +477,7 @@ namespace Netezos.Forging
 
         static SrPublishContent UnforgeSrPublish(ForgedReader reader)
         {
-            return new SrPublishContent()
+            return new SrPublishContent
             {
                 Source = reader.ReadTzAddress(),
                 Fee = (long)reader.ReadUBigInt(),
@@ -491,7 +491,7 @@ namespace Netezos.Forging
 
         static SrRecoverBondContent UnforgeSrRecoverBond(ForgedReader reader)
         {
-            return new SrRecoverBondContent()
+            return new SrRecoverBondContent
             {
                 Source = reader.ReadTzAddress(),
                 Fee = (long)reader.ReadUBigInt(),
@@ -505,7 +505,7 @@ namespace Netezos.Forging
 
         static SrRefuteContent UnforgeSrRefute(ForgedReader reader)
         {
-            return new SrRefuteContent()
+            return new SrRefuteContent
             {
                 Source = reader.ReadTzAddress(),
                 Fee = (long)reader.ReadUBigInt(),
@@ -609,7 +609,7 @@ namespace Netezos.Forging
 
         static Commitment UnforgeCommitment(ForgedReader reader)
         {
-            return new Commitment()
+            return new Commitment
             {
                 CompressedState = reader.ReadBase58(Lengths.srs1.Decoded, Prefix.srs1),
                 InboxLevel = reader.ReadInt32(),
@@ -623,7 +623,7 @@ namespace Netezos.Forging
             switch (reader.ReadByte())
             {
                 case 0:
-                    return new RefutationStart()
+                    return new RefutationStart
                     {
                         PlayerCommitmentHash = reader.ReadCommitmentAddress(),
                         OpponentCommitmentHash = reader.ReadCommitmentAddress()
@@ -632,12 +632,12 @@ namespace Netezos.Forging
                     var choice = (long)reader.ReadUBigInt();
                     return reader.ReadByte() switch
                     {
-                        0 => new RefutationDissectionMove()
+                        0 => new RefutationDissectionMove
                         {
                             Choice = choice,
                             Step = reader.ReadEnumerable(UnforgeDissection).ToList(),
                         },
-                        1 => new RefutationProofMove()
+                        1 => new RefutationProofMove
                         {
                             Choice = choice,
                             Step = UnforgeProof(reader)
@@ -651,45 +651,38 @@ namespace Netezos.Forging
 
         static Dissection UnforgeDissection(ForgedReader reader)
         {
-            var s = UnforgeConditional(reader, () => reader.ReadBase58(Lengths.src1.Decoded, Prefix.srs1));
-            var t = (long) reader.ReadUBigInt();
-            return new Dissection()
+            return new Dissection
             {
-                State = s,
-                Tick = t
-            };
-            return new Dissection()
-            {
-                State = reader.ReadBase58(Lengths.src1.Decoded, Prefix.srs1),
+                State = UnforgeConditional(reader, () => reader.ReadBase58(Lengths.src1.Decoded, Prefix.srs1)),
                 Tick = (long)reader.ReadUBigInt()
             };
         }
 
         static ProofStep UnforgeProof(ForgedReader reader)
         {
-            return new ProofStep()
+            return new ProofStep
             {
                 PvmStep = reader.ReadHexString(),
                 InputProof = UnforgeConditional<InputProof>(reader, () =>
                 {
                     return reader.ReadByte() switch
                     {
-                        0 => new InboxProof()
+                        0 => new InboxProof
                         {
                             Level = reader.ReadInt32(),
                             MessageCounter = (long)reader.ReadUBigInt(),
                             SerializedProof = reader.ReadHexString()
                         },
-                        1 => new RevealProof()
+                        1 => new RevealProof
                         {
                             RevealProofData = reader.ReadInt32(1) switch
                             {
-                                0 => new RawDataProof()
+                                0 => new RawDataProof
                                 {
                                     RawData = reader.ReadHexString(2),
                                 },
                                  1 => new MetadataProof(),
-                                2 => new DalPageProof()
+                                2 => new DalPageProof
                                 {
                                     DalProof = reader.ReadHexString()
                                 }

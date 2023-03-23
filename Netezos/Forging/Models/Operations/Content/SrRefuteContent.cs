@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Netezos.Encoding;
 
 namespace Netezos.Forging.Models;
 
@@ -120,16 +119,16 @@ public class RevealProof : InputProof
     public RevealProofData RevealProofData { get; set; }
 }
 
-public class RevealProofData
+public abstract class RevealProofData
 {
     [JsonPropertyName("reveal_proof_kind")]
-    public string RevealProofDataKind { get; set; }
+    public abstract string RevealProofDataKind { get; }
 }
 
 public class RawDataProof : RevealProofData
 {
     [JsonPropertyName("reveal_proof_kind")]
-    public string RevealProofDataKind { get; set; } = "raw_data_proof";
+    public override string RevealProofDataKind => "raw_data_proof";
     
     [JsonPropertyName("raw_data")]
     public string RawData { get; set; }
@@ -138,13 +137,13 @@ public class RawDataProof : RevealProofData
 public class MetadataProof : RevealProofData
 {
     [JsonPropertyName("reveal_proof_kind")]
-    public string RevealProofDataKind { get; set; } = "metadata_proof";
+    public override string RevealProofDataKind => "metadata_proof";
 }
 
 public class DalPageProof : RevealProofData
 {
     [JsonPropertyName("reveal_proof_kind")]
-    public string RevealProofDataKind { get; set; } = "dal_page_proof";
+    public override string RevealProofDataKind => "dal_page_proof";
     
     [JsonPropertyName("dal_proof")]
     public string DalProof { get; set; }

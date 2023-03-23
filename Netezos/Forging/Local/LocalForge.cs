@@ -9,8 +9,6 @@ namespace Netezos.Forging
         public Task<byte[]> ForgeOperationAsync(string branch, OperationContent content)
         {
             var branchBytes = Base58.Parse(branch, Prefix.B.Length);
-
-            var a = Hex.Convert(branchBytes);
             var contentBytes = ForgeOperation(content);
 
             return Task.FromResult(branchBytes.Concat(contentBytes));

@@ -76,7 +76,7 @@ namespace Netezos.Forging
             };
         }
 
-        public static byte[] ForgeSr(string value)
+        public static byte[] ForgeRollup(string value)
         {
             return Base58.Parse(value, 3);
         }
@@ -85,7 +85,6 @@ namespace Netezos.Forging
         {
             return Base58.Parse(value, 4);
         }
-        
         
         public static byte[] ForgeTzAddress(string value)
         {
