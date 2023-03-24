@@ -50,6 +50,7 @@ namespace Netezos.Forging.Models
                 "update_consensus_key" => JsonSerializer.Deserialize<UpdateConsensusKeyContent>(ref reader, options),
                 "smart_rollup_add_messages" => JsonSerializer.Deserialize<SrAddMessagesContent>(ref reader, options),
                 "smart_rollup_cement" => JsonSerializer.Deserialize<SrCementContent>(ref reader, options),
+                "smart_rollup_timeout" => JsonSerializer.Deserialize<SrTmieoutContent>(ref reader, options),
                 "smart_rollup_execute_outbox_message" => JsonSerializer.Deserialize<SrExecuteContent>(ref reader, options),
                 "smart_rollup_originate" => JsonSerializer.Deserialize<SrOriginateContent>(ref reader, options),
                 "smart_rollup_publish" => JsonSerializer.Deserialize<SrPublishContent>(ref reader, options),

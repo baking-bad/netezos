@@ -40,6 +40,7 @@ namespace Netezos.Forging
                 OperationTag.UpdateConsensusKey => UnforgeUpdateConsensusKey(reader),
                 OperationTag.SrAddMessages => UnforgeSrAddMessages(reader),
                 OperationTag.SrCement => UnforgeSrCement(reader),
+                OperationTag.SrTimeout => UnforgeSrTimeout(reader),
                 OperationTag.SrExecute => UnforgeSrExecute(reader),
                 OperationTag.SrOriginate=> UnforgeSrOriginate(reader),
                 OperationTag.SrPublish=> UnforgeSrPublish(reader),
@@ -437,6 +438,24 @@ namespace Netezos.Forging
                 StorageLimit = (int)reader.ReadUBigInt(),
                 Rollup = reader.ReadSrAddress(),
                 Commitment = reader.ReadCommitmentAddress()
+            };
+        }
+
+        static SrTmieoutContent UnforgeSrTimeout(ForgedReader reader)
+        {
+            return new SrTmieoutContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadSrAddress(),
+                Stakers = new Stakers
+                {
+                    Alice = reader.ReadTzAddress(),
+                    Bob = reader.ReadTzAddress()
+                }
             };
         }
 

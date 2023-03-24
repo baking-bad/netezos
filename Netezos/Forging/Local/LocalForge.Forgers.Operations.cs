@@ -46,6 +46,7 @@ namespace Netezos.Forging
                 SrPublishContent op => ForgeSrPublish(op),
                 SrRecoverBondContent op => ForgeSrRecoverBond(op),
                 SrRefuteContent op => ForgeSrRefute(op),
+                SrTmieoutContent op => ForgeSrTimeout(op),
                 _ => throw new ArgumentException($"Invalid operation content kind {content.Kind}")
             };
         }
@@ -414,6 +415,20 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.StorageLimit),
                 ForgeRollup(operation.Rollup),
                 ForgeCommitmentAddress(operation.Commitment));
+        }
+
+        static byte[] ForgeSrTimeout(SrTmieoutContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrTimeout),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeRollup(operation.Rollup),
+                ForgeTzAddress(operation.Stakers.Alice),
+                ForgeTzAddress(operation.Stakers.Bob));
         }
 
         static byte[] ForgeSrExecute(SrExecuteContent operation)
