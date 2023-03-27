@@ -11,10 +11,10 @@ public class SrTmieoutContent : ManagerOperationContent
     public string Rollup { get; set; }
     
     [JsonPropertyName("stakers")]
-    public Stakers Stakers { get; set; }
+    public StakersPair Stakers { get; set; }
 }
 
-public class Stakers
+public class StakersPair
 {
     [JsonPropertyName("alice")]
     public string Alice { get; set; }

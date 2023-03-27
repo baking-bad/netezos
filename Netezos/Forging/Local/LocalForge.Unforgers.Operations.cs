@@ -451,7 +451,7 @@ namespace Netezos.Forging
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
                 Rollup = reader.ReadSrAddress(),
-                Stakers = new Stakers
+                Stakers = new StakersPair
                 {
                     Alice = reader.ReadTzAddress(),
                     Bob = reader.ReadTzAddress()
@@ -470,7 +470,7 @@ namespace Netezos.Forging
                 StorageLimit = (int)reader.ReadUBigInt(),
                 Rollup = reader.ReadSrAddress(),
                 CementedCommitment = reader.ReadCommitmentAddress(),
-                OutputProof = reader.ReadHexString()
+                OutputProof = reader.ReadArray()
             };
         }
 
@@ -483,13 +483,9 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                PvmKind = reader.ReadByte() switch
-                {
-                    0 => "arith",
-                    1 => "wasm_2_0_0"
-                },
-                Kernel = reader.ReadHexString(),
-                OriginationProof = reader.ReadHexString(),
+                PvmKind = (PvmKind)reader.ReadByte(),
+                Kernel = reader.ReadArray(),
+                OriginationProof = reader.ReadArray(),
                 ParametersTy = reader.ReadEnumerableSingle(UnforgeMicheline)
             };
         }
@@ -668,9 +664,9 @@ namespace Netezos.Forging
             };
         }
 
-        static Dissection UnforgeDissection(ForgedReader reader)
+        static DissectionStep UnforgeDissection(ForgedReader reader)
         {
-            return new Dissection
+            return new DissectionStep
             {
                 State = UnforgeConditional(reader, () => reader.ReadBase58(Lengths.src1.Decoded, Prefix.srs1)),
                 Tick = (long)reader.ReadUBigInt()
@@ -681,7 +677,7 @@ namespace Netezos.Forging
         {
             return new ProofStep
             {
-                PvmStep = reader.ReadHexString(),
+                PvmStep = reader.ReadArray(),
                 InputProof = UnforgeConditional<InputProof>(reader, () =>
                 {
                     return reader.ReadByte() switch
@@ -690,7 +686,7 @@ namespace Netezos.Forging
                         {
                             Level = reader.ReadInt32(),
                             MessageCounter = (long)reader.ReadUBigInt(),
-                            SerializedProof = reader.ReadHexString()
+                            SerializedProof = reader.ReadArray()
                         },
                         1 => new RevealProof
                         {
@@ -698,12 +694,12 @@ namespace Netezos.Forging
                             {
                                 0 => new RawDataProof
                                 {
-                                    RawData = reader.ReadHexString(2),
+                                    RawData = reader.ReadBytes(reader.ReadInt32(2)),
                                 },
                                  1 => new MetadataProof(),
                                 2 => new DalPageProof
                                 {
-                                    DalProof = reader.ReadHexString()
+                                    DalProof = reader.ReadArray()
                                 }
                             }
                         },

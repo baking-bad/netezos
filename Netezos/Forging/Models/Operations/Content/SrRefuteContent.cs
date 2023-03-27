@@ -46,7 +46,7 @@ public class RefutationDissectionMove : Refutation
     public long Choice { get; set; }
     
     [JsonPropertyName("step")]
-    public List<Dissection> Step { get; set; }
+    public List<DissectionStep> Step { get; set; }
 }
 
 public class RefutationProofMove : Refutation
@@ -62,10 +62,10 @@ public class RefutationProofMove : Refutation
     public ProofStep Step { get; set; }
 }
 
-public class Dissection
+public class DissectionStep
 {
     [JsonPropertyName("state")]
-    public string State { get; set; }
+    public string? State { get; set; }
     
     [JsonPropertyName("tick")]
     [JsonConverter(typeof(Int64StringConverter))]
@@ -74,11 +74,12 @@ public class Dissection
 
 public class ProofStep
 {
+    [JsonConverter(typeof(HexConverter))]
     [JsonPropertyName("pvm_step")]
-    public string PvmStep { get; set; }
+    public byte[] PvmStep { get; set; }
     
     [JsonPropertyName("input_proof")]
-    public InputProof InputProof { get; set;}
+    public InputProof? InputProof { get; set;}
 }
 
 [JsonConverter(typeof(InputProofConverter))]
@@ -106,8 +107,9 @@ public class InboxProof : InputProof
     [JsonConverter(typeof(Int64StringConverter))]
     public long MessageCounter { get; set; }
     
+    [JsonConverter(typeof(HexConverter))]
     [JsonPropertyName("serialized_proof")]
-    public string SerializedProof { get; set; }
+    public byte[] SerializedProof { get; set; }
 }
 
 public class RevealProof : InputProof
@@ -130,8 +132,9 @@ public class RawDataProof : RevealProofData
     [JsonPropertyName("reveal_proof_kind")]
     public override string RevealProofDataKind => "raw_data_proof";
     
+    [JsonConverter(typeof(HexConverter))]
     [JsonPropertyName("raw_data")]
-    public string RawData { get; set; }
+    public byte[] RawData { get; set; }
 }
 
 public class MetadataProof : RevealProofData
@@ -145,6 +148,7 @@ public class DalPageProof : RevealProofData
     [JsonPropertyName("reveal_proof_kind")]
     public override string RevealProofDataKind => "dal_page_proof";
     
+    [JsonConverter(typeof(HexConverter))]
     [JsonPropertyName("dal_proof")]
-    public string DalProof { get; set; }
+    public byte[] DalProof { get; set; }
 }

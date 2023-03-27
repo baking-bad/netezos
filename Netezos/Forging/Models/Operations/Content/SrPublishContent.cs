@@ -13,12 +13,6 @@ public class SrPublishContent : ManagerOperationContent
     
     [JsonPropertyName("commitment")]
     public Commitment Commitment { get; set; }
-    
-    [JsonPropertyName("origination_proof")]
-    public string OriginationProof { get; set; }
-    
-    [JsonPropertyName("parameters_ty")]
-    public MichelinePrim ParametersTy { get; set; }
 }
 
 public class Commitment

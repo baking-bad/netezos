@@ -81,7 +81,7 @@ namespace Netezos.Forging
             return Base58.Parse(value, 3);
         }
         
-        public static byte[] ForgeCommitmentAddress(string value)
+        public static byte[] ForgeCommitmentHash(string value)
         {
             return Base58.Parse(value, 4);
         }

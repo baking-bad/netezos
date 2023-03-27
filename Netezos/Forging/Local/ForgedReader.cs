@@ -395,12 +395,6 @@ namespace Netezos.Forging
             return Hex.Convert(ReadBytes(stringLength));
         }
 
-        public string ReadHexString(int len)
-        {
-            var stringLength = ReadInt32(len);
-            return Hex.Convert(ReadBytes(stringLength));
-        }
-
         public string ReadBase58(int length, byte[] prefix)
         {
             if (prefix == null)

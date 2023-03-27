@@ -9,14 +9,23 @@ public class SrOriginateContent : ManagerOperationContent
     public override string Kind => "smart_rollup_originate";
 
     [JsonPropertyName("pvm_kind")]
-    public string PvmKind { get; set; }
+    public PvmKind PvmKind { get; set; }
     
+    [JsonConverter(typeof(HexConverter))]
     [JsonPropertyName("kernel")]
-    public string Kernel { get; set; }
+    public byte[] Kernel { get; set; }
     
+    [JsonConverter(typeof(HexConverter))]
     [JsonPropertyName("origination_proof")]
-    public string OriginationProof { get; set; }
+    public byte[] OriginationProof { get; set; }
     
     [JsonPropertyName("parameters_ty")]
     public IMicheline ParametersTy { get; set; }
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum PvmKind
+{
+    Arith = 0,
+    Wasm_2_0_0 = 1
 }

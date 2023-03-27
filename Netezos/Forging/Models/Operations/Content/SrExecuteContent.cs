@@ -13,6 +13,7 @@ public class SrExecuteContent : ManagerOperationContent
     [JsonPropertyName("cemented_commitment")]
     public string CementedCommitment { get; set; }
     
+    [JsonConverter(typeof(HexConverter))]
     [JsonPropertyName("output_proof")]
-    public string OutputProof { get; set; }
+    public byte[] OutputProof { get; set; }
 }
