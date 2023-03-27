@@ -7,6 +7,7 @@ public class SrAddMessagesContent : ManagerOperationContent
     [JsonPropertyName("kind")]
     public override string Kind => "smart_rollup_add_messages";
     
+    [JsonConverter(typeof(HexListConverter))]
     [JsonPropertyName("message")]
-    public List<string> Message { get; set; }
+    public List<byte[]> Message { get; set; }
 }

@@ -201,7 +201,6 @@ namespace Netezos.Forging
         public string ReadSrAddress()
         {
             var address = ReadBase58(Lengths.sr1.Decoded, Prefix.sr1);
-            // ReadByte(); // Consume padded 0
             return address;
         }
 

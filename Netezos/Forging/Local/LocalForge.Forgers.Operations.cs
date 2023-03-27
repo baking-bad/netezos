@@ -401,7 +401,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeArray(operation.Message.Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray()));
+                ForgeArray(operation.Message.Select(x => ForgeArray(x)).SelectMany(x => x).ToArray()));
         }
 
         static byte[] ForgeSrCement(SrCementContent operation)
