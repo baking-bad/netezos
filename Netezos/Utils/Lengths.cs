@@ -76,6 +76,24 @@ namespace Netezos
         }
 
         /// <summary>
+        /// Smart rollup commitment
+        /// </summary>
+        public static class src1
+        {
+            public const int Encoded = 54;
+            public const int Decoded = 32;
+        }
+
+        /// <summary>
+        /// Compressed smart rollup state
+        /// </summary>
+        public static class srs1
+        {
+            public const int Encoded = 54;
+            public const int Decoded = 32;
+        }
+
+        /// <summary>
         /// generic signature
         /// </summary>
         public static class sig

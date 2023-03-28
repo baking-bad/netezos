@@ -1,0 +1,20 @@
+﻿{
+  "branch": "BKj7wMot1maMQW7v1TojTpejZR4vhXcmMmW6SMQ8r2QYsutQd6w",
+  "contents": [
+    {
+      "kind": "smart_rollup_publish",
+      "source": "tz1fepBiYL6EDuNMXU2FwefgAGxVmRxVSRQy",
+      "fee": "1051",
+      "counter": "1647",
+      "gas_limit": "7298",
+      "storage_limit": "0",
+      "rollup": "sr1Dx83Z5A5HtXqcyNeWWRSFNQsHrhnMEr9G",
+      "commitment": {
+        "compressed_state": "srs13K48V1DcCrA2Zhy3fWairiQAn11NtGJbCF24M9ww6c1g5VUN9G",
+        "inbox_level": 1533,
+        "predecessor": "src13VSAPURmtir9jppcxQEP6PdUKBb4mXdhTWtNQx5N2ibY7nwSDS",
+        "number_of_ticks": "880000000000"
+      }
+    }
+  ]
+}

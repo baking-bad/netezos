@@ -39,6 +39,14 @@ namespace Netezos.Forging
                 TxRollupReturnBondContent op => ForgeTxRollupReturnBond(op),
                 TxRollupSubmitBatchContent op => ForgeTxRollupSubmitBatch(op),
                 UpdateConsensusKeyContent op => ForgeUpdateConsensusKey(op),
+                SrAddMessagesContent op => ForgeSrAddMessages(op),
+                SrCementContent op => ForgeSrCement(op),
+                SrExecuteContent op => ForgeSrExecute(op),
+                SrOriginateContent op => ForgeSrOriginate(op),
+                SrPublishContent op => ForgeSrPublish(op),
+                SrRecoverBondContent op => ForgeSrRecoverBond(op),
+                SrRefuteContent op => ForgeSrRefute(op),
+                SrTmieoutContent op => ForgeSrTimeout(op),
                 _ => throw new ArgumentException($"Invalid operation content kind {content.Kind}")
             };
         }
@@ -181,7 +189,7 @@ namespace Netezos.Forging
                 ForgeAddress(operation.Destination),
                 ForgeParameters(operation.Parameters));
         }
-        
+
         static byte[] ForgeReveal(RevealContent operation)
         {
             return Bytes.Concat(
@@ -384,6 +392,114 @@ namespace Netezos.Forging
                 ForgePublicKey(operation.PublicKey));
         }
 
+        static byte[] ForgeSrAddMessages(SrAddMessagesContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrAddMessages),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeArray(operation.Messages.Select(x => ForgeArray(x)).SelectMany(x => x).ToArray()));
+        }
+
+        static byte[] ForgeSrCement(SrCementContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrCement),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeRollup(operation.Rollup),
+                ForgeCommitment(operation.Commitment));
+        }
+
+        static byte[] ForgeSrTimeout(SrTmieoutContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrTimeout),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeRollup(operation.Rollup),
+                ForgeTzAddress(operation.Stakers.Alice),
+                ForgeTzAddress(operation.Stakers.Bob));
+        }
+
+        static byte[] ForgeSrExecute(SrExecuteContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrExecute),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeRollup(operation.Rollup),
+                ForgeCommitment(operation.Commitment),
+                ForgeArray(operation.OutputProof));
+        }
+
+        static byte[] ForgeSrOriginate(SrOriginateContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrOriginate),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                new[] { (byte)operation.PvmKind },
+                ForgeArray(operation.Kernel),
+                ForgeArray(operation.OriginationProof),
+                ForgeArray(ForgeMicheline(operation.ParametersType)));
+        }
+
+        static byte[] ForgeSrPublish(SrPublishContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrPublish),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeRollup(operation.Rollup),
+                ForgeCommitment(operation.Commitment));
+        }
+
+        static byte[] ForgeSrRecoverBond(SrRecoverBondContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrRecoverBond),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeRollup(operation.Rollup),
+                ForgeTzAddress(operation.Staker));
+        }
+
+        static byte[] ForgeSrRefute(SrRefuteContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.SrRefute),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgeRollup(operation.Rollup),
+                ForgeTzAddress(operation.Opponent),
+                ForgeRefutation(operation.Refutation));
+        }
+
         #region nested
         static byte[] ForgeBlockHeader(BlockHeader header)
         {
@@ -457,6 +573,106 @@ namespace Netezos.Forging
             return new byte[] { 3 }.Concat(ForgeInt64(value, 8));
         }
 
+        static byte[] ForgeCommitment(Commitment commitment)
+        {
+            return Bytes.Concat(
+                ForgeCommitment(commitment.State),
+                ForgeInt32(commitment.InboxLevel),
+                ForgeCommitment(commitment.Predecessor),
+                ForgeInt64(commitment.Ticks));
+        }
+
+        static byte[] ForgeRefutation(RefutationMove refutation)
+        {
+            return refutation switch
+            {
+                RefutationStart start => ForgeRefutationStart(start),
+                RefutationDissection move => ForgeRefutationDissectionMove(move),
+                RefutationProof move => ForgeRefutationProofMove(move),
+                _ => throw new ArgumentException("Invalid refutation move type")
+            };
+        }
+
+        static byte[] ForgeRefutationStart(RefutationStart start)
+        {
+            return Bytes.Concat(
+                new byte[] { 0 },
+                ForgeCommitment(start.PlayerCommitment),
+                ForgeCommitment(start.OpponentCommitment)
+            );
+        }
+
+        static byte[] ForgeRefutationDissectionMove(RefutationDissection move)
+        {
+            return Bytes.Concat(
+                new byte[] { 1 },
+                ForgeMicheNat(move.Choice),
+                new byte[] { 0 },
+                ForgeArray(move.Steps.Select(x =>
+                    Bytes.Concat(
+                         x.State == null
+                             ? ForgeBool(false)
+                             : ForgeBool(true).Concat(
+                                 ForgeCommitment(x.State)),
+                        ForgeMicheNat(x.Tick))
+                ).SelectMany(x => x).ToArray()));
+        }
+
+        static byte[] ForgeRefutationProofMove(RefutationProof move)
+        {
+            return Bytes.Concat(
+                new byte[] { 1 },
+                ForgeMicheNat(move.Choice),
+                new byte[] { 1 },
+                ForgeArray(move.Step.PvmStep),
+                move.Step.InputProof == null ? ForgeBool(false) : Bytes.Concat(
+                    ForgeBool(true),
+                    move.Step.InputProof switch
+                    {
+                        InboxProof inbox => ForgeInboxProof(inbox),
+                        RevealProof reveal => ForgeRevealProof(reveal),
+                        FirstInputProof => new byte[] { 2 },
+                        _ => throw new ArgumentException("Invalid input proof type")
+                    })
+            );
+        }
+
+        static byte[] ForgeInboxProof(InboxProof inbox)
+        {
+            return Bytes.Concat(
+                new byte[] { 0 },
+                ForgeInt32(inbox.Level),
+                ForgeMicheNat(inbox.MessageCounter),
+                ForgeArray(inbox.Proof));
+        }
+
+        static byte[] ForgeRevealProof(RevealProof reveal)
+        {
+            return Bytes.Concat(
+                new byte[] { 1 },
+                reveal.Proof switch
+                {
+                    RawDataProof raw => Bytes.Concat(
+                        new byte[] { 0 },
+                        ForgeArray(raw.RawData, 2)),
+                    MetadataProof =>
+                        new byte[] { 1 },
+                    DalPageProof dal => Bytes.Concat(
+                        new byte[] { 2 },
+                        ForgeDalPageId(dal.DalPageId),
+                        ForgeArray(dal.Proof)),
+                    _ => throw new ArgumentException("Invalid reveal proof type")
+                });
+        }
+
+        static byte[] ForgeDalPageId(DalPageId id)
+        {
+            return Bytes.Concat(
+                ForgeInt32(id.PublishedLevel, 4),
+                ForgeInt32(id.SlotIndex, 1),
+                ForgeInt32(id.PageIndex, 2)
+            );
+        }
         #endregion
     }
 }

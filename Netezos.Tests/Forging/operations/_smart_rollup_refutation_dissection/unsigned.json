@@ -1,0 +1,65 @@
+﻿{
+  "branch": "BLdm6rPe8jJV6ZNRRQhQZzaLSnZ8MdiMrCQAJ6mjgBXevpLu1cY",
+  "contents": [
+    {
+      "kind": "smart_rollup_refute",
+      "source": "tz1TecRhYLVV9bTKRKU9g1Hhpb1Ymw3ynzWS",
+      "fee": "1120",
+      "counter": "23051",
+      "gas_limit": "4120",
+      "storage_limit": "0",
+      "rollup": "sr1QZkk1swognQW3dmiXvga3wVkEgBq7QFjE",
+      "opponent": "tz1iFnSQ6V2d8piVMPMjtDNdkYNMaUfKwsoy",
+      "refutation": {
+        "refutation_kind": "move",
+        "choice": "176000000000",
+        "step": [
+          {
+            "state": "srs12kxPpf9j1PZmmfuSPeNZvvn9YKnYMPnvsndvc1GzuTgVkfkBag",
+            "tick": "176000000000"
+          },
+          {
+            "state": "srs12ueFdWbTxTW1w1ejHmwbFc4QcPiuQ3vdDL932XQtNZbSVWKDrJ",
+            "tick": "176000000001"
+          },
+          {
+            "state": "srs138aixdmCRemN4Jb7qEjQfE8nrCGcBzQF2T5f76rLxB1hwf7RP3",
+            "tick": "176000000002"
+          },
+          {
+            "state": "srs122xiEiSLwrHXBxMDknkJpTCpHRDxnqGVScxHUBUAqRg511XJWn",
+            "tick": "176000000003"
+          },
+          {
+            "state": "srs12TqgVQvMYWFBqd2VBNGHicvQwRMoKMN7yhbm55tW5rePXgMrDL",
+            "tick": "176000000004"
+          },
+          {
+            "state": "srs12Kc6kC9W4daJyfsUvLpURhisbeuR7SyFrjoPWLegLX863MY27z",
+            "tick": "176000000005"
+          },
+          {
+            "state": "srs12VRHbxBwbnZgfWHDbxUkfzyaHczy1HCqyFLFsVipCJ8T5tEz3A",
+            "tick": "176000000006"
+          },
+          {
+            "state": "srs12woVVmKnN559Y6qovMn63chYg3UMBjFz5YbGyPdLAEgLmNFWQg",
+            "tick": "176000000007"
+          },
+          {
+            "state": "srs125Jkm94rfNvssiRQZvR9jU6m6w1p5Ga5dQf4ptp2C3YMsdAice",
+            "tick": "176000000008"
+          },
+          {
+            "state": "srs11hWSQBYDybXEP1HwkM63d4Joi1UMapAjDHT1HmWfheHSN3jBfW",
+            "tick": "176000000009"
+          },
+          {
+            "state": "srs11rTAY1M67pw64rFU6mfFVsxxQVVF2hraWUF43rARFCY9CFiEvd",
+            "tick": "176000000010"
+          }
+        ]
+      }
+    }
+  ]
+}

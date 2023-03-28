@@ -205,6 +205,16 @@ namespace Netezos.Forging
             return address;
         }
 
+        public string ReadRollup()
+        {
+            return ReadBase58(Lengths.sr1.Decoded, Prefix.sr1);
+        }
+
+        public string ReadCommitmentAddress()
+        {
+            return ReadBase58(Lengths.src1.Decoded, Prefix.src1);
+        }
+
         /// <summary>
         /// Read a Micheline natural.
         /// </summary>

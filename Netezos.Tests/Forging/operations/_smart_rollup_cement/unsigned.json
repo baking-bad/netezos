@@ -1,0 +1,15 @@
+﻿{
+  "branch": "BKj7wMot1maMQW7v1TojTpejZR4vhXcmMmW6SMQ8r2QYsutQd6w",
+  "contents": [
+    {
+      "kind": "smart_rollup_cement",
+      "source": "tz1fepBiYL6EDuNMXU2FwefgAGxVmRxVSRQy",
+      "fee": "690",
+      "counter": "1746",
+      "gas_limit": "5081",
+      "storage_limit": "0",
+      "rollup": "sr1Dx83Z5A5HtXqcyNeWWRSFNQsHrhnMEr9G",
+      "commitment": "src12sCt2773PKWveYdi4g16DcYNYEk3PPf5yFWV4vYMfvZek67Guo"
+    }
+  ]
+}

@@ -38,6 +38,14 @@ namespace Netezos.Forging
                 OperationTag.TxRollupReturnBond => UnforgeTxRollupReturnBond(reader),
                 OperationTag.TxRollupSubmitBatch => UnforgeTxRollupSubmitBatch(reader),
                 OperationTag.UpdateConsensusKey => UnforgeUpdateConsensusKey(reader),
+                OperationTag.SrAddMessages => UnforgeSrAddMessages(reader),
+                OperationTag.SrCement => UnforgeSrCement(reader),
+                OperationTag.SrTimeout => UnforgeSrTimeout(reader),
+                OperationTag.SrExecute => UnforgeSrExecute(reader),
+                OperationTag.SrOriginate => UnforgeSrOriginate(reader),
+                OperationTag.SrPublish => UnforgeSrPublish(reader),
+                OperationTag.SrRecoverBond => UnforgeSrRecoverBond(reader),
+                OperationTag.SrRefute => UnforgeSrRefute(reader),
                 var operation => throw new ArgumentException($"Invalid operation: {operation}")
             };
         }
@@ -129,7 +137,7 @@ namespace Netezos.Forging
                 Nonce = Hex.Convert(reader.ReadBytes(Lengths.nce.Decoded))
             };
         }
-        
+
         static VdfRevelationContent UnforgeVdfRevelation(ForgedReader reader)
         {
             return new VdfRevelationContent
@@ -194,7 +202,7 @@ namespace Netezos.Forging
                 Parameters = UnforgeParameters(reader)
             };
         }
-        
+
         static RevealContent UnforgeReveal(ForgedReader reader)
         {
             return new RevealContent
@@ -405,6 +413,126 @@ namespace Netezos.Forging
             };
         }
 
+        static SrAddMessagesContent UnforgeSrAddMessages(ForgedReader reader)
+        {
+            return new SrAddMessagesContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Messages = reader.ReadEnumerable(r => r.ReadArray()).ToList(),
+
+            };
+        }
+
+        static SrCementContent UnforgeSrCement(ForgedReader reader)
+        {
+            return new SrCementContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadRollup(),
+                Commitment = reader.ReadCommitmentAddress()
+            };
+        }
+
+        static SrTmieoutContent UnforgeSrTimeout(ForgedReader reader)
+        {
+            return new SrTmieoutContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadRollup(),
+                Stakers = new StakersPair
+                {
+                    Alice = reader.ReadTzAddress(),
+                    Bob = reader.ReadTzAddress()
+                }
+            };
+        }
+
+        static SrExecuteContent UnforgeSrExecute(ForgedReader reader)
+        {
+            return new SrExecuteContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadRollup(),
+                Commitment = reader.ReadCommitmentAddress(),
+                OutputProof = reader.ReadArray()
+            };
+        }
+
+        static SrOriginateContent UnforgeSrOriginate(ForgedReader reader)
+        {
+            return new SrOriginateContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                PvmKind = (PvmKind)reader.ReadByte(),
+                Kernel = reader.ReadArray(),
+                OriginationProof = reader.ReadArray(),
+                ParametersType = reader.ReadEnumerableSingle(UnforgeMicheline)
+            };
+        }
+
+        static SrPublishContent UnforgeSrPublish(ForgedReader reader)
+        {
+            return new SrPublishContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadRollup(),
+                Commitment = UnforgeCommitment(reader)
+            };
+        }
+
+        static SrRecoverBondContent UnforgeSrRecoverBond(ForgedReader reader)
+        {
+            return new SrRecoverBondContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadRollup(),
+                Staker = reader.ReadTzAddress()
+            };
+        }
+
+        static SrRefuteContent UnforgeSrRefute(ForgedReader reader)
+        {
+            return new SrRefuteContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                Rollup = reader.ReadRollup(),
+                Opponent = reader.ReadTzAddress(),
+                Refutation = UnforgeRefutation(reader)
+            };
+        }
+
         #region nested
 
         static BlockHeader UnforgeBlockHeader(ForgedReader reader)
@@ -491,6 +619,108 @@ namespace Netezos.Forging
             {
                 Code = (MichelineArray)reader.ReadEnumerableSingle(UnforgeMicheline),
                 Storage = reader.ReadEnumerableSingle(UnforgeMicheline)
+            };
+        }
+
+        static Commitment UnforgeCommitment(ForgedReader reader)
+        {
+            return new Commitment
+            {
+                State = reader.ReadBase58(Lengths.srs1.Decoded, Prefix.srs1),
+                InboxLevel = reader.ReadInt32(),
+                Predecessor = reader.ReadBase58(Lengths.src1.Decoded, Prefix.src1),
+                Ticks = reader.ReadInt64()
+            };
+        }
+
+        static RefutationMove UnforgeRefutation(ForgedReader reader)
+        {
+            switch (reader.ReadByte())
+            {
+                case 0:
+                    return new RefutationStart
+                    {
+                        PlayerCommitment = reader.ReadCommitmentAddress(),
+                        OpponentCommitment = reader.ReadCommitmentAddress()
+                    };
+                case 1:
+                    var choice = (long)reader.ReadUBigInt();
+                    return reader.ReadByte() switch
+                    {
+                        0 => new RefutationDissection
+                        {
+                            Choice = choice,
+                            Steps = reader.ReadEnumerable(UnforgeDissection).ToList(),
+                        },
+                        1 => new RefutationProof
+                        {
+                            Choice = choice,
+                            Step = UnforgeProofStep(reader)
+                        },
+                        var ep => throw new ArgumentException($"Unrecognized refutation move step {ep}")
+                    };
+                default:
+                    throw new ArgumentException("Unrecognized refutation type");
+            };
+        }
+
+        static DissectionStep UnforgeDissection(ForgedReader reader)
+        {
+            return new DissectionStep
+            {
+                State = UnforgeConditional(reader, () => reader.ReadBase58(Lengths.src1.Decoded, Prefix.srs1)),
+                Tick = (long)reader.ReadUBigInt()
+            };
+        }
+
+        static ProofStep UnforgeProofStep(ForgedReader reader)
+        {
+            return new ProofStep
+            {
+                PvmStep = reader.ReadArray(),
+                InputProof = UnforgeConditional(reader, () => UnforgeInputProof(reader))
+            };
+        }
+
+        static InputProof UnforgeInputProof(ForgedReader reader)
+        {
+            return reader.ReadByte() switch
+            {
+                0 => new InboxProof
+                {
+                    Level = reader.ReadInt32(),
+                    MessageCounter = (long)reader.ReadUBigInt(),
+                    Proof = reader.ReadArray()
+                },
+                1 => UnforgeRevealProof(reader),
+                2 => new FirstInputProof(),
+                _ => throw new ArgumentException("Invalid input proof type")
+            };
+        }
+
+        static RevealProof UnforgeRevealProof(ForgedReader reader)
+        {
+            return new RevealProof
+            {
+                Proof = reader.ReadInt32(1) switch
+                {
+                    0 => new RawDataProof
+                    {
+                        RawData = reader.ReadBytes(reader.ReadInt32(2)),
+                    },
+                    1 => new MetadataProof(),
+                    2 => new DalPageProof
+                    {
+                        DalPageId = new DalPageId
+                        {
+                            PublishedLevel = reader.ReadInt32(4),
+                            SlotIndex = reader.ReadInt32(1),
+                            PageIndex = reader.ReadInt32(2)
+                        },
+                        Proof = reader.ReadArray()
+                    },
+                    _ => throw new ArgumentException("Invalid reveal proof type")
+                }
             };
         }
 
