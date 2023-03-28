@@ -121,6 +121,7 @@ public class RevealProof : InputProof
     public RevealProofData RevealProofData { get; set; }
 }
 
+[JsonConverter(typeof(RevealProofDataConverter))]
 public abstract class RevealProofData
 {
     [JsonPropertyName("reveal_proof_kind")]
@@ -148,7 +149,22 @@ public class DalPageProof : RevealProofData
     [JsonPropertyName("reveal_proof_kind")]
     public override string RevealProofDataKind => "dal_page_proof";
     
+    [JsonPropertyName("dal_page_id")]
+    public DalPageId DalPageId { get; set; }
+    
     [JsonConverter(typeof(HexConverter))]
     [JsonPropertyName("dal_proof")]
     public byte[] DalProof { get; set; }
+}
+
+public class DalPageId
+{
+    [JsonPropertyName("published_level")]
+    public int PublishedLevel { get; set; }
+    
+    [JsonPropertyName("slot_index")]
+    public int SlotIndex { get; set; }
+    
+    [JsonPropertyName("page_index")]
+    public int PageIndex { get; set; }
 }

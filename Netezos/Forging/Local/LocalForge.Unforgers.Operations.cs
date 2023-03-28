@@ -436,7 +436,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Rollup = reader.ReadSrAddress(),
+                Rollup = reader.ReadRollup(),
                 Commitment = reader.ReadCommitmentAddress()
             };
         }
@@ -450,7 +450,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Rollup = reader.ReadSrAddress(),
+                Rollup = reader.ReadRollup(),
                 Stakers = new StakersPair
                 {
                     Alice = reader.ReadTzAddress(),
@@ -468,7 +468,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Rollup = reader.ReadSrAddress(),
+                Rollup = reader.ReadRollup(),
                 CementedCommitment = reader.ReadCommitmentAddress(),
                 OutputProof = reader.ReadArray()
             };
@@ -499,7 +499,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Rollup = reader.ReadSrAddress(),
+                Rollup = reader.ReadRollup(),
                 Commitment = UnforgeCommitment(reader)
             };
         }
@@ -513,7 +513,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Rollup = reader.ReadSrAddress(),
+                Rollup = reader.ReadRollup(),
                 Staker = reader.ReadTzAddress()
             };
         }
@@ -527,7 +527,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Rollup = reader.ReadSrAddress(),
+                Rollup = reader.ReadRollup(),
                 Opponent = reader.ReadTzAddress(),
                 Refutation = UnforgeRefutation(reader)
             };
@@ -678,34 +678,47 @@ namespace Netezos.Forging
             return new ProofStep
             {
                 PvmStep = reader.ReadArray(),
-                InputProof = UnforgeConditional<InputProof>(reader, () =>
-                {
-                    return reader.ReadByte() switch
-                    {
-                        0 => new InboxProof
-                        {
-                            Level = reader.ReadInt32(),
-                            MessageCounter = (long)reader.ReadUBigInt(),
-                            SerializedProof = reader.ReadArray()
-                        },
-                        1 => new RevealProof
-                        {
-                            RevealProofData = reader.ReadInt32(1) switch
-                            {
-                                0 => new RawDataProof
-                                {
-                                    RawData = reader.ReadBytes(reader.ReadInt32(2)),
-                                },
-                                 1 => new MetadataProof(),
-                                2 => new DalPageProof
-                                {
-                                    DalProof = reader.ReadArray()
-                                }
-                            }
-                        },
+                InputProof = UnforgeConditional(reader, () => UnforgeInputProof(reader))
+            };
+        }
 
-                    };
-                })
+        static InputProof UnforgeInputProof(ForgedReader reader)
+        {
+            return reader.ReadByte() switch
+            {
+                0 => new InboxProof
+                {
+                    Level = reader.ReadInt32(),
+                    MessageCounter = (long)reader.ReadUBigInt(),
+                    SerializedProof = reader.ReadArray()
+                },
+                1 => UnforgeRevealProof(reader),
+                2 => new FirstInput()
+            };
+        }
+
+        static RevealProof UnforgeRevealProof(ForgedReader reader)
+        {
+            return new RevealProof
+            {
+                RevealProofData = reader.ReadInt32(1) switch
+                {
+                    0 => new RawDataProof
+                    {
+                        RawData = reader.ReadBytes(reader.ReadInt32(2)),
+                    },
+                    1 => new MetadataProof(),
+                    2 => new DalPageProof
+                    {
+                        DalPageId = new DalPageId
+                        {
+                            PublishedLevel = reader.ReadInt32(4),
+                            SlotIndex = reader.ReadInt32(1),
+                            PageIndex = reader.ReadInt32(2)
+                        },
+                        DalProof = reader.ReadArray()
+                    }
+                }
             };
         }
 

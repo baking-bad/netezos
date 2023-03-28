@@ -3,14 +3,14 @@ using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
-    class InputProofConverter : JsonConverter<InputProof?>
+    class RevealProofDataConverter : JsonConverter<RevealProofData?>
     {
-        public override InputProof? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override RevealProofData? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var sideReader = reader;
 
             sideReader.Read();
-            while (!sideReader.ValueTextEquals("input_proof_kind"))
+            while (!sideReader.ValueTextEquals("reveal_proof_kind"))
             {
                 sideReader.Skip();
                 sideReader.Read();
@@ -19,14 +19,14 @@ namespace Netezos.Forging.Models
             
             return sideReader.GetString() switch
             {
-                "inbox_proof" => JsonSerializer.Deserialize<InboxProof>(ref reader, options),
-                "reveal_proof" => JsonSerializer.Deserialize<RevealProof>(ref reader, options),
-                "first_input" => JsonSerializer.Deserialize<FirstInput>(ref reader, options),
+                "raw_data_proof" => JsonSerializer.Deserialize<RawDataProof>(ref reader, options),
+                "metadata_proof" => JsonSerializer.Deserialize<MetadataProof>(ref reader, options),
+                "dal_page_proof" => JsonSerializer.Deserialize<DalPageProof>(ref reader, options),
                 _ => throw new JsonException("Invalid input proof kind"),
             };
         }
 
-        public override void Write(Utf8JsonWriter writer, InputProof? value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, RevealProofData? value, JsonSerializerOptions options)
         {
             if (value == null)
                 writer.WriteNullValue();

@@ -201,13 +201,18 @@ namespace Netezos.Forging
         public string ReadSrAddress()
         {
             var address = ReadBase58(Lengths.sr1.Decoded, Prefix.sr1);
+            ReadByte(); // Consume padded 0
             return address;
+        }
+
+        public string ReadRollup()
+        {
+            return ReadBase58(Lengths.sr1.Decoded, Prefix.sr1);
         }
 
         public string ReadCommitmentAddress()
         {
-            var address = ReadBase58(Lengths.src1.Decoded, Prefix.src1);
-            return address;
+            return ReadBase58(Lengths.src1.Decoded, Prefix.src1);
         }
 
         /// <summary>

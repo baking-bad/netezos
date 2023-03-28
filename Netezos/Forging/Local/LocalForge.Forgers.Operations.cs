@@ -624,16 +624,67 @@ namespace Netezos.Forging
                 ForgeMicheNat(move.Choice),
                 new byte[] { 1 },
                 ForgeArray(move.Step.PvmStep),
-                move.Step.InputProof == null ? ForgeBool(false) : move.Step.InputProof switch
+                move.Step.InputProof == null ? ForgeBool(false) : Bytes.Concat(
+                    ForgeBool(true),
+                    move.Step.InputProof switch
+                    {
+                        InboxProof inbox => ForgeInboxProof(inbox),
+                        RevealProof reveal => ForgeRevealProof(reveal),
+                        FirstInput => new byte[]{ 2 }
+                    })
+            );
+        }
+
+        static byte[] ForgeInboxProof(InboxProof inbox)
+        {
+            return Bytes.Concat(
+                new byte[] {0},
+                ForgeInt32(inbox.Level),
+                ForgeMicheNat(inbox.MessageCounter),
+                ForgeArray(inbox.SerializedProof));
+        }
+
+        static byte[] ForgeRevealProof(RevealProof reveal)
+        {
+
+            switch (reveal.RevealProofData)
+            {
+                case RawDataProof raw:
+                    var r = Bytes.Concat(new byte[] {0}, ForgeArray(raw.RawData));
+                    break;
+                case MetadataProof meta:
+                    var m = new byte[] {1};
+                    break;
+                case DalPageProof dal:
+                    var d = Bytes.Concat(new byte[] {2}, ForgeDalPageId(dal.DalPageId), ForgeArray(dal.DalProof));
+                    var c = Hex.Convert(d);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(reveal.RevealProofData));
+            }
+
+            return Bytes.Concat(
+                new byte[] {1},
+                reveal.RevealProofData switch
                 {
-                    InboxProof inbox => Bytes.Concat(
-                        ForgeBool(true),
-                        new byte[] { 0 },
-                        ForgeInt32(inbox.Level),
-                        ForgeMicheNat(inbox.MessageCounter),
-                        ForgeArray(inbox.SerializedProof)),
-                    RevealProof => throw new NotImplementedException()
-                }
+                    RawDataProof raw => Bytes.Concat(
+                        new byte[] {0},
+                        ForgeArray(raw.RawData, 2)),
+                    MetadataProof meta => new byte[] {1},
+                    DalPageProof dal => Bytes.Concat(
+                        new byte[] {2},
+                        ForgeDalPageId(dal.DalPageId),
+                        ForgeArray(dal.DalProof)
+                    )
+                });
+        }
+        
+        static byte[] ForgeDalPageId(DalPageId id)
+        {
+            return Bytes.Concat(
+                ForgeInt32(id.PublishedLevel, 4),
+                ForgeInt32(id.SlotIndex, 1),
+                ForgeInt32(id.PageIndex, 2)
             );
         }
         #endregion
