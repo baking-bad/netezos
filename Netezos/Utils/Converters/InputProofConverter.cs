@@ -21,7 +21,7 @@ namespace Netezos.Forging.Models
             {
                 "inbox_proof" => JsonSerializer.Deserialize<InboxProof>(ref reader, options),
                 "reveal_proof" => JsonSerializer.Deserialize<RevealProof>(ref reader, options),
-                "first_input" => JsonSerializer.Deserialize<FirstInput>(ref reader, options),
+                "first_input" => JsonSerializer.Deserialize<FirstInputProof>(ref reader, options),
                 _ => throw new JsonException("Invalid input proof kind"),
             };
         }

@@ -42,9 +42,9 @@ namespace Netezos.Forging
                 OperationTag.SrCement => UnforgeSrCement(reader),
                 OperationTag.SrTimeout => UnforgeSrTimeout(reader),
                 OperationTag.SrExecute => UnforgeSrExecute(reader),
-                OperationTag.SrOriginate=> UnforgeSrOriginate(reader),
-                OperationTag.SrPublish=> UnforgeSrPublish(reader),
-                OperationTag.SrRecoverBond=> UnforgeSrRecoverBond(reader),
+                OperationTag.SrOriginate => UnforgeSrOriginate(reader),
+                OperationTag.SrPublish => UnforgeSrPublish(reader),
+                OperationTag.SrRecoverBond => UnforgeSrRecoverBond(reader),
                 OperationTag.SrRefute => UnforgeSrRefute(reader),
                 var operation => throw new ArgumentException($"Invalid operation: {operation}")
             };
@@ -137,7 +137,7 @@ namespace Netezos.Forging
                 Nonce = Hex.Convert(reader.ReadBytes(Lengths.nce.Decoded))
             };
         }
-        
+
         static VdfRevelationContent UnforgeVdfRevelation(ForgedReader reader)
         {
             return new VdfRevelationContent
@@ -202,7 +202,7 @@ namespace Netezos.Forging
                 Parameters = UnforgeParameters(reader)
             };
         }
-        
+
         static RevealContent UnforgeReveal(ForgedReader reader)
         {
             return new RevealContent
@@ -422,7 +422,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Message = reader.ReadEnumerable(r => r.ReadArray()).ToList(),
+                Messages = reader.ReadEnumerable(r => r.ReadArray()).ToList(),
 
             };
         }
@@ -469,7 +469,7 @@ namespace Netezos.Forging
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
                 Rollup = reader.ReadRollup(),
-                CementedCommitment = reader.ReadCommitmentAddress(),
+                Commitment = reader.ReadCommitmentAddress(),
                 OutputProof = reader.ReadArray()
             };
         }
@@ -486,7 +486,7 @@ namespace Netezos.Forging
                 PvmKind = (PvmKind)reader.ReadByte(),
                 Kernel = reader.ReadArray(),
                 OriginationProof = reader.ReadArray(),
-                ParametersTy = reader.ReadEnumerableSingle(UnforgeMicheline)
+                ParametersType = reader.ReadEnumerableSingle(UnforgeMicheline)
             };
         }
 
@@ -626,33 +626,33 @@ namespace Netezos.Forging
         {
             return new Commitment
             {
-                CompressedState = reader.ReadBase58(Lengths.srs1.Decoded, Prefix.srs1),
+                State = reader.ReadBase58(Lengths.srs1.Decoded, Prefix.srs1),
                 InboxLevel = reader.ReadInt32(),
                 Predecessor = reader.ReadBase58(Lengths.src1.Decoded, Prefix.src1),
-                NumberOfTicks = reader.ReadInt64()
+                Ticks = reader.ReadInt64()
             };
         }
 
-        static Refutation UnforgeRefutation(ForgedReader reader)
+        static RefutationMove UnforgeRefutation(ForgedReader reader)
         {
             switch (reader.ReadByte())
             {
                 case 0:
                     return new RefutationStart
                     {
-                        PlayerCommitmentHash = reader.ReadCommitmentAddress(),
-                        OpponentCommitmentHash = reader.ReadCommitmentAddress()
+                        PlayerCommitment = reader.ReadCommitmentAddress(),
+                        OpponentCommitment = reader.ReadCommitmentAddress()
                     };
                 case 1:
                     var choice = (long)reader.ReadUBigInt();
                     return reader.ReadByte() switch
                     {
-                        0 => new RefutationDissectionMove
+                        0 => new RefutationDissection
                         {
                             Choice = choice,
-                            Step = reader.ReadEnumerable(UnforgeDissection).ToList(),
+                            Steps = reader.ReadEnumerable(UnforgeDissection).ToList(),
                         },
-                        1 => new RefutationProofMove
+                        1 => new RefutationProof
                         {
                             Choice = choice,
                             Step = UnforgeProofStep(reader)
@@ -690,10 +690,11 @@ namespace Netezos.Forging
                 {
                     Level = reader.ReadInt32(),
                     MessageCounter = (long)reader.ReadUBigInt(),
-                    SerializedProof = reader.ReadArray()
+                    Proof = reader.ReadArray()
                 },
                 1 => UnforgeRevealProof(reader),
-                2 => new FirstInput()
+                2 => new FirstInputProof(),
+                _ => throw new ArgumentException("Invalid input proof type")
             };
         }
 
@@ -701,7 +702,7 @@ namespace Netezos.Forging
         {
             return new RevealProof
             {
-                RevealProofData = reader.ReadInt32(1) switch
+                Proof = reader.ReadInt32(1) switch
                 {
                     0 => new RawDataProof
                     {
@@ -716,8 +717,9 @@ namespace Netezos.Forging
                             SlotIndex = reader.ReadInt32(1),
                             PageIndex = reader.ReadInt32(2)
                         },
-                        DalProof = reader.ReadArray()
-                    }
+                        Proof = reader.ReadArray()
+                    },
+                    _ => throw new ArgumentException("Invalid reveal proof type")
                 }
             };
         }

@@ -189,7 +189,7 @@ namespace Netezos.Forging
                 ForgeAddress(operation.Destination),
                 ForgeParameters(operation.Parameters));
         }
-        
+
         static byte[] ForgeReveal(RevealContent operation)
         {
             return Bytes.Concat(
@@ -401,7 +401,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeArray(operation.Message.Select(x => ForgeArray(x)).SelectMany(x => x).ToArray()));
+                ForgeArray(operation.Messages.Select(x => ForgeArray(x)).SelectMany(x => x).ToArray()));
         }
 
         static byte[] ForgeSrCement(SrCementContent operation)
@@ -414,7 +414,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
                 ForgeRollup(operation.Rollup),
-                ForgeCommitmentHash(operation.Commitment));
+                ForgeCommitment(operation.Commitment));
         }
 
         static byte[] ForgeSrTimeout(SrTmieoutContent operation)
@@ -441,7 +441,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
                 ForgeRollup(operation.Rollup),
-                ForgeCommitmentHash(operation.CementedCommitment),
+                ForgeCommitment(operation.Commitment),
                 ForgeArray(operation.OutputProof));
         }
 
@@ -457,7 +457,7 @@ namespace Netezos.Forging
                 new[] { (byte)operation.PvmKind },
                 ForgeArray(operation.Kernel),
                 ForgeArray(operation.OriginationProof),
-                ForgeArray(ForgeMicheline(operation.ParametersTy)));
+                ForgeArray(ForgeMicheline(operation.ParametersType)));
         }
 
         static byte[] ForgeSrPublish(SrPublishContent operation)
@@ -499,7 +499,7 @@ namespace Netezos.Forging
                 ForgeTzAddress(operation.Opponent),
                 ForgeRefutation(operation.Refutation));
         }
-        
+
         #region nested
         static byte[] ForgeBlockHeader(BlockHeader header)
         {
@@ -576,19 +576,20 @@ namespace Netezos.Forging
         static byte[] ForgeCommitment(Commitment commitment)
         {
             return Bytes.Concat(
-                ForgeCommitmentHash(commitment.CompressedState),
+                ForgeCommitment(commitment.State),
                 ForgeInt32(commitment.InboxLevel),
-                ForgeCommitmentHash(commitment.Predecessor),
-                ForgeInt64(commitment.NumberOfTicks));
+                ForgeCommitment(commitment.Predecessor),
+                ForgeInt64(commitment.Ticks));
         }
 
-        static byte[] ForgeRefutation(Refutation refutation)
+        static byte[] ForgeRefutation(RefutationMove refutation)
         {
             return refutation switch
             {
                 RefutationStart start => ForgeRefutationStart(start),
-                RefutationDissectionMove move => ForgeRefutationDissectionMove(move),
-                RefutationProofMove move => ForgeRefutationProofMove(move)
+                RefutationDissection move => ForgeRefutationDissectionMove(move),
+                RefutationProof move => ForgeRefutationProofMove(move),
+                _ => throw new ArgumentException("Invalid refutation move type")
             };
         }
 
@@ -596,28 +597,28 @@ namespace Netezos.Forging
         {
             return Bytes.Concat(
                 new byte[] { 0 },
-                ForgeCommitmentHash(start.PlayerCommitmentHash),
-                ForgeCommitmentHash(start.OpponentCommitmentHash)
+                ForgeCommitment(start.PlayerCommitment),
+                ForgeCommitment(start.OpponentCommitment)
             );
         }
-        
-        static byte[] ForgeRefutationDissectionMove(RefutationDissectionMove move)
+
+        static byte[] ForgeRefutationDissectionMove(RefutationDissection move)
         {
             return Bytes.Concat(
                 new byte[] { 1 },
                 ForgeMicheNat(move.Choice),
                 new byte[] { 0 },
-                ForgeArray(move.Step.Select(x =>
+                ForgeArray(move.Steps.Select(x =>
                     Bytes.Concat(
-                         x.State == null 
-                             ? ForgeBool(false) 
+                         x.State == null
+                             ? ForgeBool(false)
                              : ForgeBool(true).Concat(
-                                 ForgeCommitmentHash(x.State)),
+                                 ForgeCommitment(x.State)),
                         ForgeMicheNat(x.Tick))
                 ).SelectMany(x => x).ToArray()));
         }
-        
-        static byte[] ForgeRefutationProofMove(RefutationProofMove move)
+
+        static byte[] ForgeRefutationProofMove(RefutationProof move)
         {
             return Bytes.Concat(
                 new byte[] { 1 },
@@ -630,7 +631,8 @@ namespace Netezos.Forging
                     {
                         InboxProof inbox => ForgeInboxProof(inbox),
                         RevealProof reveal => ForgeRevealProof(reveal),
-                        FirstInput => new byte[]{ 2 }
+                        FirstInputProof => new byte[] { 2 },
+                        _ => throw new ArgumentException("Invalid input proof type")
                     })
             );
         }
@@ -638,30 +640,31 @@ namespace Netezos.Forging
         static byte[] ForgeInboxProof(InboxProof inbox)
         {
             return Bytes.Concat(
-                new byte[] {0},
+                new byte[] { 0 },
                 ForgeInt32(inbox.Level),
                 ForgeMicheNat(inbox.MessageCounter),
-                ForgeArray(inbox.SerializedProof));
+                ForgeArray(inbox.Proof));
         }
 
         static byte[] ForgeRevealProof(RevealProof reveal)
         {
             return Bytes.Concat(
-                new byte[] {1},
-                reveal.RevealProofData switch
+                new byte[] { 1 },
+                reveal.Proof switch
                 {
                     RawDataProof raw => Bytes.Concat(
-                        new byte[] {0},
+                        new byte[] { 0 },
                         ForgeArray(raw.RawData, 2)),
-                    MetadataProof meta => new byte[] {1},
+                    MetadataProof =>
+                        new byte[] { 1 },
                     DalPageProof dal => Bytes.Concat(
-                        new byte[] {2},
+                        new byte[] { 2 },
                         ForgeDalPageId(dal.DalPageId),
-                        ForgeArray(dal.DalProof)
-                    )
+                        ForgeArray(dal.Proof)),
+                    _ => throw new ArgumentException("Invalid reveal proof type")
                 });
         }
-        
+
         static byte[] ForgeDalPageId(DalPageId id)
         {
             return Bytes.Concat(

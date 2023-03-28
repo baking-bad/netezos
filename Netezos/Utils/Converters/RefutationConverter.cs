@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
-    class RefutationConverter : JsonConverter<Refutation?>
+    class RefutationMoveConverter : JsonConverter<RefutationMove?>
     {
-        public override Refutation? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override RefutationMove? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var sideReader = reader;
             var refReader = reader;
@@ -32,14 +32,14 @@ namespace Netezos.Forging.Models
                     refReader.Read();
                     
                     return refReader.TokenType == JsonTokenType.StartArray
-                        ? JsonSerializer.Deserialize<RefutationDissectionMove>(ref reader, options)
-                        : JsonSerializer.Deserialize<RefutationProofMove>(ref reader, options);
+                        ? JsonSerializer.Deserialize<RefutationDissection>(ref reader, options)
+                        : JsonSerializer.Deserialize<RefutationProof>(ref reader, options);
                 default:
                     throw new JsonException("Invalid refutation kind");
             }
         }
 
-        public override void Write(Utf8JsonWriter writer, Refutation? value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, RefutationMove? value, JsonSerializerOptions options)
         {
             if (value == null)
                 writer.WriteNullValue();

@@ -1,15 +1,16 @@
 using System.Text.Json.Serialization;
 
-namespace Netezos.Forging.Models;
-
-public class SrCementContent : ManagerOperationContent
+namespace Netezos.Forging.Models
 {
-    [JsonPropertyName("kind")]
-    public override string Kind => "smart_rollup_cement";
+    public class SrCementContent : ManagerOperationContent
+    {
+        [JsonPropertyName("kind")]
+        public override string Kind => "smart_rollup_cement";
 
-    [JsonPropertyName("rollup")]
-    public string Rollup { get; set; }
-    
-    [JsonPropertyName("commitment")]
-    public string Commitment { get; set; }
+        [JsonPropertyName("rollup")]
+        public string Rollup { get; set; } = null!;
+
+        [JsonPropertyName("commitment")]
+        public string Commitment { get; set; } = null!;
+    }
 }

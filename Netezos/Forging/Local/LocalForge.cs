@@ -25,7 +25,7 @@ namespace Netezos.Forging
         public Task<(string, IEnumerable<OperationContent>)> UnforgeOperationAsync(byte[] bytes)
         {
             using var reader = new ForgedReader(bytes);
-            
+
             var branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
             var content = new List<OperationContent>();
 
