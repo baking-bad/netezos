@@ -646,23 +646,6 @@ namespace Netezos.Forging
 
         static byte[] ForgeRevealProof(RevealProof reveal)
         {
-
-            switch (reveal.RevealProofData)
-            {
-                case RawDataProof raw:
-                    var r = Bytes.Concat(new byte[] {0}, ForgeArray(raw.RawData));
-                    break;
-                case MetadataProof meta:
-                    var m = new byte[] {1};
-                    break;
-                case DalPageProof dal:
-                    var d = Bytes.Concat(new byte[] {2}, ForgeDalPageId(dal.DalPageId), ForgeArray(dal.DalProof));
-                    var c = Hex.Convert(d);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(reveal.RevealProofData));
-            }
-
             return Bytes.Concat(
                 new byte[] {1},
                 reveal.RevealProofData switch

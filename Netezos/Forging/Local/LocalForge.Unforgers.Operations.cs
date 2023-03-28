@@ -655,7 +655,7 @@ namespace Netezos.Forging
                         1 => new RefutationProofMove
                         {
                             Choice = choice,
-                            Step = UnforgeProof(reader)
+                            Step = UnforgeProofStep(reader)
                         },
                         var ep => throw new ArgumentException($"Unrecognized refutation move step {ep}")
                     };
@@ -673,7 +673,7 @@ namespace Netezos.Forging
             };
         }
 
-        static ProofStep UnforgeProof(ForgedReader reader)
+        static ProofStep UnforgeProofStep(ForgedReader reader)
         {
             return new ProofStep
             {
