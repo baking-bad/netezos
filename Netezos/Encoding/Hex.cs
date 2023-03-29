@@ -66,7 +66,7 @@
             if (hex.Length == 0)
                 return Array.Empty<byte>();
 
-            var pos = hex[0] == '0' && hex[1] == 'x' ? 2 : 0;
+            var pos = hex[1] == 'x' && hex[0] == '0' ? 2 : 0;
             byte[] bytes = new byte[(hex.Length - pos) >> 1];
 
             for (int h, l, i = 0; i < bytes.Length; i++, pos += 2)
@@ -99,7 +99,7 @@
                 return true;
             }
 
-            var pos = hex[0] == '0' && hex[1] == 'x' ? 2 : 0;
+            var pos = hex[1] == 'x' && hex[0] == '0' ? 2 : 0;
             bytes = new byte[(hex.Length - pos) >> 1];
 
             for (int h, l, i = 0; i < bytes.Length; ++i, pos += 2)

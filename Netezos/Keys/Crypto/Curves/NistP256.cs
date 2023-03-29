@@ -10,7 +10,7 @@ namespace Netezos.Keys
     class NistP256 : Curve
     {
         #region static
-        static readonly byte[] _SeedKey = { 78, 105, 115, 116, 50, 53, 54, 112, 49, 32, 115, 101, 101, 100 }; // "Nist256p1 seed"
+        static readonly byte[] _Slip10Seed = { 78, 105, 115, 116, 50, 53, 54, 112, 49, 32, 115, 101, 101, 100 }; // "Nist256p1 seed"
         #endregion
         
         public override ECKind Kind => ECKind.NistP256;
@@ -19,7 +19,15 @@ namespace Netezos.Keys
         public override byte[] PublicKeyPrefix => Prefix.p2pk;
         public override byte[] PrivateKeyPrefix => Prefix.p2sk;
         public override byte[] SignaturePrefix => Prefix.p2sig;
-        public override byte[] SeedKey => _SeedKey;
+        public override byte[] Slip10Seed => _Slip10Seed;
+
+        public override byte[] ExtractPrivateKey(byte[] bytes)
+        {
+            if (bytes.Length != 32)
+                throw new ArgumentException("Invalid private key length. Expected 32 bytes.");
+
+            return bytes.GetBytes(0, 32);
+        }
 
         public override byte[] GeneratePrivateKey()
         {

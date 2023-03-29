@@ -71,10 +71,21 @@
             return true;
         }
 
+        public static bool IsEqual(this byte[] src, int srcOffset, byte[] data)
+        {
+            if (src.Length - srcOffset != data.Length)
+                return false;
+
+            for (int i = srcOffset, j = 0; i < src.Length; i++, j++)
+                if (src[i] != data[j])
+                    return false;
+
+            return true;
+        }
+
         public static void Flush(this byte[] data)
         {
-            for (int i = 0; i < data.Length; i++)
-                data[i] = 0;
+            Array.Clear(data, 0, data.Length);
         }
 
         public static bool StartWith(this byte[] src, byte[] data)

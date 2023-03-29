@@ -44,7 +44,7 @@ namespace Netezos.Keys
         /// <param name="kind">Elliptic curve kind</param>
         public HDKey(ECKind kind = ECKind.Ed25519)
         {
-            Key = new(RNG.GetBytes(32), kind, true);
+            Key = new(kind);
             _ChainCode = RNG.GetBytes(32);
         }
 

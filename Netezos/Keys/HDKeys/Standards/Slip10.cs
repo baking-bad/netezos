@@ -14,7 +14,7 @@ namespace Netezos.Keys
             if (curve.Kind == ECKind.Bls12381)
                 throw new NotSupportedException("BLS12-381 curve is not supported by the SLIP-0010 standard");
 
-            using var hmacSha512 = new HMACSHA512(curve.SeedKey);
+            using var hmacSha512 = new HMACSHA512(curve.Slip10Seed);
             while (true)
             {
                 var l = hmacSha512.ComputeHash(seed);

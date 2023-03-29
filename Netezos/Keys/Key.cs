@@ -16,7 +16,6 @@ namespace Netezos.Keys
                         _PubKey = new PubKey(Curve.GetPublicKey(Store.Data), Curve.Kind, true);
                     }
                 }
-
                 return _PubKey;
             }
         }
@@ -28,18 +27,17 @@ namespace Netezos.Keys
         public Key(ECKind kind = ECKind.Ed25519)
         {
             Curve = Curve.FromKind(kind);
-            var bytes = Curve.GeneratePrivateKey();
-            Store = new PlainSecretStore(bytes);
-            bytes.Flush();
+            var pk = Curve.GeneratePrivateKey();
+            Store = new PlainSecretStore(pk);
+            pk.Flush();
         }
 
         internal Key(byte[] bytes, ECKind kind, bool flush = false)
         {
-            if (bytes?.Length != 32)
-                throw new ArgumentException("Invalid private key length", nameof(bytes));
-
             Curve = Curve.FromKind(kind);
-            Store = new PlainSecretStore(bytes);
+            var pk = Curve.ExtractPrivateKey(bytes ?? throw new ArgumentNullException(nameof(bytes)));
+            Store = new PlainSecretStore(pk);
+            pk.Flush();
             if (flush) bytes.Flush();
         }
 
@@ -116,17 +114,16 @@ namespace Netezos.Keys
 
         public static Key FromBase58(string base58)
         {
+            if (base58 == null)
+                throw new ArgumentNullException(nameof(base58));
+
             if (base58.Length != 54 && base58.Length != 98)
-            {
-                throw new ArgumentException($"Base58 string must be 54 or 98 characters length");
-            }
-            
-            var curve = Curve.FromPrefix(base58.Substring(0, 4));
+                throw new ArgumentException("Invalid private key format. Expected base58 string of 54 or 98 characters.");
+
+            var curve = Curve.FromPrivateKeyBase58(base58);
             var bytes = Base58.Parse(base58, curve.PrivateKeyPrefix);
 
-            return base58.Length == 54 
-                ? new Key(bytes, curve.Kind, true) 
-                : new Key(bytes.GetBytes(0,32), curve.Kind, true);
+            return new(bytes, curve.Kind, true);
         }
 
         public static Key FromMnemonic(Mnemonic mnemonic)

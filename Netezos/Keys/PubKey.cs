@@ -5,7 +5,6 @@ namespace Netezos.Keys
 {
     public class PubKey
     {
-        string? _Address;
         public string Address
         {
             get
@@ -17,10 +16,10 @@ namespace Netezos.Keys
                         _Address = Base58.Convert(Blake2b.GetDigest(Store.Data, 160), Curve.AddressPrefix);
                     }
                 }
-                
                 return _Address;
             }
         }
+        string? _Address;
 
         internal readonly Curve Curve;
         internal readonly ISecretStore Store;
@@ -106,7 +105,7 @@ namespace Netezos.Keys
 
         public static PubKey FromBase58(string base58)
         {
-            var curve = Curve.FromPrefix(base58.Substring(0, 4));
+            var curve = Curve.FromPublicKeyBase58(base58);
             var bytes = Base58.Parse(base58, curve.PublicKeyPrefix);
 
             return new PubKey(bytes, curve.Kind, true);

@@ -8,7 +8,12 @@
         public override byte[] PublicKeyPrefix => Prefix.BLpk;
         public override byte[] PrivateKeyPrefix => Prefix.BLsk;
         public override byte[] SignaturePrefix => Prefix.BLsig;
-        public override byte[] SeedKey => throw new NotImplementedException("BLS12-381 curve is not implemented yet");
+        public override byte[] Slip10Seed => throw new NotImplementedException("BLS12-381 curve is not implemented yet");
+
+        public override byte[] ExtractPrivateKey(byte[] bytes)
+        {
+            throw new NotImplementedException("BLS12-381 curve is not implemented yet");
+        }
 
         public override byte[] GeneratePrivateKey()
         {

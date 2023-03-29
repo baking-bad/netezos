@@ -10,7 +10,7 @@ namespace Netezos.Keys
     class Secp256k1 : Curve
     {
         #region static
-        static readonly byte[] _SeedKey = { 66, 105, 116, 99, 111, 105, 110, 32, 115, 101, 101, 100 }; // "Bitcoin seed"
+        static readonly byte[] _Slip10Seed = { 66, 105, 116, 99, 111, 105, 110, 32, 115, 101, 101, 100 }; // "Bitcoin seed"
         #endregion
         
         public override ECKind Kind => ECKind.Secp256k1;
@@ -19,7 +19,15 @@ namespace Netezos.Keys
         public override byte[] PublicKeyPrefix => Prefix.sppk;
         public override byte[] PrivateKeyPrefix => Prefix.spsk;
         public override byte[] SignaturePrefix => Prefix.spsig;
-        public override byte[] SeedKey => _SeedKey;
+        public override byte[] Slip10Seed => _Slip10Seed;
+
+        public override byte[] ExtractPrivateKey(byte[] bytes)
+        {
+            if (bytes.Length != 32)
+                throw new ArgumentException("Invalid private key length. Expected 32 bytes.");
+
+            return bytes.GetBytes(0, 32);
+        }
 
         public override byte[] GeneratePrivateKey()
         {

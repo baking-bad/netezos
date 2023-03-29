@@ -8,7 +8,7 @@ namespace Netezos.Keys
     class Ed25519 : Curve
     {
         #region static
-        static readonly byte[] _SeedKey = { 101, 100, 50, 53, 53, 49, 57, 32, 115, 101, 101, 100 }; // "ed25519 seed"
+        static readonly byte[] _Slip10Seed = { 101, 100, 50, 53, 53, 49, 57, 32, 115, 101, 101, 100 }; // "ed25519 seed"
         #endregion
         
         public override ECKind Kind => ECKind.Ed25519;
@@ -17,7 +17,15 @@ namespace Netezos.Keys
         public override byte[] PublicKeyPrefix => Prefix.edpk;
         public override byte[] PrivateKeyPrefix => Prefix.edsk;
         public override byte[] SignaturePrefix => Prefix.edsig;
-        public override byte[] SeedKey => _SeedKey;
+        public override byte[] Slip10Seed => _Slip10Seed;
+
+        public override byte[] ExtractPrivateKey(byte[] bytes)
+        {
+            if (bytes.Length != 32 && (bytes.Length != 64 || !bytes.IsEqual(32, GetPublicKey(bytes))))
+                throw new ArgumentException("Invalid private key format. Expected 32 bytes seed, or 64 bytes seed+pubkey.");
+
+            return bytes.GetBytes(0, 32);
+        }
 
         public override byte[] GeneratePrivateKey()
         {
