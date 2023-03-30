@@ -36,13 +36,13 @@
         TxRollupDispatchTickets     = 157,
         TransferTicket              = 158,
         
-        SrOriginate = 200,
+        SrOriginate   = 200,
         SrAddMessages = 201,
-        SrCement = 202,
-        SrPublish = 203,
-        SrRefute = 204,
-        SrTimeout = 205,
-        SrExecute = 206,
+        SrCement      = 202,
+        SrPublish     = 203,
+        SrRefute      = 204,
+        SrTimeout     = 205,
+        SrExecute     = 206,
         SrRecoverBond = 207
     }
 }
