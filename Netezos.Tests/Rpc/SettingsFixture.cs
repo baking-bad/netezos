@@ -20,7 +20,7 @@ namespace Netezos.Tests.Rpc
         {
             lock (Crit)
             {
-                var settings = DJson.Read("../../../Rpc/settings.json");
+                var settings = DJson.Read("../../../Rpc/settings_oxford.json");
 
                 Rpc = new TezosRpc(settings.node, 60);
                 TestContract = settings.TestContract;

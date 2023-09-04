@@ -436,8 +436,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Rollup = reader.ReadRollup(),
-                Commitment = reader.ReadCommitmentAddress()
+                Rollup = reader.ReadRollup()
             };
         }
 
