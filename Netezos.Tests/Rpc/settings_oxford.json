@@ -1,9 +1,10 @@
 {
   "node": "https://rpc.tzkt.io/oxfordnet/",
-  "testContract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+  "testContract": "KT1XtHJBXF3aAwggHrZh1fUbzaHc5MmB6QDs",
   "testEntrypoint": "default",
   "testDelegate": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
-  "testInactive": "tz1Wn7JnLVf7PpTbaLQNzmNaF9z9UudWHGBR",
+  "testInactive": "tz2Wjf3XgkgxWF4nMJM2cKqbgTQ8as7agMM2",
+  "testSmartRollup": "sr1ANUAuGgaDVKhsjyWLNWYkyZ4U1HojZ15H",
   "keyHash": "expru2dKqDfZG8hu4wNGkiyunvq2hdSKuVYtcKta7BWP6Q18oNxKjS",
-  "bigMapId": "4"
+  "bigMapId": "5"
 }

@@ -13,6 +13,7 @@ namespace Netezos.Tests.Rpc
         public string TestEntrypoint { get; }
         public string TestDelegate { get; }
         public string TestInactive { get; }
+        public string TestSmartRollup { get; }
         public string KeyHash { get; }
         public int BigMapId { get; }
 
@@ -27,6 +28,7 @@ namespace Netezos.Tests.Rpc
                 TestEntrypoint = settings.TestEntrypoint;
                 TestDelegate = settings.TestDelegate;
                 TestInactive = settings.TestInactive;
+                TestSmartRollup = settings.TestSmartRollup;
                 KeyHash = settings.KeyHash;
                 BigMapId = settings.BigMapId;
             }

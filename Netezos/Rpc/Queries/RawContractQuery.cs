@@ -50,6 +50,7 @@
         /// <summary>
         /// 
         /// </summary>
+        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public RpcObject InactiveDelegate => new(this, "inactive_delegate/");
 
         /// <summary>
