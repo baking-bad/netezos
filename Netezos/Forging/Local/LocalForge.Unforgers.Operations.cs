@@ -607,6 +607,10 @@ namespace Netezos.Forging
                 3 => "set_delegate",
                 4 => "remove_delegate",
                 5 => "deposit",
+                6 => "stake",
+                7 => "unstake",
+                8 => "finalize_unstake",
+                9 => "set_delegate_parameters",
                 255 => reader.ReadString(1),
                 var ep => throw new ArgumentException($"Unrecognized endpoint type {ep}")
             };

@@ -186,6 +186,10 @@ namespace Netezos.Forging
                 "set_delegate" => new byte[] { 3 },
                 "remove_delegate" => new byte[] { 4 },
                 "deposit" => new byte[] { 5 },
+                "stake" => new byte[] { 6 },
+                "unstake" => new byte[] { 7 },
+                "finalize_unstake" => new byte[] { 8 },
+                "set_delegate_parameters" => new byte[] { 9 },
                 _ => new byte[] { 255 }.Concat(ForgeString(value, 1))
             };
         }
