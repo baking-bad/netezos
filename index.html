@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang=en prefix="og: http://ogp.me/ns#">
+
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+
+    <title>Netezos</title>
+    <meta name="description" content="Netezos is a cross-platform Tezos SDK for .NET developers, simplifying interaction with the Tezos blockchain">
+    <meta name="keywords" content="tezos, csharp, sdk">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@TezosBakingBad">
+    <meta name="twitter:creator" content="@TezosBakingBad">
+    <meta name="twitter:title" content="Netezos">
+    <meta name="twitter:description" content="Netezos is a cross-platform Tezos SDK for .NET developers, simplifying interaction with the Tezos blockchain">
+    <meta name="twitter:image" content="https://netezos.dev/logo.png">
+    <meta name="twitter:image:alt" content="Netezos">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://netezos.dev">
+    <meta property="og:title" content="Netezos">
+    <meta property="og:description" content="Netezos is a cross-platform Tezos SDK for .NET developers, simplifying interaction with the Tezos blockchain">
+    <meta property="og:image" content="https://netezos.dev/logo.png">
+    <meta property="og:image:secure_url" content="https://netezos.dev/logo.png">
+    <meta property="og:image:alt" content="Netezos">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <link rel="canonical" href="https://netezos.dev">
+
+    <link rel="stylesheet" href="/styles/docfx.vendor.css">
+    <link rel="stylesheet" href="/styles/docfx.css">
+    <link rel="stylesheet" href="/styles/main.css">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+<body style="background:#1f1f25; color:#f5f5f5;">
+    <section id="home">
+        <div class="text-center">
+            <div id="title-logo">
+                <img src="logo.svg" class="img-responsive" />
+            </div>
+
+            <h1 id="title">
+                <span>Netezos</span> is a cross-platform Tezos SDK for .NET developers,
+                <br class="hidden-xs">
+                simplifying interaction with the Tezos blockchain
+            </h1>
+
+            <h1 id="anima" class="hidden-xs">|</h1>
+
+            <div id="actions">
+                <a role="button" class="btn btn-lg btn-act" href="docs/get-started.html">Get Started</a>
+                <a role="button" class="btn btn-lg" href="api/index.html">API Reference</a>
+                <a role="button" class="btn btn-lg" href="https://github.com/baking-bad/netezos" target="_blank">GitHub</a>
+            </div>
+        </div>
+
+        <div id="footer">
+            <div>
+                <a href="https://baking-bad.org/docs" target="_blank">© 2018-2021 Baking Bad</a>
+                <span class="hidden-xs">
+                    &nbsp;|&nbsp;
+                    <a href="https://discord.gg/aG8XKuwsQd" target="_blank">Discord</a>
+                    &nbsp;|&nbsp;
+                    <a href="tg://resolve?domain=baking_bad_chat" target="_blank">Telegram</a>
+                    &nbsp;|&nbsp;
+                    <a href="https://tezos-dev.slack.com/archives/CV5NX7F2L" target="_blank">Slack</a>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+    <script>
+        const writer = new Typewriter('#anima', {
+            loop: true,
+            delay: 75,
+        });
+        writer
+            .deleteAll()
+            .pauseFor(1000)
+            .typeString('Interact with <span class="highlight">smart contracts</span>...')
+            .pauseFor(3000)
+            .deleteAll()
+            .typeString('<span class="highlight">Forge, sign, inject</span> operations...')
+            .pauseFor(3000)
+            .deleteAll()
+            .typeString('Stay safe with <span class="highlight">Ledger</span> support..')
+            .pauseFor(3000)
+            .deleteAll()
+            .typeString('Interact with <span class="highlight">nodes</span> via <span class="highlight">RPC</span>...')
+            .pauseFor(3000)
+            .deleteAll()
+            .typeString('Works well on <span class="highlight">most platforms</span>...')
+            .pauseFor(3000)
+            .start();
+    </script>
+</body>
