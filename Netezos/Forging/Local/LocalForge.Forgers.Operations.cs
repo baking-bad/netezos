@@ -413,8 +413,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeRollup(operation.Rollup),
-                ForgeCommitment(operation.Commitment));
+                ForgeRollup(operation.Rollup));
         }
 
         static byte[] ForgeSrTimeout(SrTmieoutContent operation)

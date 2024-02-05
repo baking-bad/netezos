@@ -9,8 +9,5 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("rollup")]
         public string Rollup { get; set; } = null!;
-
-        [JsonPropertyName("commitment")]
-        public string Commitment { get; set; } = null!;
     }
 }

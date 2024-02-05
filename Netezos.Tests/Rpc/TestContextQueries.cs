@@ -12,6 +12,7 @@ namespace Netezos.Tests.Rpc
         readonly string TestContract;
         readonly string TestEntrypoint;
         readonly string TestDelegate;
+        readonly string TestSmartRollup;
         readonly string KeyHash;
         readonly int BigMapId;
 
@@ -21,8 +22,19 @@ namespace Netezos.Tests.Rpc
             TestContract = settings.TestContract;
             TestEntrypoint = settings.TestEntrypoint;
             TestDelegate = settings.TestDelegate;
+            TestSmartRollup = settings.TestSmartRollup;
             KeyHash = settings.KeyHash;
             BigMapId = settings.BigMapId;
+        }
+
+        [Fact]
+        public async Task TestContextAdaptiveIssuanceLaunch()
+        {
+            var query = Rpc.Blocks.Head.Context.AdaptiveIssuanceLaunch;
+            Assert.Equal($"chains/main/blocks/head/context/adaptive_issuance_launch_cycle/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -76,10 +88,30 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextAllTicketBalances()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].AllTicketBalances;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/all_ticket_balances/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
         public async Task TestContextContractBalance()
         {
             var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Balance;
             Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/balance/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextContractBalanceAndFrozenBonds()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].BalanceAndFrozenBonds;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/balance_and_frozen_bonds/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -98,8 +130,8 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestContextContractDelegate()
         {
-            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Delegate;
-            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/delegate/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].Delegate;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/delegate/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -123,6 +155,26 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextContractFrozenBonds()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].FrozenBonds;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/frozen_bonds/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextContractFullBalance()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].FullBalance;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/full_balance/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -156,6 +208,16 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextContractStakedBalance()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].StakedBalance;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/staked_balance/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
         public async Task TestContextContractStorage()
         {
             var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Storage;
@@ -173,6 +235,74 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.PostAsync(NormalizedQuery.UnparsingMode.Readable);
             Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextContractPaidSpace()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Storage.PaidSpace;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/storage/paid_space/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextContractUsedSpace()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Storage.UsedSpace;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/storage/used_space/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextContractTicketBalance()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].TicketBalance;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/ticket_balance/", query.ToString());
+
+            var res = await query.PostAsync("KT1XtHJBXF3aAwggHrZh1fUbzaHc5MmB6QDs", 
+                new
+                {
+                    prim = "int"
+                },
+                new
+                {
+                    @int = "1"
+                });
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextContractUnstakeRequests()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].UnstakeRequests;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/unstake_requests/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextContractUnstakedFinalizableBalance()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].UnstakedFinalizableBalance;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/unstaked_finalizable_balance/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextContractUnstakedFrozenBalance()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].UnstakedFrozenBalance;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/unstaked_frozen_balance/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -202,10 +332,50 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextDelegateActiveStakingParameters()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].ActiveStakingParameters;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/active_staking_parameters/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateConsensusKey()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].ConsensusKey;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/consensus_key/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateCurrentBakingPower()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].CurrentBakingPower;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/current_baking_power/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
         public async Task TestContextDelegateCurrentFrozenDeposits()
         {
             var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].CurrentFrozenDeposits;
             Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/current_frozen_deposits/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateCurrentVotingPower()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].CurrentVotingPower;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/current_voting_power/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -250,17 +420,6 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
-
-        [Fact]
-        public async Task TestContextDelegateFrozenDepositsLimit()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FrozenDepositsLimit;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/frozen_deposits_limit/", query.ToString());
-
-            var res = await query.GetAsync();
-            if (res != null)
-                Assert.True(res is DJsonValue);
-        }
         
         [Fact]
         public async Task TestContextDelegateFullBalance()
@@ -283,13 +442,23 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextDelegatParticipation()
+        public async Task TestContextDelegateParticipation()
         {
             var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].Participation;
             Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/participation/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextDelegatePendingStakingParameters()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].PendingStakingParameters;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/pending_staking_parameters/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
         }
 
         [Fact]
@@ -303,10 +472,70 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextDelegateUnstakedFrozenDeposits()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].UnstakedFrozenDeposits;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/unstaked_frozen_deposits/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
         public async Task TestContextDelegateVotingPower()
         {
             var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].VotingPower;
             Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/voting_power/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateVotingInfo()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].VotingInfo;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/voting_info/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextIssuanceCurrentYearlyRate()
+        {
+            var query = Rpc.Blocks.Head.Context.Issuance.CurrentYearlyRate;
+            Assert.Equal($"chains/main/blocks/head/context/issuance/current_yearly_rate/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextIssuanceCurrentYearlyRateExact()
+        {
+            var query = Rpc.Blocks.Head.Context.Issuance.CurrentYearlyRateExact;
+            Assert.Equal($"chains/main/blocks/head/context/issuance/current_yearly_rate_exact/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextIssuanceExpectedIssuance()
+        {
+            var query = Rpc.Blocks.Head.Context.Issuance.ExpectedIssuance;
+            Assert.Equal($"chains/main/blocks/head/context/issuance/expected_issuance/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
+        public async Task TestContextIssuanceIssuancePerMinute()
+        {
+            var query = Rpc.Blocks.Head.Context.Issuance.IssuancePerMinute;
+            Assert.Equal($"chains/main/blocks/head/context/issuance/issuance_per_minute/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -332,6 +561,86 @@ namespace Netezos.Tests.Rpc
             Assert.Equal($"chains/main/blocks/head/context/seed", query.ToString());
 
             var res = await query.PostAsync(query);
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextSmartRollupsAll()
+        {
+            var query = Rpc.Blocks.Head.Context.SmartRollups.All;
+            Assert.Equal($"chains/main/blocks/head/context/smart_rollups/all/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
+        public async Task TestContextSmartRollupGenesisInfo()
+        {
+            var query = Rpc.Blocks.Head.Context.SmartRollups[TestSmartRollup].GenesisInfo;
+            Assert.Equal($"chains/main/blocks/head/context/smart_rollups/smart_rollup/{TestSmartRollup}/genesis_info/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextSmartRollupInitialPvmStateHash()
+        {
+            var query = Rpc.Blocks.Head.Context.SmartRollups[TestSmartRollup].InitialPvmStateHash;
+            Assert.Equal($"chains/main/blocks/head/context/smart_rollups/smart_rollup/{TestSmartRollup}/initial_pvm_state_hash/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextSmartRollupKind()
+        {
+            var query = Rpc.Blocks.Head.Context.SmartRollups[TestSmartRollup].Kind;
+            Assert.Equal($"chains/main/blocks/head/context/smart_rollups/smart_rollup/{TestSmartRollup}/kind/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextSmartRollupLastCementedCommitmentHashWithLevel()
+        {
+            var query = Rpc.Blocks.Head.Context.SmartRollups[TestSmartRollup].LastCementedCommitmentHashWithLevel;
+            Assert.Equal($"chains/main/blocks/head/context/smart_rollups/smart_rollup/{TestSmartRollup}/last_cemented_commitment_hash_with_level/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextSmartRollupStakers()
+        {
+            var query = Rpc.Blocks.Head.Context.SmartRollups[TestSmartRollup].Stakers;
+            Assert.Equal($"chains/main/blocks/head/context/smart_rollups/smart_rollup/{TestSmartRollup}/stakers/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
+        public async Task TestContextTotalFrozenStake()
+        {
+            var query = Rpc.Blocks.Head.Context.TotalFrozenStake;
+            Assert.Equal($"chains/main/blocks/head/context/total_frozen_stake/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextTotalSupply()
+        {
+            var query = Rpc.Blocks.Head.Context.TotalSupply;
+            Assert.Equal($"chains/main/blocks/head/context/total_supply/", query.ToString());
+
+            var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
     }
