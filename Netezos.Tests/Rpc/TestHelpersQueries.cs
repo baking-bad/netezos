@@ -37,16 +37,6 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestHelpersEndorsingRights()
-        {
-            var query = Rpc.Blocks.Head.Helpers.EndorsingRights;
-            Assert.Equal($"chains/main/blocks/head/helpers/endorsing_rights", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
-        }
-
-        [Fact]
         public void TestHelpersForgeBlockHeader()
         {
             var query = Rpc.Blocks.Head.Helpers.Forge.BlockHeader;

@@ -1,6 +1,6 @@
 {
   "node": "https://rpc.tzkt.io/oxfordnet/",
-  "testContract": "KT1XtHJBXF3aAwggHrZh1fUbzaHc5MmB6QDs",
+  "testContract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
   "testEntrypoint": "default",
   "testDelegate": "tz1foXHgRzdYdaLgX6XhpZGxbBv42LZ6ubvE",
   "testInactive": "tz2Wjf3XgkgxWF4nMJM2cKqbgTQ8as7agMM2",

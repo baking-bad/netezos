@@ -1,7 +1,7 @@
 {
   "node": "https://rpc.tzkt.io/mainnet/",
-  "testContract": "KT1WPEis2WhAc2FciM2tZVn8qe6pCBe9HkDp",
-  "testEntrypoint": "Action",
+  "testContract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+  "testEntrypoint": "default",
   "testDelegate": "tz3bvNMQ95vfAYtG8193ymshqjSvmxiCUuR5",
   "testInactive": "tz1bR8MFMyWSa428KRQcdShZFu9C4gEA4iFd",
   "testSmartRollup": "sr1M8qwvJuzmB5fgu4JFS2gtUvC3CBGs7TQx",

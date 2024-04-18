@@ -11,7 +11,7 @@ public class ShardsQuery : RpcObject
     /// Get the shards assignment for a given level and given delegates.
     /// </summary>
     /// <param name="level">Level of the block</param>
-    /// <param name="delegates">A Secp256k1 of an Ed25519 public key hash (Base58Check-encoded)</param>
+    /// <param name="delegates">A Secp256k1 or an Ed25519 public key hash (Base58Check-encoded)</param>
     public new Task<dynamic> GetAsync(int level, string delegates)
         => Client.GetJson($"{Query}?level={level}&delegates={delegates}");
 

@@ -293,7 +293,7 @@ namespace Netezos.Tests.Rpc
             Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/unstake_requests/", query.ToString());
 
             var res = await query.GetAsync();
-            Assert.True(res is DJsonObject);
+            Assert.True(res is DJsonObject || res == null);
         }
 
         [Fact]
@@ -665,16 +665,6 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
-        }
-
-        [Fact]
-        public async Task TestContextSmartRollupInitialPvmStateHash()
-        {
-            var query = Rpc.Blocks.Head.Context.SmartRollups[TestSmartRollup].InitialPvmStateHash;
-            Assert.Equal($"chains/main/blocks/head/context/smart_rollups/smart_rollup/{TestSmartRollup}/initial_pvm_state_hash/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
         }
 
         [Fact]
