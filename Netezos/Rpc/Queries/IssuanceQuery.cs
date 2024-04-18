@@ -16,7 +16,7 @@ public class IssuanceQuery : RpcQuery
     public RpcObject CurrentYearlyRateExact => new(this, "current_yearly_rate_exact/");
         
     /// <summary>
-    /// Returns the expected issued tez for the provided block and the next five cycles.
+    /// Returns the expected issued tez for the provided block and the next 'consensus_rights_delay' cycles.
     /// </summary>
     public RpcObject ExpectedIssuance => new(this, "expected_issuance/");
         

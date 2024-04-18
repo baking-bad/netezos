@@ -1,4 +1,5 @@
-﻿using Netezos.Rpc.Queries.Post;
+﻿using Netezos.Rpc.Queries.Dal;
+using Netezos.Rpc.Queries.Post;
 
 namespace Netezos.Rpc.Queries
 {
@@ -26,6 +27,11 @@ namespace Netezos.Rpc.Queries
         /// Gets the query to all existing contracts (including non-empty default contracts)
         /// </summary>
         public ContractsQuery Contracts => new(this, "contracts/");
+
+        /// <summary>
+        /// Gets the query to Data-Availability Layer
+        /// </summary>
+        public DalQuery Dal => new(this, "dal/");
 
         /// <summary>
         /// Gets the query to all registered delegates
