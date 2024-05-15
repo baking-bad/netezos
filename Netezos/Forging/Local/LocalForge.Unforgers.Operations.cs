@@ -9,6 +9,7 @@ namespace Netezos.Forging
         {
             return (OperationTag)reader.ReadByte() switch
             {
+                OperationTag.AttestationWithDal => UnforgeAttestationWithDal(reader),
                 OperationTag.Endorsement => UnforgeEndorsement(reader),
                 OperationTag.Preendorsement => UnforgePreendorsement(reader),
                 OperationTag.Ballot => UnforgeBallot(reader),
@@ -46,7 +47,20 @@ namespace Netezos.Forging
                 OperationTag.SrPublish => UnforgeSrPublish(reader),
                 OperationTag.SrRecoverBond => UnforgeSrRecoverBond(reader),
                 OperationTag.SrRefute => UnforgeSrRefute(reader),
+                OperationTag.DalPublishCommitment => UnforgeDalPublishCommitment(reader),
                 var operation => throw new ArgumentException($"Invalid operation: {operation}")
+            };
+        }
+
+        static AttestationWithDalContent UnforgeAttestationWithDal(ForgedReader reader)
+        {
+            return new AttestationWithDalContent
+            {
+                Slot = reader.ReadInt32(2),
+                Level = reader.ReadInt32(),
+                Round = reader.ReadInt32(),
+                PayloadHash = reader.ReadBase58(32, Prefix.vh),
+                DalAttestation = reader.ReadMichelineInt().Value
             };
         }
 
@@ -532,8 +546,25 @@ namespace Netezos.Forging
             };
         }
 
-        #region nested
+        static DalPublishCommitmentContent UnforgeDalPublishCommitment(ForgedReader reader)
+        {
+            return new DalPublishCommitmentContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                SlotHeader = new DalSlotHeader
+                {
+                    SlotIndex = reader.ReadByte(),
+                    Commitment = reader.ReadBase58(48, Prefix.sh),
+                    CommitmentProof = reader.ReadBytes(96)
+                }
+            };
+        }
 
+        #region nested
         static BlockHeader UnforgeBlockHeader(ForgedReader reader)
         {
             return new BlockHeader
@@ -732,7 +763,6 @@ namespace Netezos.Forging
         {
             return reader.ReadBool() ? tb() : fb?.Invoke();
         }
-
         #endregion
     }
 }

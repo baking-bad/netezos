@@ -1,0 +1,18 @@
+﻿{
+  "branch": "BKrVwdc7fD2Sz6BypYQUNE5YvYBRYSM2mLBW39tss916K2e7eCB",
+  "contents": [
+    {
+      "kind": "dal_publish_commitment",
+      "source": "tz1gBnaS1n7LKqpaRnyBX5MSmamadXXfzNpt",
+      "fee": "513",
+      "counter": "2",
+      "gas_limit": "1433",
+      "storage_limit": "0",
+      "slot_header": {
+        "slot_index": 10,
+        "commitment": "sh25wJo53VSwWsR3NLHw6s6VhL2kXXb2zXsQgYiWGhVykfYMbFsVgKFXnhd7QrJJNRJz7bAxzT",
+        "commitment_proof": "b989e195c8f3d63eea3c5a1b51b32c853b4c09c124d53d8eac621c2d60c00544b4f11b9546f9fc4b8d4d641d097851c7112b7d539e6cfcf61ae5b17de43320f10ee33ee31e8080aca6660426fd40f02ba41a7da8845514d433f583e5d2872d42"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+﻿{
+  "branch": "BKoLvj4KKvpYZogKgjARRu6jzcJMqTm8NRUe47dNHKguTYUCmnx",
+  "contents": [
+    {
+      "kind": "attestation_with_dal",
+      "slot": 15,
+      "level": 570452,
+      "round": 0,
+      "block_payload_hash": "vh3SBb7RHo3Dva947myZ9cdNxpGeVE1RfZU2NGHC7Jn9eyVNwhiW",
+      "dal_attestation": "0"
+    }
+  ]
+}

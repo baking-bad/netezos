@@ -13,9 +13,10 @@
         DrainDelegate       = 9,
 
         FailingNoop         = 17,
-
+        
         Preendorsement      = 20,
         Endorsement         = 21,
+        AttestationWithDal  = 23,
 
         Reveal              = 107,
         Transaction         = 108,
@@ -34,6 +35,7 @@
         TxRollupRemoveCommitment    = 155,
         TxRollupRejection           = 156,
         TxRollupDispatchTickets     = 157,
+
         TransferTicket              = 158,
         
         SrOriginate   = 200,
@@ -43,6 +45,8 @@
         SrRefute      = 204,
         SrTimeout     = 205,
         SrExecute     = 206,
-        SrRecoverBond = 207
+        SrRecoverBond = 207,
+
+        DalPublishCommitment = 230
     }
 }

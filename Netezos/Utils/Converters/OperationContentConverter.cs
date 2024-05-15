@@ -19,6 +19,7 @@ namespace Netezos.Forging.Models
             sideReader.Read();
             return sideReader.GetString() switch
             {
+                "attestation_with_dal" => JsonSerializer.Deserialize<AttestationWithDalContent>(ref reader, options),
                 "endorsement" => JsonSerializer.Deserialize<EndorsementContent>(ref reader, options),
                 "preendorsement" => JsonSerializer.Deserialize<PreendorsementContent>(ref reader, options),
                 "ballot" => JsonSerializer.Deserialize<BallotContent>(ref reader, options),
@@ -56,6 +57,7 @@ namespace Netezos.Forging.Models
                 "smart_rollup_publish" => JsonSerializer.Deserialize<SrPublishContent>(ref reader, options),
                 "smart_rollup_recover_bond" => JsonSerializer.Deserialize<SrRecoverBondContent>(ref reader, options),
                 "smart_rollup_refute" => JsonSerializer.Deserialize<SrRefuteContent>(ref reader, options),
+                "dal_publish_commitment" => JsonSerializer.Deserialize<DalPublishCommitmentContent>(ref reader, options),
                 _ => throw new JsonException("Invalid operation kind"),
             };
         }

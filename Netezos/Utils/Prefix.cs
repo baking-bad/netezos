@@ -191,5 +191,10 @@
         /// Tx Rollup withdraw list hash
         /// </summary>
         public static readonly byte[] txw = new byte[] { 79, 150, 72 };
+
+        /// <summary>
+        /// DAL slot header
+        /// </summary>
+        public static readonly byte[] sh = new byte[] { 2, 116, 180 };
     }
 }

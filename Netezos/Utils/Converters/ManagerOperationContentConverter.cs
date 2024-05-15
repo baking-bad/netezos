@@ -44,6 +44,7 @@ namespace Netezos.Forging.Models
                 "smart_rollup_publish" => JsonSerializer.Deserialize<SrPublishContent>(ref reader, options),
                 "smart_rollup_recover_bond" => JsonSerializer.Deserialize<SrRecoverBondContent>(ref reader, options),
                 "smart_rollup_refute" => JsonSerializer.Deserialize<SrRefuteContent>(ref reader, options),
+                "dal_publish_commitment" => JsonSerializer.Deserialize<DalPublishCommitmentContent>(ref reader, options),
                 _ => throw new JsonException("Invalid operation kind"),
             };
         }

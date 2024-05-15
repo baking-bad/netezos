@@ -10,6 +10,7 @@ namespace Netezos.Forging
         {
             return content switch
             {
+                AttestationWithDalContent op => ForgeAttestationWithDal(op),
                 EndorsementContent op => ForgeEndorsement(op),
                 PreendorsementContent op => ForgePreendorsement(op),
                 BallotContent op => ForgeBallot(op),
@@ -47,8 +48,20 @@ namespace Netezos.Forging
                 SrRecoverBondContent op => ForgeSrRecoverBond(op),
                 SrRefuteContent op => ForgeSrRefute(op),
                 SrTmieoutContent op => ForgeSrTimeout(op),
+                DalPublishCommitmentContent op => ForgeDalPublishCommitment(op),
                 _ => throw new ArgumentException($"Invalid operation content kind {content.Kind}")
             };
+        }
+
+        static byte[] ForgeAttestationWithDal(AttestationWithDalContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.AttestationWithDal),
+                ForgeInt32(operation.Slot, 2),
+                ForgeInt32(operation.Level),
+                ForgeInt32(operation.Round),
+                Base58.Parse(operation.PayloadHash, Prefix.vh),
+                ForgeMicheInt(operation.DalAttestation));
         }
 
         static byte[] ForgeEndorsement(EndorsementContent operation)
@@ -497,6 +510,20 @@ namespace Netezos.Forging
                 ForgeRollup(operation.Rollup),
                 ForgeTzAddress(operation.Opponent),
                 ForgeRefutation(operation.Refutation));
+        }
+
+        static byte[] ForgeDalPublishCommitment(DalPublishCommitmentContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.DalPublishCommitment),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                [operation.SlotHeader.SlotIndex],
+                Base58.Parse(operation.SlotHeader.Commitment, Prefix.sh),
+                operation.SlotHeader.CommitmentProof);
         }
 
         #region nested
