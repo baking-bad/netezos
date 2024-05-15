@@ -8,7 +8,7 @@ namespace Netezos.Rpc.Queries
     public class ContractQuery : RpcObject
     {
         /// <summary>
-        /// Gets the query to the the complete list of tickets owned by the given contract by scanning the contract's storage.
+        /// Gets the query to the complete list of tickets owned by the given contract by scanning the contract's storage.
         /// </summary>
         public RpcObject AllTicketBalances => new(this, "all_ticket_balances/");
         
@@ -48,6 +48,11 @@ namespace Netezos.Rpc.Queries
         /// Return the list of entrypoints of the contract
         /// </summary>
         public EntrypointsQuery Entrypoints => new(this, "entrypoints/");
+
+        /// <summary>
+        /// Gets the query to the estimated own pending slashed amount (in mutez) of a contract.
+        /// </summary>
+        public RpcObject EstimatedOwnPendingSlashedAmount => new(this, "estimated_own_pending_slashed_amount/");
 
         /// <summary>
         /// Gets the query to the frozen bonds of a contract.

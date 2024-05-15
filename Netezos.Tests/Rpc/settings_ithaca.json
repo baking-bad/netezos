@@ -1,7 +1,7 @@
 {
   "node": "https://rpc.tzkt.io/ithacanet/",
-  "testContract": "KT1GHz4zehbss9hxsYsTbppRgozXxaLJLM2R",
-  "testEntrypoint": "do",
+  "testContract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+  "testEntrypoint": "default",
   "testDelegate": "tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9",
   "testInactive": "tz1Wn7JnLVf7PpTbaLQNzmNaF9z9UudWHGBR",
   "keyHash": "expru2dKqDfZG8hu4wNGkiyunvq2hdSKuVYtcKta7BWP6Q18oNxKjS",

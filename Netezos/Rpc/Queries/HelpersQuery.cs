@@ -18,6 +18,7 @@
         /// <summary>
         /// Gets the query to the endorsing rights
         /// </summary>
+        [Obsolete("This RPC query is deprecated. Use it on early protocols only.")]
         public EndorsingRightsQuery EndorsingRights => new(this, "endorsing_rights");
         
         /// <summary>

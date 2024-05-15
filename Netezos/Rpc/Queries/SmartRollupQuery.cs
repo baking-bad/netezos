@@ -13,6 +13,7 @@ public class SmartRollupQuery : RpcObject
     /// <summary>
     /// Initial PVM state hash of smart rollup.
     /// </summary>
+    [Obsolete("This RPC query is deprecated. Use it on early protocols only.")]
     public RpcObject InitialPvmStateHash => new(this, "initial_pvm_state_hash/");
         
     /// <summary>

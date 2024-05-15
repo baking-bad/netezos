@@ -159,16 +159,6 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestRawContextContractFrozenDeposits()
-        {
-            var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].FrozenDeposits;
-            Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestDelegate}/frozen_deposits/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonObject);
-        }
-
-        [Fact]
         public async Task TestRawContextContractManager()
         {
             var query = Rpc.Blocks.Head.Context.Raw.Contracts[TestDelegate].Manager;
@@ -195,7 +185,7 @@ namespace Netezos.Tests.Rpc
             Assert.Equal($"chains/main/blocks/head/context/raw/json/contracts/index/{TestContract}/storage/", query.ToString());
 
             var res = await query.GetAsync();
-            Assert.True(res is DJsonObject);
+            Assert.True(res is DJsonArray);
         }
 
         [Fact]
