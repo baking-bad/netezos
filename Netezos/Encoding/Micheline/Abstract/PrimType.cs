@@ -162,6 +162,7 @@ namespace Netezos.Encoding
         LAMBDA_REC,
         TICKET,
         BYTES,
-        NAT
+        NAT,
+        Ticket
     }
 }

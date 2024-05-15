@@ -164,6 +164,7 @@ namespace Netezos.Encoding.Serialization
             "TICKET" => PrimType.TICKET,
             "BYTES" => PrimType.BYTES,
             "NAT" => PrimType.NAT,
+            "Ticket" => PrimType.Ticket,
             var value => throw new FormatException($"Invalid prim: {value}")
         };
 
