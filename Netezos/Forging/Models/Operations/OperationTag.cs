@@ -3,19 +3,19 @@
     public enum OperationTag
     {
         SeedNonceRevelation = 1,
-        DoubleEndorsement   = 2,
+        DoubleAttestation   = 2,
         DoubleBaking        = 3,
         Activation          = 4,
         Proposals           = 5,
         Ballot              = 6,
-        DoublePreendorsement= 7,
+        DoublePreattestation= 7,
         VdfRevelation       = 8,
         DrainDelegate       = 9,
 
         FailingNoop         = 17,
         
-        Preendorsement      = 20,
-        Endorsement         = 21,
+        Preattestation      = 20,
+        Attestation         = 21,
         AttestationWithDal  = 23,
 
         Reveal              = 107,

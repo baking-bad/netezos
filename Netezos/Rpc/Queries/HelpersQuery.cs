@@ -16,11 +16,10 @@
         public RpcObject CurrentLevel => new(this, "current_level");
 
         /// <summary>
-        /// Gets the query to the endorsing rights
+        /// Gets the query to the attestation rights
         /// </summary>
-        [Obsolete("This RPC query is deprecated. Use it on early protocols only.")]
-        public EndorsingRightsQuery EndorsingRights => new(this, "endorsing_rights");
-        
+        public AttestationRightsQuery AttestationRights => new(this, "attestation_rights");
+
         /// <summary>
         /// Gets the query to the forging
         /// </summary>

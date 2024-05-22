@@ -2,25 +2,25 @@
 
 namespace Netezos.Forging.Models
 {
-    public class DoublePreendorsementContent : OperationContent
+    public class DoublePreattestationContent : OperationContent
     {
         [JsonPropertyName("kind")]
-        public override string Kind => "double_preendorsement_evidence";
+        public override string Kind => "double_preattestation_evidence";
 
         [JsonPropertyName("op1")]
-        public InlinePreendorsement Op1 { get; set; } = null!;
+        public InlinePreattestation Op1 { get; set; } = null!;
 
         [JsonPropertyName("op2")]
-        public InlinePreendorsement Op2 { get; set; } = null!;
+        public InlinePreattestation Op2 { get; set; } = null!;
     }
 
-    public class InlinePreendorsement
+    public class InlinePreattestation
     {
         [JsonPropertyName("branch")]
         public string Branch { get; set; } = null!;
 
         [JsonPropertyName("operations")]
-        public PreendorsementContent Operations { get; set; } = null!;
+        public PreattestationContent Operations { get; set; } = null!;
 
         [JsonPropertyName("signature")]
         public string Signature { get; set; } = null!;

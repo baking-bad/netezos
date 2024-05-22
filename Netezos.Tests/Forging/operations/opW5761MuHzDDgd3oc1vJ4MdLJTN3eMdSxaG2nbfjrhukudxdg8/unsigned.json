@@ -2,7 +2,7 @@
   "branch": "BL897B6K3nzQ8cD91WxYNNKdmfiCBkD4xMu2QTWmAQ6i7G1DAE1",
   "contents": [
     {
-      "kind": "endorsement",
+      "kind": "attestation",
       "slot": 94,
       "level": 9167,
       "round": 0,

@@ -108,10 +108,10 @@
 
         /// <summary>
         /// Returns cycle and level participation information. In particular this indicates, in the field 'expected_cycle_activity',
-        /// the number of slots the delegate is expected to have in the cycle based on its active stake. The field 'minimal_cycle_activity' indicates the minimal endorsing slots in the cycle required to get endorsing rewards.
-        /// It is computed based on 'expected_cycle_activity. The fields 'missed_slots' and 'missed_levels' indicate the number of missed endorsing slots and missed levels (for endorsing) in the cycle so far.
-        /// 'missed_slots' indicates the number of missed endorsing slots in the cycle so far. The field 'remaining_allowed_missed_slots' indicates the remaining amount of endorsing slots that can be missed in the cycle before forfeiting the rewards.
-        /// Finally, 'expected_endorsing_rewards' indicates the endorsing rewards that will be distributed at the end of the cycle if activity at that point will be greater than the minimal required; if the activity is already known to be below the required minimum, then the rewards are zero.
+        /// the number of slots the delegate is expected to have in the cycle based on its active stake. The field 'minimal_cycle_activity' indicates the minimal attesting slots in the cycle required to get attesting rewards.
+        /// It is computed based on 'expected_cycle_activity. The fields 'missed_slots' and 'missed_levels' indicate the number of missed attesting slots and missed levels (for attesting) in the cycle so far.
+        /// 'missed_slots' indicates the number of missed attesting slots in the cycle so far. The field 'remaining_allowed_missed_slots' indicates the remaining amount of attesting slots that can be missed in the cycle before forfeiting the rewards.
+        /// Finally, 'expected_attesting_rewards' indicates the attesting rewards that will be distributed at the end of the cycle if activity at that point will be greater than the minimal required; if the activity is already known to be below the required minimum, then the rewards are zero.
         /// </summary>
         public RpcObject Participation => new(this, "participation/");
 

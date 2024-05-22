@@ -2,11 +2,11 @@
   "branch": "BLuyhUCVEhbjwjpC7RE16sjoVNi1bvQiUdmDndUqM41vnpzqFoH",
   "contents": [
     {
-      "kind": "double_preendorsement_evidence",
+      "kind": "double_preattestation_evidence",
       "op1": {
         "branch": "BLBPGmGahGToPBGsNzwPmV5A3ciqVe5HD5nGRUVHqiJgoyMPH1t",
         "operations": {
-          "kind": "preendorsement",
+          "kind": "preattestation",
           "slot": 106,
           "level": 35248,
           "round": 1,
@@ -17,7 +17,7 @@
       "op2": {
         "branch": "BLBPGmGahGToPBGsNzwPmV5A3ciqVe5HD5nGRUVHqiJgoyMPH1t",
         "operations": {
-          "kind": "preendorsement",
+          "kind": "preattestation",
           "slot": 106,
           "level": 35248,
           "round": 1,
