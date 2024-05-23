@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  
+      <title>Wallet Import and HD Keys Interaction | Netezos</title>
+      <meta name="description" content="Short guide on how to create or import a Hierarchical Deterministic (HD) wallet.">
+      <meta name="keywords" content="netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk, hierarchical deterministic, hd, kukai, atomex, temple wallet, slip-0010, bip-32">
+  
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@TezosBakingBad">
+      <meta name="twitter:creator" content="@TezosBakingBad">
+      <meta name="twitter:title" content="Wallet Import and HD Keys Interaction | Netezos">
+      <meta name="twitter:description" content="Short guide on how to create or import a Hierarchical Deterministic (HD) wallet.">
+      <meta name="twitter:image" content="https://netezos.dev/logo.png">
+      <meta name="twitter:image:alt" content="Netezos">
+  
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://netezos.dev">
+      <meta property="og:title" content="Wallet Import and HD Keys Interaction | Netezos">
+      <meta property="og:description" content="Short guide on how to create or import a Hierarchical Deterministic (HD) wallet.">
+      <meta property="og:image" content="https://netezos.dev/logo.png">
+      <meta property="og:image:secure_url" content="https://netezos.dev/logo.png">
+      <meta property="og:image:alt" content="Netezos">
+      <meta property="og:image:type" content="image/png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+  
+      <link rel="canonical" href="https://netezos.dev/docs/wallet-import.html">
+  
+      <link rel="stylesheet" href="/styles/docfx.vendor.css">
+      <link rel="stylesheet" href="/styles/docfx.css">
+      <link rel="stylesheet" href="/styles/main.css">
+  
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+      <meta property="docfx:rel" content="../">
+      <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="wallet-import-and-hd-keys-interaction">Wallet Import and HD Keys Interaction</h1>
+
+<p>With Netezos.Keys you can create or import a Hierarchical Deterministic (HD) wallet.</p>
+<h2 id="basic-usage">Basic usage</h2>
+<p>In order to create an HD wallet, you just need to create a new instance of <code>HDKey</code></p>
+<pre><code class="lang-cs">var masterKey = new HDKey(ECKind.Ed25519); //Ed25519, Secp256k1, and NistP256 are available
+</code></pre>
+<p>To get a child key, for instance, with the path <code>&quot;m/44'/1729'/0'/0'&quot;</code> (it's a default path for Atomex, Temple, Kukai and other Tezos wallets), we need to <code>Derive</code> it from the master key</p>
+<pre><code class="lang-cs">var childHdKey = masterKey.Derive(&quot;m/44'/1729'/0'/0'&quot;);
+</code></pre>
+<p>Also, if you need to get a lot of child keys, you can derive an intermediate HD key and then derive children from it, using a shorter derivation path, for slightly better performance:</p>
+<pre><code class="lang-cs">var hdKey = masterKey.Derive(&quot;m/44'/1729'&quot;);
+
+var firstChild = hdKey.Derive(&quot;/0'/0'&quot;); // the result path is m/44'/1729'/0'/0'
+// or
+var secondChild = hdKey.Derive(1, true).Derive(0); // the result path is m/44'/1729'/1'/0
+// etc.
+</code></pre>
+<h2 id="public-key-derivation">Public Key Derivation</h2>
+<p>Public key derivation process is identical to the private key derivation, but keep in mind that it always fails for <code>Ed25519</code> and for other curves it is only defined for non-hardened child keys.
+To create an <code>HDPubKey</code> object we need a public key and a chain code</p>
+<pre><code class="lang-cs">var hdKey = new HDKey(ECKind.NistP256);
+var hdPubKey = HDPubKey.FromPubKey(hdKey.PubKey, hdKey.ChainCode);
+var childPubKey = hdPubKey.Derive(&quot;m/44/1729/0/0&quot;);
+var anotherChild = childPubKey.Derive(0);
+</code></pre>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/baking-bad/netezos/blob/master/docs/docs/wallet-import.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright © Baking Bad
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
