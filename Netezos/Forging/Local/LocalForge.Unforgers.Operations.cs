@@ -59,13 +59,14 @@ namespace Netezos.Forging
                 Slot = reader.ReadInt32(2),
                 Level = reader.ReadInt32(),
                 Round = reader.ReadInt32(),
-                PayloadHash = reader.ReadBase58(32, Prefix.vh)
+                PayloadHash = reader.ReadBase58(32, Prefix.vh),
+                DalAttestation = null
             };
         }
 
-        static AttestationWithDalContent UnforgeAttestationWithDal(ForgedReader reader)
+        static AttestationContent UnforgeAttestationWithDal(ForgedReader reader)
         {
-            return new AttestationWithDalContent
+            return new AttestationContent
             {
                 Slot = reader.ReadInt32(2),
                 Level = reader.ReadInt32(),

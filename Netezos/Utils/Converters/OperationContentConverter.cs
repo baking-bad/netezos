@@ -20,7 +20,7 @@ namespace Netezos.Forging.Models
             return sideReader.GetString() switch
             {
                 "attestation" => JsonSerializer.Deserialize<AttestationContent>(ref reader, options),
-                "attestation_with_dal" => JsonSerializer.Deserialize<AttestationWithDalContent>(ref reader, options),
+                "attestation_with_dal" => JsonSerializer.Deserialize<AttestationContent>(ref reader, options),
                 "preattestation" => JsonSerializer.Deserialize<PreattestationContent>(ref reader, options),
                 "ballot" => JsonSerializer.Deserialize<BallotContent>(ref reader, options),
                 "proposals" => JsonSerializer.Deserialize<ProposalsContent>(ref reader, options),

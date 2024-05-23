@@ -11,7 +11,6 @@ namespace Netezos.Forging
             return content switch
             {
                 AttestationContent op => ForgeAttestation(op),
-                AttestationWithDalContent op => ForgeAttestationWithDal(op),
                 PreattestationContent op => ForgePreattestation(op),
                 BallotContent op => ForgeBallot(op),
                 ProposalsContent op => ForgeProposals(op),
@@ -55,23 +54,25 @@ namespace Netezos.Forging
 
         static byte[] ForgeAttestation(AttestationContent operation)
         {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.Attestation),
-                ForgeInt32(operation.Slot, 2),
-                ForgeInt32(operation.Level),
-                ForgeInt32(operation.Round),
-                Base58.Parse(operation.PayloadHash, Prefix.vh));
-        }
-
-        static byte[] ForgeAttestationWithDal(AttestationWithDalContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.AttestationWithDal),
-                ForgeInt32(operation.Slot, 2),
-                ForgeInt32(operation.Level),
-                ForgeInt32(operation.Round),
-                Base58.Parse(operation.PayloadHash, Prefix.vh),
-                ForgeMicheInt(operation.DalAttestation));
+            if (operation.DalAttestation == null)
+            {
+                return Bytes.Concat(
+                    ForgeTag(OperationTag.Attestation),
+                    ForgeInt32(operation.Slot, 2),
+                    ForgeInt32(operation.Level),
+                    ForgeInt32(operation.Round),
+                    Base58.Parse(operation.PayloadHash, Prefix.vh));
+            }
+            else
+            {
+                return Bytes.Concat(
+                    ForgeTag(OperationTag.AttestationWithDal),
+                    ForgeInt32(operation.Slot, 2),
+                    ForgeInt32(operation.Level),
+                    ForgeInt32(operation.Round),
+                    Base58.Parse(operation.PayloadHash, Prefix.vh),
+                    ForgeMicheInt(operation.DalAttestation.Value));
+            }
         }
 
         static byte[] ForgePreattestation(PreattestationContent operation)
