@@ -229,6 +229,26 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextContractSpendable()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Spendable;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/spendable/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextContractSpendableAndFrozenBonds()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].SpendableAndFrozenBonds;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/spendable_and_frozen_bonds/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
         public async Task TestContextContractStorage()
         {
             var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Storage;
@@ -383,6 +403,46 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextDelegateBakingPower()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].BakingPower;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/baking_power/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateDelegators()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].Delegators;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/delegators/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateExternalDelegated()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].ExternalDelegated;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/external_delegated/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateExternalStaked()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].ExternalStaked;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/external_staked/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
         public async Task TestContextDelegateConsensusKey()
         {
             var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].ConsensusKey;
@@ -390,26 +450,6 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
-        }
-
-        [Fact]
-        public async Task TestContextDelegateCurrentBakingPower()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].CurrentBakingPower;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/current_baking_power/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextDelegateCurrentFrozenDeposits()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].CurrentFrozenDeposits;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/current_frozen_deposits/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
         }
 
         [Fact]
@@ -433,26 +473,6 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextDelegateDelegatedBalance()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].DelegatedBalance;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/delegated_balance/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextDelegateDelegatedContracts()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].DelegatedContracts;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/delegated_contracts/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
-        }
-
-        [Fact]
         public async Task TestContextDelegateDenunciations()
         {
             var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].Denunciations;
@@ -468,6 +488,16 @@ namespace Netezos.Tests.Rpc
             var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].EstimatedSharedPendingSlashedAmount;
             Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/estimated_shared_pending_slashed_amount/",
                 query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateGracePeriod()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].GracePeriod;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/grace_period/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -495,30 +525,30 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextDelegateFrozenDeposits()
+        public async Task TestContextDelegateOwnDelegated()
         {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FrozenDeposits;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/frozen_deposits/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-        
-        [Fact]
-        public async Task TestContextDelegateFullBalance()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].FullBalance;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/full_balance/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].OwnDelegated;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/own_delegated/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
 
         [Fact]
-        public async Task TestContextDelegateGracePeriod()
+        public async Task TestContextDelegateOwnFullBalance()
         {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].GracePeriod;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/grace_period/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].OwnFullBalance;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/own_full_balance/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateOwnStaked()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].OwnStaked;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/own_staked/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
@@ -555,10 +585,30 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextDelegateUnstakedFrozenDeposits()
+        public async Task TestContextDelegateTotalDelegated()
         {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].UnstakedFrozenDeposits;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/unstaked_frozen_deposits/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].TotalDelegated;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/total_delegated/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateTotalStaked()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].TotalStaked;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/total_staked/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextDelegateTotalUnstakedPerCycle()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].TotalUnstakedPerCycle;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/total_unstaked_per_cycle/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
@@ -592,6 +642,16 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
+        public async Task TestContextIssuanceCurrentYearlyRateDetails()
+        {
+            var query = Rpc.Blocks.Head.Context.Issuance.CurrentYearlyRateDetails;
+            Assert.Equal($"chains/main/blocks/head/context/issuance/current_yearly_rate_details/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]
@@ -695,6 +755,16 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
+        public async Task TestContextTotalCurrentlyStaked()
+        {
+            var query = Rpc.Blocks.Head.Context.TotalCurrentlyStaked;
+            Assert.Equal($"chains/main/blocks/head/context/total_currently_staked/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]

@@ -1,5 +1,5 @@
 {
-  "node": "https://rpc.tzkt.io/ithacanet/",
+  "node": "https://rpc.tzkt.io/ghostnet/",
   "testContract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
   "testEntrypoint": "default",
   "testDelegate": "tz1aWXP237BLwNHJcCD4b3DutCevhqq2T1Z9",
