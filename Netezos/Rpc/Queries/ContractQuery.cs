@@ -13,12 +13,16 @@ namespace Netezos.Rpc.Queries
         public RpcObject AllTicketBalances => new(this, "all_ticket_balances/");
         
         /// <summary>
-        /// Gets the query to the balance of a contract
+        /// Gets the query to the spendable balance of a contract (in mutez), also known as liquid balance. Corresponds
+        /// to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds.
+        /// Identical to the 'spendable' RPC.
         /// </summary>
         public RpcObject Balance => new(this, "balance/");
         
         /// <summary>
-        /// Gets the query to the sum of the spendable balance and frozen bonds of a contract.
+        /// Gets the query to the sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds
+        /// to the contract's full balance from which staked funds and unstake requests have been excluded. Identical
+        /// to the 'spendable_and_frozen_bonds' RPC.
         /// </summary>
         public RpcObject BalanceAndFrozenBonds => new(this, "balance_and_frozen_bonds/");
 
@@ -60,7 +64,9 @@ namespace Netezos.Rpc.Queries
         public RpcObject FrozenBonds => new(this, "frozen_bonds/");
 
         /// <summary>
-        /// Gets the query to the full balance of a contract, including frozen bonds and stake.
+        /// Gets the query to the full balance (in mutez) of the contract. Includes its spendable balance, staked tez,
+        /// unstake requests, and frozen bonds. Even if the contract is a delegate, it does not include any staked or
+        /// delegated tez owned by external delegators.
         /// </summary>
         public RpcObject FullBalance => new(this, "full_balance/");
 
@@ -81,15 +87,24 @@ namespace Netezos.Rpc.Queries
         public ScriptQuery Script => new(this, "script/");
 
         /// <summary>
-        /// Gets the query to the staked balance of a contract. Returns None if the contract is originated, or neither delegated nor a delegate.
+        /// Gets the query to the staked balance of a contract (in mutez). Returns None if the contract is originated,
+        /// or neither delegated nor a delegate.
         /// </summary>
         public RpcObject StakedBalance => new(this, "staked_balance/");
 
         /// <summary>
-        /// Gets the query to the flag, indicating if the contract tokens can be spent by the manager
+        /// Gets the query to the spendable balance of a contract (in mutez), also known as liquid balance. Corresponds
+        /// to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds.
+        /// Identical to the 'balance' RPC.
         /// </summary>
-        [Obsolete("This RPC query was removed. Use it on early protocols only.")]
         public RpcObject Spendable => new(this, "spendable/");
+        
+        /// <summary>
+        /// Gets the query to the sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds
+        /// to the contract's full balance from which staked funds and unstake requests have been excluded. Identical
+        /// to the 'balance_and_frozen_bonds' RPC.
+        /// </summary>
+        public RpcObject SpendableAndFrozenBonds => new(this, "spendable_and_frozen_bonds/");
 
         /// <summary>
         /// Gets the query to the data of the contract's storage

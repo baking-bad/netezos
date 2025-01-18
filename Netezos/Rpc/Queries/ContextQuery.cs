@@ -64,6 +64,11 @@ namespace Netezos.Rpc.Queries
         public SmartRollupsQuery SmartRollups => new(this, "smart_rollups/");
         
         /// <summary>
+        /// Returns the amount of staked tez by delegates, delegators or overstaked.
+        /// </summary>
+        public RpcObject TotalCurrentlyStaked => new(this, "total_currently_staked/");
+        
+        /// <summary>
         /// Returns the total stake (in mutez) frozen on the chain.
         /// </summary>
         public RpcObject TotalFrozenStake => new(this, "total_frozen_stake/");
