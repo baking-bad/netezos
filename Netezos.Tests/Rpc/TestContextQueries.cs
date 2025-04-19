@@ -357,6 +357,16 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextSkipListCellsOfLevel()
+        {
+            var query = Rpc.Blocks.Head.Context.Dal.SkipListCellsOfLevel;
+            Assert.Equal("chains/main/blocks/head/context/dal/skip_list_cells_of_level/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
         public async Task TestContextDalShards()
         {
             var query = Rpc.Blocks.Head.Context.Dal.Shards;
@@ -460,6 +470,16 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
+        }
+        
+        [Fact]
+        public async Task TestContextDalParticipation()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].DalParticipation;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/dal_participation/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
         }
 
         [Fact]
@@ -782,6 +802,16 @@ namespace Netezos.Tests.Rpc
         {
             var query = Rpc.Blocks.Head.Context.TotalSupply;
             Assert.Equal($"chains/main/blocks/head/context/total_supply/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+        
+        [Fact]
+        public async Task TestContextProtocolFirstLevel()
+        {
+            var query = Rpc.Blocks.Head.Context.Protocol.FirstLevel;
+            Assert.Equal("chains/main/blocks/head/context/protocol/first_level/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);

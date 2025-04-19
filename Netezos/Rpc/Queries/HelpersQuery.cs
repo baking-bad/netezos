@@ -49,6 +49,11 @@
         /// Gets the query to validators
         /// </summary>
         public ValidatorsQuery Validators => new(this, "validators");
+
+        /// <summary>
+        /// Returns the number of blocks consecutively baked at round zero.
+        /// </summary>
+        public RpcObject ConsecutiveRoundZero => new(this, "consecutive_round_zero");
         
         internal HelpersQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

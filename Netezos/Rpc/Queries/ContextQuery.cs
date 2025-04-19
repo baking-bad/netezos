@@ -77,6 +77,11 @@ namespace Netezos.Rpc.Queries
         /// Returns the total supply (in mutez) available on the chain.
         /// </summary>
         public RpcObject TotalSupply => new(this, "total_supply/");
+        
+        /// <summary>
+        /// Gets the query to the protocol.
+        /// </summary>
+        public ProtocolQuery Protocol => new(this, "protocol/");
 
         internal ContextQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }
