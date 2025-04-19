@@ -45,6 +45,12 @@
         /// The voting power of a given delegate, as computed from its current stake.
         /// </summary>
         public RpcObject CurrentVotingPower => new(this, "current_voting_power/");
+        
+        /// <summary>
+        /// Returns information about the delegate's participation in the attestation of slots published into the Data
+        /// Availability Layer (DAL) during the current cycle.
+        /// </summary>
+        public RpcObject DalParticipation => new(this, "dal_participation/");
 
         /// <summary>
         /// Gets the query to the flag, indicating whether the delegate is currently tagged as deactivated or not

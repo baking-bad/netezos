@@ -170,5 +170,15 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync(TestDelegate);
             Assert.True(res is DJsonArray);
         }
+
+        [Fact]
+        public async Task TestHelperConsecutiveRoundZero()
+        {
+            var query = Rpc.Blocks.Head.Helpers.ConsecutiveRoundZero;
+            Assert.Equal("chains/main/blocks/head/helpers/consecutive_round_zero", query.ToString());
+            
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
     }
 }
