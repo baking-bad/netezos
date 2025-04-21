@@ -403,7 +403,7 @@ namespace Netezos.Forging
             var gasLimitBytes = Hex.Convert(ForgeMicheNat(operation.GasLimit));
             var storageLimitBytes = Hex.Convert(ForgeMicheNat(operation.StorageLimit));
             var publicKeyBytes = Hex.Convert(ForgePublicKey(operation.PublicKey));
-            var sig = Base58.Parse(operation.Proof, 3);
+            var sig = Base58.Parse(operation.Proof, 5);
             var sigLen = Hex.Convert(ForgeInt32(sig.Length));
             var sigBytes = Hex.Convert(sig);
             var sigwitLen = Hex.Convert(ForgeSignatureV1(operation.Proof));

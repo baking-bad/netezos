@@ -103,16 +103,21 @@ namespace Netezos.Forging
 
         public static byte[] ForgeSignatureV1(string value)
         {
+            if (value.StartsWith("sig"))
+            {
+                var sig = Base58.Parse(value, 3);
+                return ForgeInt32(sig.Length).Concat(sig);
+            }
             
             var prefix = value.Substring(0, 5);
-            var res = Base58.Parse(value, 3);
-            return ForgeInt32(res.Length).Concat(res);
+            var res = Base58.Parse(value, 5);
+
             return prefix switch
             {
-                "edsig" => Prefix.edsig.Concat(res),
-                "spsig" => Prefix.spsig.Concat(res),
-                "p2sig" => Prefix.p2sig.Concat(res),
-                "blsig" => Prefix.BLsig.Concat(res),
+                "edsig" => ForgeInt32(res.Length).Concat(res),
+                "spsig" => ForgeInt32(res.Length).Concat(res),
+                "p2sig" => ForgeInt32(res.Length).Concat(res),
+                "BLsig" => ForgeInt32(res.Length).Concat(res),
                 _ => throw new ArgumentException($"Invalid source prefix {prefix}")
             };
         }
