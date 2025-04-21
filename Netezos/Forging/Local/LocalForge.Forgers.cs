@@ -101,6 +101,22 @@ namespace Netezos.Forging
             };
         }
 
+        public static byte[] ForgeSignatureV1(string value)
+        {
+            
+            var prefix = value.Substring(0, 5);
+            var res = Base58.Parse(value, 3);
+            return ForgeInt32(res.Length).Concat(res);
+            return prefix switch
+            {
+                "edsig" => Prefix.edsig.Concat(res),
+                "spsig" => Prefix.spsig.Concat(res),
+                "p2sig" => Prefix.p2sig.Concat(res),
+                "blsig" => Prefix.BLsig.Concat(res),
+                _ => throw new ArgumentException($"Invalid source prefix {prefix}")
+            };
+        }
+
         public static byte[] ForgePkh(string value)
         {
             return Base58.Parse(value, 3);

@@ -9,5 +9,8 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("pk")]
         public string PublicKey { get; set; } = null!;
+
+        [JsonPropertyName("proof")]
+        public string Proof { get; set; } = null!;
     }
 }

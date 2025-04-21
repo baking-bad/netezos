@@ -396,6 +396,23 @@ namespace Netezos.Forging
 
         static byte[] ForgeUpdateConsensusKey(UpdateConsensusKeyContent operation)
         {
+            var tagBytes = Hex.Convert(ForgeTag(OperationTag.UpdateConsensusKey));
+            var sourceBytes = Hex.Convert(ForgeTzAddress(operation.Source));
+            var feeBytes = Hex.Convert(ForgeMicheNat(operation.Fee));
+            var counterBytes = Hex.Convert(ForgeMicheNat(operation.Counter));
+            var gasLimitBytes = Hex.Convert(ForgeMicheNat(operation.GasLimit));
+            var storageLimitBytes = Hex.Convert(ForgeMicheNat(operation.StorageLimit));
+            var publicKeyBytes = Hex.Convert(ForgePublicKey(operation.PublicKey));
+            var sig = Base58.Parse(operation.Proof, 3);
+            var sigLen = Hex.Convert(ForgeInt32(sig.Length));
+            var sigBytes = Hex.Convert(sig);
+            var sigwitLen = Hex.Convert(ForgeSignatureV1(operation.Proof));
+            var proofBytes = Hex.Convert(Bytes.Concat(
+                operation.Proof == null
+                    ? ForgeBool(false)
+                    : ForgeBool(true).Concat(
+                        ForgeSignatureV1(operation.Proof))));
+                
             return Bytes.Concat(
                 ForgeTag(OperationTag.UpdateConsensusKey),
                 ForgeTzAddress(operation.Source),
@@ -403,7 +420,12 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgePublicKey(operation.PublicKey));
+                ForgePublicKey(operation.PublicKey),
+                Bytes.Concat(
+                    operation.Proof == null
+                        ? ForgeBool(false)
+                        : ForgeBool(true).Concat(
+                            ForgeSignatureV1(operation.Proof))));
         }
 
         static byte[] ForgeSrAddMessages(SrAddMessagesContent operation)
@@ -530,7 +552,7 @@ namespace Netezos.Forging
         #region nested
         static byte[] ForgeBlockHeader(BlockHeader header)
         {
-            return Bytes.Concat(
+          return Bytes.Concat(
                 ForgeInt32(header.Level),
                 ForgeInt32(header.Proto, 1),
                 Base58.Parse(header.Predecessor, 2),

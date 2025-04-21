@@ -8,7 +8,8 @@
       "counter": "106",
       "gas_limit": "1100",
       "storage_limit": "0",
-      "pk": "sppk7aYY6kGrvKrYiSoQAcen8FubgiCrCHHkq1CEQCe5n4Xh3tXTcUd"
+      "pk": "sppk7aYY6kGrvKrYiSoQAcen8FubgiCrCHHkq1CEQCe5n4Xh3tXTcUd",
+      "proof": "sigQFenAPMsrMxVvgH1K33sJgj5VqD3gajK1sBJyEugCzZ9EgTvHGiXii9opAgkei7tY1qpJKyB37YGdGGMAWdgodPyDcQvg"
     }
   ]
 }
