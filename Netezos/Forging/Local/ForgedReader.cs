@@ -406,6 +406,19 @@ namespace Netezos.Forging
             }
             yield break;
         }
+        
+        public IEnumerable<string> ReadShardHashes()
+        {
+            var result = new List<string>();
+    
+            var totalBytes = ReadInt32();
+            for (var i = 0; i < totalBytes / 32; i++)
+            {
+                result.Add(Hex.Convert(ReadBytes(32)));
+            }
+    
+            return result;
+        }
 
         public string ReadHexString()
         {

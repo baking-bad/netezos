@@ -48,6 +48,7 @@ namespace Netezos.Forging
                 OperationTag.SrRecoverBond => UnforgeSrRecoverBond(reader),
                 OperationTag.SrRefute => UnforgeSrRefute(reader),
                 OperationTag.DalPublishCommitment => UnforgeDalPublishCommitment(reader),
+                OperationTag.DalEntrapmentEvidence => UnforgeDalEntrapmentEvidence(reader),
                 var operation => throw new ArgumentException($"Invalid operation: {operation}")
             };
         }
@@ -562,6 +563,24 @@ namespace Netezos.Forging
                     SlotIndex = reader.ReadByte(),
                     Commitment = reader.ReadBase58(48, Prefix.sh),
                     CommitmentProof = reader.ReadBytes(96)
+                }
+            };
+        }
+
+        static DalEntrapmentEvidenceContent UnforgeDalEntrapmentEvidence(ForgedReader reader)
+        {
+            return new DalEntrapmentEvidenceContent
+            {
+                Attestation = reader.ReadEnumerableSingle(UnforgeInlineAttestation),
+                SlotIndex = reader.ReadByte(),
+                ShardWithProof = new ShardWithProof()
+                {
+                    Shard = new ShardData()
+                    {
+                        Id = reader.ReadInt32(),
+                        Hashes = reader.ReadShardHashes().ToList()
+                    },
+                    Proof = reader.ReadBase58(48, Prefix.sh)
                 }
             };
         }
