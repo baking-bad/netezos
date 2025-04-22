@@ -718,7 +718,6 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestContextSeed()
         {
-            // Returns 401 for Giganode
             // Returns 404 for the SmartPy Node
             var query = Rpc.Blocks.Head.Context.Seed; // this is a POST request
             Assert.Equal($"chains/main/blocks/head/context/seed", query.ToString());

@@ -535,13 +535,6 @@ namespace Netezos.Forging
 
         static byte[] ForgeDalEntrapmentEvidence(DalEntrapmentEvidenceContent operation)
         {
-            var a = Hex.Convert(ForgeTag(OperationTag.DalEntrapmentEvidence));
-            var len = Hex.Convert(ForgeArray(ForgeInlineAttestation(operation.Attestation)));
-            var c = Hex.Convert(ForgeInt32(operation.SlotIndex, 1));
-            var d = Hex.Convert(ForgeInt32(operation.ShardWithProof.Shard.Id));
-            var e = Hex.Convert(ForgeArray(operation.ShardWithProof.Shard.Hashes.Select(x => Hex.Parse(x)).SelectMany(x => x).ToArray()));
-            var proof = Hex.Convert(Base58.Parse(operation.ShardWithProof.Proof, 3));
-
             return Bytes.Concat(
                 ForgeTag(OperationTag.DalEntrapmentEvidence),
                 ForgeArray(ForgeInlineAttestation(operation.Attestation)),
