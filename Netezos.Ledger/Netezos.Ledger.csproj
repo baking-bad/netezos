@@ -14,13 +14,13 @@
     <Authors>dmirgaleev</Authors>
     <Product>Netezos.Ledger</Product>
     <Description>.Net Standard 2.0 library for interacting with Ledger device and working with Tezos Ledger App</Description>
-    <Version>0.9.0</Version>
+    <Version>0.9.1</Version>
     <Copyright>Copyright © Baking Bad 2019</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="LedgerWallet" Version="2.0.0.5" />
-    <PackageReference Include="Netezos.Keys" Version="1.0.0" />
+    <PackageReference Include="Netezos" Version="2.11.0" />
   </ItemGroup>
 
 </Project>
