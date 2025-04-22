@@ -425,7 +425,7 @@ namespace Netezos.Forging
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
                 PublicKey = reader.ReadPublicKey(),
-                Proof = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig)
+                Proof = reader.ReadBool() ? reader.ReadBlsig() : null
             };
         }
 

@@ -396,23 +396,6 @@ namespace Netezos.Forging
 
         static byte[] ForgeUpdateConsensusKey(UpdateConsensusKeyContent operation)
         {
-            var tagBytes = Hex.Convert(ForgeTag(OperationTag.UpdateConsensusKey));
-            var sourceBytes = Hex.Convert(ForgeTzAddress(operation.Source));
-            var feeBytes = Hex.Convert(ForgeMicheNat(operation.Fee));
-            var counterBytes = Hex.Convert(ForgeMicheNat(operation.Counter));
-            var gasLimitBytes = Hex.Convert(ForgeMicheNat(operation.GasLimit));
-            var storageLimitBytes = Hex.Convert(ForgeMicheNat(operation.StorageLimit));
-            var publicKeyBytes = Hex.Convert(ForgePublicKey(operation.PublicKey));
-            var sig = Base58.Parse(operation.Proof, 5);
-            var sigLen = Hex.Convert(ForgeInt32(sig.Length));
-            var sigBytes = Hex.Convert(sig);
-            var sigwitLen = Hex.Convert(ForgeSignatureV1(operation.Proof));
-            var proofBytes = Hex.Convert(Bytes.Concat(
-                operation.Proof == null
-                    ? ForgeBool(false)
-                    : ForgeBool(true).Concat(
-                        ForgeSignatureV1(operation.Proof))));
-                
             return Bytes.Concat(
                 ForgeTag(OperationTag.UpdateConsensusKey),
                 ForgeTzAddress(operation.Source),

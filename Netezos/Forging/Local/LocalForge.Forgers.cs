@@ -103,22 +103,23 @@ namespace Netezos.Forging
 
         public static byte[] ForgeSignatureV1(string value)
         {
-            if (value.StartsWith("sig"))
-            {
-                var sig = Base58.Parse(value, 3);
-                return ForgeInt32(sig.Length).Concat(sig);
-            }
-            
             var prefix = value.Substring(0, 5);
-
+            
             return prefix switch
-            {
-                "edsig" => ForgeInt32(Base58.Parse(value, Prefix.edsig).Length).Concat(Base58.Parse(value, Prefix.edsig)),
-                "spsig" => ForgeInt32(Base58.Parse(value, Prefix.spsig).Length).Concat(Base58.Parse(value, Prefix.spsig)),
-                "p2sig" => ForgeInt32(Base58.Parse(value, Prefix.p2sig).Length).Concat(Base58.Parse(value, Prefix.p2sig)),
-                "BLsig" => ForgeInt32(Base58.Parse(value, Prefix.BLsig).Length).Concat(Base58.Parse(value, Prefix.BLsig)),
-                _ => throw new ArgumentException($"Invalid source prefix {prefix}")
-            };
+                {
+                    "edsig" => ForgeSignature(value, Prefix.edsig),
+                    "spsig" => ForgeSignature(value, Prefix.spsig),
+                    "p2sig" => ForgeSignature(value, Prefix.p2sig),
+                    "BLsig" => ForgeSignature(value, Prefix.BLsig),
+                    _ when value.StartsWith("sig") => ForgeSignature(value, Prefix.sig),
+                    _ => throw new ArgumentException($"Invalid signature prefix: {value}")
+                };
+        }
+        
+        public static byte[] ForgeSignature(string value, byte[] prefix)
+        {
+            var parsed = Base58.Parse(value, prefix);
+            return ForgeInt32(parsed.Length).Concat(parsed);
         }
 
         public static byte[] ForgePkh(string value)

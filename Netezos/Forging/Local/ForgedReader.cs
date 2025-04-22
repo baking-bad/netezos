@@ -159,6 +159,16 @@ namespace Netezos.Forging
             return ReadBase58(len, prefix);
         }
 
+        public string ReadBlsig()
+        {
+            var proofLength = ReadInt32();
+            if (proofLength != Lengths.BLsig.Decoded)
+            {
+                throw new ArgumentException($"Invalid signature length {proofLength}");
+            }
+            return ReadBase58(proofLength, Prefix.BLsig);
+        }
+
         public string ReadAddress()
         {
             return ReadByte() switch
