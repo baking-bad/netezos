@@ -535,7 +535,7 @@ namespace Netezos.Forging
         #region nested
         static byte[] ForgeBlockHeader(BlockHeader header)
         {
-          return Bytes.Concat(
+            return Bytes.Concat(
                 ForgeInt32(header.Level),
                 ForgeInt32(header.Proto, 1),
                 Base58.Parse(header.Predecessor, 2),
