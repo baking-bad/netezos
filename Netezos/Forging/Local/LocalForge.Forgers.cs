@@ -110,14 +110,13 @@ namespace Netezos.Forging
             }
             
             var prefix = value.Substring(0, 5);
-            var res = Base58.Parse(value, 5);
 
             return prefix switch
             {
-                "edsig" => ForgeInt32(res.Length).Concat(res),
-                "spsig" => ForgeInt32(res.Length).Concat(res),
-                "p2sig" => ForgeInt32(res.Length).Concat(res),
-                "BLsig" => ForgeInt32(res.Length).Concat(res),
+                "edsig" => ForgeInt32(Base58.Parse(value, Prefix.edsig).Length).Concat(Base58.Parse(value, Prefix.edsig)),
+                "spsig" => ForgeInt32(Base58.Parse(value, Prefix.spsig).Length).Concat(Base58.Parse(value, Prefix.spsig)),
+                "p2sig" => ForgeInt32(Base58.Parse(value, Prefix.p2sig).Length).Concat(Base58.Parse(value, Prefix.p2sig)),
+                "BLsig" => ForgeInt32(Base58.Parse(value, Prefix.BLsig).Length).Concat(Base58.Parse(value, Prefix.BLsig)),
                 _ => throw new ArgumentException($"Invalid source prefix {prefix}")
             };
         }
