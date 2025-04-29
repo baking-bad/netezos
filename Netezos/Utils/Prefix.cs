@@ -18,7 +18,7 @@
         public static readonly byte[] Lo = new byte[] { 133, 233 };
 
         /// <summary>
-        /// Operation list list hash prefix
+        /// Operation list hash prefix
         /// </summary>
         public static readonly byte[] LLo = new byte[] { 29, 159, 109 };
 

@@ -47,6 +47,7 @@
         SrExecute     = 206,
         SrRecoverBond = 207,
 
-        DalPublishCommitment = 230
+        DalPublishCommitment = 230,
+        DalEntrapmentEvidence = 24
     }
 }

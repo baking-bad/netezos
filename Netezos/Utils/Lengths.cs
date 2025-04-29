@@ -103,6 +103,15 @@ namespace Netezos
         }
 
         /// <summary>
+        /// generic signature
+        /// </summary>
+        public static class BLsig
+        {
+            // public const int Encoded = 96;
+            public const int Decoded = 96;
+        }
+
+        /// <summary>
         /// nce
         /// </summary>
         public static class nce

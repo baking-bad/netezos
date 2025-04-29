@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Dynamic.Json;
 using Xunit;
 using NJsonSchema;
@@ -13,7 +14,7 @@ namespace Netezos.Tests.Contracts
     public class TestSchema
     {
         [Fact]
-        public async void TestJsonSchemaGeneration()
+        public async Task TestJsonSchemaGeneration()
         {
             foreach (var address in Directory.GetFiles($@"../../../Contracts/Parameters").Select(x => x.Substring(x.Length - 41, 36)))
             {

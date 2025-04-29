@@ -48,6 +48,7 @@ namespace Netezos.Forging
                 SrRefuteContent op => ForgeSrRefute(op),
                 SrTmieoutContent op => ForgeSrTimeout(op),
                 DalPublishCommitmentContent op => ForgeDalPublishCommitment(op),
+                DalEntrapmentEvidenceContent op => ForgeDalEntrapmentEvidence(op),
                 _ => throw new ArgumentException($"Invalid operation content kind {content.Kind}")
             };
         }
@@ -403,7 +404,10 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgePublicKey(operation.PublicKey));
+                ForgePublicKey(operation.PublicKey),
+                operation.Proof is string proof
+                    ? Bytes.Concat(ForgeBool(true), ForgeSignature(proof))
+                    : ForgeBool(false));
         }
 
         static byte[] ForgeSrAddMessages(SrAddMessagesContent operation)
@@ -525,6 +529,18 @@ namespace Netezos.Forging
                 [operation.SlotHeader.SlotIndex],
                 Base58.Parse(operation.SlotHeader.Commitment, Prefix.sh),
                 operation.SlotHeader.CommitmentProof);
+        }
+
+        static byte[] ForgeDalEntrapmentEvidence(DalEntrapmentEvidenceContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.DalEntrapmentEvidence),
+                ForgeArray(ForgeInlineAttestation(operation.Attestation)),
+                ForgeInt32(operation.SlotIndex, 1),
+                ForgeInt32(operation.ShardWithProof.Shard.Id),
+                ForgeArray(operation.ShardWithProof.Shard.Hashes.Select(x => Hex.Parse(x)).SelectMany(x => x).ToArray()),
+                Base58.Parse(operation.ShardWithProof.Proof, 3)
+            );
         }
 
         #region nested

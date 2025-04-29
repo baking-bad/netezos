@@ -159,6 +159,16 @@ namespace Netezos.Forging
             return ReadBase58(len, prefix);
         }
 
+        public string ReadBlsig()
+        {
+            var proofLength = ReadInt32();
+            if (proofLength != Lengths.BLsig.Decoded)
+            {
+                throw new ArgumentException($"Invalid signature length {proofLength}");
+            }
+            return ReadBase58(proofLength, Prefix.BLsig);
+        }
+
         public string ReadAddress()
         {
             return ReadByte() switch
@@ -395,6 +405,19 @@ namespace Netezos.Forging
                 }
             }
             yield break;
+        }
+        
+        public IEnumerable<string> ReadShardHashes()
+        {
+            var result = new List<string>();
+    
+            var cnt = ReadInt32() / 32;
+            for (var i = 0; i < cnt; i++)
+            {
+                result.Add(Hex.Convert(ReadBytes(32)));
+            }
+    
+            return result;
         }
 
         public string ReadHexString()

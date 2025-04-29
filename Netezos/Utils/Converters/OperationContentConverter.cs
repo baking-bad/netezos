@@ -58,6 +58,7 @@ namespace Netezos.Forging.Models
                 "smart_rollup_recover_bond" => JsonSerializer.Deserialize<SrRecoverBondContent>(ref reader, options),
                 "smart_rollup_refute" => JsonSerializer.Deserialize<SrRefuteContent>(ref reader, options),
                 "dal_publish_commitment" => JsonSerializer.Deserialize<DalPublishCommitmentContent>(ref reader, options),
+                "dal_entrapment_evidence" => JsonSerializer.Deserialize<DalEntrapmentEvidenceContent>(ref reader, options),
                 #region deprecated
                 "endorsement" => JsonSerializer.Deserialize<AttestationContent>(ref reader, options),
                 "preendorsement" => JsonSerializer.Deserialize<PreattestationContent>(ref reader, options),
