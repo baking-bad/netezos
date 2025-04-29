@@ -405,11 +405,9 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
                 ForgePublicKey(operation.PublicKey),
-                Bytes.Concat(
-                    operation.Proof == null
-                        ? ForgeBool(false)
-                        : ForgeBool(true).Concat(
-                            ForgeSignatureV1(operation.Proof))));
+                operation.Proof is string proof
+                    ? Bytes.Concat(ForgeBool(true), ForgeSignature(proof))
+                    : ForgeBool(false));
         }
 
         static byte[] ForgeSrAddMessages(SrAddMessagesContent operation)

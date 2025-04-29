@@ -101,25 +101,19 @@ namespace Netezos.Forging
             };
         }
 
-        public static byte[] ForgeSignatureV1(string value)
+        public static byte[] ForgeSignature(string value)
         {
-            var prefix = value.Substring(0, 5);
-            
-            return prefix switch
-                {
-                    "edsig" => ForgeSignature(value, Prefix.edsig),
-                    "spsig" => ForgeSignature(value, Prefix.spsig),
-                    "p2sig" => ForgeSignature(value, Prefix.p2sig),
-                    "BLsig" => ForgeSignature(value, Prefix.BLsig),
-                    _ when value.StartsWith("sig") => ForgeSignature(value, Prefix.sig),
-                    _ => throw new ArgumentException($"Invalid signature prefix: {value}")
-                };
-        }
-        
-        public static byte[] ForgeSignature(string value, byte[] prefix)
-        {
-            var parsed = Base58.Parse(value, prefix);
-            return ForgeInt32(parsed.Length).Concat(parsed);
+            var prefix = value.Substring(0, 3) switch
+            {
+                "eds" => Prefix.edsig,
+                "sps" => Prefix.spsig,
+                "p2s" => Prefix.p2sig,
+                "BLs" => Prefix.BLsig,
+                "sig" => Prefix.sig,
+                _ => throw new ArgumentException($"Invalid signature prefix: {value}")
+            };
+            var bytes = Base58.Parse(value, prefix);
+            return ForgeInt32(bytes.Length).Concat(bytes);
         }
 
         public static byte[] ForgePkh(string value)
