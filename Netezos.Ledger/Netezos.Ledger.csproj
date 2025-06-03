@@ -25,7 +25,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="LedgerWallet" Version="2.0.0.5" />
-		<PackageReference Include="Netezos" Version="2.11.0" />
+		<PackageReference Include="Netezos" Version="2.12.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
 </Project>
