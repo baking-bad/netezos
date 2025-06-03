@@ -35,7 +35,7 @@ namespace Netezos.Keys
         readonly byte[] _ChainCode;
         HDPubKey? _HDPubKey;
         Curve Curve => Key.Curve;
-        HDStandard HD => HDStandard.Slip10;
+        HDStandard HD => HDStandard.FromCurve(Curve);
         ISecretStore Store => Key.Store;
 
         /// <summary>
@@ -45,20 +45,35 @@ namespace Netezos.Keys
         public HDKey(ECKind kind = ECKind.Ed25519)
         {
             Key = new(kind);
-            _ChainCode = RNG.GetBytes(32);
+            _ChainCode = kind == ECKind.Bls12381 ? [] : RNG.GetBytes(32);
         }
 
         internal HDKey(Key key, byte[] chainCode)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
             _ChainCode = chainCode?.Copy() ?? throw new ArgumentNullException(nameof(chainCode));
-            if (chainCode.Length != 32) throw new ArgumentException("Invalid chain code length", nameof(chainCode));
+            if (chainCode.Length != 32 && key.Curve is not Bls12381)
+                throw new ArgumentException("Invalid chain code length", nameof(chainCode));
         }
 
         /// <summary>
         /// Derives an extended child key at the given index
         /// </summary>
-        /// <param name="index">Index of the child key, starting from zero</param>
+        /// <param name="index">Index of the child key (0..2^32)</param>
+        /// <returns>Derived extended child key</returns>
+        public HDKey Derive(uint index)
+        {
+            using (Store.Unlock())
+            {
+                var (prvKey, chainCode) = HD.GetChildPrivateKey(Curve, Store.Data, _ChainCode, index);
+                return new(new(prvKey, Curve.Kind, true), chainCode);
+            }
+        }
+
+        /// <summary>
+        /// Derives an extended child key at the given index
+        /// </summary>
+        /// <param name="index">Index of the child key (0..2^31)</param>
         /// <param name="hardened">If true, hardened derivation will be performed</param>
         /// <returns>Derived extended child key</returns>
         public HDKey Derive(int index, bool hardened = false)
@@ -145,7 +160,7 @@ namespace Netezos.Keys
         /// Creates an extended (hierarchical deterministic) private key from the given private key and chain code
         /// </summary>
         /// <param name="key">Private key</param>
-        /// <param name="chainCode">32 bytes of entropy to be added to the private key</param>
+        /// <param name="chainCode">32 bytes of entropy to be added to the private key (for BLS it's not used, so can be an empty array)</param>
         /// <returns>Extended private key</returns>
         public static HDKey FromKey(Key key, byte[] chainCode) => new(key, chainCode);
 
@@ -174,7 +189,7 @@ namespace Netezos.Keys
         public static HDKey FromSeed(byte[] seed, ECKind kind = ECKind.Ed25519)
         {
             if (seed == null) throw new ArgumentNullException(nameof(seed));
-            var (prvKey, chainCode) = HDStandard.Slip10.GenerateMasterKey(Curve.FromKind(kind), seed);
+            var (prvKey, chainCode) = HDStandard.FromECKind(kind).GenerateMasterKey(Curve.FromKind(kind), seed);
             return new(new(prvKey, kind, true), chainCode);
         }
         #endregion

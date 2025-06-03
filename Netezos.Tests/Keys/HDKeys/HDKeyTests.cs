@@ -155,7 +155,21 @@ namespace Netezos.Tests.Keys
                 TestPublicKeyDerivation(sample.path, sample.seed, ECKind.NistP256);
             }
         }
-        
+
+        [Fact]
+        public void TestBls12381()
+        {
+            foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\bls12381.json"))
+            {
+                var hdKey = HDKey.FromSeed(Hex.Parse((string)sample.seed), ECKind.Bls12381)
+                    .Derive((string)sample.path);
+
+                Assert.Equal(sample.privateKey, hdKey.Key.GetHex());
+                Assert.Equal(sample.chainCode, Hex.Convert(hdKey.ChainCode));
+                Assert.Equal(sample.pubKey, hdKey.PubKey.GetHex());
+            }
+        }
+
         [Fact]
         public void Atomex()
         {

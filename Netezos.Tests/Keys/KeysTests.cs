@@ -79,5 +79,29 @@ namespace Netezos.Tests.Keys
             Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
             Assert.False(testKey.PubKey.Verify((string)null, sign));
         }
+
+        [Fact]
+        public void TestBls12381()
+        {
+            foreach (var sample in DJson.Read(@"../../../Keys/Samples/bls12381.json"))
+            {
+                var key = Key.FromBase58((string)sample.prv);
+                var data = Hex.Parse(sample.data);
+
+                Assert.Equal(sample.pub, key.PubKey.GetBase58());
+                Assert.Equal(sample.pkh, key.PubKey.Address);
+                Assert.Equal(sample.sig, key.Sign(data));
+                Assert.True(key.PubKey.Verify(data, sample.sig));
+            }
+
+            var testKey = new Key(ECKind.Bls12381);
+            const string msg = "TestMessage";
+            var sign = testKey.Sign(msg);
+            Assert.True(testKey.PubKey.Verify(msg, sign));
+            Assert.False(testKey.PubKey.Verify(msg, "wrongSignature"));
+            Assert.False(testKey.PubKey.Verify(msg, null));
+            Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
+            Assert.False(testKey.PubKey.Verify((string)null, sign));
+        }
     }
 }
