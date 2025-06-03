@@ -36,7 +36,7 @@ namespace Netezos.Contracts
                     throw new FormatException("Invalid 'Some' prim args count");
 
                 var treeView = base.GetTreeView(parent, value, name);
-                treeView.Children = new(1) { Some.GetTreeView(treeView, prim.Args[0], name ?? Name) };
+                treeView.Children = [Some.GetTreeView(treeView, prim.Args[0], name ?? Name)];
                 return treeView;
             }
             else
@@ -92,7 +92,7 @@ namespace Netezos.Contracts
 
         protected override List<IMicheline> GetArgs()
         {
-            return new List<IMicheline>(1) { Some.ToMicheline() };
+            return [Some.ToMicheline()];
         }
 
         protected override IMicheline MapValue(object? value)
@@ -105,10 +105,10 @@ namespace Netezos.Contracts
                 : new MichelinePrim
                 {
                     Prim = PrimType.Some,
-                    Args = new List<IMicheline>(1)
-                    {
+                    Args =
+                    [
                         Some.MapObject(value, true)
-                    }
+                    ]
                 };
         }
 

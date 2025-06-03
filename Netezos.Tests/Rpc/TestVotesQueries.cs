@@ -4,14 +4,9 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestVotesQueries : IClassFixture<SettingsFixture>
+    public class TestVotesQueries(SettingsFixture settings) : IClassFixture<SettingsFixture>
     {
-        readonly TezosRpc Rpc;
-
-        public TestVotesQueries(SettingsFixture settings)
-        {
-            Rpc = settings.Rpc;
-        }
+        readonly TezosRpc Rpc = settings.Rpc;
 
         [Fact]
         public async Task TestVotesBallotList()

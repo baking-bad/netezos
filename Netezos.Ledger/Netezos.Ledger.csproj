@@ -23,6 +23,10 @@
 		<Copyright>Copyright © Baking Bad 2019</Copyright>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);IDE0130;IDE0230</NoWarn>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="LedgerWallet" Version="2.0.0.5" />
 		<PackageReference Include="Netezos" Version="2.12.0" />

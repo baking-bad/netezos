@@ -4,17 +4,17 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class Bls12381FrSchema : Schema, IFlat
+    public sealed class Bls12381FrSchema(MichelinePrim micheline) : Schema(micheline), IFlat
     {
-        public override PrimType Prim => PrimType.bls12_381_fr;
-
-        BigInteger Order => new(new byte[]
-        {
+        #region static
+        static BigInteger Order => new(
+        [
             1, 0, 0, 0, 255, 255, 255, 255, 254, 91, 254, 255, 2, 164, 189, 83,
             5, 216, 161, 9, 8, 216, 57, 51, 72, 125, 157, 41, 83, 167, 237, 115
-        });
+        ]);
+        #endregion
 
-        public Bls12381FrSchema(MichelinePrim micheline) : base(micheline) { }
+        public override PrimType Prim => PrimType.bls12_381_fr;
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {

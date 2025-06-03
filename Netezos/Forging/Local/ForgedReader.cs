@@ -39,6 +39,7 @@ namespace Netezos.Forging
         public void Dispose()
         {
             Reader?.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public IMicheline ReadMicheline()
@@ -125,11 +126,11 @@ namespace Netezos.Forging
 
                 if (annots.Length > 0)
                 {
-                    prim.Annots = annots
+                    prim.Annots = [..annots
                         .Split(' ')
                         .Select(a =>
                         {
-                            var annot = a.Substring(1);
+                            var annot = a[1..];
                             return a[0] switch
                             {
                                 FieldAnnotation.Prefix => (IAnnotation)new FieldAnnotation(annot),
@@ -137,8 +138,7 @@ namespace Netezos.Forging
                                 VariableAnnotation.Prefix => new VariableAnnotation(annot),
                                 _ => throw new InvalidOperationException($"Unknown annotation type: {a[0]}")
                             };
-                        })
-                        .ToList();
+                        })];
                 }
             }
 
@@ -322,7 +322,7 @@ namespace Netezos.Forging
         public int ReadInt32(int len = 4)
         {
             if (len < 1 || 4 < len)
-                throw new ArgumentOutOfRangeException($"{nameof(len)} must be between 1 and 4");
+                throw new ArgumentOutOfRangeException(nameof(len), "must be between 1 and 4");
 
             var bytes = ReadBytes(len);
 
@@ -338,7 +338,7 @@ namespace Netezos.Forging
         public long ReadInt64(int len = 8)
         {
             if (len < 1 || 8 < len)
-                throw new ArgumentOutOfRangeException($"{nameof(len)} must be between 1 and 8");
+                throw new ArgumentOutOfRangeException(nameof(len), "must be between 1 and 8");
 
             var bytes = ReadBytes(len);
 

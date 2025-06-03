@@ -184,7 +184,7 @@ namespace Netezos.Contracts
 
         protected override List<IMicheline> GetArgs()
         {
-            return new List<IMicheline>(2) { Key.ToMicheline(), Value.ToMicheline() };
+            return [Key.ToMicheline(), Value.ToMicheline()];
         }
 
         protected override IMicheline MapValue(object? value)
@@ -204,11 +204,11 @@ namespace Netezos.Contracts
                         arr1.Add(new MichelinePrim
                         {
                             Prim = PrimType.Elt,
-                            Args = new List<IMicheline>(2)
-                            {
+                            Args =
+                            [
                                 Key.MapObject(keyProp.GetValue(item), true),
                                 Value.MapObject(valueProp.GetValue(item), true)
-                            }
+                            ]
                         });
                     }
                     return arr1;
@@ -220,11 +220,11 @@ namespace Netezos.Contracts
                         arr2.Add(new MichelinePrim
                         {
                             Prim = PrimType.Elt,
-                            Args = new List<IMicheline>(2)
-                            {
+                            Args =
+                            [
                                 Key.MapObject(item.Name, true),
                                 Value.MapObject(item.Value, true)
-                            }
+                            ]
                         });
                     }
                     return arr2;
@@ -241,11 +241,11 @@ namespace Netezos.Contracts
                         arr3.Add(new MichelinePrim
                         {
                             Prim = PrimType.Elt,
-                            Args = new List<IMicheline>(2)
-                            {
+                            Args =
+                            [
                                 Key.MapObject(key, true),
                                 Value.MapObject(val, true)
-                            }
+                            ]
                         });
                     }
                     return arr3;

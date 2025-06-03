@@ -29,7 +29,7 @@ namespace Netezos.Contracts
 
         protected override List<IMicheline> GetArgs()
         {
-            return new List<IMicheline>(2) { In.ToMicheline(), Out.ToMicheline() };
+            return [In.ToMicheline(), Out.ToMicheline()];
         }
 
         protected override IMicheline MapValue(object? value)

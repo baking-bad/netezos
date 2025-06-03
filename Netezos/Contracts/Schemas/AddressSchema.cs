@@ -3,11 +3,9 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class AddressSchema : Schema, IFlat
+    public sealed class AddressSchema(MichelinePrim micheline) : Schema(micheline), IFlat
     {
         public override PrimType Prim => PrimType.address;
-
-        public AddressSchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
@@ -104,24 +102,24 @@ namespace Netezos.Contracts
 
             if (micheStr.Value.StartsWith("txr1"))
             {
-                address = micheStr.Value.Length > 37 ? micheStr.Value.Substring(0, 37) : micheStr.Value;
+                address = micheStr.Value.Length > 37 ? micheStr.Value[..37] : micheStr.Value;
                 addressBytes = Base58.Parse(address, 4);
                 entrypointBytes = micheStr.Value.Length > 38
-                    ? Utf8.Parse(micheStr.Value.Substring(38))
+                    ? Utf8.Parse(micheStr.Value[38..])
                     : null;
             }
             else
             {
-                address = micheStr.Value.Length > 36 ? micheStr.Value.Substring(0, 36) : micheStr.Value;
+                address = micheStr.Value.Length > 36 ? micheStr.Value[..36] : micheStr.Value;
                 addressBytes = Base58.Parse(address, 3);
                 entrypointBytes = micheStr.Value.Length > 37
-                    ? Utf8.Parse(micheStr.Value.Substring(37))
+                    ? Utf8.Parse(micheStr.Value[37..])
                     : null;
             }
 
             var res = new byte[22 + (entrypointBytes?.Length ?? 0)];
 
-            switch (address.Substring(0, 3))
+            switch (address[..3])
             {
                 case "tz1":
                     addressBytes.CopyTo(res, 2);

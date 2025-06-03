@@ -114,9 +114,6 @@ namespace Netezos.Keys
 
         public static Key FromBase58(string base58)
         {
-            if (base58 == null)
-                throw new ArgumentNullException(nameof(base58));
-
             if (base58.Length != 54 && base58.Length != 98)
                 throw new ArgumentException("Invalid private key format. Expected base58 string of 54 or 98 characters.");
 

@@ -8,12 +8,12 @@ namespace Netezos.Forging
     {
         public static byte[] ForgeTag(OperationTag tag)
         {
-            return new[] { (byte)tag };
+            return [(byte)tag];
         }
 
         public static byte[] ForgeBool(bool value)
         {
-            return value ? new byte[] { 255 } : new byte[] { 0 };
+            return value ? [255] : [0];
         }
 
         public static byte[] ForgeInt32(int value, int len = 4)
@@ -45,34 +45,28 @@ namespace Netezos.Forging
 
         public static byte[] ForgePublicKey(string value)
         {
-            var prefix = value.Substring(0, 4);
-            var res = Base58.Parse(value, 4);
-
-            return prefix switch
+            return value[..4] switch
             {
-                "edpk" => new byte[] { 0 }.Concat(res),
-                "sppk" => new byte[] { 1 }.Concat(res),
-                "p2pk" => new byte[] { 2 }.Concat(res),
-                "BLpk" => new byte[] { 3 }.Concat(res),
-                _ => throw new ArgumentException($"Invalid public key prefix {prefix}")
+                "edpk" => new byte[] { 0 }.Concat(Base58.Parse(value, Prefix.edpk)),
+                "sppk" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefix.sppk)),
+                "p2pk" => new byte[] { 2 }.Concat(Base58.Parse(value, Prefix.p2pk)),
+                "BLpk" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefix.BLpk)),
+                _ => throw new ArgumentException("Invalid public key prefix")
             };
         }
 
         public static byte[] ForgeAddress(string value)
         {
-            var prefix = value.Substring(0, 3);
-            var res = Base58.Parse(value, 3);
-
-            return prefix switch
+            return value[..3] switch
             {
-                "tz1" => new byte[] { 0, 0 }.Concat(res),
-                "tz2" => new byte[] { 0, 1 }.Concat(res),
-                "tz3" => new byte[] { 0, 2 }.Concat(res),
-                "tz4" => new byte[] { 0, 3 }.Concat(res),
-                "KT1" => new byte[] { 1 }.Concat(res).Concat(new byte[] { 0 }),
-                "txr" when value.StartsWith("txr1") => new byte[] { 2 }.Concat(res).Concat(new byte[] { 0 }),
-                "sr1" => new byte[] { 3 }.Concat(res).Concat(new byte[] { 0 }),
-                _ => throw new ArgumentException($"Invalid address prefix {prefix}")
+                "tz1" => new byte[] { 0, 0 }.Concat(Base58.Parse(value, Prefix.tz1)),
+                "tz2" => new byte[] { 0, 1 }.Concat(Base58.Parse(value, Prefix.tz2)),
+                "tz3" => new byte[] { 0, 2 }.Concat(Base58.Parse(value, Prefix.tz3)),
+                "tz4" => new byte[] { 0, 3 }.Concat(Base58.Parse(value, Prefix.tz4)),
+                "KT1" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefix.KT1)).Concat([0]),
+                "txr" when value.StartsWith("txr1") => new byte[] { 2 }.Concat(Base58.Parse(value, Prefix.txr1)).Concat([0]),
+                "sr1" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefix.sr1)).Concat([0]),
+                _ => throw new ArgumentException("Invalid address prefix")
             };
         }
 
@@ -88,22 +82,19 @@ namespace Netezos.Forging
 
         public static byte[] ForgeTzAddress(string value)
         {
-            var prefix = value.Substring(0, 3);
-            var res = Base58.Parse(value, 3);
-
-            return prefix switch
+            return value[..3] switch
             {
-                "tz1" => new byte[] { 0 }.Concat(res),
-                "tz2" => new byte[] { 1 }.Concat(res),
-                "tz3" => new byte[] { 2 }.Concat(res),
-                "tz4" => new byte[] { 3 }.Concat(res),
-                _ => throw new ArgumentException($"Invalid source prefix {prefix}")
+                "tz1" => new byte[] { 0 }.Concat(Base58.Parse(value, Prefix.tz1)),
+                "tz2" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefix.tz2)),
+                "tz3" => new byte[] { 2 }.Concat(Base58.Parse(value, Prefix.tz3)),
+                "tz4" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefix.tz4)),
+                _ => throw new ArgumentException("Invalid source prefix")
             };
         }
 
         public static byte[] ForgeSignature(string value)
         {
-            var prefix = value.Substring(0, 3) switch
+            var prefix = value[..3] switch
             {
                 "eds" => Prefix.edsig,
                 "sps" => Prefix.spsig,
@@ -131,12 +122,12 @@ namespace Netezos.Forging
 
             while (value > 0)
             {
-                res[res.Count - 1] |= 0x80;
+                res[^1] |= 0x80;
                 res.Add((byte)(value & 0x7F));
                 value >>= 7;
             }
 
-            return res.ToArray();
+            return [..res];
         }
 
         public static byte[] ForgeMicheNat(long value)
@@ -149,12 +140,12 @@ namespace Netezos.Forging
 
             while (value > 0)
             {
-                res[res.Count - 1] |= 0x80;
+                res[^1] |= 0x80;
                 res.Add((byte)(value & 0x7F));
                 value >>= 7;
             }
 
-            return res.ToArray();
+            return [..res];
         }
 
         public static byte[] ForgeMicheNat(BigInteger value)
@@ -167,12 +158,12 @@ namespace Netezos.Forging
 
             while (value > 0)
             {
-                res[res.Count - 1] |= 0x80;
+                res[^1] |= 0x80;
                 res.Add((byte)(value & 0x7F));
                 value >>= 7;
             }
 
-            return res.ToArray();
+            return [..res];
         }
 
         public static byte[] ForgeMicheInt(BigInteger value)
@@ -183,28 +174,28 @@ namespace Netezos.Forging
 
             while (abs > 0)
             {
-                res[res.Count - 1] |= 0x80;
+                res[^1] |= 0x80;
                 res.Add((byte)(abs & 0x7F));
                 abs >>= 7;
             }
 
-            return res.ToArray();
+            return [..res];
         }
 
         public static byte[] ForgeEntrypoint(string value)
         {
             return value switch
             {
-                "default" => new byte[] { 0 },
-                "root" => new byte[] { 1 },
-                "do" => new byte[] { 2 },
-                "set_delegate" => new byte[] { 3 },
-                "remove_delegate" => new byte[] { 4 },
-                "deposit" => new byte[] { 5 },
-                "stake" => new byte[] { 6 },
-                "unstake" => new byte[] { 7 },
-                "finalize_unstake" => new byte[] { 8 },
-                "set_delegate_parameters" => new byte[] { 9 },
+                "default" => [0],
+                "root" => [1],
+                "do" => [2],
+                "set_delegate" => [3],
+                "remove_delegate" => [4],
+                "deposit" => [5],
+                "stake" => [6],
+                "unstake" => [7],
+                "finalize_unstake" => [8],
+                "set_delegate_parameters" => [9],
                 _ => new byte[] { 255 }.Concat(ForgeString(value, 1))
             };
         }
@@ -226,7 +217,7 @@ namespace Netezos.Forging
                     if (argsCnt > 0)
                     {
                         var args = prim.Args!.Select(ForgeMicheline).SelectMany(x => x);
-                        res.AddRange(argsCnt < 3 ? args : ForgeArray(args.ToArray()));
+                        res.AddRange(argsCnt < 3 ? args : ForgeArray([..args]));
                     }
 
                     if (annots > 0)
@@ -235,13 +226,13 @@ namespace Netezos.Forging
                     }
                     else if (argsCnt >= 3)
                     {
-                        res.AddRange(new List<byte> { 0, 0, 0, 0 });
+                        res.AddRange([0, 0, 0, 0]);
                     }
 
-                    return res.ToArray();
+                    return [..res];
 
                 case MichelineArray array:
-                    return new byte[] { 2 }.Concat(ForgeArray(array.Select(ForgeMicheline).SelectMany(x => x).ToArray()));
+                    return new byte[] { 2 }.Concat(ForgeArray([..array.Select(ForgeMicheline).SelectMany(x => x)]));
 
                 case MichelineInt micheInt:
                     return new byte[] { 0 }.Concat(ForgeMicheInt(micheInt.Value));

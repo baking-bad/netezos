@@ -3,16 +3,14 @@ using Netezos.Forging.Models;
 
 namespace Netezos.Encoding
 {
-    public class MichelineBytes : IMicheline
+    public class MichelineBytes(byte[] value) : IMicheline
     {
         [JsonIgnore]
         public MichelineType Type => MichelineType.Bytes;
 
         [JsonPropertyName("bytes")]
         [JsonConverter(typeof(HexConverter))]
-        public byte[] Value { get; set; }
-
-        public MichelineBytes(byte[] value) => Value = value;
+        public byte[] Value { get; set; } = value;
 
         public void Write(BinaryWriter writer, int depth = 0)
         {

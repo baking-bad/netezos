@@ -17,7 +17,7 @@ namespace Netezos.Forging
         public Task<byte[]> ForgeOperationGroupAsync(string branch, IEnumerable<ManagerOperationContent> contents)
         {
             var branchBytes = Base58.Parse(branch, Prefix.B.Length);
-            var contentBytes = Bytes.Concat(contents.Select(ForgeOperation).ToArray());
+            var contentBytes = Bytes.Concat([..contents.Select(ForgeOperation)]);
 
             return Task.FromResult(branchBytes.Concat(contentBytes));
         }

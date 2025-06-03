@@ -4,16 +4,10 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestHelpersQueries : IClassFixture<SettingsFixture>
+    public class TestHelpersQueries(SettingsFixture settings) : IClassFixture<SettingsFixture>
     {
-        readonly TezosRpc Rpc;
-        readonly string TestDelegate;
-
-        public TestHelpersQueries(SettingsFixture settings)
-        {
-            Rpc = settings.Rpc;
-            TestDelegate = settings.TestDelegate;
-        }
+        readonly TezosRpc Rpc = settings.Rpc;
+        readonly string TestDelegate = settings.TestDelegate;
 
         [Fact]
         public async Task TestHelpersBakingRights()

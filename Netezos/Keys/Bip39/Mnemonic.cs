@@ -3,7 +3,7 @@ using Netezos.Utils;
 
 namespace Netezos.Keys
 {
-    public class Mnemonic
+    public partial class Mnemonic
     {
         readonly string Sentence;
 
@@ -16,7 +16,7 @@ namespace Netezos.Keys
             Sentence = string.Join(" ", words);
         }
 
-        public Mnemonic(string mnemonic) => Sentence = Regex.Replace(mnemonic, @"[\s,;]+", " ");
+        public Mnemonic(string mnemonic) => Sentence = MnemonicRegex().Replace(mnemonic, " ");
 
         public Mnemonic(IEnumerable<string> words) => Sentence = string.Join(" ", words);
 
@@ -30,6 +30,9 @@ namespace Netezos.Keys
         public static Mnemonic Parse(string mnemonic) => new(mnemonic);
 
         public static Mnemonic Parse(IEnumerable<string> words) => new(words);
+
+        [GeneratedRegex(@"[\s,;]+")]
+        private static partial Regex MnemonicRegex();
         #endregion
     }
 

@@ -4,11 +4,9 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class TimestampSchema : Schema, IFlat
+    public sealed class TimestampSchema(MichelinePrim micheline) : Schema(micheline), IFlat
     {
         public override PrimType Prim => PrimType.timestamp;
-
-        public TimestampSchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {

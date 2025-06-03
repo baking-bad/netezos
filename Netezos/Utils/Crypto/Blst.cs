@@ -35,33 +35,6 @@ namespace Netezos.Utils
             return NativeLibrary.Load(libraryName, assembly, searchPath);
         }
 
-        public enum ERROR
-        {
-            SUCCESS = 0,
-            BAD_ENCODING,
-            POINT_NOT_ON_CURVE,
-            POINT_NOT_IN_GROUP,
-            AGGR_TYPE_MISMATCH,
-            VERIFY_FAIL,
-            PK_IS_INFINITY,
-            BAD_SCALAR,
-        }
-
-        public class Exception(ERROR code) : ApplicationException
-        {
-            public override string Message => code switch
-            {
-                ERROR.BAD_ENCODING => "bad encoding",
-                ERROR.POINT_NOT_ON_CURVE => "point not on curve",
-                ERROR.POINT_NOT_IN_GROUP => "point not in group",
-                ERROR.AGGR_TYPE_MISMATCH => "aggregate type mismatch",
-                ERROR.VERIFY_FAIL => "verify failure",
-                ERROR.PK_IS_INFINITY => "public key is infinity",
-                ERROR.BAD_SCALAR => "bad scalar",
-                _ => "unknown error",
-            };
-        }
-
         [LibraryImport("blst")]
         [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
         public static partial void blst_keygen(
@@ -102,7 +75,7 @@ namespace Netezos.Utils
 
         [LibraryImport("blst")]
         [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-        public static partial ERROR blst_p1_uncompress(
+        public static partial BlstError blst_p1_uncompress(
             Span<long> ret,
             ReadOnlySpan<byte> inp);
 
@@ -130,7 +103,7 @@ namespace Netezos.Utils
 
         [LibraryImport("blst")]
         [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-        public static partial ERROR blst_p2_uncompress(
+        public static partial BlstError blst_p2_uncompress(
             Span<long> ret,
             ReadOnlySpan<byte> inp);
 
@@ -155,7 +128,7 @@ namespace Netezos.Utils
 
         [LibraryImport("blst")]
         [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-        public static partial ERROR blst_pairing_chk_n_aggr_pk_in_g1(
+        public static partial BlstError blst_pairing_chk_n_aggr_pk_in_g1(
             Span<long> ctx,
             ReadOnlySpan<long> pk, [MarshalAs(UnmanagedType.Bool)] bool pk_grpchk,
             ReadOnlySpan<long> sig, [MarshalAs(UnmanagedType.Bool)] bool sig_grpchk,
@@ -174,5 +147,32 @@ namespace Netezos.Utils
             Span<byte> key,
             ReadOnlySpan<byte> master,
             uint child_index);
+    }
+
+    public enum BlstError
+    {
+        SUCCESS = 0,
+        BAD_ENCODING,
+        POINT_NOT_ON_CURVE,
+        POINT_NOT_IN_GROUP,
+        AGGR_TYPE_MISMATCH,
+        VERIFY_FAIL,
+        PK_IS_INFINITY,
+        BAD_SCALAR,
+    }
+
+    public class BlstException(BlstError code) : ApplicationException
+    {
+        public override string Message => code switch
+        {
+            BlstError.BAD_ENCODING => "bad encoding",
+            BlstError.POINT_NOT_ON_CURVE => "point not on curve",
+            BlstError.POINT_NOT_IN_GROUP => "point not in group",
+            BlstError.AGGR_TYPE_MISMATCH => "aggregate type mismatch",
+            BlstError.VERIFY_FAIL => "verify failure",
+            BlstError.PK_IS_INFINITY => "public key is infinity",
+            BlstError.BAD_SCALAR => "bad scalar",
+            _ => "unknown error",
+        };
     }
 }

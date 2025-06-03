@@ -8,7 +8,7 @@ namespace Netezos.Keys
     class Ed25519 : Curve
     {
         #region static
-        static readonly byte[] _Slip10Seed = { 101, 100, 50, 53, 53, 49, 57, 32, 115, 101, 101, 100 }; // "ed25519 seed"
+        static readonly byte[] _Slip10Seed = [101, 100, 50, 53, 53, 49, 57, 32, 115, 101, 101, 100]; // "ed25519 seed"
         #endregion
         
         public override ECKind Kind => ECKind.Ed25519;

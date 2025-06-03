@@ -25,15 +25,15 @@ namespace Netezos.Contracts
                 {
                     Prim = micheline.Prim,
                     Annots = micheline.Annots,
-                    Args = new List<IMicheline>(2)
-                    {
+                    Args =
+                    [
                         micheline.Args[0],
                         new MichelinePrim
                         {
                             Prim = PrimType.pair,
-                            Args = micheline.Args.Skip(1).ToList()
+                            Args = [..micheline.Args.Skip(1)]
                         }
-                    }
+                    ]
                 };
             }
             #endregion
@@ -63,10 +63,8 @@ namespace Netezos.Contracts
                 foreach (var child in children)
                 {
                     var name = child.Name!;
-                    if (fields.ContainsKey(name))
+                    if (!fields.TryAdd(name, 0))
                         child.Index = ++fields[name];
-                    else
-                        fields.Add(name, 0);
                 }
                 foreach (var kv in fields.Where(x => x.Value > 0))
                     children.First(x => x.Name == kv.Key).Index = 0;
@@ -76,10 +74,8 @@ namespace Netezos.Contracts
         internal override TreeView GetTreeView(TreeView? parent, IMicheline value, string? name = null, Schema? schema = null)
         {
             var treeView = base.GetTreeView(parent, value, name, schema);
-
-            treeView.Children = Children(value)
-                .Select(x => x.Item1.GetTreeView(treeView, x.Item2))
-                .ToList();
+            treeView.Children = [..Children(value)
+                .Select(x => x.Item1.GetTreeView(treeView, x.Item2))];
 
             return treeView;
         }
@@ -120,14 +116,14 @@ namespace Netezos.Contracts
             }
         }
 
-        IMicheline MapPair(object? value) => new MichelinePrim
+        MichelinePrim MapPair(object? value) => new()
         {
             Prim = PrimType.Pair,
-            Args = new List<IMicheline>(2)
-            {
+            Args =
+            [
                 Left.MapObject(value),
                 Right.MapObject(value)
-            }
+            ]
         };
 
         internal override void WriteProperty(Utf8JsonWriter writer)
@@ -249,10 +245,10 @@ namespace Netezos.Contracts
 
         protected override List<IMicheline> GetArgs()
         {
-            return new List<IMicheline>(2) { Left.ToMicheline(), Right.ToMicheline() };
+            return [Left.ToMicheline(), Right.ToMicheline()];
         }
 
-        IMicheline Uncomb(IMicheline value)
+        static IMicheline Uncomb(IMicheline value)
         {
             if (value is MichelineArray array)
             {
@@ -268,15 +264,15 @@ namespace Netezos.Contracts
                 {
                     Prim = p.Prim,
                     Annots = p.Annots,
-                    Args = new List<IMicheline>(2)
-                    {
+                    Args =
+                    [
                         p.Args[0],
                         new MichelinePrim
                         {
                             Prim = PrimType.Pair,
-                            Args = p.Args.Skip(1).ToList()
+                            Args = [.. p.Args.Skip(1)]
                         }
-                    }
+                    ]
                 };
             }
             return value;

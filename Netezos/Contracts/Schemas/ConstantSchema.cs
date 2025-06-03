@@ -5,11 +5,9 @@ using Netezos.Utils;
 
 namespace Netezos.Contracts
 {
-    public sealed class ConstantSchema : Schema
+    public sealed class ConstantSchema(MichelinePrim micheline) : Schema(micheline)
     {
         public override PrimType Prim => PrimType.constant;
-
-        public ConstantSchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteProperty(Utf8JsonWriter writer, IMicheline value)
             => throw new InvalidOperationException($"Value of type {Prim} is not allowed");

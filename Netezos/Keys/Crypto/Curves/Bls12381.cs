@@ -64,7 +64,7 @@ namespace Netezos.Keys
 
         public override bool Verify(byte[] msg, byte[] sig, byte[] pubKey)
         {
-            Blst.ERROR res;
+            BlstError res;
 
             #region init pairing
             var pairingSize = (int)(Blst.blst_pairing_sizeof() / sizeof(long));
@@ -84,16 +84,16 @@ namespace Netezos.Keys
 
             var _pk = new long[Blst.blst_p1_affine_sizeof() / sizeof(long)];
             res = Blst.blst_p1_uncompress(_pk, pubKey);
-            if (res != Blst.ERROR.SUCCESS)
+            if (res != BlstError.SUCCESS)
                 return false;
 
             var _sig = new long[Blst.blst_p2_affine_sizeof() / sizeof(long)];
             res = Blst.blst_p2_uncompress(_sig, sig);
-            if (res != Blst.ERROR.SUCCESS)
+            if (res != BlstError.SUCCESS)
                 return false;
 
             res = Blst.blst_pairing_chk_n_aggr_pk_in_g1(ctx, _pk, true, _sig, true, _msg, (nuint)_msg.Length, [], 0);
-            if (res != Blst.ERROR.SUCCESS)
+            if (res != BlstError.SUCCESS)
                 return false;
 
             Blst.blst_pairing_commit(ctx);

@@ -6,10 +6,12 @@ using PubKey = Netezos.Keys.PubKey;
 
 namespace Netezos.Ledger
 {
-    public class TezosLedgerClient : LedgerClientBase
+    public class TezosLedgerClient(ILedgerTransport transport, KeyPath? keyPath) : LedgerClientBase(transport)
     {
         readonly byte TezosWalletCLA = 0x80;
-        readonly byte[] KeyPath;
+        readonly byte[] KeyPath = keyPath is null
+            ? Utils.Serialize(new KeyPath("44'/1729'/0'/0'"))
+            : Utils.Serialize(keyPath);
         
         enum Instruction { // taken from https://github.com/obsidiansystems/ledger-app-tezos/blob/master/APDUs.md
             InsVersion = 0x00,
@@ -19,13 +21,6 @@ namespace Netezos.Ledger
             InsSignUnsafe = 0x05
         }
 
-        public TezosLedgerClient(ILedgerTransport transport, KeyPath? keyPath) : base(transport)
-        {
-            KeyPath = keyPath is null
-                ? Utils.Serialize(new KeyPath("44'/1729'/0'/0'"))
-                : Utils.Serialize(keyPath);
-        }
-        
         public async Task<PubKey> GetPublicKeyAsync(ECKind curve = ECKind.Ed25519, bool display = false, CancellationToken cancellation = default)
         {
             var response = await ExchangeSingleAPDUAsync(

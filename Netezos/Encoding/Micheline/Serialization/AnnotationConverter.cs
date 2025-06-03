@@ -12,9 +12,9 @@ namespace Netezos.Encoding.Serialization
 
             return annot[0] switch
             {
-                '%' => new FieldAnnotation(annot.Substring(1)),
-                ':' => new TypeAnnotation(annot.Substring(1)),
-                '@' => new VariableAnnotation(annot.Substring(1)),
+                '%' => new FieldAnnotation(annot[1..]),
+                ':' => new TypeAnnotation(annot[1..]),
+                '@' => new VariableAnnotation(annot[1..]),
                 _ => new UnsafeAnnotation(annot)
             };
         }

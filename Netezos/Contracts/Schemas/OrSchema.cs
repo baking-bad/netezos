@@ -32,10 +32,8 @@ namespace Netezos.Contracts
                 foreach (var child in children.Where(x => x.Name != null))
                 {
                     var name = child.Name!;
-                    if (fields.ContainsKey(name))
+                    if (!fields.TryAdd(name, 0))
                         child.Index = ++fields[name];
-                    else
-                        fields.Add(name, 0);
                 }
                 foreach (var kv in fields.Where(x => x.Value > 0))
                     children.First(x => x.Name == kv.Key).Index = 0;
@@ -50,10 +48,10 @@ namespace Netezos.Contracts
                 : endPath;
 
             var treeView = base.GetTreeView(parent, value, name, schema);
-            treeView.Children = new List<TreeView>
-            {
+            treeView.Children =
+            [
                 endSchema.GetTreeView(treeView, endValue, path)
-            };
+            ];
 
             return treeView;
         }
@@ -84,7 +82,7 @@ namespace Netezos.Contracts
             throw MapFailedException("no paths matched");
         }
 
-        IMicheline MapOr(string path, object value, Schema child)
+        static MichelinePrim MapOr(string path, object value, Schema child)
         {
             var res = new MichelinePrim
             {
@@ -168,7 +166,7 @@ namespace Netezos.Contracts
 
         protected override List<IMicheline> GetArgs()
         {
-            return new List<IMicheline>(2) { Left.ToMicheline(), Right.ToMicheline() };
+            return [Left.ToMicheline(), Right.ToMicheline()];
         }
 
         (Schema, IMicheline, string) JumpToEnd(OrSchema or, IMicheline value, string path = "")

@@ -31,6 +31,10 @@
 		<None Include="../README.md" Pack="true" PackagePath="/" />
 	</ItemGroup>
 
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);IDE0130;IDE0230</NoWarn>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<Content Include="runtimes\linux-arm64\native\libblst.so" Pack="true" PackagePath="runtimes/linux-arm64/native/libblst.so">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

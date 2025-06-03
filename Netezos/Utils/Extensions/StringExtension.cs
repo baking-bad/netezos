@@ -2,8 +2,8 @@
 {
     static class StringExtension
     {
-        static readonly char[] AlphaNumeric = new char[123]
-        {
+        static readonly char[] AlphaNumeric =
+        [
             '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
             '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
             '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
@@ -12,7 +12,7 @@
             'P','Q','R','S','T','U','V','W','X','Y','Z','_','_','_','_','_',
             '_','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o',
             'p','q','r','s','t','u','v','w','x','y','z'
-        };
+        ];
 
         public static string ToAlphaNumeric(this string str)
         {

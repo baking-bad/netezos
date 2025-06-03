@@ -175,13 +175,13 @@ namespace Netezos.Contracts
             if (Type != null)
             {
                 return Field != null
-                    ? new List<IAnnotation>(2) { new TypeAnnotation(Type), new FieldAnnotation(Field) }
-                    : new List<IAnnotation>(1) { new TypeAnnotation(Type) };
+                    ? [new TypeAnnotation(Type), new FieldAnnotation(Field)]
+                    : [new TypeAnnotation(Type)];
             }
             else
             {
                 return Field != null
-                    ? new List<IAnnotation>(1) { new FieldAnnotation(Field) }
+                    ? [new FieldAnnotation(Field)]
                     : null;
             }
         }

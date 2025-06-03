@@ -21,27 +21,27 @@ namespace Netezos.Contracts
             var ticket = new MichelinePrim
             {
                 Prim = PrimType.pair,
-                Args = new List<IMicheline>(2)
-                {
+                Args =
+                [
                     new MichelinePrim
                     {
                         Prim = PrimType.address,
-                        Annots = new List<IAnnotation>(1) { new FieldAnnotation("address") }
+                        Annots = [new FieldAnnotation("address")]
                     },
                     new MichelinePrim
                     {
                         Prim = PrimType.pair,
-                        Args = new List<IMicheline>(2)
-                        {
+                        Args =
+                        [
                             contentType,
                             new MichelinePrim
                             {
                                 Prim = PrimType.nat,
-                                Annots = new List<IAnnotation>(1) { new FieldAnnotation("amount") }
+                                Annots = [new FieldAnnotation("amount")]
                             }
-                        }
+                        ]
                     }
-                }
+                ]
             };
 
             Ticket = new PairSchema(ticket);
@@ -100,7 +100,7 @@ namespace Netezos.Contracts
         protected override List<IMicheline> GetArgs()
         {
             var type = (Ticket.Right as PairSchema)!.Left;
-            return new List<IMicheline>(1) { type.ToMicheline() };
+            return [type.ToMicheline()];
         }
 
         protected override IMicheline MapValue(object? value)

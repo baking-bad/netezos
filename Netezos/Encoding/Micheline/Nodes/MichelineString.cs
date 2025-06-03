@@ -2,15 +2,13 @@
 
 namespace Netezos.Encoding
 {
-    public class MichelineString : IMicheline
+    public class MichelineString(string value) : IMicheline
     {
         [JsonIgnore]
         public MichelineType Type => MichelineType.String;
 
         [JsonPropertyName("string")]
-        public string Value { get; set; }
-
-        public MichelineString(string value) => Value = value;
+        public string Value { get; set; } = value;
 
         public void Write(BinaryWriter writer, int depth = 0)
         {

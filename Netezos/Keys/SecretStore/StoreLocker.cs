@@ -1,11 +1,7 @@
 ﻿namespace Netezos.Keys
 {
-    class StoreLocker : IDisposable
+    class StoreLocker(ISecretStore store) : IDisposable
     {
-        readonly ISecretStore Store;
-
-        public StoreLocker(ISecretStore store) => Store = store;
-
-        public void Dispose() => Store.Lock();
+        public void Dispose() => store.Lock();
     }
 }

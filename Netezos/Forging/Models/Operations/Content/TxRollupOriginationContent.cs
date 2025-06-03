@@ -8,6 +8,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "tx_rollup_origination";
 
         [JsonPropertyName("tx_rollup_origination")]
-        public object Parameters => new();
+        public object Parameters { get; } = new();
     }
 }

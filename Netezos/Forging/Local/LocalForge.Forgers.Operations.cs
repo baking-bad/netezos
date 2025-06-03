@@ -93,7 +93,7 @@ namespace Netezos.Forging
                 ForgeTzAddress(operation.Source),
                 ForgeInt32(operation.Period),
                 Base58.Parse(operation.Proposal, 2),
-                new[] { (byte)operation.Ballot });
+                [(byte)operation.Ballot]);
         }
 
         static byte[] ForgeProposals(ProposalsContent operation)
@@ -102,10 +102,9 @@ namespace Netezos.Forging
                 ForgeTag(OperationTag.Proposals),
                 ForgeTzAddress(operation.Source),
                 ForgeInt32(operation.Period),
-                ForgeArray(operation.Proposals
+                ForgeArray([..operation.Proposals
                     .Select(x => Base58.Parse(x, 2))
-                    .SelectMany(x => x)
-                    .ToArray()));
+                    .SelectMany(x => x)]));
         }
 
         static byte[] ForgeActivation(ActivationContent operation)
@@ -291,13 +290,12 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.StorageLimit),
                 Base58.Parse(operation.Rollup, Prefix.txr1),
                 ForgeInt32(operation.Commitment.Level),
-                ForgeArray(operation.Commitment.Messages
+                ForgeArray([..operation.Commitment.Messages
                     .Select(x => Base58.Parse(x, Prefix.txmr))
-                    .SelectMany(x => x)
-                    .ToArray()),
+                    .SelectMany(x => x)]),
                 operation.Commitment.Predecessor is string str
                     ? new byte[] { 1 }.Concat(Base58.Parse(str, Prefix.txc))
-                    : new byte[] { 0 },
+                    : [0],
                 Base58.Parse(operation.Commitment.InboxMerkleRoot, Prefix.txi));
         }
 
@@ -314,17 +312,15 @@ namespace Netezos.Forging
                 ForgeInt32(operation.Level),
                 Base58.Parse(operation.ContextHash, Prefix.Co),
                 ForgeInt32(operation.MessageIndex),
-                ForgeArray(operation.MessageResultPath
+                ForgeArray([..operation.MessageResultPath
                     .Select(x => Base58.Parse(x, Prefix.txM))
-                    .SelectMany(x => x)
-                    .ToArray()),
-                ForgeArray(operation.TicketsInfo.SelectMany(ti => Bytes.Concat(
+                    .SelectMany(x => x)]),
+                ForgeArray([..operation.TicketsInfo.SelectMany(ti => Bytes.Concat(
                     ForgeArray(ForgeMicheline(ti.Contents)),
                     ForgeArray(ForgeMicheline(ti.Type)),
                     ForgeAddress(ti.Ticketer),
                     ForgeVarLong(ti.Amount),
-                    ForgeTzAddress(ti.Claimer)))
-                    .ToArray()));
+                    ForgeTzAddress(ti.Claimer)))]));
         }
 
         static byte[] ForgeTxRollupFinalizeCommitment(TxRollupFinalizeCommitmentContent operation)
@@ -419,7 +415,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgeArray(operation.Messages.Select(x => ForgeArray(x)).SelectMany(x => x).ToArray()));
+                ForgeArray([..operation.Messages.Select(x => ForgeArray(x)).SelectMany(x => x)]));
         }
 
         static byte[] ForgeSrCement(SrCementContent operation)
@@ -471,7 +467,7 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                new[] { (byte)operation.PvmKind },
+                [(byte)operation.PvmKind],
                 ForgeArray(operation.Kernel),
                 ForgeArray(operation.OriginationProof),
                 ForgeArray(ForgeMicheline(operation.ParametersType)));
@@ -538,7 +534,7 @@ namespace Netezos.Forging
                 ForgeArray(ForgeInlineAttestation(operation.Attestation)),
                 ForgeInt32(operation.SlotIndex, 1),
                 ForgeInt32(operation.ShardWithProof.Shard.Id),
-                ForgeArray(operation.ShardWithProof.Shard.Hashes.Select(x => Hex.Parse(x)).SelectMany(x => x).ToArray()),
+                ForgeArray([..operation.ShardWithProof.Shard.Hashes.Select(x => Hex.Parse(x)).SelectMany(x => x)]),
                 Base58.Parse(operation.ShardWithProof.Proof, 3)
             );
         }
@@ -553,13 +549,13 @@ namespace Netezos.Forging
                 ForgeInt64(header.Timestamp.ToUnixTime()),
                 ForgeInt32(header.ValidationPass, 1),
                 Base58.Parse(header.OperationsHash, 3),
-                ForgeArray(header.Fitness.Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x).ToArray()),
+                ForgeArray([..header.Fitness.Select(x => ForgeArray(Hex.Parse(x))).SelectMany(x => x)]),
                 Base58.Parse(header.Context, 2),
                 Base58.Parse(header.PayloadHash, Prefix.vh),
                 ForgeInt32(header.PayloadRound),
                 Hex.Parse(header.ProofOfWorkNonce),
                 ForgeSeedNonce(header.SeedNonceHash),
-                new[] { (byte)header.LiquidityBakingToggleVote },
+                [(byte)header.LiquidityBakingToggleVote],
                 Base58.Parse(header.Signature, 3));
         }
 
@@ -598,7 +594,7 @@ namespace Netezos.Forging
             return param == null ? ForgeBool(false) : Bytes.Concat(
                 ForgeBool(true),
                 ForgeEntrypoint(param.Entrypoint),
-                ForgeArray(ForgeMicheline(param.Value).ToArray()));
+                ForgeArray([..ForgeMicheline(param.Value)]));
         }
 
         static byte[] ForgeScript(Script script)
@@ -610,7 +606,7 @@ namespace Netezos.Forging
 
         static byte[] ForgeVarLong(long value)
         {
-            if (value <= byte.MaxValue) return new byte[] { 0, (byte)value };
+            if (value <= byte.MaxValue) return [0, (byte)value];
             if (value <= ushort.MaxValue) return new byte[] { 1 }.Concat(ForgeInt64(value, 2));
             if (value <= int.MaxValue) return new byte[] { 2 }.Concat(ForgeInt64(value, 4));
             return new byte[] { 3 }.Concat(ForgeInt64(value, 8));
@@ -639,7 +635,7 @@ namespace Netezos.Forging
         static byte[] ForgeRefutationStart(RefutationStart start)
         {
             return Bytes.Concat(
-                new byte[] { 0 },
+                [0],
                 ForgeCommitment(start.PlayerCommitment),
                 ForgeCommitment(start.OpponentCommitment)
             );
@@ -648,25 +644,24 @@ namespace Netezos.Forging
         static byte[] ForgeRefutationDissectionMove(RefutationDissection move)
         {
             return Bytes.Concat(
-                new byte[] { 1 },
+                [1],
                 ForgeMicheNat(move.Choice),
-                new byte[] { 0 },
-                ForgeArray(move.Steps.Select(x =>
-                    Bytes.Concat(
-                         x.State == null
-                             ? ForgeBool(false)
-                             : ForgeBool(true).Concat(
-                                 ForgeCommitment(x.State)),
-                        ForgeMicheNat(x.Tick))
-                ).SelectMany(x => x).ToArray()));
+                [0],
+                ForgeArray([..move.Steps
+                    .Select(x => Bytes.Concat(
+                        x.State == null
+                            ? ForgeBool(false)
+                            : ForgeBool(true).Concat(ForgeCommitment(x.State)),
+                        ForgeMicheNat(x.Tick)))
+                    .SelectMany(x => x)]));
         }
 
         static byte[] ForgeRefutationProofMove(RefutationProof move)
         {
             return Bytes.Concat(
-                new byte[] { 1 },
+                [1],
                 ForgeMicheNat(move.Choice),
-                new byte[] { 1 },
+                [1],
                 ForgeArray(move.Step.PvmStep),
                 move.Step.InputProof == null ? ForgeBool(false) : Bytes.Concat(
                     ForgeBool(true),
@@ -674,7 +669,7 @@ namespace Netezos.Forging
                     {
                         InboxProof inbox => ForgeInboxProof(inbox),
                         RevealProof reveal => ForgeRevealProof(reveal),
-                        FirstInputProof => new byte[] { 2 },
+                        FirstInputProof => [2],
                         _ => throw new ArgumentException("Invalid input proof type")
                     })
             );
@@ -683,7 +678,7 @@ namespace Netezos.Forging
         static byte[] ForgeInboxProof(InboxProof inbox)
         {
             return Bytes.Concat(
-                new byte[] { 0 },
+                [0],
                 ForgeInt32(inbox.Level),
                 ForgeMicheNat(inbox.MessageCounter),
                 ForgeArray(inbox.Proof));
@@ -692,16 +687,16 @@ namespace Netezos.Forging
         static byte[] ForgeRevealProof(RevealProof reveal)
         {
             return Bytes.Concat(
-                new byte[] { 1 },
+                [1],
                 reveal.Proof switch
                 {
                     RawDataProof raw => Bytes.Concat(
-                        new byte[] { 0 },
+                        [0],
                         ForgeArray(raw.RawData, 2)),
                     MetadataProof =>
-                        new byte[] { 1 },
+                        [1],
                     DalPageProof dal => Bytes.Concat(
-                        new byte[] { 2 },
+                        [2],
                         ForgeDalPageId(dal.DalPageId),
                         ForgeArray(dal.Proof)),
                     _ => throw new ArgumentException("Invalid reveal proof type")

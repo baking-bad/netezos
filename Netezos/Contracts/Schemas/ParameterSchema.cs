@@ -47,7 +47,7 @@ namespace Netezos.Contracts
 
         protected override List<IMicheline> GetArgs()
         {
-            return new List<IMicheline>(1) { Schema.ToMicheline() };
+            return [Schema.ToMicheline()];
         }
 
         public override IMicheline Optimize(IMicheline value)
