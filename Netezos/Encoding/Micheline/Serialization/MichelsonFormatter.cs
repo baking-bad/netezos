@@ -57,7 +57,7 @@ namespace Netezos.Encoding.Serialization
                     var isScriptRoot = root && IsScript(array);
                     var seqIndent = isScriptRoot ? indent : $"{indent}{new string(' ', 2)}";
                     var items = array.Select(x => FormatNode(x, seqIndent, inline, wrapped: true)).ToList();
-                    if (!items.Any())
+                    if (items.Count == 0)
                         return "{}";
                     
                     var length = indent.Length + items.Sum(x => x.Length) + 4;
@@ -70,12 +70,12 @@ namespace Netezos.Encoding.Serialization
                 }
                 case MichelinePrim prim:
                     var expr = $"{prim.Prim}{(prim.Annots != null ? $" {string.Join(" ", prim.Annots)}" : "")}";
-                    var args = prim.Args ?? new List<IMicheline>();
+                    var args = prim.Args ?? [];
                     if (prim.Prim == PrimType.LAMBDA || (prim.Prim >= PrimType.IF && prim.Prim <= PrimType.IF_NONE))
                     {
                         var argIndent = $"{indent}{new string(' ', 2)}";
                         var items = args.Select(x => FormatNode(x, argIndent, inline)).ToList();
-                        var length = indent.Length + expr.Length + items.Sum(x => x.Length) + items.Count() + 1;
+                        var length = indent.Length + expr.Length + items.Sum(x => x.Length) + items.Count + 1;
                         if (inline || length < LineSize)
                             expr = $"{expr} {string.Join(" ", items)}";
                         else

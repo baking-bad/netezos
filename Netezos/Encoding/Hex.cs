@@ -2,8 +2,8 @@
 {
     public static class Hex
     {
-        private static readonly int[] HexAscii = new[]
-        {
+        private static readonly int[] HexAscii =
+        [
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -20,7 +20,7 @@
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255
-        };
+        ];
 
         public static string Convert(byte[] bytes)
         {
@@ -57,14 +57,11 @@
 
         public static byte[] Parse(string hex)
         {
-            if (hex == null)
-                throw new ArgumentNullException(nameof(hex));
-
             if (hex.Length % 2 > 0)
                 throw new FormatException("Invalid hex string");
 
             if (hex.Length == 0)
-                return Array.Empty<byte>();
+                return [];
 
             var pos = hex[1] == 'x' && hex[0] == '0' ? 2 : 0;
             byte[] bytes = new byte[(hex.Length - pos) >> 1];
@@ -95,7 +92,7 @@
 
             if (hex.Length == 0)
             {
-                bytes = Array.Empty<byte>();
+                bytes = [];
                 return true;
             }
 

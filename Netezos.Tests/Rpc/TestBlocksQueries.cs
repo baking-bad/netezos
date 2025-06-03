@@ -4,14 +4,9 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestBlocksQueries : IClassFixture<SettingsFixture>
+    public class TestBlocksQueries(SettingsFixture settings) : IClassFixture<SettingsFixture>
     {
-        readonly TezosRpc Rpc;
-
-        public TestBlocksQueries(SettingsFixture settings)
-        {
-            Rpc = settings.Rpc;
-        }
+        readonly TezosRpc Rpc = settings.Rpc;
 
         [Fact]
         public async Task TestBlockHash()

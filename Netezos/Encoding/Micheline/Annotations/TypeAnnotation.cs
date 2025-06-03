@@ -1,14 +1,12 @@
 ﻿namespace Netezos.Encoding
 {
-    public class TypeAnnotation : IAnnotation
+    public class TypeAnnotation(string value) : IAnnotation
     {
         public const char Prefix = ':';
 
         public AnnotationType Type => AnnotationType.Type;
 
-        public string Value { get; set; }
-
-        public TypeAnnotation(string value) => Value = value;
+        public string Value { get; set; } = value;
 
         public override string ToString() => $"{Prefix}{Value}";
     }

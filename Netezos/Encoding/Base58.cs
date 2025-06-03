@@ -6,8 +6,8 @@ namespace Netezos.Encoding
     public static class Base58
     {
         const string Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-        static readonly byte[] Base58Ascii = new byte[]
-        {
+        static readonly byte[] Base58Ascii =
+        [
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -24,13 +24,12 @@ namespace Netezos.Encoding
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-        };
+        ];
 
         static byte[] GetCheckSum(byte[] data)
         {
-            using var shA256 = SHA256.Create();
-            var hash = shA256.ComputeHash(shA256.ComputeHash(data));
-            return new[] { hash[0], hash[1], hash[2], hash[3] };
+            var hash = SHA256.HashData(SHA256.HashData(data));
+            return [hash[0], hash[1], hash[2], hash[3]];
         }
 
         static byte[] VerifyAndRemoveCheckSum(byte[] bytes)
@@ -38,10 +37,10 @@ namespace Netezos.Encoding
             var data = bytes.GetBytes(0, bytes.Length - 4);
 
             var checkSum = GetCheckSum(data);
-            if (bytes[bytes.Length - 4] != checkSum[0] ||
-                bytes[bytes.Length - 3] != checkSum[1] ||
-                bytes[bytes.Length - 2] != checkSum[2] ||
-                bytes[bytes.Length - 1] != checkSum[3])
+            if (bytes[^4] != checkSum[0] ||
+                bytes[^3] != checkSum[1] ||
+                bytes[^2] != checkSum[2] ||
+                bytes[^1] != checkSum[3])
                 throw new FormatException("Checksum is invalid");
 
             return data;
@@ -56,10 +55,10 @@ namespace Netezos.Encoding
             var data = bytes.GetBytes(0, bytes.Length - 4);
 
             var checkSum = GetCheckSum(data);
-            if (bytes[bytes.Length - 4] != checkSum[0] ||
-                bytes[bytes.Length - 3] != checkSum[1] ||
-                bytes[bytes.Length - 2] != checkSum[2] ||
-                bytes[bytes.Length - 1] != checkSum[3])
+            if (bytes[^4] != checkSum[0] ||
+                bytes[^3] != checkSum[1] ||
+                bytes[^2] != checkSum[2] ||
+                bytes[^1] != checkSum[3])
                 return false;
 
             res = data;

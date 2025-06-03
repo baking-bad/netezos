@@ -16,7 +16,7 @@ namespace Netezos.Rpc
             var ctor = typeof(T).GetConstructor(
                 BindingFlags.NonPublic | BindingFlags.Instance,
                 null,
-                new[] { typeof(RpcQuery), typeof(string) },
+                [typeof(RpcQuery), typeof(string)],
                 null)
                 ?? throw new Exception($"Can't find appropriate constructor in {typeof(T)}");
 
@@ -26,12 +26,11 @@ namespace Netezos.Rpc
                 Expression.Parameter(typeof(string))
             };
 
-            var lambda = Expression.Lambda(
-                typeof(Creator<T>),
+            var lambda = Expression.Lambda<Creator<T>>(
                 Expression.New(ctor, args),
                 args);
 
-            return (Creator<T>)lambda.Compile();
+            return lambda.Compile();
         }
         #endregion
 

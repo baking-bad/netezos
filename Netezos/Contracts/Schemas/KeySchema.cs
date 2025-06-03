@@ -3,11 +3,9 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class KeySchema : Schema, IFlat
+    public sealed class KeySchema(MichelinePrim micheline) : Schema(micheline), IFlat
     {
         public override PrimType Prim => PrimType.key;
-
-        public KeySchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
@@ -61,7 +59,7 @@ namespace Netezos.Contracts
                 var bytes = Base58.Parse(micheStr.Value, 4);
                 byte[] res;
 
-                switch (micheStr.Value.Substring(0, 4))
+                switch (micheStr.Value[..4])
                 {
                     case "edpk":
                         res = new byte[33];

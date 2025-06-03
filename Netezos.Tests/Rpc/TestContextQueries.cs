@@ -5,26 +5,15 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestContextQueries : IClassFixture<SettingsFixture>
+    public class TestContextQueries(SettingsFixture settings) : IClassFixture<SettingsFixture>
     {
-        readonly TezosRpc Rpc;
-        readonly string TestContract;
-        readonly string TestEntrypoint;
-        readonly string TestDelegate;
-        readonly string TestSmartRollup;
-        readonly string KeyHash;
-        readonly int BigMapId;
-
-        public TestContextQueries(SettingsFixture settings)
-        {
-            Rpc = settings.Rpc;
-            TestContract = settings.TestContract;
-            TestEntrypoint = settings.TestEntrypoint;
-            TestDelegate = settings.TestDelegate;
-            TestSmartRollup = settings.TestSmartRollup;
-            KeyHash = settings.KeyHash;
-            BigMapId = settings.BigMapId;
-        }
+        readonly TezosRpc Rpc = settings.Rpc;
+        readonly string TestContract = settings.TestContract;
+        readonly string TestEntrypoint = settings.TestEntrypoint;
+        readonly string TestDelegate = settings.TestDelegate;
+        readonly string TestSmartRollup = settings.TestSmartRollup;
+        readonly string KeyHash = settings.KeyHash;
+        readonly int BigMapId = settings.BigMapId;
 
         [Fact]
         public async Task TestContextAdaptiveIssuanceLaunch()

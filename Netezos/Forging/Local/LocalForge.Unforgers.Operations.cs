@@ -105,7 +105,7 @@ namespace Netezos.Forging
             {
                 Source = reader.ReadTzAddress(),
                 Period = reader.ReadInt32(),
-                Proposals = reader.ReadEnumerable(r => r.ReadBase58(Lengths.P.Decoded, Prefix.P)).ToList()
+                Proposals = [..reader.ReadEnumerable(r => r.ReadBase58(Lengths.P.Decoded, Prefix.P))]
             };
         }
 
@@ -158,11 +158,11 @@ namespace Netezos.Forging
         {
             return new VdfRevelationContent
             {
-                Solution = new(2)
-                {
+                Solution =
+                [
                     Hex.Convert(reader.ReadBytes(100)),
                     Hex.Convert(reader.ReadBytes(100))
-                }
+                ]
             };
         }
 
@@ -311,7 +311,7 @@ namespace Netezos.Forging
                 Commitment = new TxRollupCommitment
                 {
                     Level = reader.ReadInt32(),
-                    Messages = reader.ReadEnumerable(r => r.ReadBase58(32, Prefix.txmr)).ToList(),
+                    Messages = [..reader.ReadEnumerable(r => r.ReadBase58(32, Prefix.txmr))],
                     Predecessor = reader.ReadByte() == 1
                         ? Base58.Convert(reader.ReadBytes(32), Prefix.txc)
                         : null,
@@ -333,15 +333,15 @@ namespace Netezos.Forging
                 Level = reader.ReadInt32(),
                 ContextHash = Base58.Convert(reader.ReadBytes(32), Prefix.Co),
                 MessageIndex = reader.ReadInt32(),
-                MessageResultPath = reader.ReadEnumerable(r => r.ReadBase58(32, Prefix.txM)).ToList(),
-                TicketsInfo = reader.ReadEnumerable(r => new TxRollupTicketsInfo
+                MessageResultPath = [..reader.ReadEnumerable(r => r.ReadBase58(32, Prefix.txM))],
+                TicketsInfo = [..reader.ReadEnumerable(r => new TxRollupTicketsInfo
                 {
                     Contents = r.ReadEnumerableSingle(UnforgeMicheline),
                     Type = r.ReadEnumerableSingle(UnforgeMicheline),
                     Ticketer = r.ReadAddress(),
                     Amount = r.ReadInt64(1 << r.ReadByte()),
                     Claimer = r.ReadTzAddress()
-                }).ToList()
+                })]
             };
         }
 
@@ -439,7 +439,7 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                Messages = reader.ReadEnumerable(r => r.ReadArray()).ToList(),
+                Messages = [..reader.ReadEnumerable(r => r.ReadArray())],
 
             };
         }
@@ -578,7 +578,7 @@ namespace Netezos.Forging
                     Shard = new ShardData()
                     {
                         Id = reader.ReadInt32(),
-                        Hashes = reader.ReadShardHashes().ToList()
+                        Hashes = [..reader.ReadShardHashes()]
                     },
                     Proof = reader.ReadBase58(48, Prefix.sh)
                 }
@@ -596,7 +596,7 @@ namespace Netezos.Forging
                 Timestamp = DateTimeExtension.FromUnixTime(reader.ReadInt64()),
                 ValidationPass = reader.ReadInt32(1),
                 OperationsHash = reader.ReadBase58(Lengths.LLo.Decoded, Prefix.LLo),
-                Fitness = reader.ReadEnumerable(r => r.ReadHexString()).ToList(),
+                Fitness = [..reader.ReadEnumerable(r => r.ReadHexString())],
                 Context = reader.ReadBase58(Lengths.Co.Decoded, Prefix.Co),
                 PayloadHash = reader.ReadBase58(Lengths.vh.Decoded, Prefix.vh),
                 PayloadRound = reader.ReadInt32(2),
@@ -705,7 +705,7 @@ namespace Netezos.Forging
                         0 => new RefutationDissection
                         {
                             Choice = choice,
-                            Steps = reader.ReadEnumerable(UnforgeDissection).ToList(),
+                            Steps = [..reader.ReadEnumerable(UnforgeDissection)],
                         },
                         1 => new RefutationProof
                         {

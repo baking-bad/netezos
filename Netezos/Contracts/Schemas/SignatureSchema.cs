@@ -3,11 +3,9 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class SignatureSchema : Schema, IFlat
+    public sealed class SignatureSchema(MichelinePrim micheline) : Schema(micheline), IFlat
     {
         public override PrimType Prim => PrimType.signature;
-
-        public SignatureSchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
@@ -48,7 +46,7 @@ namespace Netezos.Contracts
         {
             if (value is MichelineString micheStr)
             {
-                var res = micheStr.Value.Substring(0, 3) switch
+                var res = micheStr.Value[..3] switch
                 {
                     "eds" or "sps" => Base58.Parse(micheStr.Value, 5),
                     "p2s" or "BLs" => Base58.Parse(micheStr.Value, 4),

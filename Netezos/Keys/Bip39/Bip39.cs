@@ -6,8 +6,8 @@ namespace Netezos.Keys
 {
     static class Bip39
     {
-        static readonly List<string> WordList = new()
-        {
+        static readonly List<string> WordList =
+        [
             "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access",
             "accident", "account", "accuse", "achieve", "acid", "acoustic", "acquire", "across", "act", "action",
             "actor", "actress", "actual", "adapt", "add", "addict", "address", "adjust", "admit", "adult", "advance",
@@ -192,13 +192,10 @@ namespace Netezos.Keys
             "window", "wine", "wing", "wink", "winner", "winter", "wire", "wisdom", "wise", "wish", "witness", "wolf",
             "woman", "wonder", "wood", "wool", "word", "work", "world", "worry", "worth", "wrap", "wreck", "wrestle",
             "wrist", "write", "wrong", "yard", "year", "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"
-        };
+        ];
 
         public static byte[] GetEntropy(IEnumerable<string> words)
         {
-            if (words == null)
-                throw new ArgumentNullException(nameof(words));
-
             if (!words.Any())
                 throw new ArgumentException("Word list is empty");
 
@@ -250,12 +247,8 @@ namespace Netezos.Keys
                     concatBits[(i * 8) + 7] << 0);
             }
 
-            byte[] hashBits;
-            using (var sha256 = SHA256.Create())
-            {
-                var hash = sha256.ComputeHash(entropy);
-                hashBits = BytesToBits(hash);
-            }
+            var hash = SHA256.HashData(entropy);
+            var hashBits = BytesToBits(hash);
 
             for (int i = 0; i < checksumBitsCnt; ++i)
                 if (concatBits[entropyBitsCnt + i] != hashBits[i])
@@ -282,12 +275,8 @@ namespace Netezos.Keys
             else if (entropy.Length % 4 > 0)
                 throw new ArgumentException("Entropy length is not a multiple of 4");
 
-            byte[] hashBits;
-            using (var sha256 = SHA256.Create())
-            {
-                var hash = sha256.ComputeHash(entropy);
-                hashBits = BytesToBits(hash);
-            }
+            var hash = SHA256.HashData(entropy);
+            var hashBits = BytesToBits(hash);
 
             var entropyBits = BytesToBits(entropy);
             var bits = entropyBits.Concat(hashBits, entropyBits.Length / 32);

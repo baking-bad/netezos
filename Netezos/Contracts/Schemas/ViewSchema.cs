@@ -3,11 +3,9 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class ViewSchema : Schema
+    public sealed class ViewSchema(MichelinePrim micheline) : Schema(micheline)
     {
         public override PrimType Prim => PrimType.view;
-
-        public ViewSchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteProperty(Utf8JsonWriter writer, IMicheline value)
             => throw new InvalidOperationException($"Value of type {Prim} is not allowed");

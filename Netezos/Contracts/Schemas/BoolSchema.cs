@@ -3,11 +3,9 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class BoolSchema : Schema, IFlat
+    public sealed class BoolSchema(MichelinePrim micheline) : Schema(micheline), IFlat
     {
         public override PrimType Prim => PrimType.@bool;
-
-        public BoolSchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
@@ -38,8 +36,8 @@ namespace Netezos.Contracts
             return value switch
             {
                 bool b => new MichelinePrim { Prim = b ? PrimType.True : PrimType.False },
-                JsonElement { ValueKind: JsonValueKind.True } json => new MichelinePrim { Prim = PrimType.True },
-                JsonElement { ValueKind: JsonValueKind.False } json => new MichelinePrim { Prim = PrimType.False },
+                JsonElement { ValueKind: JsonValueKind.True } => new MichelinePrim { Prim = PrimType.True },
+                JsonElement { ValueKind: JsonValueKind.False } => new MichelinePrim { Prim = PrimType.False },
                 _ => throw MapFailedException("invalid value")
             };
         }

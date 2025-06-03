@@ -5,19 +5,19 @@ namespace Netezos.Ledger
 {
     public static class Utils
     {
-        static readonly byte[] _EdPublicKeyPrefix = { 13, 15, 37, 217 };
-        static readonly byte[] _EdSignaturePrefix = { 9, 245, 205, 134, 18 };
+        static readonly byte[] _EdPublicKeyPrefix = [13, 15, 37, 217];
+        static readonly byte[] _EdSignaturePrefix = [9, 245, 205, 134, 18];
         
-        static readonly byte[] _NistPublicKeyPrefix = { 3, 178, 139, 127 };
-        static readonly byte[] _NistSignaturePrefix = { 54, 240, 44, 52 };
+        static readonly byte[] _NistPublicKeyPrefix = [3, 178, 139, 127];
+        static readonly byte[] _NistSignaturePrefix = [54, 240, 44, 52];
         
-        static readonly byte[] _SecpPublicKeyPrefix = { 3, 254, 226, 86 };
-        static readonly byte[] _SecpSignaturePrefix = { 13, 115, 101, 19, 63 };
+        static readonly byte[] _SecpPublicKeyPrefix = [3, 254, 226, 86];
+        static readonly byte[] _SecpSignaturePrefix = [13, 115, 101, 19, 63];
 
         internal static byte[] Serialize(KeyPath keyPath)
         {
             AssertKeyPath(keyPath);
-            MemoryStream memoryStream = new MemoryStream();
+            var memoryStream = new MemoryStream();
             memoryStream.WriteByte((byte) keyPath.Indexes.Length);
             for (int index = 0; index < keyPath.Indexes.Length; ++index)
             {
@@ -47,20 +47,20 @@ namespace Netezos.Ledger
         static byte[] ToBytes(uint value, bool littleEndian)
         {
             if (littleEndian)
-                return new byte[4]
-                {
+                return
+                [
                     (byte) value,
                     (byte) (value >> 8),
                     (byte) (value >> 16),
                     (byte) (value >> 24)
-                };
-            return new byte[4]
-            {
+                ];
+            return
+            [
                 (byte) (value >> 24),
                 (byte) (value >> 16),
                 (byte) (value >> 8),
                 (byte) value
-            };
+            ];
         }
 
         internal static byte[] GetBytes(byte[] src, int start, int length)

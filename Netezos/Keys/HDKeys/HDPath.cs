@@ -19,7 +19,7 @@ namespace Netezos.Keys
         /// </summary>
         public HDPath()
         {
-            Indexes = Array.Empty<uint>();
+            Indexes = [];
         }
 
         /// <summary>
@@ -30,9 +30,7 @@ namespace Netezos.Keys
         {
             path = path?.TrimStart('m').Trim('/')
                 ?? throw new ArgumentNullException(nameof(path));
-            Indexes = path.Length == 0
-                ? Array.Empty<uint>()
-                : path.Split('/').Select(ParseIndex).ToArray();
+            Indexes = path.Length == 0 ? [] : [..path.Split('/').Select(ParseIndex)];
         }
 
         HDPath(uint[] indexes)
@@ -50,7 +48,7 @@ namespace Netezos.Keys
         {
             var indexes = new uint[Indexes.Length + 1];
             Indexes.CopyTo(indexes, 0);
-            indexes[indexes.Length - 1] = GetIndex(index, hardened);
+            indexes[^1] = GetIndex(index, hardened);
             return new(indexes);
         }
 
@@ -129,9 +127,9 @@ namespace Netezos.Keys
                 return false;
             }
 
-            var hardened = str[str.Length - 1] == '\'' || str[str.Length - 1] == 'h';
+            var hardened = str[^1] == '\'' || str[^1] == 'h';
 
-            if (!uint.TryParse(hardened ? str.Substring(0, str.Length - 1) : str, out ind))
+            if (!uint.TryParse(hardened ? str[..^1] : str, out ind))
                 return false;
 
             if ((ind & 0x80000000) != 0)
@@ -148,9 +146,9 @@ namespace Netezos.Keys
             if (str.Length == 0)
                 throw new FormatException("Path contains empty element");
 
-            var hardened = str[str.Length - 1] == '\'' || str[str.Length - 1] == 'h';
+            var hardened = str[^1] == '\'' || str[^1] == 'h';
 
-            if (!uint.TryParse(hardened ? str.Substring(0, str.Length - 1) : str, out var ind))
+            if (!uint.TryParse(hardened ? str[..^1] : str, out var ind))
                 throw new FormatException("Path contains invalid index");
 
             if ((ind & 0x80000000) != 0)

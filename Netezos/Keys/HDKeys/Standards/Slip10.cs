@@ -158,15 +158,15 @@ namespace Netezos.Keys
         static byte[] Bip32Hash(byte[] chainCode, uint index, byte prefix, byte[] data)
         {
             using var hmacSha512 = new HMACSHA512(chainCode);
-            return hmacSha512.ComputeHash(Bytes.Concat(new byte[] { prefix }, data, Ser32(index)));
+            return hmacSha512.ComputeHash(Bytes.Concat([prefix], data, Ser32(index)));
         }
 
-        static byte[] Ser32(uint index) => new byte[]
-        {
+        static byte[] Ser32(uint index) =>
+        [
             (byte)((index >> 24) & 0xFF),
             (byte)((index >> 16) & 0xFF),
             (byte)((index >> 8) & 0xFF),
             (byte)((index >> 0) & 0xFF)
-        };
+        ];
     }
 }

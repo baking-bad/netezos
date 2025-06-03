@@ -3,11 +3,9 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class KeyHashSchema : Schema, IFlat
+    public sealed class KeyHashSchema(MichelinePrim micheline) : Schema(micheline), IFlat
     {
         public override PrimType Prim => PrimType.key_hash;
-
-        public KeyHashSchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {
@@ -64,7 +62,7 @@ namespace Netezos.Contracts
                 var bytes = Base58.Parse(micheStr.Value, 3);
                 var res = new byte[21];
 
-                res[0] = micheStr.Value.Substring(0, 3) switch
+                res[0] = micheStr.Value[..3] switch
                 {
                     "tz1" => 0,
                     "tz2" => 1,

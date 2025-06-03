@@ -4,20 +4,12 @@ using Xunit;
 
 namespace Netezos.Tests.Rpc
 {
-    public class TestRawContextQueries : IClassFixture<SettingsFixture>
+    public class TestRawContextQueries(SettingsFixture settings) : IClassFixture<SettingsFixture>
     {
-        readonly TezosRpc Rpc;
-        readonly string TestContract;
-        readonly string TestDelegate;
-        readonly string TestInactive;
-
-        public TestRawContextQueries(SettingsFixture settings)
-        {
-            Rpc = settings.Rpc;
-            TestContract = settings.TestContract;
-            TestDelegate = settings.TestDelegate;
-            TestInactive = settings.TestInactive;
-        }
+        readonly TezosRpc Rpc = settings.Rpc;
+        readonly string TestContract = settings.TestContract;
+        readonly string TestDelegate = settings.TestDelegate;
+        readonly string TestInactive = settings.TestInactive;
 
         [Fact]
         public async Task TestRawContext()

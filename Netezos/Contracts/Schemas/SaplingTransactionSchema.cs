@@ -35,7 +35,7 @@ namespace Netezos.Contracts
 
         protected override List<IMicheline> GetArgs()
         {
-            return new List<IMicheline>(1) { new MichelineInt(MemoSize) };
+            return [new MichelineInt(MemoSize)];
         }
 
         protected override IMicheline MapValue(object? value)

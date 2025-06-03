@@ -4,11 +4,9 @@ using Netezos.Encoding;
 
 namespace Netezos.Contracts
 {
-    public sealed class IntSchema : Schema, IFlat
+    public sealed class IntSchema(MichelinePrim micheline) : Schema(micheline), IFlat
     {
         public override PrimType Prim => PrimType.@int;
-
-        public IntSchema(MichelinePrim micheline) : base(micheline) { }
 
         internal override void WriteValue(Utf8JsonWriter writer, IMicheline value)
         {

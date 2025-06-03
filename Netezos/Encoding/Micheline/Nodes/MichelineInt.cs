@@ -4,16 +4,14 @@ using Netezos.Forging.Models;
 
 namespace Netezos.Encoding
 {
-    public class MichelineInt : IMicheline
+    public class MichelineInt(BigInteger value) : IMicheline
     {
         [JsonIgnore]
         public MichelineType Type => MichelineType.Int;
 
         [JsonPropertyName("int")]
         [JsonConverter(typeof(BigIntegerStringConverter))]
-        public BigInteger Value { get; set; }
-
-        public MichelineInt(BigInteger value) => Value = value;
+        public BigInteger Value { get; set; } = value;
 
         public void Write(BinaryWriter writer, int depth = 0)
         {

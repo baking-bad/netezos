@@ -10,7 +10,7 @@ namespace Netezos.Keys
     class Secp256k1 : Curve
     {
         #region static
-        static readonly byte[] _Slip10Seed = { 66, 105, 116, 99, 111, 105, 110, 32, 115, 101, 101, 100 }; // "Bitcoin seed"
+        static readonly byte[] _Slip10Seed = [66, 105, 116, 99, 111, 105, 110, 32, 115, 101, 101, 100]; // "Bitcoin seed"
         #endregion
         
         public override ECKind Kind => ECKind.Secp256k1;

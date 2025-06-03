@@ -2,22 +2,13 @@
 
 namespace Netezos.Keys
 {
-    public class Signature
+    public class Signature(byte[] bytes, byte[] prefix)
     {
-        readonly byte[] Bytes;
-        readonly byte[] Prefix;
+        public byte[] ToBytes() => bytes;
 
-        public Signature(byte[] bytes, byte[] prefix)
-        {
-            Bytes = bytes;
-            Prefix = prefix;
-        }
+        public string ToBase58() => Base58.Convert(bytes, prefix);
 
-        public byte[] ToBytes() => Bytes;
-
-        public string ToBase58() => Base58.Convert(Bytes, Prefix);
-
-        public string ToHex() => Hex.Convert(Bytes);
+        public string ToHex() => Hex.Convert(bytes);
 
         public override string ToString() => ToBase58();
 

@@ -37,7 +37,7 @@ namespace Netezos.Utils
             return kdf.Read(derivedKeyLength);
         }
 
-        void BEBytesFromUInt32(uint value, byte[] bytes, int offset)
+        static void BEBytesFromUInt32(uint value, byte[] bytes, int offset)
         {
             bytes[offset + 0] = (byte)(value >> 24);
             bytes[offset + 1] = (byte)(value >> 16);
@@ -65,7 +65,7 @@ namespace Netezos.Utils
         {
             HmacAlgorithm.Initialize();
             HmacAlgorithm.TransformBlock(input, 0, input.Length, input, 0);
-            HmacAlgorithm.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
+            HmacAlgorithm.TransformFinalBlock([], 0, 0);
             Array.Copy(HmacAlgorithm.Hash!, output, output.Length);
         }
         #endregion
@@ -115,7 +115,7 @@ namespace Netezos.Utils
                 SeekOrigin.Begin => offset,
                 SeekOrigin.Current => Position + offset,
                 SeekOrigin.End => Length + offset,
-                _ => throw new ArgumentException()
+                _ => throw new ArgumentException("Invalid seek origin")
             };
             return Position;
         }

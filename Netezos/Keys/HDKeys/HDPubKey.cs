@@ -77,9 +77,6 @@
         /// <returns>Derived extended child key</returns>
         public HDPubKey Derive(HDPath path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-
             if (!path.Any())
                 return this;
 

@@ -10,7 +10,7 @@ namespace Netezos.Keys
     class NistP256 : Curve
     {
         #region static
-        static readonly byte[] _Slip10Seed = { 78, 105, 115, 116, 50, 53, 54, 112, 49, 32, 115, 101, 101, 100 }; // "Nist256p1 seed"
+        static readonly byte[] _Slip10Seed = [78, 105, 115, 116, 50, 53, 54, 112, 49, 32, 115, 101, 101, 100]; // "Nist256p1 seed"
         #endregion
         
         public override ECKind Kind => ECKind.NistP256;

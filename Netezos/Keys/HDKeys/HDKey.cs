@@ -100,9 +100,6 @@ namespace Netezos.Keys
         /// <returns>Derived extended child key</returns>
         public HDKey Derive(HDPath path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-
             if (!path.Any())
                 return this;
 
@@ -173,7 +170,6 @@ namespace Netezos.Keys
         /// <returns>Extended private key</returns>
         public static HDKey FromMnemonic(Mnemonic mnemonic, string passphrase = "", ECKind kind = ECKind.Ed25519)
         {
-            if (mnemonic == null) throw new ArgumentNullException(nameof(mnemonic));
             var seed = mnemonic.GetSeed(passphrase);
             var key = FromSeed(seed, kind);
             seed.Flush();
@@ -188,7 +184,6 @@ namespace Netezos.Keys
         /// <returns>Extended private key</returns>
         public static HDKey FromSeed(byte[] seed, ECKind kind = ECKind.Ed25519)
         {
-            if (seed == null) throw new ArgumentNullException(nameof(seed));
             var (prvKey, chainCode) = HDStandard.FromECKind(kind).GenerateMasterKey(Curve.FromKind(kind), seed);
             return new(new(prvKey, kind, true), chainCode);
         }

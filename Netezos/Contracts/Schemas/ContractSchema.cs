@@ -92,7 +92,7 @@ namespace Netezos.Contracts
 
         protected override List<IMicheline> GetArgs()
         {
-            return new List<IMicheline>(1) { Parameters.ToMicheline() };
+            return [Parameters.ToMicheline()];
         }
 
         protected override IMicheline MapValue(object? value)
@@ -117,24 +117,24 @@ namespace Netezos.Contracts
 
             if (micheStr.Value.StartsWith("txr1"))
             {
-                address = micheStr.Value.Substring(0, 37);
+                address = micheStr.Value[..37];
                 addressBytes = Base58.Parse(address, 4);
                 entrypointBytes = micheStr.Value.Length > 38
-                    ? Utf8.Parse(micheStr.Value.Substring(38))
+                    ? Utf8.Parse(micheStr.Value[38..])
                     : null;
             }
             else
             {
-                address = micheStr.Value.Substring(0, 36);
+                address = micheStr.Value[..36];
                 addressBytes = Base58.Parse(address, 3);
                 entrypointBytes = micheStr.Value.Length > 37
-                    ? Utf8.Parse(micheStr.Value.Substring(37))
+                    ? Utf8.Parse(micheStr.Value[37..])
                     : null;
             }
 
             var res = new byte[22 + (entrypointBytes?.Length ?? 0)];
 
-            switch (address.Substring(0, 3))
+            switch (address[..3])
             {
                 case "tz1":
                     addressBytes.CopyTo(res, 2);

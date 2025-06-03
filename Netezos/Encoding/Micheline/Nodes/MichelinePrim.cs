@@ -79,7 +79,7 @@ namespace Netezos.Encoding
             }
         }
 
-        void WriteAnnotation(BinaryWriter writer, IAnnotation annot)
+        static void WriteAnnotation(BinaryWriter writer, IAnnotation annot)
         {
             var bytes = Utf8.Parse(annot.Value);
             var len = bytes.Length;

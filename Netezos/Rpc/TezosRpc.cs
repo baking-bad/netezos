@@ -87,6 +87,10 @@ namespace Netezos.Rpc
         /// <summary>
         /// Releases the unmanaged resources and disposes of the managed resources used by the <c>TezosRpc</c>
         /// </summary>
-        public void Dispose() => Client?.Dispose();
+        public void Dispose()
+        {
+            Client?.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

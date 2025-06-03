@@ -22,6 +22,10 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);IDE0130;IDE0230</NoWarn>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="../Netezos/Netezos.csproj" />
 	</ItemGroup>
