@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Encodings.Web;
 using Xunit;
 using Netezos.Encoding;
@@ -21,7 +17,7 @@ namespace Netezos.Tests.Encoding
                 var json = File.ReadAllText($"{path}/Sample{i}.json");
                 var bytes = Base64.Parse(File.ReadAllText($"{path}/Sample{i}.base64"));
 
-                var micheline = Micheline.FromJson(json);
+                var micheline = Micheline.FromJson(json)!;
 
                 Assert.True(Equal(micheline, Micheline.FromBytes(bytes)));
                 Assert.Equal(json.Length, micheline.ToJson().Length);
@@ -40,7 +36,7 @@ namespace Netezos.Tests.Encoding
             }
 
             var json1 = CreateDeepOption(12_000);
-            var m1 = Micheline.FromJson(json1);
+            var m1 = Micheline.FromJson(json1)!;
             var b1 = m1.ToBytes();
             Assert.NotNull(m1);
             Assert.NotNull(b1);
@@ -59,7 +55,7 @@ namespace Netezos.Tests.Encoding
             }
 
             var json2 = CreateDeepPair(10_000);
-            var m2 = Micheline.FromJson(json2);
+            var m2 = Micheline.FromJson(json2)!;
             var b2 = m2.ToBytes();
             Assert.NotNull(m2);
             Assert.NotNull(b2);
@@ -75,7 +71,7 @@ namespace Netezos.Tests.Encoding
             var m = Micheline.FromJson(json) as MichelinePrim;
 
             Assert.NotNull(m);
-            Assert.Equal(6, m.Annots.Count);
+            Assert.Equal(6, m.Annots!.Count);
             Assert.True(m.Annots[0] is FieldAnnotation);
             Assert.True(m.Annots[1] is TypeAnnotation);
             Assert.True(m.Annots[2] is VariableAnnotation);
@@ -113,7 +109,7 @@ namespace Netezos.Tests.Encoding
                         if ((p1.Annots == null) != (p2.Annots == null))
                             return false;
                         if (p1.Annots != null &&
-                            !p1.Annots.Select(x => x.ToString()).SequenceEqual(p2.Annots.Select(x => x.ToString())))
+                            !p1.Annots.Select(x => x.ToString()).SequenceEqual(p2.Annots!.Select(x => x.ToString())))
                             return false;
                         if ((p1.Args == null) != (p2.Args == null))
                             return false;
@@ -121,7 +117,7 @@ namespace Netezos.Tests.Encoding
                         {
                             for (int i = p1.Args.Count - 1; i >= 0; i--)
                                 stack1.Push(p1.Args[i]);
-                            for (int i = p2.Args.Count - 1; i >= 0; i--)
+                            for (int i = p2.Args!.Count - 1; i >= 0; i--)
                                 stack2.Push(p2.Args[i]);
                         }
                         break;

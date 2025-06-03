@@ -146,7 +146,7 @@ namespace Netezos.Encoding
             return bytes.GetBytes(prefixLength, bytes.Length - prefixLength);
         }
 
-        public static bool TryParse(string base58, out byte[] bytes)
+        public static bool TryParse(string? base58, out byte[] bytes)
         {
             bytes = null!;
 
@@ -156,7 +156,7 @@ namespace Netezos.Encoding
             return TryDecodePlain(base58, out var data) && TryVerifyAndRemoveCheckSum(data, out bytes);
         }
         
-        public static bool TryParse(string base58, byte[] prefix, out byte[] bytes)
+        public static bool TryParse(string? base58, byte[] prefix, out byte[] bytes)
         {
             bytes = null!;
             

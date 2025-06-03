@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using NBitcoin;
+﻿using NBitcoin;
 using Netezos.Keys;
 
 namespace Netezos.Ledger

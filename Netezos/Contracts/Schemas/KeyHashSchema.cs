@@ -46,7 +46,7 @@ namespace Netezos.Contracts
             }
         }
 
-        protected override IMicheline MapValue(object value)
+        protected override IMicheline MapValue(object? value)
         {
             return value switch
             {

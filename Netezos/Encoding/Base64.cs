@@ -7,18 +7,19 @@
             return System.Convert.FromBase64String(base64);
         }
 
-        public static bool TryParse(string base64, out byte[] bytes)
+        public static bool TryParse(string? base64, out byte[] bytes)
         {
-            try
+            if (base64 != null)
             {
-                bytes = System.Convert.FromBase64String(base64);
-                return true;
+                try
+                {
+                    bytes = System.Convert.FromBase64String(base64);
+                    return true;
+                }
+                catch { }
             }
-            catch
-            {
-                bytes = null!;
-                return false;
-            }
+            bytes = null!;
+            return false;
         }
 
         public static string Convert(byte[] bytes)

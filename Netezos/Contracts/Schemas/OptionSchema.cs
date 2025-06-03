@@ -95,7 +95,7 @@ namespace Netezos.Contracts
             return new List<IMicheline>(1) { Some.ToMicheline() };
         }
 
-        protected override IMicheline MapValue(object value)
+        protected override IMicheline MapValue(object? value)
         {
             return value == null || value is JsonElement json && json.ValueKind == JsonValueKind.Null
                 ? new MichelinePrim

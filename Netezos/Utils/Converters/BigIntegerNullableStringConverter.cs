@@ -9,7 +9,7 @@ namespace Netezos.Forging.Models
         public override BigInteger? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return reader.TokenType == JsonTokenType.String
-                ? BigInteger.Parse(reader.GetString())
+                ? BigInteger.Parse(reader.GetString()!)
                 : reader.TokenType == JsonTokenType.Number
                     ? reader.GetInt64()
                     : null;

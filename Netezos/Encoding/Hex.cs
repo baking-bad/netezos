@@ -83,7 +83,7 @@
             return bytes;
         }
 
-        public static bool TryParse(string hex, out byte[] bytes)
+        public static bool TryParse(string? hex, out byte[] bytes)
         {
             bytes = null!;
 
