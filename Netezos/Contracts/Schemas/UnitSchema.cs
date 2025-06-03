@@ -27,7 +27,7 @@ namespace Netezos.Contracts
             writer.WriteString("$comment", Prim.ToString());
         }
 
-        public override IMicheline MapObject(object? value, bool isValue = false)
+        public override IMicheline MapObject(object? obj, bool isValue = false)
         {
             return new MichelinePrim { Prim = PrimType.Unit };
         }

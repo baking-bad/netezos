@@ -20,7 +20,7 @@ namespace Netezos.Contracts
                 if (micheInt.Value > 253_402_300_800 || micheInt.Value < -62_135_596_800) // DateTime overflow
                     return micheInt.Value.ToString();
                 
-                return new DateTime(1970, 1, 1)
+                return DateTime.UnixEpoch
                     .AddSeconds((long)micheInt.Value)
                     .ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
@@ -31,7 +31,7 @@ namespace Netezos.Contracts
                     if (seconds > 253_402_300_800 || seconds < -62_135_596_800) // DateTime overflow
                         return seconds.ToString();
 
-                    return new DateTime(1970, 1, 1)
+                    return DateTime.UnixEpoch
                         .AddSeconds((long)seconds)
                         .ToString("yyyy-MM-ddTHH:mm:ssZ");
                 }
@@ -40,7 +40,7 @@ namespace Netezos.Contracts
                     return datetime.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
                 if (micheString.Value.Length == 0)
-                    return new DateTime(1970, 1, 1).ToString("yyyy-MM-ddTHH:mm:ssZ");
+                    return DateTime.UnixEpoch.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
                 return micheString.Value;
             }
@@ -73,7 +73,7 @@ namespace Netezos.Contracts
 
                 if (DateTimeOffset.TryParse(micheStr.Value, out var datetime))
                 {
-                    var seconds = (long)(datetime - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds;
+                    var seconds = (long)(datetime - DateTimeOffset.UnixEpoch).TotalSeconds;
                     return new MichelineInt(new BigInteger(seconds));
                 }
 
