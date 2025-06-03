@@ -161,7 +161,7 @@ namespace Netezos.Utils
         BAD_SCALAR,
     }
 
-    public class BlstException(BlstError code) : ApplicationException
+    public class BlstException(BlstError code) : Exception
     {
         public override string Message => code switch
         {

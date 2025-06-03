@@ -16,7 +16,10 @@
                     bytes = System.Text.Encoding.UTF8.GetBytes(text);
                     return true;
                 }
-                catch { }
+                catch
+                {
+                    // we don't care
+                }
             }
             bytes = null!;
             return false;

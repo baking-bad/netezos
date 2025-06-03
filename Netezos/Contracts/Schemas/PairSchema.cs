@@ -82,37 +82,33 @@ namespace Netezos.Contracts
 
         public override IMicheline MapObject(object? obj, bool isValue = false)
         {
-            if (Kind == PairKind.Object)
-            {
-                if (obj is IEnumerable e)
-                    return MapPair(e.GetEnumerator());
-
-                if (isValue)
-                    return MapPair(obj);
-
-                switch (obj)
-                {
-                    case IEnumerator enumerator:
-                        if (!enumerator.MoveNext())
-                            throw MapFailedException($"enumerable is over");
-                        return MapPair(enumerator.Current);
-                    case JsonElement json:
-                        if (Name == null)
-                            return MapPair(json);
-                        if (!json.TryGetProperty(Name, out var jsonProp))
-                            throw MapFailedException($"no such property");
-                        return MapPair(jsonProp);
-                    default:
-                        if (Name == null)
-                            return MapPair(obj);
-                        var prop = obj?.GetType()?.GetProperty(Name)
-                            ?? throw MapFailedException($"no such property");
-                        return MapPair(prop.GetValue(obj));
-                }
-            }
-            else
-            {
+            if (Kind != PairKind.Object)
                 return MapPair(obj);
+
+            if (obj is IEnumerable e)
+                return MapPair(e.GetEnumerator());
+
+            if (isValue)
+                return MapPair(obj);
+
+            switch (obj)
+            {
+                case IEnumerator enumerator:
+                    if (!enumerator.MoveNext())
+                        throw MapFailedException($"enumerable is over");
+                    return MapPair(enumerator.Current);
+                case JsonElement json:
+                    if (Name == null)
+                        return MapPair(json);
+                    if (!json.TryGetProperty(Name, out var jsonProp))
+                        throw MapFailedException($"no such property");
+                    return MapPair(jsonProp);
+                default:
+                    if (Name == null)
+                        return MapPair(obj);
+                    var prop = obj?.GetType()?.GetProperty(Name)
+                        ?? throw MapFailedException($"no such property");
+                    return MapPair(prop.GetValue(obj));
             }
         }
 

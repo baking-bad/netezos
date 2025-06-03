@@ -16,7 +16,10 @@
                     bytes = System.Convert.FromBase64String(base64);
                     return true;
                 }
-                catch { }
+                catch
+                {
+                    // we don't care
+                }
             }
             bytes = null!;
             return false;
