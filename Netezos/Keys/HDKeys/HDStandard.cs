@@ -4,6 +4,10 @@
     {
         #region static
         public static HDStandard Slip10 { get; } = new Slip10();
+        public static HDStandard Eip2333 { get; } = new Eip2333();
+
+        public static HDStandard FromCurve(Curve curve) => curve is Bls12381 ? Eip2333 : Slip10;
+        public static HDStandard FromECKind(ECKind kind) => kind == ECKind.Bls12381 ? Eip2333 : Slip10;
         #endregion
 
         public abstract (byte[], byte[]) GenerateMasterKey(Curve curve, byte[] seed);

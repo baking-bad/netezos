@@ -22,20 +22,35 @@
         
         readonly byte[] _ChainCode;
         Curve Curve => PubKey.Curve;
-        HDStandard HD => HDStandard.Slip10;
+        HDStandard HD => HDStandard.FromCurve(Curve);
         ISecretStore Store => PubKey.Store;
 
         internal HDPubKey(PubKey pubKey, byte[] chainCode)
         {
             PubKey = pubKey ?? throw new ArgumentNullException(nameof(pubKey));
             _ChainCode = chainCode?.Copy() ?? throw new ArgumentNullException(nameof(chainCode));
-            if (chainCode.Length != 32) throw new ArgumentException("Invalid chain code length", nameof(chainCode));
+            if (chainCode.Length != 32 && pubKey.Curve is not Bls12381)
+                throw new ArgumentException("Invalid chain code length", nameof(chainCode));
         }
 
         /// <summary>
         /// Derives an extended child key at the given index
         /// </summary>
-        /// <param name="index">Index of the child key, starting from zero</param>
+        /// <param name="index">Index of the child key (0..2^32)</param>
+        /// <returns>Derived extended child key</returns>
+        public HDPubKey Derive(uint index)
+        {
+            using (Store.Unlock())
+            {
+                var (pubKey, chainCode) = HD.GetChildPublicKey(Curve, Store.Data, _ChainCode, index);
+                return new(new(pubKey, Curve.Kind, true), chainCode);
+            }
+        }
+
+        /// <summary>
+        /// Derives an extended child key at the given index
+        /// </summary>
+        /// <param name="index">Index of the child key (0..2^31)</param>
         /// <param name="hardened">If true, hardened derivation will be performed</param>
         /// <returns>Derived extended child key</returns>
         public HDPubKey Derive(int index, bool hardened = false)
@@ -101,7 +116,7 @@
         /// Creates an extended (hierarchical deterministic) public key from the given public key and chain code
         /// </summary>
         /// <param name="pubKey">Public key</param>
-        /// <param name="chainCode">32 bytes of entropy to be added to the public key</param>
+        /// <param name="chainCode">32 bytes of entropy to be added to the public key (for BLS it's not used, so can be an empty array)</param>
         /// <returns>Extended public key</returns>
         public static HDPubKey FromPubKey(PubKey pubKey, byte[] chainCode) => new(pubKey, chainCode);
         #endregion
