@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Dynamic.Json;
+﻿using Dynamic.Json;
 using Netezos.Rpc;
 using Xunit;
 

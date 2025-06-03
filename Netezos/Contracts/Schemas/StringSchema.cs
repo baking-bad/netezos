@@ -22,7 +22,7 @@ namespace Netezos.Contracts
             throw FormatException(value);
         }
 
-        protected override IMicheline MapValue(object value)
+        protected override IMicheline MapValue(object? value)
         {
             return value switch
             {

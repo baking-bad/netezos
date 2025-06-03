@@ -84,7 +84,7 @@ namespace Netezos.Encoding.Serialization
                         case "int":
                             if (reader.TokenType != JsonTokenType.String)
                                 throw new FormatException("Invalid Micheline int node");
-                            node = new MichelineInt(BigInteger.Parse(reader.GetString()));
+                            node = new MichelineInt(BigInteger.Parse(reader.GetString()!));
                             break;
                         default:
                             throw new FormatException("Invalid Micheline node");

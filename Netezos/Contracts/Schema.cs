@@ -133,7 +133,7 @@ namespace Netezos.Contracts
             return value;
         }
 
-        public virtual IMicheline MapObject(object obj, bool isValue = false)
+        public virtual IMicheline MapObject(object? obj, bool isValue = false)
         {
             if (isValue)
                 return MapValue(obj);
@@ -154,13 +154,13 @@ namespace Netezos.Contracts
                         throw MapFailedException($"no such property");
                     return MapValue(jsonProp);
                 default:
-                    var prop = obj?.GetType()?.GetProperty(Name)
+                    var prop = obj?.GetType()?.GetProperty(Name!)
                         ?? throw MapFailedException($"no such property");
                     return MapValue(prop.GetValue(obj));
             }
         }
 
-        protected virtual IMicheline MapValue(object value)
+        protected virtual IMicheline MapValue(object? value)
         {
             throw new NotImplementedException();
         }

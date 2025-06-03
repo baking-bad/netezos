@@ -225,13 +225,13 @@ namespace Netezos.Forging
 
                     if (argsCnt > 0)
                     {
-                        var args = prim.Args.Select(ForgeMicheline).SelectMany(x => x);
+                        var args = prim.Args!.Select(ForgeMicheline).SelectMany(x => x);
                         res.AddRange(argsCnt < 3 ? args : ForgeArray(args.ToArray()));
                     }
 
                     if (annots > 0)
                     {
-                        res.AddRange(ForgeString(string.Join(" ", prim.Annots)));
+                        res.AddRange(ForgeString(string.Join(" ", prim.Annots!)));
                     }
                     else if (argsCnt >= 3)
                     {

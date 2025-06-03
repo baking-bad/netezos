@@ -1,8 +1,7 @@
 using Dynamic.Json;
+using Xunit;
 using Netezos.Encoding;
 using Netezos.Keys;
-using System;
-using Xunit;
 
 namespace Netezos.Tests.Keys
 {
@@ -68,7 +67,7 @@ namespace Netezos.Tests.Keys
             Assert.Equal("m/1", HDPath.Parse("m/1").ToString());
             Assert.Equal("m/1/2'/3'", HDPath.Parse("m/1/2'/3h").ToString());
 
-            Assert.Throws<ArgumentNullException>(() => HDPath.Parse(null));
+            Assert.Throws<ArgumentNullException>(() => HDPath.Parse(null!));
             Assert.Throws<FormatException>(() => HDPath.Parse("m/1//2"));
             Assert.Throws<FormatException>(() => HDPath.Parse("m/m"));
             Assert.Throws<FormatException>(() => HDPath.Parse("m/-1"));

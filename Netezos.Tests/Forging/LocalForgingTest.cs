@@ -1,12 +1,7 @@
-using System;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Dynamic.Json;
 using Xunit;
-
 using Netezos.Encoding;
 using Netezos.Forging;
 using Netezos.Forging.Models;
@@ -28,7 +23,7 @@ namespace Netezos.Tests.Forging
                 var opBytes = File.ReadAllText($"{directory}/forged.hex");
                 var localBytes = op.Contents.Count == 1
                     ? await forge.ForgeOperationAsync(op.Branch, op.Contents[0])
-                    : await forge.ForgeOperationGroupAsync(op.Branch, op.Contents.Select(x => x as ManagerOperationContent));
+                    : await forge.ForgeOperationGroupAsync(op.Branch, op.Contents.Select(x => (x as ManagerOperationContent)!));
 
                 Assert.True(opBytes == Hex.Convert(localBytes), directory);
             }

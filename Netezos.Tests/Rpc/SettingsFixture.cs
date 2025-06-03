@@ -1,6 +1,5 @@
 ﻿using Dynamic.Json;
 using Netezos.Rpc;
-using System;
 
 namespace Netezos.Tests.Rpc
 {

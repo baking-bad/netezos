@@ -95,7 +95,7 @@ namespace Netezos.Contracts
             return new List<IMicheline>(1) { Parameters.ToMicheline() };
         }
 
-        protected override IMicheline MapValue(object value)
+        protected override IMicheline MapValue(object? value)
         {
             return value switch
             {

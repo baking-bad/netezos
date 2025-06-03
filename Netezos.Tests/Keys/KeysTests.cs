@@ -1,6 +1,5 @@
 ﻿using Dynamic.Json;
 using Xunit;
-
 using Netezos.Encoding;
 using Netezos.Keys;
 
@@ -27,9 +26,9 @@ namespace Netezos.Tests.Keys
             var sign = testKey.Sign(msg);
             Assert.True(testKey.PubKey.Verify(msg, sign));
             Assert.False(testKey.PubKey.Verify(msg, "wrongSignature"));
-            Assert.False(testKey.PubKey.Verify(msg, null));
+            Assert.False(testKey.PubKey.Verify(msg, null!));
             Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
-            Assert.False(testKey.PubKey.Verify((string)null, sign));
+            Assert.False(testKey.PubKey.Verify((string)null!, sign));
         }
 
         [Fact]
@@ -51,9 +50,9 @@ namespace Netezos.Tests.Keys
             var sign = testKey.Sign(msg);
             Assert.True(testKey.PubKey.Verify(msg, sign));
             Assert.False(testKey.PubKey.Verify(msg, "wrongSignature"));
-            Assert.False(testKey.PubKey.Verify(msg, null));
+            Assert.False(testKey.PubKey.Verify(msg, null!));
             Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
-            Assert.False(testKey.PubKey.Verify((string)null, sign));
+            Assert.False(testKey.PubKey.Verify((string)null!, sign));
         }
 
         [Fact]
@@ -75,9 +74,9 @@ namespace Netezos.Tests.Keys
             var sign = testKey.Sign(msg);
             Assert.True(testKey.PubKey.Verify(msg, sign));
             Assert.False(testKey.PubKey.Verify(msg, "wrongSignature"));
-            Assert.False(testKey.PubKey.Verify(msg, null));
+            Assert.False(testKey.PubKey.Verify(msg, null!));
             Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
-            Assert.False(testKey.PubKey.Verify((string)null, sign));
+            Assert.False(testKey.PubKey.Verify((string)null!, sign));
         }
 
         [Fact]
@@ -99,9 +98,9 @@ namespace Netezos.Tests.Keys
             var sign = testKey.Sign(msg);
             Assert.True(testKey.PubKey.Verify(msg, sign));
             Assert.False(testKey.PubKey.Verify(msg, "wrongSignature"));
-            Assert.False(testKey.PubKey.Verify(msg, null));
+            Assert.False(testKey.PubKey.Verify(msg, null!));
             Assert.False(testKey.PubKey.Verify("wrongMessage", sign));
-            Assert.False(testKey.PubKey.Verify((string)null, sign));
+            Assert.False(testKey.PubKey.Verify((string)null!, sign));
         }
     }
 }

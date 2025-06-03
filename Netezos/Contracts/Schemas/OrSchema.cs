@@ -58,7 +58,7 @@ namespace Netezos.Contracts
             return treeView;
         }
 
-        protected override IMicheline MapValue(object value)
+        protected override IMicheline MapValue(object? value)
         {
             if (value is JsonElement json && json.ValueKind == JsonValueKind.Object)
             {

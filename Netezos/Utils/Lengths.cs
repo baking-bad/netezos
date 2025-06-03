@@ -1,4 +1,5 @@
-﻿#pragma warning disable IDE1006
+﻿#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
+#pragma warning disable IDE1006 // Naming Styles
 namespace Netezos
 {
     static class Lengths
@@ -130,4 +131,5 @@ namespace Netezos
         }
     }
 }
-#pragma warning restore IDE1006
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.

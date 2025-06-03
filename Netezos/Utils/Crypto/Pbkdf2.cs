@@ -66,7 +66,7 @@ namespace Netezos.Utils
             HmacAlgorithm.Initialize();
             HmacAlgorithm.TransformBlock(input, 0, input.Length, input, 0);
             HmacAlgorithm.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
-            Array.Copy(HmacAlgorithm.Hash, output, output.Length);
+            Array.Copy(HmacAlgorithm.Hash!, output, output.Length);
         }
         #endregion
 

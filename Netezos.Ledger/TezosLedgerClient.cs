@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using LedgerWallet;
+﻿using LedgerWallet;
 using LedgerWallet.Transports;
 using NBitcoin;
 using Netezos.Keys;
@@ -24,9 +19,9 @@ namespace Netezos.Ledger
             InsSignUnsafe = 0x05
         }
 
-        public TezosLedgerClient(ILedgerTransport transport, KeyPath keyPath) : base(transport)
+        public TezosLedgerClient(ILedgerTransport transport, KeyPath? keyPath) : base(transport)
         {
-            KeyPath = keyPath == null
+            KeyPath = keyPath is null
                 ? Utils.Serialize(new KeyPath("44'/1729'/0'/0'"))
                 : Utils.Serialize(keyPath);
         }
@@ -69,7 +64,7 @@ namespace Netezos.Ledger
         }
 
         #region static
-        public static async Task<IEnumerable<TezosLedgerClient>> GetHIDLedgersAsync(KeyPath keyPath = null)
+        public static async Task<IEnumerable<TezosLedgerClient>> GetHIDLedgersAsync(KeyPath? keyPath = null)
         {
             return (await HIDLedgerTransport.GetHIDTransportsAsync())
                 .Select(t => new TezosLedgerClient(t, keyPath));

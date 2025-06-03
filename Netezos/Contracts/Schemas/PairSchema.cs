@@ -84,7 +84,7 @@ namespace Netezos.Contracts
             return treeView;
         }
 
-        public override IMicheline MapObject(object obj, bool isValue = false)
+        public override IMicheline MapObject(object? obj, bool isValue = false)
         {
             if (Kind == PairKind.Object)
             {
@@ -101,10 +101,14 @@ namespace Netezos.Contracts
                             throw MapFailedException($"enumerable is over");
                         return MapPair(enumerator.Current);
                     case JsonElement json:
-                        if (!json.TryGetProperty(Name!, out var jsonProp))
+                        if (Name == null)
+                            return MapPair(json);
+                        if (!json.TryGetProperty(Name, out var jsonProp))
                             throw MapFailedException($"no such property");
                         return MapPair(jsonProp);
                     default:
+                        if (Name == null)
+                            return MapPair(obj);
                         var prop = obj?.GetType()?.GetProperty(Name)
                             ?? throw MapFailedException($"no such property");
                         return MapPair(prop.GetValue(obj));
@@ -116,7 +120,7 @@ namespace Netezos.Contracts
             }
         }
 
-        IMicheline MapPair(object value) => new MichelinePrim
+        IMicheline MapPair(object? value) => new MichelinePrim
         {
             Prim = PrimType.Pair,
             Args = new List<IMicheline>(2)

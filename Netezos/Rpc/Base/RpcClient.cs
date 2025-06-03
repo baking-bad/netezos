@@ -10,7 +10,7 @@ namespace Netezos.Rpc
     class RpcClient : IDisposable
     {
         #region static
-        static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
+        static readonly string? Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(2);
 
         static readonly JsonSerializerOptions DefaultOptions = new()
         {
@@ -65,10 +65,11 @@ namespace Netezos.Rpc
 
         public RpcClient(HttpClient client)
         {
-            BaseAddress = client.BaseAddress;
             _HttpClient = client ?? throw new ArgumentNullException(nameof(client));
             _HttpClient.DefaultRequestHeaders.UserAgent.Add(new("Netezos", Version));
-
+            
+            BaseAddress = client.BaseAddress ?? throw new ArgumentException("Provided HttpClient must have BaseAddress specified");
+            RequestTimeout = client.Timeout;
             Expiration = DateTime.MaxValue;
         }
 
@@ -79,7 +80,7 @@ namespace Netezos.Rpc
 
         public async Task<T?> GetJson<T>(string path, CancellationToken cancellationToken = default)
         {
-            using var stream = await HttpClient.GetStreamAsync(path);
+            using var stream = await HttpClient.GetStreamAsync(path, cancellationToken);
             return await JsonSerializer.DeserializeAsync<T>(stream, DefaultOptions, cancellationToken);
         }
 
@@ -94,7 +95,7 @@ namespace Netezos.Rpc
             var response = await HttpClient.PostAsync(path, new JsonContent(content), cancellationToken);
             await EnsureResponseSuccessful(response);
 
-            using var stream = await response.Content.ReadAsStreamAsync();
+            using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
             return await DJson.ParseAsync(stream, DefaultOptions, cancellationToken);
         }
 
@@ -109,7 +110,7 @@ namespace Netezos.Rpc
             var response = await HttpClient.PostAsync(path, new JsonContent(content), cancellationToken);
             await EnsureResponseSuccessful(response);
 
-            using var stream = await response.Content.ReadAsStreamAsync();
+            using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
             return await JsonSerializer.DeserializeAsync<T>(stream, DefaultOptions, cancellationToken);
         }
 
@@ -118,7 +119,7 @@ namespace Netezos.Rpc
             _HttpClient?.Dispose();
         }
 
-        private async Task EnsureResponseSuccessful(HttpResponseMessage response)
+        private static async Task EnsureResponseSuccessful(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {

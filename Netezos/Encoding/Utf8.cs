@@ -6,17 +6,20 @@
         {
             return System.Text.Encoding.UTF8.GetBytes(text);
         }
-        
-        public static bool TryParse(string text, out byte[] bytes)
+
+        public static bool TryParse(string? text, out byte[] bytes)
         {
+            if (text != null)
+            {
+                try
+                {
+                    bytes = System.Text.Encoding.UTF8.GetBytes(text);
+                    return true;
+                }
+                catch { }
+            }
             bytes = null!;
-
-            if (string.IsNullOrEmpty(text))
-                return false;
-            
-            bytes = System.Text.Encoding.UTF8.GetBytes(text);
-
-            return true;
+            return false;
         }
 
         public static string Convert(byte[] bytes)
