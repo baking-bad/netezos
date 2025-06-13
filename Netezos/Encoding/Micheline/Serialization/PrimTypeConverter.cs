@@ -165,6 +165,7 @@ namespace Netezos.Encoding.Serialization
             "BYTES" => PrimType.BYTES,
             "NAT" => PrimType.NAT,
             "Ticket" => PrimType.Ticket,
+            "IS_IMPLICIT_ACCOUNT" => PrimType.IS_IMPLICIT_ACCOUNT,
             var value => throw new FormatException($"Invalid prim: {value}")
         };
 

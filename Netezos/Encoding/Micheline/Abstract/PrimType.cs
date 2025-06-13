@@ -163,6 +163,7 @@ namespace Netezos.Encoding
         TICKET,
         BYTES,
         NAT,
-        Ticket
+        Ticket,
+        IS_IMPLICIT_ACCOUNT
     }
 }
