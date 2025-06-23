@@ -161,12 +161,11 @@ namespace Netezos.Forging
 
         public string ReadBlsig()
         {
-            var proofLength = ReadInt32();
-            if (proofLength != Lengths.BLsig.Decoded)
-            {
-                throw new ArgumentException($"Invalid signature length {proofLength}");
-            }
-            return ReadBase58(proofLength, Prefix.BLsig);
+            var len = ReadInt32();
+            if (len != Lengths.BLsig.Decoded)
+                throw new ArgumentException($"Invalid BLS signature length {len}");
+            
+            return ReadBase58(len, Prefix.BLsig);
         }
 
         public string ReadAddress()

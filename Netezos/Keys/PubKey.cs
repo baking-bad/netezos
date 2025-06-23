@@ -64,20 +64,20 @@ namespace Netezos.Keys
             }
         }
 
-        public bool Verify(byte[] data, byte[] signature)
+        public bool Verify(byte[] message, byte[] signature)
         {
             using (Store.Unlock())
             {
-                return Curve.Verify(data, signature, Store.Data);
+                return Curve.Verify(message, signature, Store.Data);
             }
         }
 
-        public bool Verify(byte[] data, string signature)
+        public bool Verify(byte[] message, string signature)
         {
             using (Store.Unlock())
             {
                 return Base58.TryParse(signature, Curve.SignaturePrefix, out var signatureBytes) 
-                    && Curve.Verify(data, signatureBytes, Store.Data);
+                    && Curve.Verify(message, signatureBytes, Store.Data);
             }
         }
 
