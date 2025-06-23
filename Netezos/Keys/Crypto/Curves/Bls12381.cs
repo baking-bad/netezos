@@ -6,7 +6,8 @@ namespace Netezos.Keys
     class Bls12381 : Curve
     {
         static byte[]? _Dst;
-        static byte[] Dst => _Dst ??= Utf8.Parse("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_AUG_");
+        static byte[] Dst => _Dst ??= Utf8.Parse("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_"); // Pop scheme
+        //static byte[] Dst => _Dst ??= Utf8.Parse("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_AUG_"); // Aug scheme
 
         public override ECKind Kind => ECKind.Bls12381;
 
@@ -48,7 +49,8 @@ namespace Netezos.Keys
 
         public override Signature Sign(byte[] msg, byte[] prvKey)
         {
-            var message = GetPublicKey(prvKey).Concat(msg); // TODO: re-check after migrating from AUG to POP
+            var message = msg; // Pop scheme
+            //var message = GetPublicKey(prvKey).Concat(msg); // Aug scheme
 
             var hash = new long[Blst.blst_p2_sizeof() / sizeof(long)];
             Blst.blst_hash_to_g2(hash, message, (nuint)message.Length, Dst, (nuint)Dst.Length, [], 0);
@@ -80,7 +82,8 @@ namespace Netezos.Keys
             Blst.blst_pairing_init(ctx, true, ref ctx[pairingSize], (nuint)Dst.Length);
             #endregion
 
-            var _msg = pubKey.Concat(msg);
+            var _msg = msg; // Pop scheme
+            //var _msg = pubKey.Concat(msg); // Aug scheme
 
             var _pk = new long[Blst.blst_p1_affine_sizeof() / sizeof(long)];
             res = Blst.blst_p1_uncompress(_pk, pubKey);
