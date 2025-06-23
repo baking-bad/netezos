@@ -213,7 +213,10 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.Counter),
                 ForgeMicheNat(operation.GasLimit),
                 ForgeMicheNat(operation.StorageLimit),
-                ForgePublicKey(operation.PublicKey));
+                ForgePublicKey(operation.PublicKey),
+                operation.Proof == null
+                    ? ForgeBool(false)
+                    : Bytes.Concat(ForgeBool(true), ForgeSignature(operation.Proof)));
         }
 
         static byte[] ForgeRegisterConstant(RegisterConstantContent operation)

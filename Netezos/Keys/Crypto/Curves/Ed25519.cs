@@ -32,12 +32,17 @@ namespace Netezos.Keys
             return RNG.GetBytes(32);
         }
 
-        public override byte[] GetPublicKey(byte[] privateKey)
+        public override byte[] GetPublicKey(byte[] prvKey)
         {
             var publicKey = new byte[32];
-            BcEd25519.GeneratePublicKey(privateKey, 0, publicKey, 0);
+            BcEd25519.GeneratePublicKey(prvKey, 0, publicKey, 0);
 
             return publicKey;
+        }
+
+        public override Signature GetProofOfPossession(byte[] prvKey)
+        {
+            return Sign(GetPublicKey(prvKey), prvKey);
         }
 
         public override Signature Sign(byte[] msg, byte[] prvKey)

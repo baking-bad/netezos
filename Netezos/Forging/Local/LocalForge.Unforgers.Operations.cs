@@ -228,7 +228,8 @@ namespace Netezos.Forging
                 Counter = (int)reader.ReadUBigInt(),
                 GasLimit = (int)reader.ReadUBigInt(),
                 StorageLimit = (int)reader.ReadUBigInt(),
-                PublicKey = reader.ReadPublicKey()
+                PublicKey = reader.ReadPublicKey(),
+                Proof = reader.ReadBool() ? reader.ReadBlsig() : null
             };
         }
 

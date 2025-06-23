@@ -1,0 +1,15 @@
+﻿{
+  "branch": "BKiUgGJ1WitXWoeYFuzK1mCJhFAUg1AnuSAmLzWfKpMc9xWs7u9",
+  "contents": [
+    {
+      "kind": "reveal",
+      "source": "tz4SgbhLRDJxTTTUx4C1j3aUqqHziHa8QdYe",
+      "fee": "1000",
+      "counter": "10623",
+      "gas_limit": "5000",
+      "storage_limit": "0",
+      "public_key": "BLpk1zUpYdF9hmpLK8hhWNCgTiz8iv25aQDANAJ15np3uyetr2JdhyvpkAviDY6cFprVM9KZjexg",
+      "proof": "BLsigAEvSHBkCVscmgNMvf6eKEazCWKU69wCD4Na35ky7j1FJB3BfdyzUEfXdiTvMVissBZMEuDKSexWdKFmoNv4dHuukfJxV24RSttV9QKrbv7uveJggg5eUGmQbYTxBM6XtQt5s8g5HV"
+    }
+  ]
+}

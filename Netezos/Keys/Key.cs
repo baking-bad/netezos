@@ -67,11 +67,19 @@ namespace Netezos.Keys
             }
         }
 
-        public Signature Sign(byte[] bytes)
+        public Signature GetProofOfPossession()
         {
             using (Store.Unlock())
             {
-                return Curve.Sign(bytes, Store.Data);
+                return Curve.GetProofOfPossession(Store.Data);
+            }
+        }
+
+        public Signature Sign(byte[] message)
+        {
+            using (Store.Unlock())
+            {
+                return Curve.Sign(message, Store.Data);
             }
         }
 
@@ -96,7 +104,7 @@ namespace Netezos.Keys
             }
         }
 
-        public bool Verify(byte[] data, byte[] signature) => PubKey.Verify(data, signature);
+        public bool Verify(byte[] message, byte[] signature) => PubKey.Verify(message, signature);
 
         public bool Verify(string message, string signature) => PubKey.Verify(message, signature);
 

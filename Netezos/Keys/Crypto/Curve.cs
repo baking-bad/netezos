@@ -14,11 +14,13 @@
 
         public abstract byte[] GeneratePrivateKey();
 
-        public abstract byte[] GetPublicKey(byte[] privateKey);
+        public abstract byte[] GetPublicKey(byte[] prvKey);
 
-        public abstract Signature Sign(byte[] bytes, byte[] prvKey);
+        public abstract Signature GetProofOfPossession(byte[] prvKey);
 
-        public abstract bool Verify(byte[] bytes, byte[] signature, byte[] pubKey);
+        public abstract Signature Sign(byte[] msg, byte[] prvKey);
+
+        public abstract bool Verify(byte[] msg, byte[] sig, byte[] pubKey);
 
         #region static
         public static Curve FromKind(ECKind kind) => kind switch

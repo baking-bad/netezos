@@ -40,14 +40,19 @@ namespace Netezos.Keys
             return res;
         }
 
-        public override byte[] GetPublicKey(byte[] privateKey)
+        public override byte[] GetPublicKey(byte[] prvKey)
         {
             var curve = SecNamedCurves.GetByName("secp256r1");
             var parameters = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H, curve.GetSeed());
-            var key = new ECPrivateKeyParameters(new BigInteger(1, privateKey), parameters);
+            var key = new ECPrivateKeyParameters(new BigInteger(1, prvKey), parameters);
 
             var q = key.Parameters.G.Multiply(key.D);
             return q.GetEncoded(true);
+        }
+
+        public override Signature GetProofOfPossession(byte[] prvKey)
+        {
+            return Sign(GetPublicKey(prvKey), prvKey);
         }
 
         public override Signature Sign(byte[] msg, byte[] prvKey)
