@@ -40,14 +40,6 @@ namespace Netezos.Forging.Models
                 "increase_paid_storage" => JsonSerializer.Deserialize<IncreasePaidStorageContent>(ref reader, options),
                 "failing_noop" => JsonSerializer.Deserialize<FailingNoopContent>(ref reader, options),
                 "transfer_ticket" => JsonSerializer.Deserialize<TransferTicketContent>(ref reader, options),
-                "tx_rollup_commit" => JsonSerializer.Deserialize<TxRollupCommitContent>(ref reader, options),
-                "tx_rollup_dispatch_tickets" => JsonSerializer.Deserialize<TxRollupDispatchTicketsContent>(ref reader, options),
-                "tx_rollup_finalize_commitment" => JsonSerializer.Deserialize<TxRollupFinalizeCommitmentContent>(ref reader, options),
-                "tx_rollup_origination" => JsonSerializer.Deserialize<TxRollupOriginationContent>(ref reader, options),
-                "tx_rollup_rejection" => JsonSerializer.Deserialize<TxRollupRejectionContent>(ref reader, options),
-                "tx_rollup_remove_commitment" => JsonSerializer.Deserialize<TxRollupRemoveCommitmentContent>(ref reader, options),
-                "tx_rollup_return_bond" => JsonSerializer.Deserialize<TxRollupReturnBondContent>(ref reader, options),
-                "tx_rollup_submit_batch" => JsonSerializer.Deserialize<TxRollupSubmitBatchContent>(ref reader, options),
                 "update_consensus_key" => JsonSerializer.Deserialize<UpdateConsensusKeyContent>(ref reader, options),
                 "smart_rollup_add_messages" => JsonSerializer.Deserialize<SrAddMessagesContent>(ref reader, options),
                 "smart_rollup_cement" => JsonSerializer.Deserialize<SrCementContent>(ref reader, options),
@@ -59,12 +51,6 @@ namespace Netezos.Forging.Models
                 "smart_rollup_refute" => JsonSerializer.Deserialize<SrRefuteContent>(ref reader, options),
                 "dal_publish_commitment" => JsonSerializer.Deserialize<DalPublishCommitmentContent>(ref reader, options),
                 "dal_entrapment_evidence" => JsonSerializer.Deserialize<DalEntrapmentEvidenceContent>(ref reader, options),
-                #region deprecated
-                "endorsement" => JsonSerializer.Deserialize<AttestationContent>(ref reader, options),
-                "preendorsement" => JsonSerializer.Deserialize<PreattestationContent>(ref reader, options),
-                "double_endorsement_evidence" => JsonSerializer.Deserialize<DoubleAttestationContent>(ref reader, options),
-                "double_preendorsement_evidence" => JsonSerializer.Deserialize<DoublePreattestationContent>(ref reader, options),
-                #endregion
                 _ => throw new JsonException("Invalid operation kind"),
             };
         }
