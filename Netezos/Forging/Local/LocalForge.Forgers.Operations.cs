@@ -30,14 +30,6 @@ namespace Netezos.Forging
                 IncreasePaidStorageContent op => ForgeIncreasePaidStorage(op),
                 FailingNoopContent op => ForgeFailingNoop(op),
                 TransferTicketContent op => ForgeTransferTicket(op),
-                TxRollupCommitContent op => ForgeTxRollupCommit(op),
-                TxRollupDispatchTicketsContent op => ForgeTxRollupDispatchTickets(op),
-                TxRollupFinalizeCommitmentContent op => ForgeTxRollupFinalizeCommitment(op),
-                TxRollupOriginationContent op => ForgeTxRollupOrigination(op),
-                TxRollupRejectionContent op => ForgeTxRollupRejection(op),
-                TxRollupRemoveCommitmentContent op => ForgeTxRollupRemoveCommitment(op),
-                TxRollupReturnBondContent op => ForgeTxRollupReturnBond(op),
-                TxRollupSubmitBatchContent op => ForgeTxRollupSubmitBatch(op),
                 UpdateConsensusKeyContent op => ForgeUpdateConsensusKey(op),
                 SrAddMessagesContent op => ForgeSrAddMessages(op),
                 SrCementContent op => ForgeSrCement(op),
@@ -280,118 +272,6 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.TicketAmount),
                 ForgeAddress(operation.Destination),
                 ForgeString(operation.Entrypoint));
-        }
-
-        static byte[] ForgeTxRollupCommit(TxRollupCommitContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.TxRollupCommit),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                Base58.Parse(operation.Rollup, Prefix.txr1),
-                ForgeInt32(operation.Commitment.Level),
-                ForgeArray([..operation.Commitment.Messages
-                    .Select(x => Base58.Parse(x, Prefix.txmr))
-                    .SelectMany(x => x)]),
-                operation.Commitment.Predecessor is string str
-                    ? new byte[] { 1 }.Concat(Base58.Parse(str, Prefix.txc))
-                    : [0],
-                Base58.Parse(operation.Commitment.InboxMerkleRoot, Prefix.txi));
-        }
-
-        static byte[] ForgeTxRollupDispatchTickets(TxRollupDispatchTicketsContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.TxRollupDispatchTickets),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                Base58.Parse(operation.Rollup, Prefix.txr1),
-                ForgeInt32(operation.Level),
-                Base58.Parse(operation.ContextHash, Prefix.Co),
-                ForgeInt32(operation.MessageIndex),
-                ForgeArray([..operation.MessageResultPath
-                    .Select(x => Base58.Parse(x, Prefix.txM))
-                    .SelectMany(x => x)]),
-                ForgeArray([..operation.TicketsInfo.SelectMany(ti => Bytes.Concat(
-                    ForgeArray(ForgeMicheline(ti.Contents)),
-                    ForgeArray(ForgeMicheline(ti.Type)),
-                    ForgeAddress(ti.Ticketer),
-                    ForgeVarLong(ti.Amount),
-                    ForgeTzAddress(ti.Claimer)))]));
-        }
-
-        static byte[] ForgeTxRollupFinalizeCommitment(TxRollupFinalizeCommitmentContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.TxRollupFinalizeCommitment),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                Base58.Parse(operation.Rollup, Prefix.txr1));
-        }
-
-        static byte[] ForgeTxRollupOrigination(TxRollupOriginationContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.TxRollupOrigination),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit));
-        }
-
-        static byte[] ForgeTxRollupRejection(TxRollupRejectionContent operation)
-        {
-            throw new NotImplementedException("Due to lack of examples no one knows how to handle it");
-        }
-
-        static byte[] ForgeTxRollupRemoveCommitment(TxRollupRemoveCommitmentContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.TxRollupRemoveCommitment),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                Base58.Parse(operation.Rollup, Prefix.txr1));
-        }
-
-        static byte[] ForgeTxRollupReturnBond(TxRollupReturnBondContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.TxRollupReturnBond),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                Base58.Parse(operation.Rollup, Prefix.txr1));
-        }
-
-        static byte[] ForgeTxRollupSubmitBatch(TxRollupSubmitBatchContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.TxRollupSubmitBatch),
-                ForgeTzAddress(operation.Source),
-                ForgeMicheNat(operation.Fee),
-                ForgeMicheNat(operation.Counter),
-                ForgeMicheNat(operation.GasLimit),
-                ForgeMicheNat(operation.StorageLimit),
-                Base58.Parse(operation.Rollup, Prefix.txr1),
-                ForgeArray(operation.Content),
-                operation.BurnLimit is long value
-                    ? Bytes.Concat(ForgeBool(true), ForgeMicheNat(value))
-                    : ForgeBool(false));
         }
 
         static byte[] ForgeUpdateConsensusKey(UpdateConsensusKeyContent operation)
