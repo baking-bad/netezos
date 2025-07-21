@@ -8,6 +8,7 @@ namespace Netezos.Forging.Models
         public override string Kind => "failing_noop";
 
         [JsonPropertyName("arbitrary")]
-        public string Message { get; set; } = null!;
+        [JsonConverter(typeof(HexConverter))]
+        public required byte[] Message { get; set; }
     }
 }

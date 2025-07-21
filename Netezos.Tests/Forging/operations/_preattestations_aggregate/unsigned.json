@@ -1,0 +1,19 @@
+﻿{
+  "branch": "BKoLvj4KKvpYZogKgjARRu6jzcJMqTm8NRUe47dNHKguTYUCmnx",
+  "contents": [
+    {
+      "kind": "preattestations_aggregate",
+      "consensus_content": {
+        "level": 109772,
+        "round": 0,
+        "block_payload_hash": "vh1jC8jsjWdJVETCNHiUdk9oto8aE88zGSz8aJCcF7PGxWVv3TgH"
+      },
+      "committee": [
+        0,
+        3,
+        4,
+        10
+      ]
+    }
+  ]
+}

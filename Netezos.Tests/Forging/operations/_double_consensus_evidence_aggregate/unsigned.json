@@ -1,0 +1,79 @@
+﻿{
+  "branch": "BKoLvj4KKvpYZogKgjARRu6jzcJMqTm8NRUe47dNHKguTYUCmnx",
+  "contents": [
+    {
+      "kind": "double_consensus_operation_evidence",
+      "slot": 83,
+      "op1": {
+        "branch": "BLEVomdmPi274XtWAu6uVB5S1Dchba5xmJ8YfS7kxaprBPWWMLL",
+        "operations": {
+          "kind": "attestations_aggregate",
+          "consensus_content": {
+            "level": 213813,
+            "round": 0,
+            "block_payload_hash": "vh2qS2nkg5ucV8gqpWWh2jRZGf2mEQz414L1wS6ycZ7K5FZeZgrE"
+          },
+          "committee": [
+            {
+              "slot": 0,
+              "dal_attestation": "1"
+            },
+            {
+              "slot": 3,
+              "dal_attestation": "1"
+            },
+            {
+              "slot": 5,
+              "dal_attestation": "1"
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 684
+            },
+            {
+              "slot": 5942
+            }
+          ]
+        },
+        "signature": "sigrqfEUAcALXvU7cCeiTGzQrRmL9PE7w3pUvA5i8C5V53aUpqkQqvzic5NEwbR7zNG8ndFJTmJusS6CRLk2iBUNYamnLc4V"
+      },
+      "op2": {
+        "branch": "BLEVomdmPi274XtWAu6uVB5S1Dchba5xmJ8YfS7kxaprBPWWMLL",
+        "operations": {
+          "kind": "attestations_aggregate",
+          "consensus_content": {
+            "level": 213813,
+            "round": 0,
+            "block_payload_hash": "vh2rzWxkdUALsamUHcNFi8kybDM7R26xgyFyv1WVZaowW2VWJ2ot"
+          },
+          "committee": [
+            {
+              "slot": 0,
+              "dal_attestation": "1"
+            },
+            {
+              "slot": 3,
+              "dal_attestation": "1"
+            },
+            {
+              "slot": 5,
+              "dal_attestation": "1"
+            },
+            {
+              "slot": 8
+            },
+            {
+              "slot": 684
+            },
+            {
+              "slot": 5942
+            }
+          ]
+        },
+        "signature": "sigkUwi8AKuL9ViT56ktaEBxF7Zb4JsSSqgVewYdMjjQm9S7oY7j4aZZSWX47i9xHsMkTeauPzD47mK5XJn6Q3wzeUeaWZoq"
+      }
+    }
+  ]
+}

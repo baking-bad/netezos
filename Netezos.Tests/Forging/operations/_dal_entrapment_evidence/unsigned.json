@@ -15,6 +15,7 @@
         },
         "signature": "sigrqfEUAcALXvU7cCeiTGzQrRmL9PE7w3pUvA5i8C5V53aUpqkQqvzic5NEwbR7zNG8ndFJTmJusS6CRLk2iBUNYamnLc4V"
       },
+      "consensus_slot": 83,
       "slot_index": 123,
       "shard_with_proof": {
         "shard": [

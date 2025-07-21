@@ -1,0 +1,15 @@
+﻿{
+  "branch": "BLqznfya9HUtND5bc9u4TvD1XYoL1uVkitutj7iJnEMzjuRqnKY",
+  "contents": [
+    {
+      "kind": "update_companion_key",
+      "source": "tz1LmrwzCKUDibk7xaGC5RxvTbmUbCAtCA4a",
+      "fee": "559",
+      "counter": "86",
+      "gas_limit": "1845",
+      "storage_limit": "0",
+      "pk": "BLpk1ooTSoab3eJbJHDX2Bh6Gsqf6zzuRz8zqs67TQhyzgo6w6wCJBBJFnZxU9J699oDTF9orFGo",
+      "proof": "BLsigBVTgPvbLmocXkrncvhHsTDVzmCoJ5kER1c9VYR3USe2xy13DEdkoMhWp219g2igEnyV6dxNQDmts7GzgJjNYiqWYzaaPSEMuGc18B4Z2wSQNsSAnQJkmzccqrpLnnV5bxRr7C9MuG"
+    }
+  ]
+}

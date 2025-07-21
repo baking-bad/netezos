@@ -3,13 +3,13 @@
   "contents": [
     {
       "kind": "update_consensus_key",
-      "source": "tz1Xf8zdT3DbAX9cHw3c3CXh79rc4nK4gCe8",
-      "fee": "272",
-      "counter": "106",
-      "gas_limit": "1100",
+      "source": "tz1NNT9EERmcKekRq2vdv6e8TL3WQpY8AXSF",
+      "fee": "456",
+      "counter": "3",
+      "gas_limit": "1772",
       "storage_limit": "0",
-      "pk": "sppk7aYY6kGrvKrYiSoQAcen8FubgiCrCHHkq1CEQCe5n4Xh3tXTcUd",
-      "proof": "BLsigASWx9GkMxUpQMGvCrHrhkcsTZ5V9pmDrXSHvkiurrX6Bf5RQcMPbDMDgqWj4GokRekK42FyG76ccMUyFYWcJEmnCd8s6Kek9gtUGkXjPkLEhu8dbFFn5LWyQ4FoMCK3QrxXn6M6LD"
+      "pk": "BLpk1vQ65AuhzksXPqG56YZsJb1UCJSDpFtygDuB9HdAZH4c2xrtFYLA7jUxLAtgZ6epUrRuDhYq",
+      "proof": "BLsigB94ftmNtoDSbVwTcq2nWw2PqyowoYv21LG9WLjHrQ5WPwyoJcUBm2eJw1EcKApsyfdkgRhEgQwHYitohWApAP62cFwL8S8YWyuohcd1fRS3PTsgq3LTnkFnP2cASDyquFLyxPubV7"
     }
   ]
 }

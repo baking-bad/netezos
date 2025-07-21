@@ -16,6 +16,11 @@ namespace Netezos.Forging
             return value ? [255] : [0];
         }
 
+        public static byte[] ForgeUInt16(ushort value)
+        {
+            return [(byte)(value >>> 8), (byte)(value & 0xFF)];
+        }
+
         public static byte[] ForgeInt32(int value, int len = 4)
         {
             var res = new byte[len];

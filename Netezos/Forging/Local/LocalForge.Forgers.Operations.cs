@@ -11,13 +11,15 @@ namespace Netezos.Forging
             return content switch
             {
                 AttestationContent op => ForgeAttestation(op),
+                AttestationWithDalContent op => ForgeAttestationWithDal(op),
                 PreattestationContent op => ForgePreattestation(op),
+                AttestationsAggregateContent op => ForgeAttestationsAggregate(op),
+                PreattestationsAggregateContent op => ForgePreattestationsAggregate(op),
                 BallotContent op => ForgeBallot(op),
                 ProposalsContent op => ForgeProposals(op),
                 ActivationContent op => ForgeActivation(op),
                 DoubleBakingContent op => ForgeDoubleBaking(op),
-                DoubleAttestationContent op => ForgeDoubleAttestation(op),
-                DoublePreattestationContent op => ForgeDoublePreattestation(op),
+                DoubleConsensusContent op => ForgeDoubleConsensus(op),
                 SeedNonceRevelationContent op => ForgeSeedNonceRevelation(op),
                 VdfRevelationContent op => ForgeVdfRevelation(op),
                 DrainDelegateContent op => ForgeDrainDelegate(op),
@@ -30,6 +32,7 @@ namespace Netezos.Forging
                 IncreasePaidStorageContent op => ForgeIncreasePaidStorage(op),
                 FailingNoopContent op => ForgeFailingNoop(op),
                 TransferTicketContent op => ForgeTransferTicket(op),
+                UpdateCompanionKeyContent op => ForgeUpdateCompanionKey(op),
                 UpdateConsensusKeyContent op => ForgeUpdateConsensusKey(op),
                 SrAddMessagesContent op => ForgeSrAddMessages(op),
                 SrCementContent op => ForgeSrCement(op),
@@ -38,7 +41,7 @@ namespace Netezos.Forging
                 SrPublishContent op => ForgeSrPublish(op),
                 SrRecoverBondContent op => ForgeSrRecoverBond(op),
                 SrRefuteContent op => ForgeSrRefute(op),
-                SrTmieoutContent op => ForgeSrTimeout(op),
+                SrTimeoutContent op => ForgeSrTimeout(op),
                 DalPublishCommitmentContent op => ForgeDalPublishCommitment(op),
                 DalEntrapmentEvidenceContent op => ForgeDalEntrapmentEvidence(op),
                 _ => throw new ArgumentException($"Invalid operation content kind {content.Kind}")
@@ -47,35 +50,58 @@ namespace Netezos.Forging
 
         static byte[] ForgeAttestation(AttestationContent operation)
         {
-            if (operation.DalAttestation == null)
-            {
-                return Bytes.Concat(
-                    ForgeTag(OperationTag.Attestation),
-                    ForgeInt32(operation.Slot, 2),
-                    ForgeInt32(operation.Level),
-                    ForgeInt32(operation.Round),
-                    Base58.Parse(operation.PayloadHash, Prefix.vh));
-            }
-            else
-            {
-                return Bytes.Concat(
-                    ForgeTag(OperationTag.AttestationWithDal),
-                    ForgeInt32(operation.Slot, 2),
-                    ForgeInt32(operation.Level),
-                    ForgeInt32(operation.Round),
-                    Base58.Parse(operation.PayloadHash, Prefix.vh),
-                    ForgeMicheInt(operation.DalAttestation.Value));
-            }
+            return Bytes.Concat(
+                ForgeTag(OperationTag.Attestation),
+                ForgeUInt16(operation.Slot),
+                ForgeInt32(operation.Level),
+                ForgeInt32(operation.Round),
+                Base58.Parse(operation.PayloadHash, Prefix.vh));
+        }
+
+        static byte[] ForgeAttestationWithDal(AttestationWithDalContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.AttestationWithDal),
+                ForgeUInt16(operation.Slot),
+                ForgeInt32(operation.Level),
+                ForgeInt32(operation.Round),
+                Base58.Parse(operation.PayloadHash, Prefix.vh),
+                ForgeMicheInt(operation.DalAttestation));
         }
 
         static byte[] ForgePreattestation(PreattestationContent operation)
         {
             return Bytes.Concat(
                 ForgeTag(OperationTag.Preattestation),
-                ForgeInt32(operation.Slot, 2),
+                ForgeUInt16(operation.Slot),
                 ForgeInt32(operation.Level),
                 ForgeInt32(operation.Round),
                 Base58.Parse(operation.PayloadHash, Prefix.vh));
+        }
+
+        static byte[] ForgeAttestationsAggregate(AttestationsAggregateContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.AttestationsAggregate),
+                ForgeInt32(operation.ConsensusContent.Level),
+                ForgeInt32(operation.ConsensusContent.Round),
+                Base58.Parse(operation.ConsensusContent.PayloadHash, Prefix.vh),
+                ForgeArray([..operation.Committee
+                    .SelectMany(x => Bytes.Concat(
+                        ForgeUInt16(x.Slot),
+                        x.DalAttestation == null
+                           ? ForgeBool(false)
+                           : Bytes.Concat(ForgeBool(true), ForgeMicheInt(x.DalAttestation.Value))))]));
+        }
+
+        static byte[] ForgePreattestationsAggregate(PreattestationsAggregateContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.PreattestationsAggregate),
+                ForgeInt32(operation.ConsensusContent.Level),
+                ForgeInt32(operation.ConsensusContent.Round),
+                Base58.Parse(operation.ConsensusContent.PayloadHash, Prefix.vh),
+                ForgeArray([..operation.Committee.SelectMany(ForgeUInt16)]));
         }
 
         static byte[] ForgeBallot(BallotContent operation)
@@ -115,20 +141,13 @@ namespace Netezos.Forging
                 ForgeArray(ForgeBlockHeader(operation.BlockHeader2)));
         }
 
-        static byte[] ForgeDoubleAttestation(DoubleAttestationContent operation)
+        static byte[] ForgeDoubleConsensus(DoubleConsensusContent operation)
         {
             return Bytes.Concat(
-                ForgeTag(OperationTag.DoubleAttestation),
-                ForgeArray(ForgeInlineAttestation(operation.Op1)),
-                ForgeArray(ForgeInlineAttestation(operation.Op2)));
-        }
-
-        static byte[] ForgeDoublePreattestation(DoublePreattestationContent operation)
-        {
-            return Bytes.Concat(
-                ForgeTag(OperationTag.DoublePreattestation),
-                ForgeArray(ForgeInlinePreattestation(operation.Op1)),
-                ForgeArray(ForgeInlinePreattestation(operation.Op2)));
+                ForgeTag(OperationTag.DoubleConsensus),
+                ForgeUInt16(operation.Slot),
+                ForgeArray(ForgeInlineConsensusOperation(operation.Op1)),
+                ForgeArray(ForgeInlineConsensusOperation(operation.Op2)));
         }
 
         static byte[] ForgeSeedNonceRevelation(SeedNonceRevelationContent operation)
@@ -254,7 +273,7 @@ namespace Netezos.Forging
         {
             return Bytes.Concat(
                 ForgeTag(OperationTag.FailingNoop),
-                ForgeString(operation.Message));
+                ForgeArray(operation.Message));
         }
 
         static byte[] ForgeTransferTicket(TransferTicketContent operation)
@@ -272,6 +291,21 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.TicketAmount),
                 ForgeAddress(operation.Destination),
                 ForgeString(operation.Entrypoint));
+        }
+
+        static byte[] ForgeUpdateCompanionKey(UpdateCompanionKeyContent operation)
+        {
+            return Bytes.Concat(
+                ForgeTag(OperationTag.UpdateCompanionKey),
+                ForgeTzAddress(operation.Source),
+                ForgeMicheNat(operation.Fee),
+                ForgeMicheNat(operation.Counter),
+                ForgeMicheNat(operation.GasLimit),
+                ForgeMicheNat(operation.StorageLimit),
+                ForgePublicKey(operation.PublicKey),
+                operation.Proof is string proof
+                    ? Bytes.Concat(ForgeBool(true), ForgeSignature(proof))
+                    : ForgeBool(false));
         }
 
         static byte[] ForgeUpdateConsensusKey(UpdateConsensusKeyContent operation)
@@ -313,7 +347,7 @@ namespace Netezos.Forging
                 ForgeRollup(operation.Rollup));
         }
 
-        static byte[] ForgeSrTimeout(SrTmieoutContent operation)
+        static byte[] ForgeSrTimeout(SrTimeoutContent operation)
         {
             return Bytes.Concat(
                 ForgeTag(OperationTag.SrTimeout),
@@ -352,8 +386,10 @@ namespace Netezos.Forging
                 ForgeMicheNat(operation.StorageLimit),
                 [(byte)operation.PvmKind],
                 ForgeArray(operation.Kernel),
-                ForgeArray(operation.OriginationProof),
-                ForgeArray(ForgeMicheline(operation.ParametersType)));
+                ForgeArray(ForgeMicheline(operation.ParametersType)),
+                operation.Whitelist?.Count > 0
+                    ? Bytes.Concat(ForgeBool(true), ForgeArray([..operation.Whitelist.SelectMany(ForgeTzAddress)]))
+                    : ForgeBool(false));
         }
 
         static byte[] ForgeSrPublish(SrPublishContent operation)
@@ -414,7 +450,8 @@ namespace Netezos.Forging
         {
             return Bytes.Concat(
                 ForgeTag(OperationTag.DalEntrapmentEvidence),
-                ForgeArray(ForgeInlineAttestation(operation.Attestation)),
+                ForgeArray(ForgeInlineConsensusOperation(operation.Attestation)),
+                ForgeUInt16(operation.ConsensusSlot),
                 ForgeInt32(operation.SlotIndex, 1),
                 ForgeInt32(operation.ShardWithProof.Shard.Id),
                 ForgeArray([..operation.ShardWithProof.Shard.Hashes.Select(x => Hex.Parse(x)).SelectMany(x => x)]),
@@ -442,19 +479,11 @@ namespace Netezos.Forging
                 Base58.Parse(header.Signature, 3));
         }
 
-        static byte[] ForgeInlineAttestation(InlineAttestation op)
+        static byte[] ForgeInlineConsensusOperation(InlineConsensusOperation op)
         {
             return Bytes.Concat(
                 Base58.Parse(op.Branch, 2),
-                ForgeAttestation(op.Operations),
-                Base58.Parse(op.Signature, 3));
-        }
-
-        static byte[] ForgeInlinePreattestation(InlinePreattestation op)
-        {
-            return Bytes.Concat(
-                Base58.Parse(op.Branch, 2),
-                ForgePreattestation(op.Operations),
+                ForgeOperation(op.Operations),
                 Base58.Parse(op.Signature, 3));
         }
 
@@ -485,14 +514,6 @@ namespace Netezos.Forging
             return Bytes.Concat(
                 ForgeArray(ForgeMicheline(script.Code)),
                 ForgeArray(ForgeMicheline(script.Storage)));
-        }
-
-        static byte[] ForgeVarLong(long value)
-        {
-            if (value <= byte.MaxValue) return [0, (byte)value];
-            if (value <= ushort.MaxValue) return new byte[] { 1 }.Concat(ForgeInt64(value, 2));
-            if (value <= int.MaxValue) return new byte[] { 2 }.Concat(ForgeInt64(value, 4));
-            return new byte[] { 3 }.Concat(ForgeInt64(value, 8));
         }
 
         static byte[] ForgeCommitment(Commitment commitment)
