@@ -54,7 +54,12 @@
         /// Returns the number of blocks consecutively baked at round zero.
         /// </summary>
         public RpcObject ConsecutiveRoundZero => new(this, "consecutive_round_zero");
-        
+
+        /// <summary>
+        /// Returns the total baking power for the current cycle.
+        /// </summary>
+        public RpcObject TotalBakingPower => new(this, "total_baking_power");
+
         internal HelpersQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }
 }

@@ -441,6 +441,16 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextDelegateCompanionKey()
+        {
+            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].CompanionKey;
+            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/companion_key/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
         public async Task TestContextDelegateConsensusKey()
         {
             var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].ConsensusKey;

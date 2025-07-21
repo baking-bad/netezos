@@ -1,8 +1,8 @@
 ﻿{
-  "node": "https://rpc.tzkt.io/rionet/",
+  "node": "https://rpc.tzkt.io/seoulnet/",
   "testContract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
   "testEntrypoint": "default",
-  "testDelegate": "tz1Zt8QQ9aBznYNk5LUBjtME9DuExomw9YRs",
+  "testDelegate": "tz1NNT9EERmcKekRq2vdv6e8TL3WQpY8AXSF",
   "testInactive": "tz1PEhbjTyVvjQ2Zz8g4bYU2XPTbhvG8JMFh",
   "testSmartRollup": "sr1Fv3c7Sypd5ixnf3NPZnL2W8V49RSbQWQq",
   "keyHash": "exprvBfbrdZVCjkmcsJRpioTnZdos3RLMZUDTK2AyFURY423xuWX4N",
