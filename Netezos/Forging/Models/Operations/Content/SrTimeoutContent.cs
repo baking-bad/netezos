@@ -2,24 +2,24 @@ using System.Text.Json.Serialization;
 
 namespace Netezos.Forging.Models
 {
-    public class SrTmieoutContent : ManagerOperationContent
+    public class SrTimeoutContent : ManagerOperationContent
     {
         [JsonPropertyName("kind")]
         public override string Kind => "smart_rollup_timeout";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; } = null!;
+        public required string Rollup { get; set; }
 
         [JsonPropertyName("stakers")]
-        public StakersPair Stakers { get; set; } = null!;
+        public required StakersPair Stakers { get; set; }
     }
 
     public class StakersPair
     {
         [JsonPropertyName("alice")]
-        public string Alice { get; set; } = null!;
+        public required string Alice { get; set; }
 
         [JsonPropertyName("bob")]
-        public string Bob { get; set; } = null!;
+        public required string Bob { get; set; }
     }
 }

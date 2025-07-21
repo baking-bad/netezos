@@ -14,22 +14,22 @@ namespace Netezos.Forging.Models
         public byte SlotIndex { get; set; }
         
         [JsonPropertyName("shard_with_proof")]
-        public ShardWithProof ShardWithProof { get; set; } = null!;
+        public required ShardWithProof ShardWithProof { get; set; }
     }
     
     public class ShardWithProof
     {
         [JsonPropertyName("shard")]
         [JsonConverter(typeof(ShardDataConverter))]
-        public ShardData Shard { get; set; } = null!;
+        public required ShardData Shard { get; set; }
 
         [JsonPropertyName("proof")]
-        public string Proof { get; set; } = null!;
+        public required string Proof { get; set; }
     }
     
     public class ShardData
     {
         public int Id { get; set; }
-        public List<string> Hashes { get; set; } = null!;
+        public required List<string> Hashes { get; set; }
     }
 }

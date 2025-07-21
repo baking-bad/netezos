@@ -8,19 +8,19 @@ namespace Netezos.Forging.Models
         public override string Kind => "smart_rollup_publish";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; } = null!;
+        public required string Rollup { get; set; }
 
         [JsonPropertyName("commitment")]
-        public Commitment Commitment { get; set; } = null!;
+        public required Commitment Commitment { get; set; }
     }
 
     public class Commitment
     {
         [JsonPropertyName("predecessor")]
-        public string Predecessor { get; set; } = null!;
+        public required string Predecessor { get; set; }
 
         [JsonPropertyName("compressed_state")]
-        public string State { get; set; } = null!;
+        public required string State { get; set; }
 
         [JsonPropertyName("inbox_level")]
         public int InboxLevel { get; set; }

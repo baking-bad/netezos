@@ -9,6 +9,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "register_global_constant";
 
         [JsonPropertyName("value")]
-        public IMicheline Value { get; set; } = null!;
+        public required IMicheline Value { get; set; }
     }
 }

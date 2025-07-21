@@ -13,6 +13,6 @@ namespace Netezos.Forging.Models
         public BigInteger Amount { get; set; }
 
         [JsonPropertyName("destination")]
-        public string Destination { get; set; } = null!;
+        public required string Destination { get; set; }
     }
 }

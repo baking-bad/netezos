@@ -8,9 +8,9 @@ namespace Netezos.Forging.Models
         public override string Kind => "smart_rollup_recover_bond";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; } = null!;
+        public required string Rollup { get; set; }
 
         [JsonPropertyName("staker")]
-        public string Staker { get; set; } = null!;
+        public required string Staker { get; set; }
     }
 }

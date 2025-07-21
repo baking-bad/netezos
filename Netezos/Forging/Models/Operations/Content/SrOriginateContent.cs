@@ -13,7 +13,7 @@ namespace Netezos.Forging.Models
 
         [JsonConverter(typeof(HexConverter))]
         [JsonPropertyName("kernel")]
-        public byte[] Kernel { get; set; } = null!;
+        public required byte[] Kernel { get; set; }
 
         [JsonPropertyName("origination_proof")]
         [JsonConverter(typeof(HexConverter))]
@@ -26,7 +26,7 @@ namespace Netezos.Forging.Models
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum PvmKind
     {
-        Arith = 0,
-        Wasm_2_0_0 = 1
+        arith = 0,
+        wasm_2_0_0 = 1
     }
 }

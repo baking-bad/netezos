@@ -8,9 +8,9 @@ namespace Netezos.Forging.Models
         public override string Kind => "activate_account";
 
         [JsonPropertyName("pkh")]
-        public string Address { get; set; } = null!;
+        public required string Address { get; set; }
 
         [JsonPropertyName("secret")]
-        public string Secret { get; set; } = null!;
+        public required string Secret { get; set; }
     }
 }

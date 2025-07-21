@@ -8,13 +8,13 @@ namespace Netezos.Forging.Models
         public override string Kind => "smart_rollup_refute";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; } = null!;
+        public required string Rollup { get; set; }
 
         [JsonPropertyName("opponent")]
-        public string Opponent { get; set; } = null!;
+        public required string Opponent { get; set; }
 
         [JsonPropertyName("refutation")]
-        public RefutationMove Refutation { get; set; } = null!;
+        public required RefutationMove Refutation { get; set; }
     }
 
     [JsonConverter(typeof(RefutationMoveConverter))]
@@ -30,10 +30,10 @@ namespace Netezos.Forging.Models
         public override string RefutationKind => "start";
 
         [JsonPropertyName("player_commitment_hash")]
-        public string PlayerCommitment { get; set; } = null!;
+        public required string PlayerCommitment { get; set; }
 
         [JsonPropertyName("opponent_commitment_hash")]
-        public string OpponentCommitment { get; set; } = null!;
+        public required string OpponentCommitment { get; set; }
     }
 
     public class RefutationDissection : RefutationMove
@@ -46,7 +46,7 @@ namespace Netezos.Forging.Models
         public long Choice { get; set; }
 
         [JsonPropertyName("step")]
-        public List<DissectionStep> Steps { get; set; } = null!;
+        public required List<DissectionStep> Steps { get; set; }
     }
 
     public class DissectionStep
@@ -69,14 +69,14 @@ namespace Netezos.Forging.Models
         public long Choice { get; set; }
 
         [JsonPropertyName("step")]
-        public ProofStep Step { get; set; } = null!;
+        public required ProofStep Step { get; set; }
     }
 
     public class ProofStep
     {
         [JsonPropertyName("pvm_step")]
         [JsonConverter(typeof(HexConverter))]
-        public byte[] PvmStep { get; set; } = null!;
+        public required byte[] PvmStep { get; set; }
 
         [JsonPropertyName("input_proof")]
         public InputProof? InputProof { get; set; }
@@ -109,7 +109,7 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("serialized_proof")]
         [JsonConverter(typeof(HexConverter))]
-        public byte[] Proof { get; set; } = null!;
+        public required byte[] Proof { get; set; }
     }
 
     public class RevealProof : InputProof
@@ -118,7 +118,7 @@ namespace Netezos.Forging.Models
         public override string InputProofKind => "reveal_proof";
 
         [JsonPropertyName("reveal_proof")]
-        public RevealProofData Proof { get; set; } = null!;
+        public required RevealProofData Proof { get; set; }
     }
 
     [JsonConverter(typeof(RevealProofDataConverter))]
@@ -141,7 +141,7 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("raw_data")]
         [JsonConverter(typeof(HexConverter))]
-        public byte[] RawData { get; set; } = null!;
+        public required byte[] RawData { get; set; }
     }
 
     public class DalPageProof : RevealProofData
@@ -150,11 +150,11 @@ namespace Netezos.Forging.Models
         public override string RevealProofDataKind => "dal_page_proof";
 
         [JsonPropertyName("dal_page_id")]
-        public DalPageId DalPageId { get; set; } = null!;
+        public required DalPageId DalPageId { get; set; }
 
         [JsonPropertyName("dal_proof")]
         [JsonConverter(typeof(HexConverter))]
-        public byte[] Proof { get; set; } = null!;
+        public required byte[] Proof { get; set; }
     }
 
     public class DalPageId

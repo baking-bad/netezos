@@ -8,13 +8,13 @@ namespace Netezos.Forging.Models
         public override string Kind => "smart_rollup_execute_outbox_message";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; } = null!;
+        public required string Rollup { get; set; }
 
         [JsonPropertyName("cemented_commitment")]
-        public string Commitment { get; set; } = null!;
+        public required string Commitment { get; set; }
 
         [JsonPropertyName("output_proof")]
         [JsonConverter(typeof(HexConverter))]
-        public byte[] OutputProof { get; set; } = null!;
+        public required byte[] OutputProof { get; set; }
     }
 }
