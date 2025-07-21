@@ -173,5 +173,15 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
+
+        [Fact]
+        public async Task TestHelperTotalBakingPower()
+        {
+            var query = Rpc.Blocks.Head.Helpers.TotalBakingPower;
+            Assert.Equal("chains/main/blocks/head/helpers/total_baking_power", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
     }
 }

@@ -24,6 +24,11 @@
         public RpcObject Balance => new(this, "balance/");
 
         /// <summary>
+        /// The active companion key for a given delegate.
+        /// </summary>
+        public RpcObject CompanionKey => new(this, "companion_key/");
+
+        /// <summary>
         /// The active consensus key for a given delegate and the pending consensus keys.
         /// </summary>
         public RpcObject ConsensusKey => new(this, "consensus_key/");
