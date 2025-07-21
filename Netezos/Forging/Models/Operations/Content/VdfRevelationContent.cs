@@ -8,6 +8,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "vdf_revelation";
 
         [JsonPropertyName("solution")]
-        public List<string> Solution { get; set; } = null!;
+        public required List<string> Solution { get; set; }
     }
 }

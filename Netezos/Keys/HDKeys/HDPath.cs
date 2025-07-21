@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Netezos.Keys
 {
@@ -86,9 +87,9 @@ namespace Netezos.Keys
         /// <param name="path">HD key path string, formatted like m/44'/1729'/0/0'</param>
         /// <param name="res">Successfully parsed HDPath</param>
         /// <returns>True if the HDPath is parsed successfully, otherwise false</returns>
-        public static bool TryParse(string? path, out HDPath res)
+        public static bool TryParse(string? path, [NotNullWhen(true)] out HDPath? res)
         {
-            res = null!;
+            res = null;
             if (path == null) return false;
 
             path = path.TrimStart('m').Trim('/');

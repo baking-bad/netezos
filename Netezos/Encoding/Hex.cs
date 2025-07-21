@@ -1,4 +1,6 @@
-﻿namespace Netezos.Encoding
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Netezos.Encoding
 {
     public static class Hex
     {
@@ -80,9 +82,9 @@
             return bytes;
         }
 
-        public static bool TryParse(string? hex, out byte[] bytes)
+        public static bool TryParse(string? hex, [NotNullWhen(true)] out byte[]? bytes)
         {
-            bytes = null!;
+            bytes = null;
 
             if (hex == null)
                 return false;

@@ -9,6 +9,6 @@ namespace Netezos.Forging.Models
 
         [JsonPropertyName("message")]
         [JsonConverter(typeof(HexListConverter))]
-        public List<byte[]> Messages { get; set; } = null!;
+        public required List<byte[]> Messages { get; set; }
     }
 }

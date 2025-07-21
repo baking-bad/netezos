@@ -16,15 +16,15 @@ namespace Netezos.Forging.Models
         public string? Delegate { get; set; }
 
         [JsonPropertyName("script")]
-        public Script Script { get; set; } = null!;
+        public required Script Script { get; set; }
     }
 
     public class Script
     {
         [JsonPropertyName("code")]
-        public MichelineArray Code { get; set; } = null!;
+        public required MichelineArray Code { get; set; }
 
         [JsonPropertyName("storage")]
-        public IMicheline Storage { get; set; } = null!;
+        public required IMicheline Storage { get; set; }
     }
 }

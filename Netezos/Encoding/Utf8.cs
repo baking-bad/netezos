@@ -1,4 +1,6 @@
-﻿namespace Netezos.Encoding
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Netezos.Encoding
 {
     public static class Utf8
     {
@@ -7,7 +9,7 @@
             return System.Text.Encoding.UTF8.GetBytes(text);
         }
 
-        public static bool TryParse(string? text, out byte[] bytes)
+        public static bool TryParse(string? text, [NotNullWhen(true)] out byte[]? bytes)
         {
             if (text != null)
             {
@@ -21,7 +23,7 @@
                     // we don't care
                 }
             }
-            bytes = null!;
+            bytes = null;
             return false;
         }
 

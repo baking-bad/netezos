@@ -1,4 +1,6 @@
-﻿namespace Netezos.Encoding
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Netezos.Encoding
 {
     public static class Base64
     {
@@ -7,7 +9,7 @@
             return System.Convert.FromBase64String(base64);
         }
 
-        public static bool TryParse(string? base64, out byte[] bytes)
+        public static bool TryParse(string? base64, [NotNullWhen(true)] out byte[]? bytes)
         {
             if (base64 != null)
             {
@@ -21,7 +23,7 @@
                     // we don't care
                 }
             }
-            bytes = null!;
+            bytes = null;
             return false;
         }
 

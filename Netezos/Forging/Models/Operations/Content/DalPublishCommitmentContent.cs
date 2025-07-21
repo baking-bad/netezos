@@ -8,7 +8,7 @@ namespace Netezos.Forging.Models
         public override string Kind => "dal_publish_commitment";
 
         [JsonPropertyName("slot_header")]
-        public DalSlotHeader SlotHeader { get; set; } = null!;
+        public required DalSlotHeader SlotHeader { get; set; }
     }
 
     public class DalSlotHeader
@@ -17,10 +17,10 @@ namespace Netezos.Forging.Models
         public byte SlotIndex { get; set; }
 
         [JsonPropertyName("commitment")]
-        public string Commitment { get; set; } = null!;
+        public required string Commitment { get; set; }
 
         [JsonPropertyName("commitment_proof")]
         [JsonConverter(typeof(HexConverter))]
-        public byte[] CommitmentProof { get; set; } = null!;
+        public required byte[] CommitmentProof { get; set; }
     }
 }

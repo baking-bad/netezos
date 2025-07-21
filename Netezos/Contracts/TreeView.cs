@@ -4,9 +4,9 @@ namespace Netezos.Contracts
 {
     public class TreeView
     {
-        public string Name { get; set; } = null!;
-        public Schema Schema { get; set; } = null!;
-        public IMicheline Value { get; set; } = null!;
+        public required string Name { get; set; }
+        public required Schema Schema { get; set; }
+        public required IMicheline Value { get; set; }
 
         public TreeView? Parent { get; set; }
         public List<TreeView>? Children { get; set; }
@@ -35,7 +35,7 @@ namespace Netezos.Contracts
                         yield return item;
         }
 
-        public IEnumerable<TreeView> Leafs()
+        public IEnumerable<TreeView> Leaves()
         {
             if (Children == null)
             {
@@ -44,7 +44,7 @@ namespace Netezos.Contracts
             else
             {
                 foreach (var child in Children)
-                    foreach (var item in child.Leafs())
+                    foreach (var item in child.Leaves())
                         yield return item;
             }
         }

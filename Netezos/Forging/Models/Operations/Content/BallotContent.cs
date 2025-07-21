@@ -8,13 +8,13 @@ namespace Netezos.Forging.Models
         public override string Kind => "ballot";
         
         [JsonPropertyName("source")]
-        public string Source { get; set; } = null!;
+        public required string Source { get; set; }
 
         [JsonPropertyName("period")]
         public int Period { get; set; }
 
         [JsonPropertyName("proposal")]
-        public string Proposal { get; set; } = null!;
+        public required string Proposal { get; set; }
 
         [JsonPropertyName("ballot")]
         public Ballot Ballot { get; set; }
@@ -23,8 +23,8 @@ namespace Netezos.Forging.Models
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Ballot
     {
-        Yay  = 0,
-        Nay  = 1,
-        Pass = 2
+        yay  = 0,
+        nay  = 1,
+        pass = 2
     }
 }

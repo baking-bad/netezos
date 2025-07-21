@@ -13,7 +13,7 @@ namespace Netezos.Forging.Models
         public long Amount { get; set; }
 
         [JsonPropertyName("destination")]
-        public string Destination { get; set; } = null!;
+        public required string Destination { get; set; }
 
         [JsonPropertyName("parameters")]
         public Parameters? Parameters { get; set; }
@@ -22,9 +22,9 @@ namespace Netezos.Forging.Models
     public class Parameters
     {
         [JsonPropertyName("entrypoint")]
-        public string Entrypoint { get; set; } = null!;
+        public required string Entrypoint { get; set; }
 
         [JsonPropertyName("value")]
-        public IMicheline Value { get; set; } = null!;
+        public required IMicheline Value { get; set; }
     }
 }

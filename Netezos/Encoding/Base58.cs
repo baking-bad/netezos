@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Security.Cryptography;
 
 namespace Netezos.Encoding
@@ -46,9 +47,9 @@ namespace Netezos.Encoding
             return data;
         }
 
-        static bool TryVerifyAndRemoveCheckSum(byte[] bytes, out byte[] res)
+        static bool TryVerifyAndRemoveCheckSum(byte[] bytes, [NotNullWhen(true)] out byte[]? res)
         {
-            res = null!;
+            res = null;
             if (bytes.Length < 4)
                 return false;
             
@@ -105,10 +106,10 @@ namespace Netezos.Encoding
             return new byte[cnt].Concat(bytes[0] == 0 ? bytes.GetBytes(1, bytes.Length - 1) : bytes);
         }
 
-        static bool TryDecodePlain(string base58, out byte[] res)
+        static bool TryDecodePlain(string base58, [NotNullWhen(true)] out byte[]? res)
         {
             BigInteger bigInt = 0;
-            res = null!;
+            res = null;
 
             for (int i = 0; i < base58.Length; ++i)
             {
@@ -145,9 +146,9 @@ namespace Netezos.Encoding
             return bytes.GetBytes(prefixLength, bytes.Length - prefixLength);
         }
 
-        public static bool TryParse(string? base58, out byte[] bytes)
+        public static bool TryParse(string? base58, [NotNullWhen(true)] out byte[]? bytes)
         {
-            bytes = null!;
+            bytes = null;
 
             if (string.IsNullOrEmpty(base58))
                 return false;
@@ -155,9 +156,9 @@ namespace Netezos.Encoding
             return TryDecodePlain(base58, out var data) && TryVerifyAndRemoveCheckSum(data, out bytes);
         }
         
-        public static bool TryParse(string? base58, byte[] prefix, out byte[] bytes)
+        public static bool TryParse(string? base58, byte[] prefix, [NotNullWhen(true)] out byte[]? bytes)
         {
-            bytes = null!;
+            bytes = null;
             
             if (!TryParse(base58, out var data))
                 return false;

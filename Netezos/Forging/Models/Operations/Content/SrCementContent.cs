@@ -8,6 +8,6 @@ namespace Netezos.Forging.Models
         public override string Kind => "smart_rollup_cement";
 
         [JsonPropertyName("rollup")]
-        public string Rollup { get; set; } = null!;
+        public required string Rollup { get; set; }
     }
 }
