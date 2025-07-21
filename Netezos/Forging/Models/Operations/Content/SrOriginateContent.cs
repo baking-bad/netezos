@@ -15,12 +15,11 @@ namespace Netezos.Forging.Models
         [JsonPropertyName("kernel")]
         public required byte[] Kernel { get; set; }
 
-        [JsonPropertyName("origination_proof")]
-        [JsonConverter(typeof(HexConverter))]
-        public byte[] OriginationProof { get; set; } = null!;
-
         [JsonPropertyName("parameters_ty")]
-        public IMicheline ParametersType { get; set; } = null!;
+        public required IMicheline ParametersType { get; set; }
+
+        [JsonPropertyName("whitelist")]
+        public List<string>? Whitelist { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

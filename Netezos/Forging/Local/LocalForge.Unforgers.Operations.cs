@@ -12,12 +12,13 @@ namespace Netezos.Forging
                 OperationTag.Attestation => UnforgeAttestation(reader),
                 OperationTag.AttestationWithDal => UnforgeAttestationWithDal(reader),
                 OperationTag.Preattestation => UnforgePreattestation(reader),
+                OperationTag.AttestationsAggregate => UnforgeAttestationsAggregate(reader),
+                OperationTag.PreattestationsAggregate => UnforgePreattestationsAggregate(reader),
                 OperationTag.Ballot => UnforgeBallot(reader),
                 OperationTag.Proposals => UnforgeProposals(reader),
                 OperationTag.Activation => UnforgeActivation(reader),
                 OperationTag.DoubleBaking => UnforgeDoubleBaking(reader),
-                OperationTag.DoubleAttestation => UnforgeDoubleAttestation(reader),
-                OperationTag.DoublePreattestation => UnforgeDoublePreattestation(reader),
+                OperationTag.DoubleConsensus => UnforgeDoubleConsensus(reader),
                 OperationTag.SeedNonceRevelation => UnforgeSeedNonceRevelation(reader),
                 OperationTag.VdfRevelation => UnforgeVdfRevelation(reader),
                 OperationTag.DrainDelegate => UnforgeDrainDelegate(reader),
@@ -30,6 +31,7 @@ namespace Netezos.Forging
                 OperationTag.IncreasePaidStorage => UnforgeIncreasePaidStorage(reader),
                 OperationTag.FailingNoop => UnforgeFailingNoop(reader),
                 OperationTag.TransferTicket => UnforgeTransferTicket(reader),
+                OperationTag.UpdateCompanionKey => UnforgeUpdateCompanionKey(reader),
                 OperationTag.UpdateConsensusKey => UnforgeUpdateConsensusKey(reader),
                 OperationTag.SrAddMessages => UnforgeSrAddMessages(reader),
                 OperationTag.SrCement => UnforgeSrCement(reader),
@@ -49,19 +51,18 @@ namespace Netezos.Forging
         {
             return new AttestationContent
             {
-                Slot = reader.ReadInt32(2),
+                Slot = reader.ReadUInt16(),
                 Level = reader.ReadInt32(),
                 Round = reader.ReadInt32(),
-                PayloadHash = reader.ReadBase58(32, Prefix.vh),
-                DalAttestation = null
+                PayloadHash = reader.ReadBase58(32, Prefix.vh)
             };
         }
 
-        static AttestationContent UnforgeAttestationWithDal(ForgedReader reader)
+        static AttestationWithDalContent UnforgeAttestationWithDal(ForgedReader reader)
         {
-            return new AttestationContent
+            return new AttestationWithDalContent
             {
-                Slot = reader.ReadInt32(2),
+                Slot = reader.ReadUInt16(),
                 Level = reader.ReadInt32(),
                 Round = reader.ReadInt32(),
                 PayloadHash = reader.ReadBase58(32, Prefix.vh),
@@ -73,10 +74,42 @@ namespace Netezos.Forging
         {
             return new PreattestationContent
             {
-                Slot = reader.ReadInt32(2),
+                Slot = reader.ReadUInt16(),
                 Level = reader.ReadInt32(),
                 Round = reader.ReadInt32(),
                 PayloadHash = reader.ReadBase58(32, Prefix.vh)
+            };
+        }
+
+        static AttestationsAggregateContent UnforgeAttestationsAggregate(ForgedReader reader)
+        {
+            return new AttestationsAggregateContent
+            {
+                ConsensusContent = new ConsensusContent
+                {
+                    Level = reader.ReadInt32(),
+                    Round = reader.ReadInt32(),
+                    PayloadHash = reader.ReadBase58(32, Prefix.vh)
+                },
+                Committee = [.. reader.ReadEnumerable(r => new CommitteeMember
+                {
+                    Slot = r.ReadUInt16(),
+                    DalAttestation = r.ReadBool() ? r.ReadMichelineInt().Value : null
+                })]
+            };
+        }
+
+        static PreattestationsAggregateContent UnforgePreattestationsAggregate(ForgedReader reader)
+        {
+            return new PreattestationsAggregateContent
+            {
+                ConsensusContent = new ConsensusContent
+                {
+                    Level = reader.ReadInt32(),
+                    Round = reader.ReadInt32(),
+                    PayloadHash = reader.ReadBase58(32, Prefix.vh)
+                },
+                Committee = [..reader.ReadEnumerable(r => r.ReadUInt16())]
             };
         }
 
@@ -119,21 +152,13 @@ namespace Netezos.Forging
             };
         }
 
-        static DoubleAttestationContent UnforgeDoubleAttestation(ForgedReader reader)
+        static DoubleConsensusContent UnforgeDoubleConsensus(ForgedReader reader)
         {
-            return new DoubleAttestationContent
+            return new DoubleConsensusContent
             {
-                Op1 = reader.ReadEnumerableSingle(UnforgeInlineAttestation),
-                Op2 = reader.ReadEnumerableSingle(UnforgeInlineAttestation)
-            };
-        }
-
-        static DoublePreattestationContent UnforgeDoublePreattestation(ForgedReader reader)
-        {
-            return new DoublePreattestationContent
-            {
-                Op1 = reader.ReadEnumerableSingle(UnforgeInlinePreattestation),
-                Op2 = reader.ReadEnumerableSingle(UnforgeInlinePreattestation)
+                Slot = reader.ReadUInt16(),
+                Op1 = reader.ReadEnumerableSingle(UnforgeInlineConsensusOperation),
+                Op2 = reader.ReadEnumerableSingle(UnforgeInlineConsensusOperation)
             };
         }
 
@@ -269,7 +294,7 @@ namespace Netezos.Forging
         {
             return new FailingNoopContent
             {
-                Message = Utf8.Convert(reader.ReadArray())
+                Message = reader.ReadArray()
             };
         }
 
@@ -288,6 +313,20 @@ namespace Netezos.Forging
                 TicketAmount = reader.ReadUBigInt(),
                 Destination = reader.ReadAddress(),
                 Entrypoint = reader.ReadString()
+            };
+        }
+
+        static UpdateCompanionKeyContent UnforgeUpdateCompanionKey(ForgedReader reader)
+        {
+            return new UpdateCompanionKeyContent
+            {
+                Source = reader.ReadTzAddress(),
+                Fee = (long)reader.ReadUBigInt(),
+                Counter = (int)reader.ReadUBigInt(),
+                GasLimit = (int)reader.ReadUBigInt(),
+                StorageLimit = (int)reader.ReadUBigInt(),
+                PublicKey = reader.ReadPublicKey(),
+                Proof = reader.ReadBool() ? reader.ReadBlsig() : null
             };
         }
 
@@ -332,9 +371,9 @@ namespace Netezos.Forging
             };
         }
 
-        static SrTmieoutContent UnforgeSrTimeout(ForgedReader reader)
+        static SrTimeoutContent UnforgeSrTimeout(ForgedReader reader)
         {
-            return new SrTmieoutContent
+            return new SrTimeoutContent
             {
                 Source = reader.ReadTzAddress(),
                 Fee = (long)reader.ReadUBigInt(),
@@ -376,8 +415,10 @@ namespace Netezos.Forging
                 StorageLimit = (int)reader.ReadUBigInt(),
                 PvmKind = (PvmKind)reader.ReadByte(),
                 Kernel = reader.ReadArray(),
-                OriginationProof = reader.ReadArray(),
-                ParametersType = reader.ReadEnumerableSingle(UnforgeMicheline)
+                ParametersType = reader.ReadEnumerableSingle(UnforgeMicheline),
+                Whitelist = reader.ReadBool()
+                    ? [..reader.ReadEnumerable(r => r.ReadTzAddress())]
+                    : null
             };
         }
 
@@ -446,7 +487,8 @@ namespace Netezos.Forging
         {
             return new DalEntrapmentEvidenceContent
             {
-                Attestation = reader.ReadEnumerableSingle(UnforgeInlineAttestation),
+                Attestation = reader.ReadEnumerableSingle(UnforgeInlineConsensusOperation),
+                ConsensusSlot = reader.ReadUInt16(),
                 SlotIndex = reader.ReadByte(),
                 ShardWithProof = new ShardWithProof()
                 {
@@ -482,22 +524,12 @@ namespace Netezos.Forging
             };
         }
 
-        static InlineAttestation UnforgeInlineAttestation(ForgedReader reader)
+        static InlineConsensusOperation UnforgeInlineConsensusOperation(ForgedReader reader)
         {
-            return new InlineAttestation
+            return new InlineConsensusOperation
             {
                 Branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
-                Operations = (AttestationContent)UnforgeOperation(reader),
-                Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig)
-            };
-        }
-
-        static InlinePreattestation UnforgeInlinePreattestation(ForgedReader reader)
-        {
-            return new InlinePreattestation
-            {
-                Branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
-                Operations = (PreattestationContent)UnforgeOperation(reader),
+                Operations = (ConsensusOperationContent)UnforgeOperation(reader),
                 Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig)
             };
         }

@@ -318,6 +318,12 @@ namespace Netezos.Forging
             return Reader.ReadBytes(count);
         }
 
+        public ushort ReadUInt16()
+        {
+            var bytes = ReadBytes(2);
+            return (ushort)((bytes[0] << 8) | bytes[1]);
+        }
+
         public int ReadInt32(int len = 4)
         {
             if (len < 1 || 4 < len)

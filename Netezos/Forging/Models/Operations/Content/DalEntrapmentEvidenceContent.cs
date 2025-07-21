@@ -8,7 +8,10 @@ namespace Netezos.Forging.Models
         public override string Kind => "dal_entrapment_evidence";
 
         [JsonPropertyName("attestation")]
-        public InlineAttestation Attestation { get; set; } = null!;
+        public required InlineConsensusOperation Attestation { get; set; }
+
+        [JsonPropertyName("consensus_slot")]
+        public ushort ConsensusSlot { get; set; }
 
         [JsonPropertyName("slot_index")]
         public byte SlotIndex { get; set; }

@@ -2,7 +2,8 @@
   "branch": "BKoLvj4KKvpYZogKgjARRu6jzcJMqTm8NRUe47dNHKguTYUCmnx",
   "contents": [
     {
-      "kind": "double_attestation_evidence",
+      "kind": "double_consensus_operation_evidence",
+      "slot": 83,
       "op1": {
         "branch": "BLEVomdmPi274XtWAu6uVB5S1Dchba5xmJ8YfS7kxaprBPWWMLL",
         "operations": {
