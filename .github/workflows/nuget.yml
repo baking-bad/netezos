@@ -2,7 +2,7 @@ name: Publish on NuGet
 
 on:
   push:
-    branches: [ master ]
+    branches: [ test/nuget-publish ]
 
 jobs:
   publish:
@@ -12,13 +12,19 @@ jobs:
       name: nuget
       url: https://github.com
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
+          
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
 
       - name: Build and publish package if version changed
         uses: alirezanet/publish-nuget@v3.1.0
         with:
           PROJECT_FILE_PATH: Netezos/Netezos.csproj
           PACKAGE_NAME: Netezos
-          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+#          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+          NUGET_KEY: "DUMMY_KEY"
