@@ -17,7 +17,7 @@ jobs:
           token: ${{ secrets.PAT }}
 
       - name: Build and publish package if version changed
-        uses: alirezanet/publish-nuget@v3.0.3
+        uses: alirezanet/publish-nuget@v3.1.0
         with:
           PROJECT_FILE_PATH: Netezos/Netezos.csproj
           PACKAGE_NAME: Netezos
