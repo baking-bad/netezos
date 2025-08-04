@@ -2,7 +2,7 @@ name: Publish on NuGet
 
 on:
   push:
-    branches: [ test/nuget-publish ]
+    branches: [ master ]
 
 jobs:
   publish:
@@ -26,5 +26,4 @@ jobs:
         with:
           PROJECT_FILE_PATH: Netezos/Netezos.csproj
           PACKAGE_NAME: Netezos
-#          NUGET_KEY: ${{ secrets.NUGET_KEY }}
-          NUGET_KEY: "DUMMY_KEY"
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
