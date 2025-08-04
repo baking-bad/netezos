@@ -3,20 +3,18 @@
 <a href="https://www.nuget.org/packages/Netezos/"><img src="https://img.shields.io/nuget/dt/Netezos.svg" /></a>
 [![License: MIT](https://img.shields.io/github/license/baking-bad/netezos.svg)](https://opensource.org/licenses/MIT)
 
-
-> The first version of the library has been moved to the `v1` branch for historical purposes.
-
 Netezos is a cross-platform Tezos SDK for .NET developers, simplifying the access and interaction with the [Tezos](https://tezos.com/) blockchain.
 
-The following features have been implemented so far:
+The following functionality is available:
 
-| Namespace | Description | Status |
-| --------- | ----------- | ------ |
-| Netezos.Contracts | Interaction with Tezos smart contracts | Ready to use. Dynamic wrapper: in progress... |
-| Netezos.Forge| Forging (encoding) operation bytes | Ready to use |
-| Netezos.Keys| Working with keys, HD keys, signing, verifying signature, etc. | Ready to use |
-| Netezos.Ledger| Interaction with Tezos Ledger App | Ready to use (separate package) |
-| Netezos.Rpc | Tezos RPC wrapper | Ready to use |
+| Namespace | Description |
+| --------- | ----------- |
+| Netezos.Contracts | Tools for interaction with Tezos smart contracts, enabling building/parsing Micheline types from/to human-readable types. |
+| Netezos.Encoding | Encoding tools for working with Tezos Micheline, Base58, Hex, etc.. |
+| Netezos.Forge| Forging tools for encoding operations into binary format accepting by Tezos nodes. |
+| Netezos.Keys| Tools for working with simple and HD keys. Supported curves: ed25519 (tz1), secp256k1 (tz2), nistp256 (tz3), bls12381 (tz4). |
+| Netezos.Ledger| Tools for interaction with Tezos Ledger App. This is sort of a legacy package, that is no longer maintained, but still working. |
+| Netezos.Rpc | Tezos RPC wrapper |
 
 For full documentation and API Reference, please refer to the [Netezos website](https://netezos.dev/)
 
@@ -28,7 +26,7 @@ Do not hesitate to use [GitHub issue tracker](https://github.com/baking-bad/nete
 
 ### Support
 
-Feel free to join our [Discord server](https://discord.gg/aG8XKuwsQd), [Telegram chat](https://t.me/baking_bad_chat), or find us in [Tezos Dev Slack](https://tezos-dev.slack.com/archives/CV5NX7F2L).
+Feel free to join our [Discord server](https://discord.gg/aG8XKuwsQd) or [Telegram chat](https://t.me/baking_bad_chat).
 We will be glad to hear any feedback and feature requests and will try to help you with general use cases of the Netezos library.
 
 ## Getting started
@@ -48,14 +46,14 @@ var key = new Key();
 // or use existing one
 var key = Key.FromBase58("edsk4ZkGeBwDyFVjZLL2neV5FUeWNN4NJntFNWmWyEBNbRwa2u3jh1");
 
-// use this address to receive some tez
+// use the address to receive some tez from faucet
 var address = key.PubKey.Address; // tz1SauKgPRsTSuQRWzJA262QR8cKdw1d9pyK
 ````
 
 ### Get some data from RPC
 
 ````cs
-using var rpc = new TezosRpc("https://mainnet-tezos.giganode.io/");
+using var rpc = new TezosRpc("https://rpc.tzkt.io/mainnet/");
 
 // get a head block
 var head = await rpc.Blocks.Head.Hash.GetAsync<string>();
@@ -69,7 +67,7 @@ var counter = await rpc.Blocks.Head.Context.Contracts[address].Counter.GetAsync<
 Since our address has just been created, we need to reveal its public key before sending any operation, so that everyone can validate our signatures.
 Therefore, we need to send actually two operations: a reveal and then a transaction.
 
-Netezos allows you to pack multiple operations into a group and forge/send it as a single batch.
+Netezos allows you to pack multiple operations into a group and forge/send it as an atomic batch.
 
 ````cs
 var content = new ManagerOperationContent[]
@@ -79,7 +77,7 @@ var content = new ManagerOperationContent[]
         Source = address,
         Counter = ++counter,
         PublicKey = key.PubKey.GetBase58(),
-        GasLimit = 1500,
+        GasLimit = 3500,
         Fee = 1000 // 0.001 tez
     },
     new TransactionContent
@@ -88,7 +86,7 @@ var content = new ManagerOperationContent[]
         Counter = ++counter,
         Amount = 1000000, // 1 tez
         Destination = "tz1KhnTgwoRRALBX6vRHRnydDGSBFsWtcJxc",
-        GasLimit = 1500,
+        GasLimit = 2500,
         Fee = 1000 // 0.001 tez
     }
 };
