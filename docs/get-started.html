@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  
+      <title>Get started | Netezos</title>
+      <meta name="description" content="Short guide on how to get started with Netezos, Tezos SDK for .NET developers.">
+      <meta name="keywords" content="netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk,">
+  
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@TezosBakingBad">
+      <meta name="twitter:creator" content="@TezosBakingBad">
+      <meta name="twitter:title" content="Get started | Netezos">
+      <meta name="twitter:description" content="Short guide on how to get started with Netezos, Tezos SDK for .NET developers.">
+      <meta name="twitter:image" content="https://netezos.dev/logo.png">
+      <meta name="twitter:image:alt" content="Netezos">
+  
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://netezos.dev">
+      <meta property="og:title" content="Get started | Netezos">
+      <meta property="og:description" content="Short guide on how to get started with Netezos, Tezos SDK for .NET developers.">
+      <meta property="og:image" content="https://netezos.dev/logo.png">
+      <meta property="og:image:secure_url" content="https://netezos.dev/logo.png">
+      <meta property="og:image:alt" content="Netezos">
+      <meta property="og:image:type" content="image/png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+  
+      <link rel="canonical" href="https://netezos.dev/docs/get-started.html">
+  
+      <link rel="stylesheet" href="/styles/docfx.vendor.css">
+      <link rel="stylesheet" href="/styles/docfx.css">
+      <link rel="stylesheet" href="/styles/main.css">
+  
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+      <meta property="docfx:rel" content="../">
+      <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="get-started">Get started</h1>
+
+<p>Let's consider the most common use case - sending a transaction.</p>
+<h2 id="installation">Installation</h2>
+<p><code>PM&gt; Install-Package Netezos</code></p>
+<h2 id="create-private-key">Create private key</h2>
+<pre><code class="lang-cs">// generate new key
+var key = new Key();
+
+// or use existing one
+var key = Key.FromBase58(&quot;edsk4ZkGeBwDyFVjZLL2neV5FUeWNN4NJntFNWmWyEBNbRwa2u3jh1&quot;);
+
+// use this address to receive some tez
+var address = key.PubKey.Address; // tz1SauKgPRsTSuQRWzJA262QR8cKdw1d9pyK
+</code></pre>
+<h2 id="get-some-data-from-rpc">Get some data from RPC</h2>
+<pre><code class="lang-cs">using var rpc = new TezosRpc(&quot;https://mainnet-tezos.giganode.io/&quot;);
+
+// get a head block
+var head = await rpc.Blocks.Head.Hash.GetAsync&lt;string&gt;();
+
+// get account's counter
+var counter = await rpc.Blocks.Head.Context.Contracts[address].Counter.GetAsync&lt;int&gt;();
+</code></pre>
+<h2 id="forge-an-operation">Forge an operation</h2>
+<p>Since our address has just been created, we need to reveal its public key before sending any operation, so that everyone can validate our signatures.
+Therefore, we need to send actually two operations: a reveal and then a transaction.</p>
+<p>Netezos allows you to pack multiple operations into a group and forge/send it as a single batch.</p>
+<pre><code class="lang-cs">var content = new ManagerOperationContent[]
+{
+    new RevealContent
+    {
+        Source = address,
+        Counter = ++counter,
+        PublicKey = key.PubKey.GetBase58(),
+        GasLimit = 1500,
+        Fee = 1000 // 0.001 tez
+    },
+    new TransactionContent
+    {
+        Source = address,
+        Counter = ++counter,
+        Amount = 1000000, // 1 tez
+        Destination = &quot;tz1KhnTgwoRRALBX6vRHRnydDGSBFsWtcJxc&quot;,
+        GasLimit = 1500,
+        Fee = 1000 // 0.001 tez
+    }
+};
+
+var bytes = await new LocalForge().ForgeOperationGroupAsync(head, content);
+</code></pre>
+<h2 id="sign-and-send">Sign and send</h2>
+<pre><code class="lang-cs">// sign the operation bytes
+byte[] signature = key.SignOperation(bytes);
+
+// inject the operation and get its id (operation hash)
+var result = await rpc.Inject.Operation.PostAsync(bytes.Concat(signature));
+</code></pre>
+<p>That is it. We have successfully injected our first operation into the Tezos blockchain.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/baking-bad/netezos/blob/master/docs/docs/get-started.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright © Baking Bad
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  
+      <title>Tezos RPC | Netezos</title>
+      <meta name="description" content="Short guide on how to interact with Tezos nodes via RPC using Netezos, Tezos SDK for .NET developers.">
+      <meta name="keywords" content="netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk,">
+  
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@TezosBakingBad">
+      <meta name="twitter:creator" content="@TezosBakingBad">
+      <meta name="twitter:title" content="Tezos RPC | Netezos">
+      <meta name="twitter:description" content="Short guide on how to interact with Tezos nodes via RPC using Netezos, Tezos SDK for .NET developers.">
+      <meta name="twitter:image" content="https://netezos.dev/logo.png">
+      <meta name="twitter:image:alt" content="Netezos">
+  
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://netezos.dev">
+      <meta property="og:title" content="Tezos RPC | Netezos">
+      <meta property="og:description" content="Short guide on how to interact with Tezos nodes via RPC using Netezos, Tezos SDK for .NET developers.">
+      <meta property="og:image" content="https://netezos.dev/logo.png">
+      <meta property="og:image:secure_url" content="https://netezos.dev/logo.png">
+      <meta property="og:image:alt" content="Netezos">
+      <meta property="og:image:type" content="image/png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+  
+      <link rel="canonical" href="https://netezos.dev/docs/tezos-rpc.html">
+  
+      <link rel="stylesheet" href="/styles/docfx.vendor.css">
+      <link rel="stylesheet" href="/styles/docfx.css">
+      <link rel="stylesheet" href="/styles/main.css">
+  
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+      <meta property="docfx:rel" content="../">
+      <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="tezos-rpc">Tezos RPC</h1>
+
+<p><a href="../api/Netezos.Rpc.html">Netezos.Rpc</a> provides an access to the Tezos node via RPC API.
+There is the main class <a href="../api/Netezos.Rpc.TezosRpc.html">TezosRpc</a> which you need to build queries, supported by the Tezos RPC API.</p>
+<h2 id="basic-usage">Basic usage</h2>
+<p>Let's create an instance of the <code>TezosRpc</code> class, build a simple query and execute it by calling <code>GetAsync()</code> method.</p>
+<pre><code class="lang-cs">using (var rpc = new TezosRpc(&quot;https://mainnet-tezos.giganode.io/&quot;))
+{
+    // get the head block
+    var head = await rpc.Blocks.Head.GetAsync();
+
+    // get only the hash of the head block
+    var hash = await rpc.Blocks.Head.Hash.GetAsync();
+}
+</code></pre>
+<p>Note that the real HTTP request is sent only when you call <code>GetAsync()</code>.
+Until then, you work with just the query object, which can also be used to get subqueries.</p>
+<h2 id="accessing-blocks">Accessing blocks</h2>
+<p>You can access any block in two ways: by forward or backward indexing.</p>
+<pre><code class="lang-cs">// gets the block with level = 1
+var firstBlock = rpc.Blocks[1]; // forward indexing
+
+// gets the last block (e.g. with level = 400000)
+var lastBlock = rpc.Blocks.Head;
+
+// gets the block with level = 400000 - 10 = 399990
+var tenthFromLast = rpc.Blocks[-10]; // backward indexing
+</code></pre>
+<h2 id="rpclist-and-rpcdictionary">RpcList and RpcDictionary</h2>
+<p>The results of many RPC API methods can be interpreted as arrays or dictionaries that allow you to get many objects or only one by specifying a key or an index.</p>
+<pre><code class="lang-cs">var operations = rpc.Blocks.Head.Operations;
+var firstEndorsement = rpc.Blocks.Head.Operations[0][0];
+
+var contracts = rpc.Blocks.Head.Context.Contracts;
+var myContract = rpc.Blocks.Head.Context.Contracts[&quot;KT1...&quot;];
+</code></pre>
+<h2 id="query-parameters">Query parameters</h2>
+<p>If some RPC API method has query parameters, the corresponding query object have the overridden <code>GetAsync()</code> methods.</p>
+<pre><code class="lang-cs">var activeDelegates = await rpc.Blocks.Head.Context.Delegates.GetAsync(DelegateStatus.Active);
+
+var bakingRights = await rpc.Blocks.Head.Helpers.BakingRights.GetAsync(maxPriority: 1, all: true);
+</code></pre>
+<h2 id="post-methods">POST methods</h2>
+<p>There are several ways to pass the data to the server.</p>
+<p>Some of the RPC queries contain overridden methods which take required and optional parameters. This is enough for the most cases.</p>
+<pre><code class="lang-cs">var protoData = await rpc.Blocks.Head.Helpers.Forge.ProtocolData
+    .PostAsync(0, &quot;nceUHEeriV43iAfcxsCFf2Ygqn2cQZnuGKump9JEmhaVXt79CvXdY&quot;, &quot;0000000349a42671&quot;);
+</code></pre>
+<p>If the overridden method does not meet your needs, you can simply pass the object with required fields and it will be automatically serialized to JSON before being sent.</p>
+<pre><code class="lang-cs">var protoData = await rpc.Blocks.Head.Helpers.Forge.ProtocolData
+    .PostAsync(new
+    {
+        priority = 0,
+        nonce_hash = &quot;nceUHEeriV43iAfcxsCFf2Ygqn2cQZnuGKump9JEmhaVXt79CvXdY&quot;,
+        proof_of_work_nonce = &quot;0000000349a42671&quot;
+    });
+</code></pre>
+<p>In addition, you can simply pass a valid JSON string.</p>
+<pre><code class="lang-cs">var protoData = await rpc.Blocks.Head.Helpers.Forge.ProtocolData
+    .PostAsync(@&quot;{&quot;&quot;priority&quot;&quot;: 0, &quot;&quot;nonce_hash&quot;&quot;: &quot;&quot;nceUHEe...&quot;&quot;, &quot;&quot;proof_of_work_nonce&quot;&quot;:  &quot;&quot;00000...&quot;&quot;}&quot;);
+</code></pre>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/baking-bad/netezos/blob/master/docs/docs/tezos-rpc.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright © Baking Bad
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

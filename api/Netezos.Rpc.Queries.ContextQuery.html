@@ -1,0 +1,637 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  
+      <title>Netezos</title>
+      
+      
+  
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@TezosBakingBad">
+      <meta name="twitter:creator" content="@TezosBakingBad">
+      <meta name="twitter:title" content="Netezos">
+      <meta name="twitter:description" content="">
+      <meta name="twitter:image" content="https://netezos.dev/logo.png">
+      <meta name="twitter:image:alt" content="Netezos">
+  
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://netezos.dev">
+      <meta property="og:title" content="Netezos">
+      <meta property="og:description" content="">
+      <meta property="og:image" content="https://netezos.dev/logo.png">
+      <meta property="og:image:secure_url" content="https://netezos.dev/logo.png">
+      <meta property="og:image:alt" content="Netezos">
+      <meta property="og:image:type" content="image/png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+  
+      <link rel="canonical" href="https://netezos.dev/api/Netezos.Rpc.Queries.ContextQuery.html">
+  
+      <link rel="stylesheet" href="/styles/docfx.vendor.css">
+      <link rel="stylesheet" href="/styles/docfx.css">
+      <link rel="stylesheet" href="/styles/main.css">
+  
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+      <meta property="docfx:rel" content="../">
+      <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Netezos.Rpc.Queries.ContextQuery">
+  
+  
+  <h1 id="Netezos_Rpc_Queries_ContextQuery" data-uid="Netezos.Rpc.Queries.ContextQuery" class="text-break">Class ContextQuery
+  </h1>
+  <div class="markdown level0 summary"><p>Rpc query to access context data</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Netezos.Rpc.RpcQuery.html">RpcQuery</a></div>
+    <div class="level2"><span class="xref">ContextQuery</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Netezos.Rpc.RpcQuery.html#Netezos_Rpc_RpcQuery_ToString">RpcQuery.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Netezos.Rpc.Queries.html">Netezos.Rpc.Queries</a></h6>
+  <h6><strong>Assembly</strong>: Netezos.dll</h6>
+  <h5 id="Netezos_Rpc_Queries_ContextQuery_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ContextQuery : RpcQuery</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_AdaptiveIssuanceLaunch.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.AdaptiveIssuanceLaunch%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L14">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_AdaptiveIssuanceLaunch_" data-uid="Netezos.Rpc.Queries.ContextQuery.AdaptiveIssuanceLaunch*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_AdaptiveIssuanceLaunch" data-uid="Netezos.Rpc.Queries.ContextQuery.AdaptiveIssuanceLaunch">AdaptiveIssuanceLaunch</h4>
+  <div class="markdown level1 summary"><p>Gets the query to get the cycle at which the launch of the Adaptive Issuance feature is set to happen. A result of None means that the feature is not yet set to launch.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RpcObject AdaptiveIssuanceLaunch { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.RpcObject.html">RpcObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_BigMaps.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.BigMaps%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L19">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_BigMaps_" data-uid="Netezos.Rpc.Queries.ContextQuery.BigMaps*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_BigMaps" data-uid="Netezos.Rpc.Queries.ContextQuery.BigMaps">BigMaps</h4>
+  <div class="markdown level1 summary"><p>Gets the query to big maps.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RpcSimpleArray&lt;RpcSimpleDictionary&lt;string, BigMapsQuery&gt;&gt; BigMaps { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.RpcSimpleArray-1.html">RpcSimpleArray</a>&lt;<a class="xref" href="Netezos.Rpc.RpcSimpleDictionary-2.html">RpcSimpleDictionary</a>&lt;<span class="xref">System.String</span>, <a class="xref" href="Netezos.Rpc.Queries.BigMapsQuery.html">BigMapsQuery</a>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Constants.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Constants%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L24">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Constants_" data-uid="Netezos.Rpc.Queries.ContextQuery.Constants*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Constants" data-uid="Netezos.Rpc.Queries.ContextQuery.Constants">Constants</h4>
+  <div class="markdown level1 summary"><p>Gets the query to the protocol's constants</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ConstantsQuery Constants { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.ConstantsQuery.html">ConstantsQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Contracts.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Contracts%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L29">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Contracts_" data-uid="Netezos.Rpc.Queries.ContextQuery.Contracts*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Contracts" data-uid="Netezos.Rpc.Queries.ContextQuery.Contracts">Contracts</h4>
+  <div class="markdown level1 summary"><p>Gets the query to all existing contracts (including non-empty default contracts)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ContractsQuery Contracts { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.ContractsQuery.html">ContractsQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Dal.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Dal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L34">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Dal_" data-uid="Netezos.Rpc.Queries.ContextQuery.Dal*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Dal" data-uid="Netezos.Rpc.Queries.ContextQuery.Dal">Dal</h4>
+  <div class="markdown level1 summary"><p>Gets the query to Data-Availability Layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DalQuery Dal { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.Dal.DalQuery.html">DalQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Delegates.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Delegates%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L39">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Delegates_" data-uid="Netezos.Rpc.Queries.ContextQuery.Delegates*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Delegates" data-uid="Netezos.Rpc.Queries.ContextQuery.Delegates">Delegates</h4>
+  <div class="markdown level1 summary"><p>Gets the query to all registered delegates</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DelegatesQuery Delegates { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.DelegatesQuery.html">DelegatesQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Issuance.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Issuance%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L44">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Issuance_" data-uid="Netezos.Rpc.Queries.ContextQuery.Issuance*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Issuance" data-uid="Netezos.Rpc.Queries.ContextQuery.Issuance">Issuance</h4>
+  <div class="markdown level1 summary"><p>Gets the query to the issuance data</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IssuanceQuery Issuance { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.IssuanceQuery.html">IssuanceQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Nonces.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Nonces%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L49">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Nonces_" data-uid="Netezos.Rpc.Queries.ContextQuery.Nonces*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Nonces" data-uid="Netezos.Rpc.Queries.ContextQuery.Nonces">Nonces</h4>
+  <div class="markdown level1 summary"><p>Gets the query to the info about the nonce of a previous block</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public NoncesQuery Nonces { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.NoncesQuery.html">NoncesQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Protocol.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Protocol%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L84">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Protocol_" data-uid="Netezos.Rpc.Queries.ContextQuery.Protocol*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Protocol" data-uid="Netezos.Rpc.Queries.ContextQuery.Protocol">Protocol</h4>
+  <div class="markdown level1 summary"><p>Gets the query to the protocol.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ProtocolQuery Protocol { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.ProtocolQuery.html">ProtocolQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Raw.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Raw%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L54">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Raw_" data-uid="Netezos.Rpc.Queries.ContextQuery.Raw*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Raw" data-uid="Netezos.Rpc.Queries.ContextQuery.Raw">Raw</h4>
+  <div class="markdown level1 summary"><p>Gets the query to the raw context data</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RawContextQuery Raw { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.RawContextQuery.html">RawContextQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_Seed.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.Seed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L59">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_Seed_" data-uid="Netezos.Rpc.Queries.ContextQuery.Seed*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_Seed" data-uid="Netezos.Rpc.Queries.ContextQuery.Seed">Seed</h4>
+  <div class="markdown level1 summary"><p>Gets the query to the seed data</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SeedQuery Seed { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.Post.SeedQuery.html">SeedQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_SmartRollups.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.SmartRollups%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L64">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_SmartRollups_" data-uid="Netezos.Rpc.Queries.ContextQuery.SmartRollups*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_SmartRollups" data-uid="Netezos.Rpc.Queries.ContextQuery.SmartRollups">SmartRollups</h4>
+  <div class="markdown level1 summary"><p>Gets the query to the smart rollup data</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SmartRollupsQuery SmartRollups { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.Queries.SmartRollupsQuery.html">SmartRollupsQuery</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_TotalCurrentlyStaked.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.TotalCurrentlyStaked%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L69">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_TotalCurrentlyStaked_" data-uid="Netezos.Rpc.Queries.ContextQuery.TotalCurrentlyStaked*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_TotalCurrentlyStaked" data-uid="Netezos.Rpc.Queries.ContextQuery.TotalCurrentlyStaked">TotalCurrentlyStaked</h4>
+  <div class="markdown level1 summary"><p>Returns the amount of staked tez by delegates, delegators or overstaked.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RpcObject TotalCurrentlyStaked { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.RpcObject.html">RpcObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_TotalFrozenStake.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.TotalFrozenStake%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L74">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_TotalFrozenStake_" data-uid="Netezos.Rpc.Queries.ContextQuery.TotalFrozenStake*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_TotalFrozenStake" data-uid="Netezos.Rpc.Queries.ContextQuery.TotalFrozenStake">TotalFrozenStake</h4>
+  <div class="markdown level1 summary"><p>Returns the total stake (in mutez) frozen on the chain.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RpcObject TotalFrozenStake { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.RpcObject.html">RpcObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery_TotalSupply.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery.TotalSupply%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L79">View Source</a>
+  </span>
+  <a id="Netezos_Rpc_Queries_ContextQuery_TotalSupply_" data-uid="Netezos.Rpc.Queries.ContextQuery.TotalSupply*"></a>
+  <h4 id="Netezos_Rpc_Queries_ContextQuery_TotalSupply" data-uid="Netezos.Rpc.Queries.ContextQuery.TotalSupply">TotalSupply</h4>
+  <div class="markdown level1 summary"><p>Returns the total supply (in mutez) available on the chain.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RpcObject TotalSupply { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Netezos.Rpc.RpcObject.html">RpcObject</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/baking-bad/netezos/new/master/apiSpec/new?filename=Netezos_Rpc_Queries_ContextQuery.md&amp;value=---%0Auid%3A%20Netezos.Rpc.Queries.ContextQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/baking-bad/netezos/blob/master/Netezos/Rpc/Queries/ContextQuery.cs/#L9" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright © Baking Bad
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

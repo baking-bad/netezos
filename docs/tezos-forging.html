@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  
+      <title>Tezos Forging &amp; Unforging | Netezos</title>
+      <meta name="description" content="Short guide on how to forge and unforge Tezos operations using Netezos, Tezos SDK for .NET developers.">
+      <meta name="keywords" content="netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk, forging, unforging">
+  
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@TezosBakingBad">
+      <meta name="twitter:creator" content="@TezosBakingBad">
+      <meta name="twitter:title" content="Tezos Forging &amp; Unforging | Netezos">
+      <meta name="twitter:description" content="Short guide on how to forge and unforge Tezos operations using Netezos, Tezos SDK for .NET developers.">
+      <meta name="twitter:image" content="https://netezos.dev/logo.png">
+      <meta name="twitter:image:alt" content="Netezos">
+  
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://netezos.dev">
+      <meta property="og:title" content="Tezos Forging &amp; Unforging | Netezos">
+      <meta property="og:description" content="Short guide on how to forge and unforge Tezos operations using Netezos, Tezos SDK for .NET developers.">
+      <meta property="og:image" content="https://netezos.dev/logo.png">
+      <meta property="og:image:secure_url" content="https://netezos.dev/logo.png">
+      <meta property="og:image:alt" content="Netezos">
+      <meta property="og:image:type" content="image/png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+  
+      <link rel="canonical" href="https://netezos.dev/docs/tezos-forging.html">
+  
+      <link rel="stylesheet" href="/styles/docfx.vendor.css">
+      <link rel="stylesheet" href="/styles/docfx.css">
+      <link rel="stylesheet" href="/styles/main.css">
+  
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+      <meta property="docfx:rel" content="../">
+      <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="tezos-forging--unforging">Tezos Forging &amp; Unforging</h1>
+
+<p>Netezos supports functions to convert Tezos operations and their associated data into binary form for injection into the Tezos blockchain—a process known as <strong>forging</strong>. The reverse is also possible; converting binary forms of injected operations into native types—a process known as <strong>unforging</strong>.</p>
+<h2 id="forging">Forging</h2>
+<h3 id="forge-an-operation">Forge an operation</h3>
+<p>Forging an operation requires a block hash, an operation type, and any necessary operation parameters. Let's forge a transaction operation to transfer funds between two accounts.</p>
+<pre><code class="lang-cs">var localForge = new LocalForge();
+
+var blockHash = &quot;BLghtuUq4Q578fA4STBWcSnVSBAtP1yQjtgLdejqAzzvtyrZanJ&quot;;
+
+var operation = new TransactionContent
+{
+    Source = &quot;tz1NXjqkurAmpKJEF76T58oyNsy3hWK7mk8e&quot;,
+    Destination = &quot;KT1SkmB19o8nfhRvG9LL7TjDfX2Bm1nCuYoY&quot;,
+    Fee = 22100,
+    Counter = 377727,
+    GasLimit = 218465,
+    StorageLimit = 668,
+    Amount = 1
+};
+
+var forgedBytes = await localForge.ForgeOperationAsync(blockHash, operationArgs);
+</code></pre>
+<p>The variable <code>forgedBytes</code> will now contain the block hash, operation, and all of its parameters in binary form.</p>
+<h3 id="forge-an-operation-group">Forge an operation group</h3>
+<p>It is also possible to forge a group of operations together as a batch. Here is an example of a <code>reveal</code> operation followed by <code>transaction</code> operation.</p>
+<pre><code class="lang-cs">var localForge = new LocalForge();
+
+var blockHash = &quot;BLCFdxw2kWJfCk9TWQsYxrQd9CcPPs2YdbArbDDgL4GZTYvTfZN&quot;;
+
+var operations = new ManagerOperationContent[]
+{
+    new RevealContent
+    {
+        Source = &quot;tz1f2MeahW6XMLcfHJSU5VH8USC4EuFiwdhx&quot;,
+        Fee = 1257,
+        Counter = 5,
+        GasLimit = 10000,
+        StorageLimit = 0,
+        PublicKey = &quot;edpkuEmaQSYKgDj5k9wfE3bTxjfjoG9k5YvRmYZsGf2bjEymZKkzNn&quot;
+    },
+    new TransactionContent
+    {
+        Source = &quot;tz1f2MeahW6XMLcfHJSU5VH8USC4EuFiwdhx&quot;,
+        Destination = &quot;tz1f2MeahW6XMLcfHJSU5VH8USC4EuFiwdhx&quot;,
+        Fee = 1188,
+        Counter = 6,
+        GasLimit = 10307,
+        StorageLimit = 0,
+        Amount = 1
+    }
+};
+
+var forgedBytes = await localForge.ForgeOperationGroupAsync(blockHash, operations);
+</code></pre>
+<p>Likewise, the variable <code>forgedBytes</code> will now contain the block hash, batched operations, and all operation parameters in binary form.</p>
+<h2 id="unforging">Unforging</h2>
+<p>Following from the previous example of forging an operation or operations, we can also unforge the forged bytes from their binary form to native types.</p>
+<h3 id="unforge-single-or-multiple-operations">Unforge single or multiple operation(s)</h3>
+<pre><code class="lang-cs">var localForge = new LocalForge();
+
+var unforgedOperation = await localForge.UnforgeOperationAsync(forgedBytes);
+
+var blockHash = unforgedOperations.Item1; // string
+
+var operations = unforgedOperations.Item2; // IEnumerable&lt;OperationContent&gt;
+</code></pre>
+<p>Since the number of operations from forged bytes cannot be known until the unforge process actually occurs, the return type of <code>UnforgeOperationAsync</code> is a tuple type of <code>(string, IEnumerable&lt;OperationContent&gt;)</code>. The <code>string</code> (<code>unforgedOperations.Item1</code>) is the block hash, and the <code>IEnumerable&lt;OperationContent&gt;</code> (<code>unforgedOperations.Item2</code>) is an enumerable of operations that may contain 1 or more operations based on the number of forged operations.</p>
+<h2 id="operation-types">Operation types</h2>
+<p>Following is a chart of Tezos operations and their operation native type counterparts.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Operation</th>
+<th style="text-align: center;">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">activate_account</td>
+<td style="text-align: center;">ActivationContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">ballot</td>
+<td style="text-align: center;">BallotContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">delegation</td>
+<td style="text-align: center;">DelegationContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">double_baking_evidence</td>
+<td style="text-align: center;">DoubleBakingContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">double_endorsement_evidence</td>
+<td style="text-align: center;">DoubleEndorsementContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">endorsement</td>
+<td style="text-align: center;">EndorsementContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">origination</td>
+<td style="text-align: center;">OriginationContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">proposals</td>
+<td style="text-align: center;">ProposalsContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">register_global_constant</td>
+<td style="text-align: center;">RegisterConstantContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">reveal</td>
+<td style="text-align: center;">RevealContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">seed_nonce_revelation</td>
+<td style="text-align: center;">SeedNonceRevelationContent</td>
+</tr>
+<tr>
+<td style="text-align: center;">transaction</td>
+<td style="text-align: center;">TransactionContent</td>
+</tr>
+</tbody>
+</table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/baking-bad/netezos/blob/master/docs/docs/tezos-forging.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright © Baking Bad
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
