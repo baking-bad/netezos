@@ -1,0 +1,58 @@
+[
+  {
+    "description": "Empty mnemonic",
+    "mnemonic": ""
+  },
+  {
+    "description": "Only whitespace",
+    "mnemonic": "   "
+  },
+  {
+    "description": "Invalid word count - 2 words",
+    "mnemonic": "abandon abandon"
+  },
+  {
+    "description": "Invalid word count - 4 words",
+    "mnemonic": "abandon abandon abandon abandon"
+  },
+  {
+    "description": "Invalid word count - 5 words",
+    "mnemonic": "abandon abandon abandon abandon abandon"
+  },
+  {
+    "description": "Invalid word count - 11 words",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon"
+  },
+  {
+    "description": "Invalid words not in BIP39 wordlist",
+    "mnemonic": "invalid word list test invalid word list test invalid word list"
+  },
+  {
+    "description": "One invalid word at end",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon invalid"
+  },
+  {
+    "description": "Valid words but invalid checksum - all abandon",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon"
+  },
+  {
+    "description": "Valid words but invalid checksum - ability instead of about",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon ability"
+  },
+  {
+    "description": "15-word mnemonic with invalid checksum",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon"
+  },
+  {
+    "description": "18-word mnemonic with invalid checksum", 
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon"
+  },
+  {
+    "description": "21-word mnemonic with invalid checksum",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon"
+  },
+  {
+    "description": "24-word mnemonic with invalid checksum",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon"
+  }
+]

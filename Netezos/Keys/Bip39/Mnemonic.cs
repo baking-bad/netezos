@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Netezos.Utils;
 
 namespace Netezos.Keys
@@ -16,9 +16,19 @@ namespace Netezos.Keys
             Sentence = string.Join(" ", words);
         }
 
-        public Mnemonic(string mnemonic) => Sentence = MnemonicRegex().Replace(mnemonic, " ");
+        public Mnemonic(string mnemonic)
+        {
+            var normalized = MnemonicRegex().Replace(mnemonic, " ");
+            var words = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            Bip39.GetEntropy(words); // Validate mnemonic
+            Sentence = normalized;
+        }
 
-        public Mnemonic(IEnumerable<string> words) => Sentence = string.Join(" ", words);
+        public Mnemonic(IEnumerable<string> words)
+        {
+            Bip39.GetEntropy(words); // Validate mnemonic
+            Sentence = string.Join(" ", words);
+        }
 
         public byte[] GetSeed() => Bip39.GetSeed(Sentence);
 
