@@ -194,5 +194,20 @@ namespace Netezos.Tests.Keys
                 Assert.Equal(sample.address, hdKey.Address);
             }
         }
+
+        [Fact]
+        public void BadMnemonics()
+        {
+            foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\bad_mnemonics.json"))
+            {
+                var words = ((string)sample.mnemonic).Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                Mnemonic.Parse((string)sample.mnemonic, skipValidation: true);
+                Mnemonic.Parse(words, skipValidation: true);
+
+                Assert.ThrowsAny<Exception>(() => Mnemonic.Parse((string)sample.mnemonic));
+                Assert.ThrowsAny<Exception>(() => Mnemonic.Parse(words));
+            }
+        }
     }
 }

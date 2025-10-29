@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Netezos.Utils;
 
 namespace Netezos.Keys
@@ -16,9 +16,25 @@ namespace Netezos.Keys
             Sentence = string.Join(" ", words);
         }
 
-        public Mnemonic(string mnemonic) => Sentence = MnemonicRegex().Replace(mnemonic, " ");
+        public Mnemonic(string mnemonic, bool skipValidation = false)
+        {
+            var normalized = MnemonicRegex().Replace(mnemonic, " ");
+            
+            if (!skipValidation)
+            {
+                var words = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                Bip39.GetEntropy(words); // Validate mnemonic
+            }
+            
+            Sentence = normalized;
+        }
 
-        public Mnemonic(IEnumerable<string> words) => Sentence = string.Join(" ", words);
+        public Mnemonic(IEnumerable<string> words, bool skipValidation = false)
+        {
+            if (!skipValidation)
+                Bip39.GetEntropy(words); // Validate mnemonic
+            Sentence = string.Join(" ", words);
+        }
 
         public byte[] GetSeed() => Bip39.GetSeed(Sentence);
 
@@ -27,9 +43,9 @@ namespace Netezos.Keys
         public override string ToString() => Sentence;
 
         #region static
-        public static Mnemonic Parse(string mnemonic) => new(mnemonic);
+        public static Mnemonic Parse(string mnemonic, bool skipValidation = false) => new(mnemonic, skipValidation);
 
-        public static Mnemonic Parse(IEnumerable<string> words) => new(words);
+        public static Mnemonic Parse(IEnumerable<string> words, bool skipValidation = false) => new(words, skipValidation);
 
         [GeneratedRegex(@"[\s,;]+")]
         private static partial Regex MnemonicRegex();

@@ -1,4 +1,4 @@
-﻿using Dynamic.Json;
+using Dynamic.Json;
 using Xunit;
 using Netezos.Encoding;
 using Netezos.Keys;

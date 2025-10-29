@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using Netezos.Encoding;
 using Netezos.Utils;
 
@@ -210,7 +210,7 @@ namespace Netezos.Keys
             var wordIndex = 0;
             foreach (string word in words)
             {
-                int index = WordList.BinarySearch(word);
+                int index = WordList.BinarySearch(word.ToLowerInvariant());
 
                 if (index < 0)
                     throw new ArgumentException($"Invalid mnemonic word '{word}'");
