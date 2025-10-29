@@ -16,17 +16,19 @@ namespace Netezos.Keys
             Sentence = string.Join(" ", words);
         }
 
-        public Mnemonic(string mnemonic)
+        public Mnemonic(string mnemonic, bool skipValidation = false)
         {
             var normalized = MnemonicRegex().Replace(mnemonic, " ");
             var words = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            Bip39.GetEntropy(words); // Validate mnemonic
+            if (!skipValidation)
+                Bip39.GetEntropy(words); // Validate mnemonic
             Sentence = normalized;
         }
 
-        public Mnemonic(IEnumerable<string> words)
+        public Mnemonic(IEnumerable<string> words, bool skipValidation = false)
         {
-            Bip39.GetEntropy(words); // Validate mnemonic
+            if (!skipValidation)
+                Bip39.GetEntropy(words); // Validate mnemonic
             Sentence = string.Join(" ", words);
         }
 
@@ -37,9 +39,9 @@ namespace Netezos.Keys
         public override string ToString() => Sentence;
 
         #region static
-        public static Mnemonic Parse(string mnemonic) => new(mnemonic);
+        public static Mnemonic Parse(string mnemonic, bool skipValidation = false) => new(mnemonic, skipValidation);
 
-        public static Mnemonic Parse(IEnumerable<string> words) => new(words);
+        public static Mnemonic Parse(IEnumerable<string> words, bool skipValidation = false) => new(words, skipValidation);
 
         [GeneratedRegex(@"[\s,;]+")]
         private static partial Regex MnemonicRegex();

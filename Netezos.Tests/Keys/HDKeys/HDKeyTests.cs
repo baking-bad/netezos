@@ -200,10 +200,13 @@ namespace Netezos.Tests.Keys
         {
             foreach (var sample in DJson.Read(@"..\..\..\Keys\HDKeys\Samples\bad_mnemonics.json"))
             {
-                Assert.ThrowsAny<Exception>(() => Mnemonic.Parse((string)sample.mnemonic));
-                
                 var words = ((string)sample.mnemonic).Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                Assert.ThrowsAny<Exception>(() => new Mnemonic(words));
+
+                Mnemonic.Parse((string)sample.mnemonic, skipValidation: true);
+                Mnemonic.Parse(words, skipValidation: true);
+
+                Assert.ThrowsAny<Exception>(() => Mnemonic.Parse((string)sample.mnemonic));
+                Assert.ThrowsAny<Exception>(() => Mnemonic.Parse(words));
             }
         }
     }
