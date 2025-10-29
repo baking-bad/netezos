@@ -19,9 +19,13 @@ namespace Netezos.Keys
         public Mnemonic(string mnemonic, bool skipValidation = false)
         {
             var normalized = MnemonicRegex().Replace(mnemonic, " ");
-            var words = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            
             if (!skipValidation)
+            {
+                var words = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 Bip39.GetEntropy(words); // Validate mnemonic
+            }
+            
             Sentence = normalized;
         }
 
