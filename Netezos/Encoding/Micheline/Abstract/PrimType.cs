@@ -164,6 +164,8 @@ namespace Netezos.Encoding
         BYTES,
         NAT,
         Ticket,
-        IS_IMPLICIT_ACCOUNT
+        IS_IMPLICIT_ACCOUNT,
+        GET_ADDRESS_INDEX,
+        INDEX_ADDRESS
     }
 }
