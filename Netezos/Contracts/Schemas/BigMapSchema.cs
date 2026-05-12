@@ -309,7 +309,7 @@ namespace Netezos.Contracts
             var packed = new byte[] { 5 }.Concat(LocalForge.ForgeMicheline(optimized));
             var hash = Blake2b.GetDigest(packed);
 
-            return Base58.Convert(hash, Prefix.expr);
+            return Base58.Convert(hash, Prefixes.expr);
         }
     }
 }

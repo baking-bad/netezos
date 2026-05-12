@@ -13,10 +13,10 @@ namespace Netezos.Keys
         
         public override ECKind Kind => ECKind.Ed25519;
 
-        public override byte[] AddressPrefix => Prefix.tz1;
-        public override byte[] PublicKeyPrefix => Prefix.edpk;
-        public override byte[] PrivateKeyPrefix => Prefix.edsk;
-        public override byte[] SignaturePrefix => Prefix.edsig;
+        public override byte[] AddressPrefix => Prefixes.tz1;
+        public override byte[] PublicKeyPrefix => Prefixes.edpk;
+        public override byte[] PrivateKeyPrefix => Prefixes.edsk;
+        public override byte[] SignaturePrefix => Prefixes.edsig;
         public override byte[] Slip10Seed => _Slip10Seed;
 
         public override byte[] ExtractPrivateKey(byte[] bytes)

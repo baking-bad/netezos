@@ -8,7 +8,7 @@ namespace Netezos.Forging
     {
         public Task<byte[]> ForgeOperationAsync(string branch, OperationContent content)
         {
-            var branchBytes = Base58.Parse(branch, Prefix.B.Length);
+            var branchBytes = Base58.Parse(branch, Prefixes.B.Length);
             var contentBytes = ForgeOperation(content);
 
             return Task.FromResult(branchBytes.Concat(contentBytes));
@@ -16,7 +16,7 @@ namespace Netezos.Forging
 
         public Task<byte[]> ForgeOperationGroupAsync(string branch, IEnumerable<ManagerOperationContent> contents)
         {
-            var branchBytes = Base58.Parse(branch, Prefix.B.Length);
+            var branchBytes = Base58.Parse(branch, Prefixes.B.Length);
             var contentBytes = Bytes.Concat([..contents.Select(ForgeOperation)]);
 
             return Task.FromResult(branchBytes.Concat(contentBytes));
@@ -26,7 +26,7 @@ namespace Netezos.Forging
         {
             using var reader = new ForgedReader(bytes);
 
-            var branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B);
+            var branch = reader.ReadBase58(Lengths.B.Decoded, Prefixes.B);
             var content = new List<OperationContent>();
 
             while (!reader.EndOfStream)

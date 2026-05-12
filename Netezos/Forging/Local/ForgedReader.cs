@@ -149,10 +149,10 @@ namespace Netezos.Forging
         {
             var (prefix, len) = ReadByte() switch
             {
-                0 => (Prefix.edpk, 32),
-                1 => (Prefix.sppk, 33),
-                2 => (Prefix.p2pk, 33),
-                3 => (Prefix.BLpk, 48),
+                0 => (Prefixes.edpk, 32),
+                1 => (Prefixes.sppk, 33),
+                2 => (Prefixes.p2pk, 33),
+                3 => (Prefixes.BLpk, 48),
                 var type => throw new ArgumentException($"Invalid public key prefix {type}")
             };
 
@@ -165,7 +165,7 @@ namespace Netezos.Forging
             if (len != Lengths.BLsig.Decoded)
                 throw new ArgumentException($"Invalid BLS signature length {len}");
             
-            return ReadBase58(len, Prefix.BLsig);
+            return ReadBase58(len, Prefixes.BLsig);
         }
 
         public string ReadAddress()
@@ -184,10 +184,10 @@ namespace Netezos.Forging
         {
             var prefix = ReadByte() switch
             {
-                0 => Prefix.tz1,
-                1 => Prefix.tz2,
-                2 => Prefix.tz3,
-                3 => Prefix.tz4,
+                0 => Prefixes.tz1,
+                1 => Prefixes.tz2,
+                2 => Prefixes.tz3,
+                3 => Prefixes.tz4,
                 var type => throw new ArgumentException($"Invalid source prefix {type}")
             };
             return ReadBase58(20, prefix);
@@ -195,33 +195,33 @@ namespace Netezos.Forging
 
         public string ReadKtAddress()
         {
-            var address = ReadBase58(Lengths.KT1.Decoded, Prefix.KT1);
+            var address = ReadBase58(Lengths.KT1.Decoded, Prefixes.KT1);
             ReadByte(); // Consume padded 0
             return address;
         }
 
         public string ReadTxrAddress()
         {
-            var address = ReadBase58(Lengths.txr1.Decoded, Prefix.txr1);
+            var address = ReadBase58(Lengths.txr1.Decoded, Prefixes.txr1);
             ReadByte(); // Consume padded 0
             return address;
         }
 
         public string ReadSrAddress()
         {
-            var address = ReadBase58(Lengths.sr1.Decoded, Prefix.sr1);
+            var address = ReadBase58(Lengths.sr1.Decoded, Prefixes.sr1);
             ReadByte(); // Consume padded 0
             return address;
         }
 
         public string ReadRollup()
         {
-            return ReadBase58(Lengths.sr1.Decoded, Prefix.sr1);
+            return ReadBase58(Lengths.sr1.Decoded, Prefixes.sr1);
         }
 
         public string ReadCommitmentAddress()
         {
-            return ReadBase58(Lengths.src1.Decoded, Prefix.src1);
+            return ReadBase58(Lengths.src1.Decoded, Prefixes.src1);
         }
 
         /// <summary>
@@ -373,7 +373,7 @@ namespace Netezos.Forging
 
         public string ReadTz1Address()
         {
-            return ReadBase58(Lengths.tz1.Decoded, Prefix.tz1);
+            return ReadBase58(Lengths.tz1.Decoded, Prefixes.tz1);
         }
 
         public T ReadEnumerableSingle<T>(Func<ForgedReader, T> readData)

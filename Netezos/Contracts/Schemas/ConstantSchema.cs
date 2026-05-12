@@ -25,7 +25,7 @@ namespace Netezos.Contracts
         {
             var bytes = LocalForge.ForgeMicheline(value);
             var hash = Blake2b.GetDigest(bytes);
-            return Base58.Convert(hash, Prefix.expr);
+            return Base58.Convert(hash, Prefixes.expr);
         }
     }
 }

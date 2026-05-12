@@ -52,10 +52,10 @@ namespace Netezos.Forging
         {
             return value[..4] switch
             {
-                "edpk" => new byte[] { 0 }.Concat(Base58.Parse(value, Prefix.edpk)),
-                "sppk" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefix.sppk)),
-                "p2pk" => new byte[] { 2 }.Concat(Base58.Parse(value, Prefix.p2pk)),
-                "BLpk" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefix.BLpk)),
+                "edpk" => new byte[] { 0 }.Concat(Base58.Parse(value, Prefixes.edpk)),
+                "sppk" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefixes.sppk)),
+                "p2pk" => new byte[] { 2 }.Concat(Base58.Parse(value, Prefixes.p2pk)),
+                "BLpk" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefixes.BLpk)),
                 _ => throw new ArgumentException("Invalid public key prefix")
             };
         }
@@ -64,13 +64,13 @@ namespace Netezos.Forging
         {
             return value[..3] switch
             {
-                "tz1" => new byte[] { 0, 0 }.Concat(Base58.Parse(value, Prefix.tz1)),
-                "tz2" => new byte[] { 0, 1 }.Concat(Base58.Parse(value, Prefix.tz2)),
-                "tz3" => new byte[] { 0, 2 }.Concat(Base58.Parse(value, Prefix.tz3)),
-                "tz4" => new byte[] { 0, 3 }.Concat(Base58.Parse(value, Prefix.tz4)),
-                "KT1" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefix.KT1)).Concat([0]),
-                "txr" when value.StartsWith("txr1") => new byte[] { 2 }.Concat(Base58.Parse(value, Prefix.txr1)).Concat([0]),
-                "sr1" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefix.sr1)).Concat([0]),
+                "tz1" => new byte[] { 0, 0 }.Concat(Base58.Parse(value, Prefixes.tz1)),
+                "tz2" => new byte[] { 0, 1 }.Concat(Base58.Parse(value, Prefixes.tz2)),
+                "tz3" => new byte[] { 0, 2 }.Concat(Base58.Parse(value, Prefixes.tz3)),
+                "tz4" => new byte[] { 0, 3 }.Concat(Base58.Parse(value, Prefixes.tz4)),
+                "KT1" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefixes.KT1)).Concat([0]),
+                "txr" when value.StartsWith("txr1") => new byte[] { 2 }.Concat(Base58.Parse(value, Prefixes.txr1)).Concat([0]),
+                "sr1" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefixes.sr1)).Concat([0]),
                 _ => throw new ArgumentException("Invalid address prefix")
             };
         }
@@ -89,10 +89,10 @@ namespace Netezos.Forging
         {
             return value[..3] switch
             {
-                "tz1" => new byte[] { 0 }.Concat(Base58.Parse(value, Prefix.tz1)),
-                "tz2" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefix.tz2)),
-                "tz3" => new byte[] { 2 }.Concat(Base58.Parse(value, Prefix.tz3)),
-                "tz4" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefix.tz4)),
+                "tz1" => new byte[] { 0 }.Concat(Base58.Parse(value, Prefixes.tz1)),
+                "tz2" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefixes.tz2)),
+                "tz3" => new byte[] { 2 }.Concat(Base58.Parse(value, Prefixes.tz3)),
+                "tz4" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefixes.tz4)),
                 _ => throw new ArgumentException("Invalid source prefix")
             };
         }
@@ -101,11 +101,11 @@ namespace Netezos.Forging
         {
             var prefix = value[..3] switch
             {
-                "eds" => Prefix.edsig,
-                "sps" => Prefix.spsig,
-                "p2s" => Prefix.p2sig,
-                "BLs" => Prefix.BLsig,
-                "sig" => Prefix.sig,
+                "eds" => Prefixes.edsig,
+                "sps" => Prefixes.spsig,
+                "p2s" => Prefixes.p2sig,
+                "BLs" => Prefixes.BLsig,
+                "sig" => Prefixes.sig,
                 _ => throw new ArgumentException($"Invalid signature prefix: {value}")
             };
             var bytes = Base58.Parse(value, prefix);

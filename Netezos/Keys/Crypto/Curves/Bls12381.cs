@@ -15,10 +15,10 @@ namespace Netezos.Keys
 
         public override ECKind Kind => ECKind.Bls12381;
 
-        public override byte[] AddressPrefix => Prefix.tz4;
-        public override byte[] PublicKeyPrefix => Prefix.BLpk;
-        public override byte[] PrivateKeyPrefix => Prefix.BLsk;
-        public override byte[] SignaturePrefix => Prefix.BLsig;
+        public override byte[] AddressPrefix => Prefixes.tz4;
+        public override byte[] PublicKeyPrefix => Prefixes.BLpk;
+        public override byte[] PrivateKeyPrefix => Prefixes.BLsk;
+        public override byte[] SignaturePrefix => Prefixes.BLsig;
         public override byte[] Slip10Seed => throw new InvalidOperationException("BLS12-381 doesn't support SLIP-10");
 
         public override byte[] ExtractPrivateKey(byte[] bytes)

@@ -25,10 +25,10 @@ namespace Netezos.Contracts
 
                 var prefix = micheBytes.Value[0] switch
                 {
-                    0 => Prefix.tz1,
-                    1 => Prefix.tz2,
-                    2 => Prefix.tz3,
-                    3 => Prefix.tz4,
+                    0 => Prefixes.tz1,
+                    1 => Prefixes.tz2,
+                    2 => Prefixes.tz3,
+                    3 => Prefixes.tz4,
                     _ => null
                 };
 

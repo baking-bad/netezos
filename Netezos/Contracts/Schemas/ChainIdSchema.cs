@@ -23,7 +23,7 @@ namespace Netezos.Contracts
                 if (micheBytes.Value.Length != 4)
                     return Hex.Convert(micheBytes.Value);
 
-                return Base58.Convert(micheBytes.Value, Prefix.Net);
+                return Base58.Convert(micheBytes.Value, Prefixes.Net);
             }
             else
             {

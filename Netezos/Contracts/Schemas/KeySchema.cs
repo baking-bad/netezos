@@ -22,10 +22,10 @@ namespace Netezos.Contracts
             {
                 var prefix = (micheBytes.Value[0], micheBytes.Value.Length) switch
                 {
-                    (0, 33) => Prefix.edpk,
-                    (1, 34) => Prefix.sppk,
-                    (2, 34) => Prefix.p2pk,
-                    (3, 49) => Prefix.BLpk,
+                    (0, 33) => Prefixes.edpk,
+                    (1, 34) => Prefixes.sppk,
+                    (2, 34) => Prefixes.p2pk,
+                    (3, 49) => Prefixes.BLpk,
                     _ => null
                 };
 

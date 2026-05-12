@@ -15,10 +15,10 @@ namespace Netezos.Keys
         
         public override ECKind Kind => ECKind.NistP256;
 
-        public override byte[] AddressPrefix => Prefix.tz3;
-        public override byte[] PublicKeyPrefix => Prefix.p2pk;
-        public override byte[] PrivateKeyPrefix => Prefix.p2sk;
-        public override byte[] SignaturePrefix => Prefix.p2sig;
+        public override byte[] AddressPrefix => Prefixes.tz3;
+        public override byte[] PublicKeyPrefix => Prefixes.p2pk;
+        public override byte[] PrivateKeyPrefix => Prefixes.p2sk;
+        public override byte[] SignaturePrefix => Prefixes.p2sig;
         public override byte[] Slip10Seed => _Slip10Seed;
 
         public override byte[] ExtractPrivateKey(byte[] bytes)

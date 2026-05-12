@@ -5,7 +5,7 @@ namespace Netezos.Forging
 {
     public partial class LocalForge
     {
-        static OperationContent UnforgeOperation(ForgedReader reader)
+        public static OperationContent UnforgeOperation(ForgedReader reader)
         {
             return (OperationTag)reader.ReadByte() switch
             {
@@ -47,41 +47,41 @@ namespace Netezos.Forging
             };
         }
 
-        static AttestationContent UnforgeAttestation(ForgedReader reader)
+        public static AttestationContent UnforgeAttestation(ForgedReader reader)
         {
             return new AttestationContent
             {
                 Slot = reader.ReadUInt16(),
                 Level = reader.ReadInt32(),
                 Round = reader.ReadInt32(),
-                PayloadHash = reader.ReadBase58(32, Prefix.vh)
+                PayloadHash = reader.ReadBase58(32, Prefixes.vh)
             };
         }
 
-        static AttestationWithDalContent UnforgeAttestationWithDal(ForgedReader reader)
+        public static AttestationWithDalContent UnforgeAttestationWithDal(ForgedReader reader)
         {
             return new AttestationWithDalContent
             {
                 Slot = reader.ReadUInt16(),
                 Level = reader.ReadInt32(),
                 Round = reader.ReadInt32(),
-                PayloadHash = reader.ReadBase58(32, Prefix.vh),
+                PayloadHash = reader.ReadBase58(32, Prefixes.vh),
                 DalAttestation = reader.ReadMichelineInt().Value
             };
         }
 
-        static PreattestationContent UnforgePreattestation(ForgedReader reader)
+        public static PreattestationContent UnforgePreattestation(ForgedReader reader)
         {
             return new PreattestationContent
             {
                 Slot = reader.ReadUInt16(),
                 Level = reader.ReadInt32(),
                 Round = reader.ReadInt32(),
-                PayloadHash = reader.ReadBase58(32, Prefix.vh)
+                PayloadHash = reader.ReadBase58(32, Prefixes.vh)
             };
         }
 
-        static AttestationsAggregateContent UnforgeAttestationsAggregate(ForgedReader reader)
+        public static AttestationsAggregateContent UnforgeAttestationsAggregate(ForgedReader reader)
         {
             return new AttestationsAggregateContent
             {
@@ -89,7 +89,7 @@ namespace Netezos.Forging
                 {
                     Level = reader.ReadInt32(),
                     Round = reader.ReadInt32(),
-                    PayloadHash = reader.ReadBase58(32, Prefix.vh)
+                    PayloadHash = reader.ReadBase58(32, Prefixes.vh)
                 },
                 Committee = [.. reader.ReadEnumerable(r => new CommitteeMember
                 {
@@ -99,7 +99,7 @@ namespace Netezos.Forging
             };
         }
 
-        static PreattestationsAggregateContent UnforgePreattestationsAggregate(ForgedReader reader)
+        public static PreattestationsAggregateContent UnforgePreattestationsAggregate(ForgedReader reader)
         {
             return new PreattestationsAggregateContent
             {
@@ -107,34 +107,34 @@ namespace Netezos.Forging
                 {
                     Level = reader.ReadInt32(),
                     Round = reader.ReadInt32(),
-                    PayloadHash = reader.ReadBase58(32, Prefix.vh)
+                    PayloadHash = reader.ReadBase58(32, Prefixes.vh)
                 },
                 Committee = [..reader.ReadEnumerable(r => r.ReadUInt16())]
             };
         }
 
-        static BallotContent UnforgeBallot(ForgedReader reader)
+        public static BallotContent UnforgeBallot(ForgedReader reader)
         {
             return new BallotContent
             {
                 Source = reader.ReadTzAddress(),
                 Period = reader.ReadInt32(),
-                Proposal = reader.ReadBase58(Lengths.P.Decoded, Prefix.P),
+                Proposal = reader.ReadBase58(Lengths.P.Decoded, Prefixes.P),
                 Ballot = (Ballot)reader.ReadByte()
             };
         }
 
-        static ProposalsContent UnforgeProposals(ForgedReader reader)
+        public static ProposalsContent UnforgeProposals(ForgedReader reader)
         {
             return new ProposalsContent
             {
                 Source = reader.ReadTzAddress(),
                 Period = reader.ReadInt32(),
-                Proposals = [..reader.ReadEnumerable(r => r.ReadBase58(Lengths.P.Decoded, Prefix.P))]
+                Proposals = [..reader.ReadEnumerable(r => r.ReadBase58(Lengths.P.Decoded, Prefixes.P))]
             };
         }
 
-        static ActivationContent UnforgeActivation(ForgedReader reader)
+        public static ActivationContent UnforgeActivation(ForgedReader reader)
         {
             return new ActivationContent
             {
@@ -143,7 +143,7 @@ namespace Netezos.Forging
             };
         }
 
-        static DoubleBakingContent UnforgeDoubleBaking(ForgedReader reader)
+        public static DoubleBakingContent UnforgeDoubleBaking(ForgedReader reader)
         {
             return new DoubleBakingContent
             {
@@ -152,7 +152,7 @@ namespace Netezos.Forging
             };
         }
 
-        static DoubleConsensusContent UnforgeDoubleConsensus(ForgedReader reader)
+        public static DoubleConsensusContent UnforgeDoubleConsensus(ForgedReader reader)
         {
             return new DoubleConsensusContent
             {
@@ -162,7 +162,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SeedNonceRevelationContent UnforgeSeedNonceRevelation(ForgedReader reader)
+        public static SeedNonceRevelationContent UnforgeSeedNonceRevelation(ForgedReader reader)
         {
             return new SeedNonceRevelationContent
             {
@@ -171,7 +171,7 @@ namespace Netezos.Forging
             };
         }
 
-        static VdfRevelationContent UnforgeVdfRevelation(ForgedReader reader)
+        public static VdfRevelationContent UnforgeVdfRevelation(ForgedReader reader)
         {
             return new VdfRevelationContent
             {
@@ -183,7 +183,7 @@ namespace Netezos.Forging
             };
         }
 
-        static DrainDelegateContent UnforgeDrainDelegate(ForgedReader reader)
+        public static DrainDelegateContent UnforgeDrainDelegate(ForgedReader reader)
         {
             return new DrainDelegateContent
             {
@@ -193,7 +193,7 @@ namespace Netezos.Forging
             };
         }
 
-        static DelegationContent UnforgeDelegation(ForgedReader reader)
+        public static DelegationContent UnforgeDelegation(ForgedReader reader)
         {
             return new DelegationContent
             {
@@ -206,7 +206,7 @@ namespace Netezos.Forging
             };
         }
 
-        static OriginationContent UnforgeOrigination(ForgedReader reader)
+        public static OriginationContent UnforgeOrigination(ForgedReader reader)
         {
             return new OriginationContent
             {
@@ -221,7 +221,7 @@ namespace Netezos.Forging
             };
         }
 
-        static TransactionContent UnforgeTransaction(ForgedReader reader)
+        public static TransactionContent UnforgeTransaction(ForgedReader reader)
         {
             return new TransactionContent
             {
@@ -236,7 +236,7 @@ namespace Netezos.Forging
             };
         }
 
-        static RevealContent UnforgeReveal(ForgedReader reader)
+        public static RevealContent UnforgeReveal(ForgedReader reader)
         {
             return new RevealContent
             {
@@ -250,7 +250,7 @@ namespace Netezos.Forging
             };
         }
 
-        static RegisterConstantContent UnforgeRegisterConstant(ForgedReader reader)
+        public static RegisterConstantContent UnforgeRegisterConstant(ForgedReader reader)
         {
             return new RegisterConstantContent
             {
@@ -263,7 +263,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SetDepositsLimitContent UnforgeSetDepositsLimit(ForgedReader reader)
+        public static SetDepositsLimitContent UnforgeSetDepositsLimit(ForgedReader reader)
         {
             return new SetDepositsLimitContent
             {
@@ -276,7 +276,7 @@ namespace Netezos.Forging
             };
         }
 
-        static IncreasePaidStorageContent UnforgeIncreasePaidStorage(ForgedReader reader)
+        public static IncreasePaidStorageContent UnforgeIncreasePaidStorage(ForgedReader reader)
         {
             return new IncreasePaidStorageContent
             {
@@ -290,7 +290,7 @@ namespace Netezos.Forging
             };
         }
 
-        static FailingNoopContent UnforgeFailingNoop(ForgedReader reader)
+        public static FailingNoopContent UnforgeFailingNoop(ForgedReader reader)
         {
             return new FailingNoopContent
             {
@@ -298,7 +298,7 @@ namespace Netezos.Forging
             };
         }
 
-        static TransferTicketContent UnforgeTransferTicket(ForgedReader reader)
+        public static TransferTicketContent UnforgeTransferTicket(ForgedReader reader)
         {
             return new TransferTicketContent
             {
@@ -316,7 +316,7 @@ namespace Netezos.Forging
             };
         }
 
-        static UpdateCompanionKeyContent UnforgeUpdateCompanionKey(ForgedReader reader)
+        public static UpdateCompanionKeyContent UnforgeUpdateCompanionKey(ForgedReader reader)
         {
             return new UpdateCompanionKeyContent
             {
@@ -330,7 +330,7 @@ namespace Netezos.Forging
             };
         }
 
-        static UpdateConsensusKeyContent UnforgeUpdateConsensusKey(ForgedReader reader)
+        public static UpdateConsensusKeyContent UnforgeUpdateConsensusKey(ForgedReader reader)
         {
             return new UpdateConsensusKeyContent
             {
@@ -344,7 +344,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SrAddMessagesContent UnforgeSrAddMessages(ForgedReader reader)
+        public static SrAddMessagesContent UnforgeSrAddMessages(ForgedReader reader)
         {
             return new SrAddMessagesContent
             {
@@ -358,7 +358,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SrCementContent UnforgeSrCement(ForgedReader reader)
+        public static SrCementContent UnforgeSrCement(ForgedReader reader)
         {
             return new SrCementContent
             {
@@ -371,7 +371,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SrTimeoutContent UnforgeSrTimeout(ForgedReader reader)
+        public static SrTimeoutContent UnforgeSrTimeout(ForgedReader reader)
         {
             return new SrTimeoutContent
             {
@@ -389,7 +389,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SrExecuteContent UnforgeSrExecute(ForgedReader reader)
+        public static SrExecuteContent UnforgeSrExecute(ForgedReader reader)
         {
             return new SrExecuteContent
             {
@@ -404,7 +404,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SrOriginateContent UnforgeSrOriginate(ForgedReader reader)
+        public static SrOriginateContent UnforgeSrOriginate(ForgedReader reader)
         {
             return new SrOriginateContent
             {
@@ -422,7 +422,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SrPublishContent UnforgeSrPublish(ForgedReader reader)
+        public static SrPublishContent UnforgeSrPublish(ForgedReader reader)
         {
             return new SrPublishContent
             {
@@ -436,7 +436,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SrRecoverBondContent UnforgeSrRecoverBond(ForgedReader reader)
+        public static SrRecoverBondContent UnforgeSrRecoverBond(ForgedReader reader)
         {
             return new SrRecoverBondContent
             {
@@ -450,7 +450,7 @@ namespace Netezos.Forging
             };
         }
 
-        static SrRefuteContent UnforgeSrRefute(ForgedReader reader)
+        public static SrRefuteContent UnforgeSrRefute(ForgedReader reader)
         {
             return new SrRefuteContent
             {
@@ -465,7 +465,7 @@ namespace Netezos.Forging
             };
         }
 
-        static DalPublishCommitmentContent UnforgeDalPublishCommitment(ForgedReader reader)
+        public static DalPublishCommitmentContent UnforgeDalPublishCommitment(ForgedReader reader)
         {
             return new DalPublishCommitmentContent
             {
@@ -477,13 +477,13 @@ namespace Netezos.Forging
                 SlotHeader = new DalSlotHeader
                 {
                     SlotIndex = reader.ReadByte(),
-                    Commitment = reader.ReadBase58(48, Prefix.sh),
+                    Commitment = reader.ReadBase58(48, Prefixes.sh),
                     CommitmentProof = reader.ReadBytes(96)
                 }
             };
         }
 
-        static DalEntrapmentEvidenceContent UnforgeDalEntrapmentEvidence(ForgedReader reader)
+        public static DalEntrapmentEvidenceContent UnforgeDalEntrapmentEvidence(ForgedReader reader)
         {
             return new DalEntrapmentEvidenceContent
             {
@@ -497,54 +497,54 @@ namespace Netezos.Forging
                         Id = reader.ReadInt32(),
                         Hashes = [..reader.ReadShardHashes()]
                     },
-                    Proof = reader.ReadBase58(48, Prefix.sh)
+                    Proof = reader.ReadBase58(48, Prefixes.sh)
                 }
             };
         }
 
         #region nested
-        static BlockHeader UnforgeBlockHeader(ForgedReader reader)
+        public static BlockHeader UnforgeBlockHeader(ForgedReader reader)
         {
             return new BlockHeader
             {
                 Level = reader.ReadInt32(),
                 Proto = reader.ReadInt32(1),
-                Predecessor = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
+                Predecessor = reader.ReadBase58(Lengths.B.Decoded, Prefixes.B),
                 Timestamp = DateTimeExtension.FromUnixTime(reader.ReadInt64()),
                 ValidationPass = reader.ReadInt32(1),
-                OperationsHash = reader.ReadBase58(Lengths.LLo.Decoded, Prefix.LLo),
+                OperationsHash = reader.ReadBase58(Lengths.LLo.Decoded, Prefixes.LLo),
                 Fitness = [..reader.ReadEnumerable(r => r.ReadHexString())],
-                Context = reader.ReadBase58(Lengths.Co.Decoded, Prefix.Co),
-                PayloadHash = reader.ReadBase58(Lengths.vh.Decoded, Prefix.vh),
+                Context = reader.ReadBase58(Lengths.Co.Decoded, Prefixes.Co),
+                PayloadHash = reader.ReadBase58(Lengths.vh.Decoded, Prefixes.vh),
                 PayloadRound = reader.ReadInt32(2),
                 ProofOfWorkNonce = Hex.Convert(reader.ReadBytes(8)),
                 SeedNonceHash = UnforgeSeedNonce(reader),
                 LiquidityBakingToggleVote = (LBToggle)reader.ReadByte(),
-                Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig),
+                Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefixes.sig),
             };
         }
 
-        static InlineConsensusOperation UnforgeInlineConsensusOperation(ForgedReader reader)
+        public static InlineConsensusOperation UnforgeInlineConsensusOperation(ForgedReader reader)
         {
             return new InlineConsensusOperation
             {
-                Branch = reader.ReadBase58(Lengths.B.Decoded, Prefix.B),
+                Branch = reader.ReadBase58(Lengths.B.Decoded, Prefixes.B),
                 Operations = (ConsensusOperationContent)UnforgeOperation(reader),
-                Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefix.sig)
+                Signature = reader.ReadBase58(Lengths.sig.Decoded, Prefixes.sig)
             };
         }
 
-        static string? UnforgeSeedNonce(ForgedReader reader)
+        public static string? UnforgeSeedNonce(ForgedReader reader)
         {
-            return UnforgeConditional(reader, () => reader.ReadBase58(Lengths.nce.Decoded, Prefix.nce));
+            return UnforgeConditional(reader, () => reader.ReadBase58(Lengths.nce.Decoded, Prefixes.nce));
         }
 
-        static string? UnforgeDelegate(ForgedReader reader)
+        public static string? UnforgeDelegate(ForgedReader reader)
         {
             return UnforgeConditional(reader, () => reader.ReadTzAddress());
         }
 
-        static Parameters? UnforgeParameters(ForgedReader reader)
+        public static Parameters? UnforgeParameters(ForgedReader reader)
         {
             return UnforgeConditional(reader, () =>
             {
@@ -556,7 +556,7 @@ namespace Netezos.Forging
             });
         }
 
-        static string UnforgeEntrypoint(ForgedReader reader)
+        public static string UnforgeEntrypoint(ForgedReader reader)
         {
             return reader.ReadInt32(1) switch
             {
@@ -575,7 +575,7 @@ namespace Netezos.Forging
             };
         }
 
-        static Script UnforgeScript(ForgedReader reader)
+        public static Script UnforgeScript(ForgedReader reader)
         {
             return new Script
             {
@@ -584,18 +584,18 @@ namespace Netezos.Forging
             };
         }
 
-        static Commitment UnforgeCommitment(ForgedReader reader)
+        public static Commitment UnforgeCommitment(ForgedReader reader)
         {
             return new Commitment
             {
-                State = reader.ReadBase58(Lengths.srs1.Decoded, Prefix.srs1),
+                State = reader.ReadBase58(Lengths.srs1.Decoded, Prefixes.srs1),
                 InboxLevel = reader.ReadInt32(),
-                Predecessor = reader.ReadBase58(Lengths.src1.Decoded, Prefix.src1),
+                Predecessor = reader.ReadBase58(Lengths.src1.Decoded, Prefixes.src1),
                 Ticks = reader.ReadInt64()
             };
         }
 
-        static RefutationMove UnforgeRefutation(ForgedReader reader)
+        public static RefutationMove UnforgeRefutation(ForgedReader reader)
         {
             switch (reader.ReadByte())
             {
@@ -626,16 +626,16 @@ namespace Netezos.Forging
             };
         }
 
-        static DissectionStep UnforgeDissection(ForgedReader reader)
+        public static DissectionStep UnforgeDissection(ForgedReader reader)
         {
             return new DissectionStep
             {
-                State = UnforgeConditional(reader, () => reader.ReadBase58(Lengths.src1.Decoded, Prefix.srs1)),
+                State = UnforgeConditional(reader, () => reader.ReadBase58(Lengths.src1.Decoded, Prefixes.srs1)),
                 Tick = (long)reader.ReadUBigInt()
             };
         }
 
-        static ProofStep UnforgeProofStep(ForgedReader reader)
+        public static ProofStep UnforgeProofStep(ForgedReader reader)
         {
             return new ProofStep
             {
@@ -644,7 +644,7 @@ namespace Netezos.Forging
             };
         }
 
-        static InputProof UnforgeInputProof(ForgedReader reader)
+        public static InputProof UnforgeInputProof(ForgedReader reader)
         {
             return reader.ReadByte() switch
             {
@@ -660,7 +660,7 @@ namespace Netezos.Forging
             };
         }
 
-        static RevealProof UnforgeRevealProof(ForgedReader reader)
+        public static RevealProof UnforgeRevealProof(ForgedReader reader)
         {
             return new RevealProof
             {
@@ -686,7 +686,7 @@ namespace Netezos.Forging
             };
         }
 
-        static T? UnforgeConditional<T>(ForgedReader reader, Func<T> tb, Func<T>? fb = null)
+        public static T? UnforgeConditional<T>(ForgedReader reader, Func<T> tb, Func<T>? fb = null)
             where T : class
         {
             return reader.ReadBool() ? tb() : fb?.Invoke();

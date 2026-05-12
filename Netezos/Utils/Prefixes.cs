@@ -1,6 +1,6 @@
 ﻿namespace Netezos
 {
-    static class Prefix
+    public static class Prefixes
     {
         /// <summary>
         /// Block hash prefix

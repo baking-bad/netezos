@@ -27,34 +27,34 @@ namespace Netezos.Contracts
                 if (micheBytes.Value[0] == 0)
                 {
                     if (micheBytes.Value[1] == 0)
-                        prefix = Prefix.tz1;
+                        prefix = Prefixes.tz1;
                     else if (micheBytes.Value[1] == 1)
-                        prefix = Prefix.tz2;
+                        prefix = Prefixes.tz2;
                     else if (micheBytes.Value[1] == 2)
-                        prefix = Prefix.tz3;
+                        prefix = Prefixes.tz3;
                     else if (micheBytes.Value[1] == 3)
-                        prefix = Prefix.tz4;
+                        prefix = Prefixes.tz4;
                     else
                         return Hex.Convert(micheBytes.Value);
                 }
                 else if (micheBytes.Value[0] == 1)
                 {
                     if (micheBytes.Value[21] == 0)
-                        prefix = Prefix.KT1;
+                        prefix = Prefixes.KT1;
                     else
                         return Hex.Convert(micheBytes.Value);
                 }
                 else if (micheBytes.Value[0] == 2)
                 {
                     if (micheBytes.Value[21] == 0)
-                        prefix = Prefix.txr1;
+                        prefix = Prefixes.txr1;
                     else
                         return Hex.Convert(micheBytes.Value);
                 }
                 else if (micheBytes.Value[0] == 3)
                 {
                     if (micheBytes.Value[21] == 0)
-                        prefix = Prefix.sr1;
+                        prefix = Prefixes.sr1;
                     else
                         return Hex.Convert(micheBytes.Value);
                 }
