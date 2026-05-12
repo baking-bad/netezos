@@ -579,7 +579,7 @@ namespace Netezos.Forging
         {
             return new Script
             {
-                Code = (MichelineArray)reader.ReadEnumerableSingle(UnforgeMicheline),
+                Code = reader.ReadEnumerableSingle(UnforgeMicheline),
                 Storage = reader.ReadEnumerableSingle(UnforgeMicheline)
             };
         }

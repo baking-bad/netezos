@@ -22,7 +22,7 @@ namespace Netezos.Forging.Models
     public class Script
     {
         [JsonPropertyName("code")]
-        public required MichelineArray Code { get; set; }
+        public required IMicheline Code { get; set; }
 
         [JsonPropertyName("storage")]
         public required IMicheline Storage { get; set; }
