@@ -1,0 +1,11 @@
+{
+  "node": "https://rpc.ushuaianet.teztnets.com",
+  "testContract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+  "testEntrypoint": "default",
+  "testDelegate": "tz1NNT9EERmcKekRq2vdv6e8TL3WQpY8AXSF",
+  "testInactive": "tz1P8rso6PZ2fd3mB7atQD7FqMLY8JcCnm4H",
+  "testSmartRollup": "sr1Todmok6RgcgCTm6ouS2gWxoR4UhB9sski",
+  "keyHash": "exprvBfbrdZVCjkmcsJRpioTnZdos3RLMZUDTK2AyFURY423xuWX4N",
+  "bigMapId": "2",
+  "testBlockLevel": 1
+}

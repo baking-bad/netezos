@@ -13,6 +13,11 @@ namespace Netezos.Rpc.Queries
         public ForgeBlockHeaderQuery BlockHeader => new(Base!, "forge_block_header/");
 
         /// <summary>
+        /// Gets the query to forge a consensus operation in BLS mode
+        /// </summary>
+        public ForgeBlsConsensusOperationsQuery BlsConsensusOperations => new(this, "bls_consensus_operations/");
+
+        /// <summary>
         /// Gets the query to the protocol data forging
         /// </summary>
         public ForgeProtocolDataQuery ProtocolData => new(this, "protocol_data/");
@@ -21,6 +26,11 @@ namespace Netezos.Rpc.Queries
         /// Gets the query to the operations forging
         /// </summary>
         public ForgeOperationsQuery Operations => new(this, "operations/");
+
+        /// <summary>
+        /// Gets the query to forge a signed operation
+        /// </summary>
+        public ForgeSignedOperationsQuery SignedOperations => new(this, "signed_operations/");
 
         internal ForgeQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
     }

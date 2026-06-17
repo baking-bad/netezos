@@ -6,9 +6,29 @@
     public class DelegateQuery : RpcObject
     {
         /// <summary>
-        /// Returns the currently active staking parameters for the given delegate.
+        /// Returns currently active staking parameters for the given delegate.
         /// </summary>
         public RpcObject ActiveStakingParameters => new(this, "active_staking_parameters/");
+
+        /// <summary>
+        /// Returns currently active delegate's parameters for the sTEZ contract.
+        /// </summary>
+        public RpcObject ActiveStezParameters => new(this, "active_stez_parameters/");
+
+        /// <summary>
+        /// Returns currently pending delegate's parameters for the sTEZ contract.
+        /// </summary>
+        public RpcObject PendingStezParameters => new(this, "pending_stez_parameters/");
+
+        /// <summary>
+        /// Returns true if the delegate is registered with the sTEZ contract. Otherwise, returns false.
+        /// </summary>
+        public RpcObject StezRegistered => new(this, "stez_registered/");
+
+        /// <summary>
+        /// Returns the current staking power from sTEZ allocated to this delegate.
+        /// </summary>
+        public RpcObject StezStakingPower => new(this, "stez_staking_power/");
 
         /// <summary>
         /// Returns the current baking power of a delegate, using the current staked and delegated balances of the baker

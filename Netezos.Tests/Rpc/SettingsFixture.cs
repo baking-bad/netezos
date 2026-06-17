@@ -15,6 +15,7 @@ namespace Netezos.Tests.Rpc
         public string TestSmartRollup { get; }
         public string KeyHash { get; }
         public int BigMapId { get; }
+        public int TestBlockLevel { get; }
 
         public SettingsFixture()
         {
@@ -30,6 +31,7 @@ namespace Netezos.Tests.Rpc
                 TestSmartRollup = settings.TestSmartRollup;
                 KeyHash = settings.KeyHash;
                 BigMapId = settings.BigMapId;
+                TestBlockLevel = settings.TestBlockLevel;
             }
         }
 

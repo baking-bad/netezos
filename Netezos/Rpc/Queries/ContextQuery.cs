@@ -34,6 +34,16 @@ namespace Netezos.Rpc.Queries
         public DalQuery Dal => new(this, "dal/");
 
         /// <summary>
+        /// Returns the denunciations for misbehavior in the current cycle.
+        /// </summary>
+        public RpcObject Denunciations => new(this, "denunciations/");
+
+        /// <summary>
+        /// Gets the query to destination data by destination id
+        /// </summary>
+        public DestinationsQuery Destination => new(this, "destination/");
+
+        /// <summary>
         /// Gets the query to all registered delegates
         /// </summary>
         public DelegatesQuery Delegates => new(this, "delegates/");
@@ -73,6 +83,11 @@ namespace Netezos.Rpc.Queries
         /// </summary>
         public RpcObject TotalFrozenStake => new(this, "total_frozen_stake/");
         
+        /// <summary>
+        /// Gets the query to sTEZ data
+        /// </summary>
+        public StezQuery Stez => new(this, "stez/");
+
         /// <summary>
         /// Returns the total supply (in mutez) available on the chain.
         /// </summary>

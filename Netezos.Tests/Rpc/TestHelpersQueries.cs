@@ -183,5 +183,95 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
         }
+
+        [Fact]
+        public async Task TestHelpersAllBakersAttestActivationLevel()
+        {
+            var query = Rpc.Blocks.Head.Helpers.AllBakersAttestActivationLevel;
+            Assert.Equal("chains/main/blocks/head/helpers/all_bakers_attest_activation_level", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject || res == null);
+        }
+
+        [Fact]
+        public async Task TestHelpersBakingPowerDistributionForCurrentCycle()
+        {
+            var query = Rpc.Blocks.Head.Helpers.BakingPowerDistributionForCurrentCycle;
+            Assert.Equal("chains/main/blocks/head/helpers/baking_power_distribution_for_current_cycle", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+        [Fact]
+        public async Task TestHelpersDecodeDalAttestation()
+        {
+            var query = Rpc.Blocks.Head.Helpers.DecodeDalAttestation[0];
+            Assert.Equal("chains/main/blocks/head/helpers/decode_dal_attestation/0/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+        [Fact]
+        public async Task TestHelpersEncodeDalAttestation()
+        {
+            var query = Rpc.Blocks.Head.Helpers.EncodeDalAttestation;
+            Assert.Equal("chains/main/blocks/head/helpers/encode_dal_attestation/", query.ToString());
+
+            var res = await query.PostAsync(new[]
+            {
+                new { lag_index = 0, slot_indices = Array.Empty<int>() }
+            });
+            Assert.True(res is DJsonValue);
+        }
+        [Fact]
+        public async Task TestHelpersForgeBlsConsensusOperations()
+        {
+            var query = Rpc.Blocks.Head.Helpers.Forge.BlsConsensusOperations;
+            Assert.Equal("chains/main/blocks/head/helpers/forge/bls_consensus_operations/", query.ToString());
+
+            var branch = (string)await Rpc.Blocks.Head.Hash.GetAsync();
+            var res = await query.PostAsync(branch, new List<object>
+            {
+                new
+                {
+                    kind = "attestation",
+                    slot = 0,
+                    level = 1,
+                    round = 0,
+                    block_payload_hash = "vh1g87ZG6scSYxKhspAUzprQVuLAyoa5qMBKcUfjgnQGnFb3dJcG"
+                }
+            });
+            Assert.True(res is DJsonObject);
+        }
+        [Fact]
+        public async Task TestHelpersForgeSignedOperations()
+        {
+            var query = Rpc.Blocks.Head.Helpers.Forge.SignedOperations;
+            Assert.Equal("chains/main/blocks/head/helpers/forge/signed_operations/", query.ToString());
+
+            var branch = (string)await Rpc.Blocks.Head.Hash.GetAsync();
+            var res = await query.PostAsync(branch, new List<object>
+            {
+                new
+                {
+                    kind = "attestation",
+                    slot = 0,
+                    level = 1,
+                    round = 0,
+                    block_payload_hash = "vh1g87ZG6scSYxKhspAUzprQVuLAyoa5qMBKcUfjgnQGnFb3dJcG"
+                }
+            });
+            Assert.True(res is DJsonValue);
+        }
+        [Fact]
+        public async Task TestHelpersTz4BakerNumberRatio()
+        {
+            var query = Rpc.Blocks.Head.Helpers.Tz4BakerNumberRatio;
+            Assert.Equal("chains/main/blocks/head/helpers/tz4_baker_number_ratio", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
     }
 }
