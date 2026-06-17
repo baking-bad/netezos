@@ -6,5 +6,6 @@
   "testInactive": "tz1PEhbjTyVvjQ2Zz8g4bYU2XPTbhvG8JMFh",
   "testSmartRollup": "sr1Fv3c7Sypd5ixnf3NPZnL2W8V49RSbQWQq",
   "keyHash": "exprvBfbrdZVCjkmcsJRpioTnZdos3RLMZUDTK2AyFURY423xuWX4N",
-  "bigMapId": "2"
+  "bigMapId": "2",
+  "testBlockLevel": 1
 }
