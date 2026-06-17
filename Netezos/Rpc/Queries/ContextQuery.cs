@@ -84,11 +84,6 @@ namespace Netezos.Rpc.Queries
         public RpcObject TotalFrozenStake => new(this, "total_frozen_stake/");
         
         /// <summary>
-        /// Gets the query to sTEZ data
-        /// </summary>
-        public StezQuery Stez => new(this, "stez/");
-
-        /// <summary>
         /// Returns the total supply (in mutez) available on the chain.
         /// </summary>
         public RpcObject TotalSupply => new(this, "total_supply/");

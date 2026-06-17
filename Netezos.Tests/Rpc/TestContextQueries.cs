@@ -228,46 +228,6 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
-        public async Task TestContextContractStezBalance()
-        {
-            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].StezBalance;
-            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/stez_balance/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextContractStezRedeemedFinalizableBalance()
-        {
-            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].StezRedeemedFinalizableBalance;
-            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/stez_redeemed_finalizable_balance/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextContractStezRedeemedFrozenBalance()
-        {
-            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].StezRedeemedFrozenBalance;
-            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/stez_redeemed_frozen_balance/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextContractStezTicketBalance()
-        {
-            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].StezTicketBalance;
-            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/stez_ticket_balance/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonObject);
-        }
-
-        [Fact]
         public async Task TestContextContractSpendable()
         {
             var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Spendable;
@@ -445,65 +405,6 @@ namespace Netezos.Tests.Rpc
             Assert.True(res is DJsonValue || res == null);
         }
 
-        [Fact]
-        public async Task TestContextStezBakers()
-        {
-            var query = Rpc.Blocks.Head.Context.Stez.Bakers;
-            Assert.Equal("chains/main/blocks/head/context/stez/bakers/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
-        }
-
-        [Fact]
-        public async Task TestContextStezContractHash()
-        {
-            var query = Rpc.Blocks.Head.Context.Stez.ContractHash;
-            Assert.Equal("chains/main/blocks/head/context/stez/contract_hash/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextStezStakingPower()
-        {
-            var query = Rpc.Blocks.Head.Context.Stez.StakingPower;
-            Assert.Equal("chains/main/blocks/head/context/stez/staking_power/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
-        }
-
-        [Fact]
-        public async Task TestContextStezTotalAmountOfTez()
-        {
-            var query = Rpc.Blocks.Head.Context.Stez.TotalAmountOfTez;
-            Assert.Equal("chains/main/blocks/head/context/stez/total_amount_of_tez/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextStezTotalSupply()
-        {
-            var query = Rpc.Blocks.Head.Context.Stez.TotalSupply;
-            Assert.Equal("chains/main/blocks/head/context/stez/total_supply/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextStezExchangeRate()
-        {
-            var query = Rpc.Blocks.Head.Context.Stez.ExchangeRate;
-            Assert.Equal("chains/main/blocks/head/context/stez/exchange_rate/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonObject);
-        }
 
         [Fact]
         public async Task TestContextDelegates()
@@ -539,46 +440,6 @@ namespace Netezos.Tests.Rpc
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonObject);
-        }
-
-        [Fact]
-        public async Task TestContextDelegateActiveStezParameters()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].ActiveStezParameters;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/active_stez_parameters/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonObject);
-        }
-
-        [Fact]
-        public async Task TestContextDelegatePendingStezParameters()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].PendingStezParameters;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/pending_stez_parameters/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonArray);
-        }
-
-        [Fact]
-        public async Task TestContextDelegateStezRegistered()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].StezRegistered;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/stez_registered/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
-        }
-
-        [Fact]
-        public async Task TestContextDelegateStezStakingPower()
-        {
-            var query = Rpc.Blocks.Head.Context.Delegates[TestDelegate].StezStakingPower;
-            Assert.Equal($"chains/main/blocks/head/context/delegates/{TestDelegate}/stez_staking_power/", query.ToString());
-
-            var res = await query.GetAsync();
-            Assert.True(res is DJsonValue);
         }
 
         [Fact]

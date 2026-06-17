@@ -11,26 +11,6 @@
         public RpcObject ActiveStakingParameters => new(this, "active_staking_parameters/");
 
         /// <summary>
-        /// Returns currently active delegate's parameters for the sTEZ contract.
-        /// </summary>
-        public RpcObject ActiveStezParameters => new(this, "active_stez_parameters/");
-
-        /// <summary>
-        /// Returns currently pending delegate's parameters for the sTEZ contract.
-        /// </summary>
-        public RpcObject PendingStezParameters => new(this, "pending_stez_parameters/");
-
-        /// <summary>
-        /// Returns true if the delegate is registered with the sTEZ contract. Otherwise, returns false.
-        /// </summary>
-        public RpcObject StezRegistered => new(this, "stez_registered/");
-
-        /// <summary>
-        /// Returns the current staking power from sTEZ allocated to this delegate.
-        /// </summary>
-        public RpcObject StezStakingPower => new(this, "stez_staking_power/");
-
-        /// <summary>
         /// Returns the current baking power of a delegate, using the current staked and delegated balances of the baker
         /// and its delegators. In other words, the baking rights that the baker would get for a future cycle if the
         /// current cycle ended right at the current block.

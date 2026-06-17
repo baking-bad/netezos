@@ -98,29 +98,6 @@ namespace Netezos.Rpc.Queries
         public RpcObject StakingNumerator => new(this, "staking_numerator/");
 
         /// <summary>
-        /// Gets a query for the sTEZ token balance of the contract.
-        /// </summary>
-        public RpcObject StezBalance => new(this, "stez_balance/");
-
-        /// <summary>
-        /// Gets a query for the balance (in mutez) of funds that were requested for a redeem operation and are no
-        /// longer frozen. These can be transferred to the contract's spendable balance with any deposit, redeem, or
-        /// finalize_redeem operation.
-        /// </summary>
-        public RpcObject StezRedeemedFinalizableBalance => new(this, "stez_redeemed_finalizable_balance/");
-
-        /// <summary>
-        /// Gets a query for the balance (in mutez) of funds that were requested for a redeem operation but are still
-        /// frozen for the standard unstake finalization delay.
-        /// </summary>
-        public RpcObject StezRedeemedFrozenBalance => new(this, "stez_redeemed_frozen_balance/");
-
-        /// <summary>
-        /// Gets a query for the sTEZ ticket balance of the contract (for tokens exported as tickets).
-        /// </summary>
-        public RpcObject StezTicketBalance => new(this, "stez_ticket_balance/");
-
-        /// <summary>
         /// Gets the query to the spendable balance of a contract (in mutez), also known as liquid balance. Corresponds
         /// to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds.
         /// Identical to the 'balance' RPC.
