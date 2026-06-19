@@ -6,7 +6,7 @@
     public class DelegateQuery : RpcObject
     {
         /// <summary>
-        /// Returns the currently active staking parameters for the given delegate.
+        /// Returns currently active staking parameters for the given delegate.
         /// </summary>
         public RpcObject ActiveStakingParameters => new(this, "active_staking_parameters/");
 

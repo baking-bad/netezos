@@ -21,6 +21,11 @@
         public PublishedSlotHeadersQuery PublishedSlotHeaders => new(this, "published_slot_headers/");
 
         /// <summary>
+        /// Gets the query to the DAL parameters used at the given block level
+        /// </summary>
+        public PastDalParametersQuery PastParameters => new(this, "past_parameters/");
+
+        /// <summary>
         /// Gets the query to the shards assignment for a given level (the default is the current level) and given
         /// delegates (the default is all delegates)
         /// </summary>

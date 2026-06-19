@@ -14,6 +14,7 @@ namespace Netezos.Tests.Rpc
         readonly string TestSmartRollup = settings.TestSmartRollup;
         readonly string KeyHash = settings.KeyHash;
         readonly int BigMapId = settings.BigMapId;
+        readonly int TestBlockLevel = settings.TestBlockLevel;
 
         [Fact]
         public async Task TestContextAdaptiveIssuanceLaunch()
@@ -217,6 +218,16 @@ namespace Netezos.Tests.Rpc
         }
 
         [Fact]
+        public async Task TestContextContractStakingNumerator()
+        {
+            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].StakingNumerator;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/staking_numerator/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue);
+        }
+
+        [Fact]
         public async Task TestContextContractSpendable()
         {
             var query = Rpc.Blocks.Head.Context.Contracts[TestContract].Spendable;
@@ -363,6 +374,37 @@ namespace Netezos.Tests.Rpc
             var res = await query.GetAsync();
             Assert.True(res is DJsonArray);
         }
+
+        [Fact]
+        public async Task TestContextDalPastParameters()
+        {
+            var query = Rpc.Blocks.Head.Context.Dal.PastParameters[TestBlockLevel];
+            Assert.Equal($"chains/main/blocks/head/context/dal/past_parameters/{TestBlockLevel}/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonObject);
+        }
+
+        [Fact]
+        public async Task TestContextDenunciations()
+        {
+            var query = Rpc.Blocks.Head.Context.Denunciations;
+            Assert.Equal("chains/main/blocks/head/context/denunciations/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonArray);
+        }
+
+        [Fact]
+        public async Task TestContextDestinationIndex()
+        {
+            var query = Rpc.Blocks.Head.Context.Destination[TestContract].Index;
+            Assert.Equal($"chains/main/blocks/head/context/destination/{TestContract}/index/", query.ToString());
+
+            var res = await query.GetAsync();
+            Assert.True(res is DJsonValue || res == null);
+        }
+
 
         [Fact]
         public async Task TestContextDelegates()

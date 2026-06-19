@@ -11,14 +11,14 @@ namespace Netezos.Rpc.Queries
         /// Gets the query to the complete list of tickets owned by the given contract by scanning the contract's storage.
         /// </summary>
         public RpcObject AllTicketBalances => new(this, "all_ticket_balances/");
-        
+
         /// <summary>
         /// Gets the query to the spendable balance of a contract (in mutez), also known as liquid balance. Corresponds
         /// to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds.
         /// Identical to the 'spendable' RPC.
         /// </summary>
         public RpcObject Balance => new(this, "balance/");
-        
+
         /// <summary>
         /// Gets the query to the sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds
         /// to the contract's full balance from which staked funds and unstake requests have been excluded. Identical
@@ -93,12 +93,17 @@ namespace Netezos.Rpc.Queries
         public RpcObject StakedBalance => new(this, "staked_balance/");
 
         /// <summary>
+        /// Gets a query for an abstract representation of the contract's total delegated stake.
+        /// </summary>
+        public RpcObject StakingNumerator => new(this, "staking_numerator/");
+
+        /// <summary>
         /// Gets the query to the spendable balance of a contract (in mutez), also known as liquid balance. Corresponds
         /// to tez owned by the contract that are neither staked, nor in unstaked requests, nor in frozen bonds.
         /// Identical to the 'balance' RPC.
         /// </summary>
         public RpcObject Spendable => new(this, "spendable/");
-        
+
         /// <summary>
         /// Gets the query to the sum (in mutez) of the spendable balance and frozen bonds of a contract. Corresponds
         /// to the contract's full balance from which staked funds and unstake requests have been excluded. Identical
@@ -135,6 +140,8 @@ namespace Netezos.Rpc.Queries
         /// </summary>
         public RpcObject UnstakedFrozenBalance => new(this, "unstaked_frozen_balance/");
 
-        internal ContractQuery(RpcQuery baseQuery, string append) : base(baseQuery, append) { }
+        internal ContractQuery(RpcQuery baseQuery, string append) : base(baseQuery, append)
+        {
+        }
     }
 }
