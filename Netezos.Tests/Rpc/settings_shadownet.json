@@ -1,0 +1,11 @@
+{
+  "node": "https://rpc.tzkt.io/shadownet/",
+  "testContract": "KT1TxqZ8QtKvLu3V3JH7Gx58n7Co8pgtpQU5",
+  "testEntrypoint": "default",
+  "testDelegate": "tz1TnEtqDV9mZyts2pfMy6Jw1BTPs4LMjL8M",
+  "testInactive": "tz1Z2uc25cNDrMMZWw8PcQtUjKFtpnsotqyD",
+  "testSmartRollup": "sr19fMYrr5C4qqvQqQrDSjtP31GcrWjodzvg",
+  "keyHash": "exprv5VFJ5n3TWvuA7eR1Z5FqLvwoynr4sy9sjL9MsBww2f4LpfaC9",
+  "bigMapId": "9563",
+  "testBlockLevel": 1
+}
