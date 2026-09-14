@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build
+        run: dotnet build --configuration Release --nologo
+
+      - name: Test
+        run: >
+          dotnet test Netezos.Tests
+          --no-build
+          --configuration Release
+          --nologo
+          --verbosity normal
+          --filter "FullyQualifiedName!~Rpc"

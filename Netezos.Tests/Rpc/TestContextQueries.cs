@@ -170,8 +170,8 @@ namespace Netezos.Tests.Rpc
         [Fact]
         public async Task TestContextContractFullBalance()
         {
-            var query = Rpc.Blocks.Head.Context.Contracts[TestContract].FullBalance;
-            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestContract}/full_balance/", query.ToString());
+            var query = Rpc.Blocks.Head.Context.Contracts[TestDelegate].FullBalance;
+            Assert.Equal($"chains/main/blocks/head/context/contracts/{TestDelegate}/full_balance/", query.ToString());
 
             var res = await query.GetAsync();
             Assert.True(res is DJsonValue);
