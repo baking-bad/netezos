@@ -21,7 +21,8 @@ namespace Netezos.Tests.Rpc
         {
             lock (Crit)
             {
-                var settings = DJson.Read("../../../Rpc/settings.json");
+                var file = Environment.GetEnvironmentVariable("NETEZOS_TEST_SETTINGS") ?? "settings.json";
+                var settings = DJson.Read($"../../../Rpc/{file}");
 
                 Rpc = new TezosRpc(settings.node, 60);
                 TestContract = settings.TestContract;
