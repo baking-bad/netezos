@@ -10,11 +10,13 @@ jobs:
   publish:
     name: Build and publish documentation
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     environment:
       name: github-pages
       url: https://github.com
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
       - name: Build documentation
         uses: nikeee/docfx-action@v1.0.0
@@ -22,7 +24,9 @@ jobs:
           args: docs/docfx.json
 
       - name: Publish documentation
-        uses: maxheld83/ghpages@master
-        env:
-          BUILD_DIR: docs/_site
-          GH_PAT: ${{ secrets.PAT }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_site
+          publish_branch: gh-pages
+          force_orphan: true

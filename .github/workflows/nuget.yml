@@ -12,12 +12,12 @@ jobs:
       name: nuget
       url: https://github.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           token: ${{ secrets.PAT }}
-          
+
       - name: Setup .NET 9
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '9.0.x'
 
