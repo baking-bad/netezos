@@ -23,12 +23,18 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 9.0.x
+
       - name: Build
-        run: dotnet build Netezos.Tests --configuration Release --nologo
+        run: dotnet build Netezos.Tests --framework net9.0 --configuration Release --nologo
 
       - name: Test
         run: >
           dotnet test Netezos.Tests
+          --framework net9.0
           --no-build
           --configuration Release
           --nologo

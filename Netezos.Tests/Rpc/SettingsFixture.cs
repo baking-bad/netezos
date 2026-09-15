@@ -5,7 +5,7 @@ namespace Netezos.Tests.Rpc
 {
     public class SettingsFixture : IDisposable
     {
-        static readonly Lock Crit = new();
+        static readonly object Crit = new();
 
         public TezosRpc Rpc { get; }
         public string TestContract { get; }
