@@ -1,13 +1,22 @@
 name: Publish on NuGet
 
 on:
-  push:
+  workflow_run:
+    workflows: [ CI ]
+    types: [ completed ]
     branches: [ master ]
+
+concurrency:
+  group: nuget-publish
+  cancel-in-progress: false
 
 jobs:
   publish:
     name: Build and publish package
     runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.conclusion == 'success'
     environment:
       name: nuget
       url: https://github.com
@@ -15,6 +24,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           token: ${{ secrets.PAT }}
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v6
