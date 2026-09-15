@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
-		<TargetFrameworks>net8.0;net9.0;</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -23,7 +23,7 @@
 		<Product>Netezos</Product>
 		<Description>Tezos blockchain SDK for .NET</Description>
 		<Version>3.0.3</Version>
-		<Copyright>Copyright © Baking Bad 2019-2025</Copyright>
+		<Copyright>Copyright © Baking Bad 2019-2026</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>

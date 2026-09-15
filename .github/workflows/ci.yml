@@ -22,7 +22,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # One job per native runtime shipped in the package, see Netezos.csproj
         include:
           - { os: ubuntu-latest,    rid: linux-x64 }
           - { os: ubuntu-24.04-arm, rid: linux-arm64 }
@@ -38,6 +37,7 @@ jobs:
           dotnet-version: |
             8.0.x
             9.0.x
+            10.0.x
 
       - name: Build
         run: dotnet build --configuration Release --nologo
