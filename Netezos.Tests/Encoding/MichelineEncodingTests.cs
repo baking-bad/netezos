@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using System.Text.Encodings.Web;
 using Xunit;
 using Netezos.Encoding;
@@ -31,8 +32,11 @@ namespace Netezos.Tests.Encoding
         {
             static string CreateDeepOption(int depth)
             {
-                if (depth == 0) return @"{""prim"":""int""}";
-                return $@"{{""prim"":""option"",""args"":[{CreateDeepOption(depth - 1)}]}}";
+                var sb = new StringBuilder();
+                for (int i = 0; i < depth; i++) sb.Append(@"{""prim"":""option"",""args"":[");
+                sb.Append(@"{""prim"":""int""}");
+                for (int i = 0; i < depth; i++) sb.Append("]}");
+                return sb.ToString();
             }
 
             var json1 = CreateDeepOption(12_000);
@@ -50,8 +54,11 @@ namespace Netezos.Tests.Encoding
         {
             static string CreateDeepPair(int depth)
             {
-                if (depth == 0) return $@"{{""prim"":""pair"",""args"":[{{""prim"":""nat""}},{{""prim"":""unit""}}],""annots"":[""%d0""]}}";
-                return $@"{{""prim"":""pair"",""args"":[{{""prim"":""unit""}},{CreateDeepPair(depth - 1)}],""annots"":[""%d{depth}""]}}";
+                var sb = new StringBuilder();
+                for (int i = depth; i > 0; i--) sb.Append(@"{""prim"":""pair"",""args"":[{""prim"":""unit""},");
+                sb.Append(@"{""prim"":""pair"",""args"":[{""prim"":""nat""},{""prim"":""unit""}],""annots"":[""%d0""]}");
+                for (int i = 1; i <= depth; i++) sb.Append($@"],""annots"":[""%d{i}""]}}");
+                return sb.ToString();
             }
 
             var json2 = CreateDeepPair(10_000);
