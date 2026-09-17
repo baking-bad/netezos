@@ -5,7 +5,7 @@ namespace Netezos.Tests.Rpc
 {
     public class SettingsFixture : IDisposable
     {
-        static readonly Lock Crit = new();
+        static readonly object Crit = new();
 
         public TezosRpc Rpc { get; }
         public string TestContract { get; }
@@ -21,7 +21,8 @@ namespace Netezos.Tests.Rpc
         {
             lock (Crit)
             {
-                var settings = DJson.Read("../../../Rpc/settings.json");
+                var file = Environment.GetEnvironmentVariable("NETEZOS_TEST_SETTINGS") ?? "settings.json";
+                var settings = DJson.Read($"../../../Rpc/{file}");
 
                 Rpc = new TezosRpc(settings.node, 60);
                 TestContract = settings.TestContract;

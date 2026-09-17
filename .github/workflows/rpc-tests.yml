@@ -1,0 +1,40 @@
+name: RPC tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rpc-test:
+    name: ${{ matrix.settings }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - settings_shadownet.json
+          - settings_ushuaianet.json
+    env:
+      NETEZOS_TEST_SETTINGS: ${{ matrix.settings }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        run: dotnet build Netezos.Tests --framework net10.0 --configuration Release --nologo
+
+      - name: Test
+        run: >
+          dotnet test Netezos.Tests
+          --framework net10.0
+          --no-build
+          --configuration Release
+          --nologo
+          --verbosity normal
+          --filter "FullyQualifiedName~Rpc"

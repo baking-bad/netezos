@@ -9,20 +9,20 @@ jobs:
   notify:
     name: Make release and notify
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@master
-
       - name: Get tag
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Make release
-        uses: "marvinpinto/action-automatic-releases@latest"
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: true
 
       - name: Send Telegram notification
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@214f06cfa3d3a588c1472116889437e7c6fd29b1 # v1.1.1
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
@@ -32,11 +32,12 @@ jobs:
             More info at https://github.com/baking-bad/netezos/releases/tag/${{ env.RELEASE_VERSION }}
 
       - name: Send Slack notification
-        uses: Ilshidur/action-slack@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
         with:
-          args: |
-            Netezos ${{ env.RELEASE_VERSION }} has been released 😎
-            NuGet Package will be available in a few minutes.
-            More info at https://github.com/baking-bad/netezos/releases/tag/${{ env.RELEASE_VERSION }}
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: |
+              Netezos ${{ env.RELEASE_VERSION }} has been released 😎
+              NuGet Package will be available in a few minutes.
+              More info at https://github.com/baking-bad/netezos/releases/tag/${{ env.RELEASE_VERSION }}

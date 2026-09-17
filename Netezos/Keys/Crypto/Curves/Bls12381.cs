@@ -109,7 +109,7 @@ namespace Netezos.Keys
             var hash = new long[Blst.blst_p2_sizeof() / sizeof(long)];
             Blst.blst_hash_to_g2(hash, msg, (nuint)msg.Length, dst, (nuint)dst.Length, [], 0);
 
-            var sig = new long[Blst.blst_p2_affine_sizeof() / sizeof(long)];
+            var sig = new long[Blst.blst_p2_sizeof() / sizeof(long)];
             Blst.blst_sign_pk_in_g1(sig, hash, prvKey);
 
             var res = new byte[96];
