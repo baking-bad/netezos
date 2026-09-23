@@ -30,7 +30,7 @@
 	<ItemGroup>
 		<PackageReference Include="LedgerWallet" Version="2.0.0.5" />
 		<PackageReference Include="Netezos" Version="2.12.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	</ItemGroup>
 
 </Project>
