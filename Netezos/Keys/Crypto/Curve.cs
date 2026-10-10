@@ -29,6 +29,7 @@
             ECKind.Secp256k1 => new Secp256k1(),
             ECKind.NistP256 => new NistP256(),
             ECKind.Bls12381 => new Bls12381(),
+            ECKind.MlDsa44 => new MlDsa44(),
             _ => throw new ArgumentException("Invalid EC kind")
         };
 
@@ -38,6 +39,7 @@
             "sppk" or "spsk" or "tz2" or "spesk" or "spsig" => new Secp256k1(),
             "p2pk" or "p2sk" or "tz3" or "p2esk" or "p2sig" => new NistP256(),
             "BLpk" or "BLsk" or "tz4" or "BLesk" or "BLsig" => new Bls12381(),
+            "mdpk" or "mdsk" or "tz5" or "mdesk" or "mdsig" => new MlDsa44(),
             _ => throw new ArgumentException("Invalid prefix"),
         };
 
@@ -47,6 +49,7 @@
             "spsk" => new Secp256k1(),
             "p2sk" => new NistP256(),
             "BLsk" => new Bls12381(),
+            "mdsk" => new MlDsa44(),
             _ => throw new ArgumentException("Invalid private key prefix"),
         };
 
@@ -56,6 +59,7 @@
             "sppk" => new Secp256k1(),
             "p2pk" => new NistP256(),
             "BLpk" => new Bls12381(),
+            "mdpk" => new MlDsa44(),
             _ => throw new ArgumentException("Invalid public key prefix"),
         };
         #endregion

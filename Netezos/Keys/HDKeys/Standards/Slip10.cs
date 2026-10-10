@@ -11,8 +11,8 @@ namespace Netezos.Keys
     {
         public override (byte[], byte[]) GenerateMasterKey(Curve curve, byte[] seed)
         {
-            if (curve.Kind == ECKind.Bls12381)
-                throw new NotSupportedException("BLS12-381 curve is not supported by the SLIP-0010 standard");
+            if (curve.Kind is ECKind.Bls12381 or ECKind.MlDsa44)
+                throw new NotSupportedException($"{curve.Kind} is not supported by the SLIP-0010 standard");
 
             using var hmacSha512 = new HMACSHA512(curve.Slip10Seed);
             while (true)
@@ -47,8 +47,8 @@ namespace Netezos.Keys
 
         public override (byte[], byte[]) GetChildPrivateKey(Curve curve, byte[] privateKey, byte[] chainCode, uint index)
         {
-            if (curve.Kind == ECKind.Bls12381)
-                throw new NotSupportedException("BLS12-381 curve is not supported by the SLIP-0010 standard");
+            if (curve.Kind is ECKind.Bls12381 or ECKind.MlDsa44)
+                throw new NotSupportedException($"{curve.Kind} is not supported by the SLIP-0010 standard");
 
             byte[] l;
             
@@ -109,8 +109,8 @@ namespace Netezos.Keys
 
         public override (byte[], byte[]) GetChildPublicKey(Curve curve, byte[] pubKey, byte[] chainCode, uint index)
         {
-            if (curve.Kind == ECKind.Bls12381)
-                throw new NotSupportedException("BLS12-381 curve is not supported by the SLIP-0010 standard");
+            if (curve.Kind is ECKind.Bls12381 or ECKind.MlDsa44)
+                throw new NotSupportedException($"{curve.Kind} is not supported by the SLIP-0010 standard");
 
             if (curve.Kind == ECKind.Ed25519)
                 throw new NotSupportedException("Ed25519 public key derivation not supported by slip-10");

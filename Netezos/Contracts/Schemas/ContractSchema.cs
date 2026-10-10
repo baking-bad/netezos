@@ -44,6 +44,8 @@ namespace Netezos.Contracts
                         prefix = Prefixes.tz3;
                     else if (micheBytes.Value[1] == 3)
                         prefix = Prefixes.tz4;
+                    else if (micheBytes.Value[1] == 4)
+                        prefix = Prefixes.tz5;
                     else
                         return Hex.Convert(micheBytes.Value);
                 }
@@ -155,6 +157,11 @@ namespace Netezos.Contracts
                     addressBytes.CopyTo(res, 2);
                     res[0] = 0;
                     res[1] = 3;
+                    break;
+                case "tz5":
+                    addressBytes.CopyTo(res, 2);
+                    res[0] = 0;
+                    res[1] = 4;
                     break;
                 case "KT1":
                     addressBytes.CopyTo(res, 1);

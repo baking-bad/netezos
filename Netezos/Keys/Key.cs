@@ -122,8 +122,8 @@ namespace Netezos.Keys
 
         public static Key FromBase58(string base58)
         {
-            if (base58.Length != 54 && base58.Length != 98)
-                throw new ArgumentException("Invalid private key format. Expected base58 string of 54 or 98 characters.");
+            if (base58.Length != 54 && base58.Length != 98 && base58.Length != 5298)
+                throw new ArgumentException("Invalid private key format. Expected base58 string of 54, 98 or 5298 characters.");
 
             var curve = Curve.FromPrivateKeyBase58(base58);
             var bytes = Base58.Parse(base58, curve.PrivateKeyPrefix);

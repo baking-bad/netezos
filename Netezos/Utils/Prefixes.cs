@@ -53,6 +53,11 @@
         public static readonly byte[] tz4 = [6, 161, 166];
 
         /// <summary>
+        /// Address prefix for ML-DSA-44
+        /// </summary>
+        public static readonly byte[] tz5 = [6, 161, 169];
+
+        /// <summary>
         /// Address prefix for originated contract
         /// </summary>
         public static readonly byte[] KT1 = [2, 90, 121];
@@ -98,6 +103,11 @@
         public static readonly byte[] BLpk = [6, 149, 135, 204];
 
         /// <summary>
+        /// Public key prefix for ML-DSA-44 (tz5)
+        /// </summary>
+        public static readonly byte[] mdpk = [13, 7, 237, 67];
+
+        /// <summary>
         /// Private key prefix for Ed25519 (tz1)
         /// </summary>
         public static readonly byte[] edsk = [13, 15, 58, 7];
@@ -118,6 +128,11 @@
         public static readonly byte[] BLsk = [3, 150, 192, 40];
 
         /// <summary>
+        /// Private key prefix for ML-DSA-44 (tz5)
+        /// </summary>
+        public static readonly byte[] mdsk = [9, 57, 116, 57];
+
+        /// <summary>
         /// Signature prefix for Ed25519 (tz1)
         /// </summary>
         public static readonly byte[] edsig = [9, 245, 205, 134, 18];
@@ -136,6 +151,11 @@
         /// Signature prefix for BLS12-381 (tz4)
         /// </summary>
         public static readonly byte[] BLsig = [40, 171, 64, 207];
+
+        /// <summary>
+        /// Signature prefix for ML-DSA-44 (tz5)
+        /// </summary>
+        public static readonly byte[] mdsig = [1, 156, 45, 210, 3];
 
         /// <summary>
         /// Signature prefix

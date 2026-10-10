@@ -56,6 +56,7 @@ namespace Netezos.Forging
                 "sppk" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefixes.sppk)),
                 "p2pk" => new byte[] { 2 }.Concat(Base58.Parse(value, Prefixes.p2pk)),
                 "BLpk" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefixes.BLpk)),
+                "mdpk" => new byte[] { 4 }.Concat(Base58.Parse(value, Prefixes.mdpk)),
                 _ => throw new ArgumentException("Invalid public key prefix")
             };
         }
@@ -68,6 +69,7 @@ namespace Netezos.Forging
                 "tz2" => new byte[] { 0, 1 }.Concat(Base58.Parse(value, Prefixes.tz2)),
                 "tz3" => new byte[] { 0, 2 }.Concat(Base58.Parse(value, Prefixes.tz3)),
                 "tz4" => new byte[] { 0, 3 }.Concat(Base58.Parse(value, Prefixes.tz4)),
+                "tz5" => new byte[] { 0, 4 }.Concat(Base58.Parse(value, Prefixes.tz5)),
                 "KT1" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefixes.KT1)).Concat([0]),
                 "txr" when value.StartsWith("txr1") => new byte[] { 2 }.Concat(Base58.Parse(value, Prefixes.txr1)).Concat([0]),
                 "sr1" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefixes.sr1)).Concat([0]),
@@ -93,6 +95,7 @@ namespace Netezos.Forging
                 "tz2" => new byte[] { 1 }.Concat(Base58.Parse(value, Prefixes.tz2)),
                 "tz3" => new byte[] { 2 }.Concat(Base58.Parse(value, Prefixes.tz3)),
                 "tz4" => new byte[] { 3 }.Concat(Base58.Parse(value, Prefixes.tz4)),
+                "tz5" => new byte[] { 4 }.Concat(Base58.Parse(value, Prefixes.tz5)),
                 _ => throw new ArgumentException("Invalid source prefix")
             };
         }
@@ -105,6 +108,7 @@ namespace Netezos.Forging
                 "sps" => Prefixes.spsig,
                 "p2s" => Prefixes.p2sig,
                 "BLs" => Prefixes.BLsig,
+                "mds" => Prefixes.mdsig,
                 "sig" => Prefixes.sig,
                 _ => throw new ArgumentException($"Invalid signature prefix: {value}")
             };

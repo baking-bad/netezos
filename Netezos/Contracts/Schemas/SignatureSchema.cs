@@ -20,10 +20,18 @@ namespace Netezos.Contracts
             }
             else if (value is MichelineBytes micheBytes)
             {
-                if (micheBytes.Value.Length != 64)
+                var prefix = micheBytes.Value.Length switch
+                {
+                    64 => Prefixes.sig,
+                    96 => Prefixes.BLsig,
+                    2420 => Prefixes.mdsig,
+                    _ => null
+                };
+
+                if (prefix == null)
                     return Hex.Convert(micheBytes.Value);
 
-                return Base58.Convert(micheBytes.Value, Prefixes.sig);
+                return Base58.Convert(micheBytes.Value, prefix);
             }
             else
             {
@@ -50,6 +58,7 @@ namespace Netezos.Contracts
                 {
                     "eds" or "sps" => Base58.Parse(micheStr.Value, 5),
                     "p2s" or "BLs" => Base58.Parse(micheStr.Value, 4),
+                    "mds" => Base58.Parse(micheStr.Value, 5),
                     "sig" => Base58.Parse(micheStr.Value, 3),
                     _ => throw FormatException(value)
                 };

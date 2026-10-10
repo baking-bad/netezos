@@ -12,7 +12,7 @@ The following functionality is available:
 | Netezos.Contracts | Tools for interaction with Tezos smart contracts, enabling building/parsing Micheline types from/to human-readable types. |
 | Netezos.Encoding | Encoding tools for working with Tezos Micheline, Base58, Hex, etc.. |
 | Netezos.Forge| Forging tools for encoding operations into binary format accepting by Tezos nodes. |
-| Netezos.Keys| Tools for working with simple and HD keys. Supported curves: ed25519 (tz1), secp256k1 (tz2), nistp256 (tz3), bls12381 (tz4). |
+| Netezos.Keys| Tools for working with simple and HD keys. Supported curves: ed25519 (tz1), secp256k1 (tz2), nistp256 (tz3), bls12381 (tz4). ML-DSA-44 keys and tz5 addresses are supported for encoding/decoding only. |
 | Netezos.Ledger| Tools for interaction with Tezos Ledger App. This is sort of a legacy package, that is no longer maintained, but still working. |
 | Netezos.Rpc | Tezos RPC wrapper |
 

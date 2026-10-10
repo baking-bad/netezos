@@ -29,6 +29,7 @@ namespace Netezos.Contracts
                     1 => Prefixes.tz2,
                     2 => Prefixes.tz3,
                     3 => Prefixes.tz4,
+                    4 => Prefixes.tz5,
                     _ => null
                 };
 
@@ -68,6 +69,7 @@ namespace Netezos.Contracts
                     "tz2" => 1,
                     "tz3" => 2,
                     "tz4" => 3,
+                    "tz5" => 4,
                     _ => throw FormatException(value)
                 };
 

@@ -153,6 +153,7 @@ namespace Netezos.Forging
                 1 => (Prefixes.sppk, 33),
                 2 => (Prefixes.p2pk, 33),
                 3 => (Prefixes.BLpk, 48),
+                4 => (Prefixes.mdpk, 1312),
                 var type => throw new ArgumentException($"Invalid public key prefix {type}")
             };
 
@@ -188,6 +189,7 @@ namespace Netezos.Forging
                 1 => Prefixes.tz2,
                 2 => Prefixes.tz3,
                 3 => Prefixes.tz4,
+                4 => Prefixes.tz5,
                 var type => throw new ArgumentException($"Invalid source prefix {type}")
             };
             return ReadBase58(20, prefix);

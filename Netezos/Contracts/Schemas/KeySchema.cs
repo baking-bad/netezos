@@ -26,6 +26,7 @@ namespace Netezos.Contracts
                     (1, 34) => Prefixes.sppk,
                     (2, 34) => Prefixes.p2pk,
                     (3, 49) => Prefixes.BLpk,
+                    (4, 1313) => Prefixes.mdpk,
                     _ => null
                 };
 
@@ -76,6 +77,10 @@ namespace Netezos.Contracts
                     case "BLpk":
                         res = new byte[49];
                         res[0] = 3;
+                        break;
+                    case "mdpk":
+                        res = new byte[1313];
+                        res[0] = 4;
                         break;
                     default:
                         throw FormatException(value);
