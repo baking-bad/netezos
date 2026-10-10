@@ -1,0 +1,408 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  
+      <title>Get data from view entrypoints | Netezos</title>
+      <meta name="description" content="Short guide on how to get data from Tezos smart contracts via &quot;view&quot; entrypoints using Netezos, Tezos SDK for .NET developers.">
+      <meta name="keywords" content="netezos, tezos, tezos sdk, tezos csharp, tezos csharp sdk, blockchain, blockchain sdk, smart contracts, NFT, FA2, FA1.2">
+  
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@TezosBakingBad">
+      <meta name="twitter:creator" content="@TezosBakingBad">
+      <meta name="twitter:title" content="Get data from view entrypoints | Netezos">
+      <meta name="twitter:description" content="Short guide on how to get data from Tezos smart contracts via &quot;view&quot; entrypoints using Netezos, Tezos SDK for .NET developers.">
+      <meta name="twitter:image" content="https://netezos.dev/logo.png">
+      <meta name="twitter:image:alt" content="Netezos">
+  
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://netezos.dev">
+      <meta property="og:title" content="Get data from view entrypoints | Netezos">
+      <meta property="og:description" content="Short guide on how to get data from Tezos smart contracts via &quot;view&quot; entrypoints using Netezos, Tezos SDK for .NET developers.">
+      <meta property="og:image" content="https://netezos.dev/logo.png">
+      <meta property="og:image:secure_url" content="https://netezos.dev/logo.png">
+      <meta property="og:image:alt" content="Netezos">
+      <meta property="og:image:type" content="image/png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+  
+      <link rel="canonical" href="https://netezos.dev/docs/call-view-entrypoints.html">
+  
+      <link rel="stylesheet" href="/styles/docfx.vendor.css">
+      <link rel="stylesheet" href="/styles/docfx.css">
+      <link rel="stylesheet" href="/styles/main.css">
+  
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+      <meta property="docfx:rel" content="../">
+      <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="get-data-from-view-entrypoints">Get data from &quot;view&quot; entrypoints</h1>
+
+<p>Often we need to access smart contract storage, to get specific data like token balance for a specific account, or total supply of some token, etc.</p>
+<p>In Tezos there are two ways to get data from a smart contract:</p>
+<ul>
+<li>get the whole storage and try to find there raw data;</li>
+<li>use &quot;view&quot; entrypoints to get processed data.</li>
+</ul>
+<p>Let's see how to work with &quot;view&quot; entrypoints (from the outside).</p>
+<h2 id="view-entrypoints">View entrypoints</h2>
+<p>A <code>view</code> is an entrypoint that represents a computation that does not modify smart contract's state, but returns some result.
+In Tezos <code>view</code> entrypoints are actually the same entrypoints (technically), but following some conventions.
+See more details <a href="https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-4/tzip-4.md#view-entrypoints">here</a>.</p>
+<p>In contrast with <code>view</code> functions in Ethereum, which are very easy to use, <code>view</code> entrypoints in Tezos are much more complicated, because they do not return
+a value directly, but pass it to the callback contract.</p>
+<h2 id="callback-contracts">Callback contracts</h2>
+<p>A <code>callback</code> is a contract (or an entrypoint of the contract, to be precise) which is used to process a result from the invoked <code>view</code> entrypoint.
+Obviously, a <code>callback</code> must have the same type as the result from a <code>view</code> entrypoint.
+If you pass a result of type <code>a</code> to a callback of type <code>b</code> you will get a runtime error.</p>
+<h2 id="how-it-works">How it works</h2>
+<p>Let's see how it works in a real example.</p>
+<p>This is a transaction that calls <code>getBalance</code> view entrypoint with parameter <code>tz1io...BtJKUP</code> and callback contract <code>KT1Md...XUhn1</code>.
+Note, by appending <code>%viewNat</code> to the contract address we can specify a particular entrypoint of the contract that should be used as a callback.</p>
+<pre><code class="lang-json">{
+  &quot;kind&quot;: &quot;transaction&quot;,
+  &quot;source&quot;: &quot;...&quot;,
+  &quot;destination&quot;: &quot;KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5&quot;,
+  &quot;parameters&quot;: {
+    &quot;entrypoint&quot;: &quot;getBalance&quot;,                                    // call view entrypoint
+    &quot;value&quot;: {
+      &quot;prim&quot;: &quot;Pair&quot;,
+      &quot;args&quot;: [
+        {
+          &quot;string&quot;: &quot;tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP&quot;         // with some args
+        },
+        {
+          &quot;string&quot;: &quot;KT1MdfSC8xwRvxmd1UHANt158YtoFn4XUhn1%viewNat&quot; // and callback contract
+        }
+      ]
+    }
+  },
+  &quot;metadata&quot;: {
+    &quot;internal_operation_results&quot;: [                                // callback transaction
+      {
+        &quot;kind&quot;: &quot;transaction&quot;,
+        &quot;source&quot;: &quot;KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5&quot;,
+        &quot;destination&quot;: &quot;KT1MdfSC8xwRvxmd1UHANt158YtoFn4XUhn1&quot;,     // to callback contract
+        &quot;parameters&quot;: {
+          &quot;entrypoint&quot;: &quot;viewNat&quot;,                                 // to callback entrypoint
+          &quot;value&quot;: {
+            &quot;int&quot;: &quot;37037036736&quot;                                   // with `getBalance` result
+          }
+        }
+      }
+    ]
+  }
+}
+</code></pre>
+<p>So, we called <code>view</code> entrypoint by sending a transaction to a smart contract, then the smart contract produced
+an internal transaction to the <code>callback</code> contract with a result value in the parameters.</p>
+<h2 id="call-view-entrypoints-with-netezos">Call view entrypoints with Netezos</h2>
+<p>We've just seen how <code>view</code> entrypoints work in Tezos: you send a transaction to the smart contract, then the smart contract produces
+an internal transaction with result value in its parameters and sends it to the <code>callback</code> contract.
+With Netezos we will do basically the same things.</p>
+<p>Let's see, how to get <a href="https://ghostnet.tzkt.io/KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5/code">FA1.2 token</a>
+balance by calling <code>getBalance</code> entrypoint.</p>
+<h3 id="prepare-callback-contract">Prepare callback contract</h3>
+<p>First of all, we will need an existing contract that we will use as a <code>callback</code>.
+Moreover, the <code>callback</code> contract must have an entrypoint with the same parameter type as the type of the <code>view</code> entrypoint we are calling.</p>
+<p>Here is how the <code>getBalance</code> entrypoint of <a href="https://ghostnet.tzkt.io/KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5/code">our contract</a> looks:</p>
+<pre><code>(pair %getBalance address (contract nat)))
+</code></pre>
+<p>As we can see, it takes an <code>address</code> and returns <code>nat</code>, that is passed to the callback contract.
+So, we will need a <code>callback</code> contract with an entrypoint of type <code>nat</code>.</p>
+<p>Where do we get such a contract? Well, we can either originate a new one or use any of already existing ones that have an entrypoint of the required type.</p>
+<p>Let's take <a href="https://ghostnet.tzkt.io/KT1MdfSC8xwRvxmd1UHANt158YtoFn4XUhn1/code">existing one</a>:</p>
+<pre><code>parameter (or (nat %viewNat) (or (string %viewString) (address %viewAddress)));
+storage unit;
+code { FAILWITH }
+</code></pre>
+<p>That contract contains the entrypoint <code>(nat %viewNat)</code> - that's exactly what we need.</p>
+<h3 id="simulate-operation">Simulate operation</h3>
+<p>Of course, we don't want to send a transaction just to get some data from the smart contract.
+It would be weird to wait a minute unless a transaction is included into a block and moreover to pay a tx fee.</p>
+<p>A common workaround is to use <a href="https://gitlab.com/tezos/tezos/-/blob/master/docs/api/jakarta-openapi.json">/run_operation</a> RPC endpoint
+to simulate the transaction and see its result without injecting it into the blockchain, so we don't have to wait and we don't have to pay a fee.
+By the way, <a href="https://gitlab.com/tezos/tezos/-/blob/master/docs/api/jakarta-openapi.json">/run_operation</a> ignores signature, so we don't even need to forge and sign the operation, just send its content.</p>
+<p>Let's create a transaction:</p>
+<pre><code class="lang-cs">var sender   = &quot;tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP&quot;;
+var fa12     = &quot;KT1EwXFWoG9bYebmF4pYw72aGjwEnBWefgW5&quot;;
+var callback = &quot;KT1MdfSC8xwRvxmd1UHANt158YtoFn4XUhn1%viewNat&quot;;
+            
+var rpc = new TezosRpc(&quot;https://rpc.tzkt.io/ghostnet/&quot;);
+var counter = await rpc.Blocks.Head.Context.Contracts[sender].Counter.GetAsync&lt;int&gt;();
+ 
+var tx = new TransactionContent
+{
+    Source = sender,
+    Counter = ++counter,
+    GasLimit = 100_000,
+    Destination = fa12,
+    Parameters = new Parameters
+    {
+        Entrypoint = &quot;getBalance&quot;,
+        Value = new MichelinePrim
+        {
+            Prim = PrimType.Pair,
+            Args = new List&lt;IMicheline&gt;
+            {
+                new MichelineString(sender),
+                new MichelineString(callback)
+            }
+        }
+    }
+};
+</code></pre>
+<p>Nothing new, this is just a normal transaction with parameters. Then we simulate its execution via RPC:</p>
+<pre><code class="lang-cs">var operation = await rpc.Blocks.Head.Helpers.Scripts.RunOperation.PostAsync(tx);
+</code></pre>
+<h3 id="extract-result">Extract result</h3>
+<p>And finally, we can parse the simulation result (operation) and, despite it has failed (because the callback contract does nothing but <code>FAILWITH</code>), extract the <code>getBalance</code> value from the internal transaction parameters:</p>
+<pre><code class="lang-cs">var balance = operation
+    .contents[0]
+    .metadata
+    .internal_operation_results[0]
+    .parameters
+    .value
+    .@int;
+ 
+// 37037036736
+</code></pre>
+<p>That's it. In a similar way we can call any other <code>view</code> entrypoints.</p>
+<h2 id="advanced-get-fa2-balance">Advanced: get FA2 balance</h2>
+<p>Another example, demonstrating more complex <code>callback</code> type.</p>
+<h3 id="prepare-callback-contract-1">Prepare callback contract</h3>
+<p>In case of FA2 standard, <code>balance_of</code> has the following type:</p>
+<pre><code>(pair %balance_of (list %requests (pair (address %owner) (nat %token_id)))
+                  (contract %callback (list (pair 
+                                              (pair %request (address %owner) (nat %token_id))
+                                              (nat %balance)))))
+</code></pre>
+<p>So we need a callback contract with an entrypoint of type:</p>
+<pre><code>(list (pair 
+           (pair %request (address %owner) (nat %token_id))
+           (nat %balance)))))
+</code></pre>
+<p>This time let's originate our own contract that we will use as a <code>callback</code> for all calls of FA2 <code>balance_of</code>:</p>
+<pre><code class="lang-cs">var origination = new OriginationContent
+{
+    Source = sender,
+    Counter = ++counter,
+    GasLimit = 2000,
+    StorageLimit = 100,
+    Fee = 1000000,
+    Script = new Script
+    {
+        Code = Micheline.FromJson(@&quot;
+            [{&quot;&quot;prim&quot;&quot;:&quot;&quot;parameter&quot;&quot;,&quot;&quot;args&quot;&quot;:[{&quot;&quot;prim&quot;&quot;:&quot;&quot;list&quot;&quot;,&quot;&quot;args&quot;&quot;:[{&quot;&quot;prim&quot;&quot;:
+            &quot;&quot;pair&quot;&quot;,&quot;&quot;args&quot;&quot;:[{&quot;&quot;prim&quot;&quot;:&quot;&quot;pair&quot;&quot;,&quot;&quot;args&quot;&quot;:[{&quot;&quot;prim&quot;&quot;:&quot;&quot;address&quot;&quot;,
+            &quot;&quot;annots&quot;&quot;:[&quot;&quot;%owner&quot;&quot;]},{&quot;&quot;prim&quot;&quot;:&quot;&quot;nat&quot;&quot;,&quot;&quot;annots&quot;&quot;:[&quot;&quot;%token_id&quot;&quot;]}],
+            &quot;&quot;annots&quot;&quot;:[&quot;&quot;%request&quot;&quot;]},{&quot;&quot;prim&quot;&quot;:&quot;&quot;nat&quot;&quot;,&quot;&quot;annots&quot;&quot;:[&quot;&quot;%balance&quot;&quot;]}]}]}
+            ]},{&quot;&quot;prim&quot;&quot;:&quot;&quot;storage&quot;&quot;,&quot;&quot;args&quot;&quot;:[{&quot;&quot;prim&quot;&quot;:&quot;&quot;unit&quot;&quot;}]},{&quot;&quot;prim&quot;&quot;:&quot;&quot;code&quot;&quot;,
+            &quot;&quot;args&quot;&quot;:[[{&quot;&quot;prim&quot;&quot;:&quot;&quot;FAILWITH&quot;&quot;}]]}]&quot;) as MichelineArray,
+        Storage = new MichelinePrim { Prim = PrimType.Unit }
+    },
+};
+ 
+var bytes = await new LocalForge().ForgeOperationAsync(head, origination);
+var sig = (byte[])key.SignOperation(bytes);
+ 
+var op_hash = await rpc.Inject.Operation.PostAsync(bytes.Concat(sig));
+// KT1Cm94oSUbLUZasuZo285uuw9YDzuZEJUY6
+</code></pre>
+<p>Now we can use <code>KT1Cm94oSUbLUZasuZo285uuw9YDzuZEJUY6</code> as a callback contract (in your case it will be a different address).</p>
+<h3 id="simulate-operation-1">Simulate operation</h3>
+<p>When we have prepared callback contract, we can simulate an operation:</p>
+<pre><code class="lang-cs">var fa2 = &quot;KT1DYk1XDzHredJq1EyNkDindiWDqZyekXGj&quot;;
+var callback = &quot;KT1Cm94oSUbLUZasuZo285uuw9YDzuZEJUY6&quot;;
+ 
+var script = await rpc.Blocks.Head.Context.Contracts[fa2].Script.GetAsync();
+var code = Micheline.FromJson(script.code);
+var cs = new ContractScript(code);
+ 
+var param = cs.BuildParameter(
+    &quot;balance_of&quot;,
+    new
+    {
+        requests = new []
+        {
+            new
+            {
+                owner = sender,
+                token_id = 0
+            }
+        },
+        callback
+    });
+ 
+var tx = new TransactionContent
+{
+    Source = key.PubKey.Address,
+    Counter = ++counter,
+    GasLimit = 100_000,
+    StorageLimit = 257,
+    Fee = 100_000,
+    Destination = fa2,
+    Parameters = new Parameters
+    {
+        Entrypoint = &quot;balance_of&quot;,
+        Value = param
+    }
+};
+ 
+var operation = await rpc.Blocks.Head.Helpers.Scripts.RunOperation.PostAsync(tx);
+</code></pre>
+<h3 id="extract-result-1">Extract result</h3>
+<p>In the same way as with FA1.2 we can extract the value from the simulation result:</p>
+<pre><code class="lang-cs">var value = operation
+    .contents[0]
+    .metadata
+    .internal_operation_results[0]
+    .parameters
+    .value;
+</code></pre>
+<p>This is raw Micheline JSON:</p>
+<pre><code class="lang-json">[
+  {
+    &quot;prim&quot;:&quot;Pair&quot;,
+    &quot;args&quot;:[
+      {
+        &quot;prim&quot;:&quot;Pair&quot;,
+        &quot;args&quot;:[
+          {
+            &quot;bytes&quot;:&quot;0000fe2ce0cccc0214af521ad60c140c5589b4039247&quot;
+          },
+          {
+            &quot;int&quot;:&quot;0&quot;
+          }
+        ]
+      },
+      {
+        &quot;int&quot;:&quot;12345678912&quot;
+      }
+    ]
+  }
+]
+</code></pre>
+<p>We can also convert it to human-readable JSON:</p>
+<pre><code class="lang-cs">var cbScript = await rpc.Blocks.Head.Context.Contracts[callback].Script.GetAsync();
+var cbCode = Micheline.FromJson(cbScript.code);
+var cbCs = new ContractScript(cbCode);
+ 
+var json = cbCs.HumanizeParameter(&quot;default&quot;, Micheline.FromJson(value));
+</code></pre>
+<p>So in the end we will get:</p>
+<pre><code class="lang-json">[
+  {
+    &quot;request&quot;:{
+      &quot;owner&quot;:&quot;tz1ioz62kDw6Gm5HApeQtc1PGmN2wPBtJKUP&quot;,
+      &quot;token_id&quot;:&quot;0&quot;
+    },
+    &quot;balance&quot;:&quot;12345678912&quot;
+  }
+]
+</code></pre>
+<p>That's it! :D</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/baking-bad/netezos/blob/master/docs/docs/call-view-entrypoints.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright © Baking Bad
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
