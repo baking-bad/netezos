@@ -29,5 +29,15 @@ namespace Netezos.Contracts
                 _ => throw MapFailedException("invalid value")
             };
         }
+
+        internal override IMicheline Normalize(IMicheline value)
+        {
+            return Expect<MichelineString>(value);
+        }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return string.CompareOrdinal(((MichelineString)x).Value, ((MichelineString)y).Value);
+        }
     }
 }

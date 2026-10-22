@@ -41,5 +41,17 @@ namespace Netezos.Contracts
                 _ => throw MapFailedException("invalid value")
             };
         }
+
+        internal override IMicheline Normalize(IMicheline value)
+        {
+            return value is MichelinePrim { Prim: PrimType.True or PrimType.False }
+                ? value
+                : throw FormatException(value);
+        }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return (((MichelinePrim)x).Prim == PrimType.True).CompareTo(((MichelinePrim)y).Prim == PrimType.True);
+        }
     }
 }

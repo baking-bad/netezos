@@ -242,7 +242,7 @@ namespace Netezos.Contracts
                             ]
                         });
                     }
-                    return arr1;
+                    return Sort(arr1, Key, x => ((MichelinePrim)x).Args![0]);
 
                 case JsonElement json when json.ValueKind == JsonValueKind.Object:
                     var arr2 = new MichelineArray();
@@ -258,7 +258,7 @@ namespace Netezos.Contracts
                             ]
                         });
                     }
-                    return arr2;
+                    return Sort(arr2, Key, x => ((MichelinePrim)x).Args![0]);
 
                 case JsonElement json when json.ValueKind == JsonValueKind.Array:
                     var arr3 = new MichelineArray();
@@ -279,7 +279,7 @@ namespace Netezos.Contracts
                             ]
                         });
                     }
-                    return arr3;
+                    return Sort(arr3, Key, x => ((MichelinePrim)x).Args![0]);
 
                 default:
                     throw MapFailedException("invalid value");

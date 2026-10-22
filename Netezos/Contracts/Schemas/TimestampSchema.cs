@@ -249,5 +249,15 @@ namespace Netezos.Contracts
             var m = month + 12 * a - 3;
             return day + (153 * m + 2) / 5 + 365L * y + y / 4 - y / 100 + y / 400 - 32_045 - 2_440_588;
         }
+
+        internal override IMicheline Normalize(IMicheline value)
+        {
+            return Expect<MichelineInt>(Optimize(value));
+        }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return CompareInts(x, y);
+        }
     }
 }

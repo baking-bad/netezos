@@ -84,13 +84,13 @@ namespace Netezos.Contracts
                     var arr1 = new MichelineArray();
                     foreach (var item in e)
                         arr1.Add(Item.MapObject(item, true));
-                    return arr1;
+                    return Sort(arr1, Item, x => x);
 
                 case JsonElement json when json.ValueKind == JsonValueKind.Array:
                     var arr2 = new MichelineArray();
                     foreach (var item in json.EnumerateArray())
                         arr2.Add(Item.MapObject(item, true));
-                    return arr2;
+                    return Sort(arr2, Item, x => x);
 
                 default:
                     throw MapFailedException("invalid value");

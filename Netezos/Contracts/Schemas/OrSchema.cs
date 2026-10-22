@@ -270,5 +270,35 @@ namespace Netezos.Contracts
 
             return value;
         }
+
+        internal override IMicheline Normalize(IMicheline value)
+        {
+            return value switch
+            {
+                MichelinePrim { Prim: PrimType.Left, Args.Count: 1 } left => new MichelinePrim
+                {
+                    Prim = PrimType.Left,
+                    Args = [Left.Normalize(left.Args[0])]
+                },
+                MichelinePrim { Prim: PrimType.Right, Args.Count: 1 } right => new MichelinePrim
+                {
+                    Prim = PrimType.Right,
+                    Args = [Right.Normalize(right.Args[0])]
+                },
+                _ => throw FormatException(value)
+            };
+        }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            var xPrim = (MichelinePrim)x;
+            var yPrim = (MichelinePrim)y;
+
+            if (xPrim.Prim != yPrim.Prim)
+                return xPrim.Prim == PrimType.Left ? -1 : 1;
+
+            var schema = xPrim.Prim == PrimType.Left ? Left : Right;
+            return schema.Compare(xPrim.Args![0], yPrim.Args![0]);
+        }
     }
 }

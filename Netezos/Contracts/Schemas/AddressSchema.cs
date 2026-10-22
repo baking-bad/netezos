@@ -171,5 +171,23 @@ namespace Netezos.Contracts
 
             return new MichelineBytes(res);
         }
+
+        internal override IMicheline Normalize(IMicheline value)
+        {
+            if (Optimize(value) is not MichelineBytes { Value.Length: >= 22 } micheBytes)
+                throw FormatException(value);
+
+            // an address without an entrypoint points to %default
+            return micheBytes.Value.Length == 22
+                ? new MichelineBytes([.. micheBytes.Value, .. DefaultEntrypoint])
+                : micheBytes;
+        }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return CompareBytes(x, y);
+        }
+
+        static readonly byte[] DefaultEntrypoint = Utf8.Parse("default");
     }
 }

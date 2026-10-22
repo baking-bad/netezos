@@ -165,6 +165,50 @@ namespace Netezos.Contracts
             throw new NotImplementedException();
         }
 
+        internal virtual IMicheline Normalize(IMicheline value)
+        {
+            throw new InvalidOperationException($"Values of type {Prim} are not comparable");
+        }
+
+        internal virtual int Compare(IMicheline x, IMicheline y)
+        {
+            throw new InvalidOperationException($"Values of type {Prim} are not comparable");
+        }
+
+        protected IMicheline Expect<T>(IMicheline value) where T : IMicheline
+        {
+            return value is T ? value : throw FormatException(value);
+        }
+
+        protected static int CompareInts(IMicheline x, IMicheline y)
+        {
+            return ((MichelineInt)x).Value.CompareTo(((MichelineInt)y).Value);
+        }
+
+        protected static int CompareBytes(IMicheline x, IMicheline y)
+        {
+            return ((MichelineBytes)x).Value.AsSpan().SequenceCompareTo(((MichelineBytes)y).Value);
+        }
+
+        protected MichelineArray Sort(MichelineArray items, Schema keySchema, Func<IMicheline, IMicheline> key)
+        {
+            var keys = items.Select(x => keySchema.Normalize(key(x))).ToArray();
+            var order = Enumerable.Range(0, items.Count)
+                .OrderBy(i => keys[i], Comparer<IMicheline>.Create(keySchema.Compare))
+                .ToArray();
+
+            var sorted = new MichelineArray(items.Count);
+            for (int i = 0; i < order.Length; i++)
+            {
+                if (i > 0 && keySchema.Compare(keys[order[i - 1]], keys[order[i]]) == 0)
+                    throw MapFailedException($"duplicate key {keySchema.Humanize(key(items[order[i]]))}");
+
+                sorted.Add(items[order[i]]);
+            }
+
+            return sorted;
+        }
+
         protected virtual List<IMicheline>? GetArgs()
         {
             return null;
