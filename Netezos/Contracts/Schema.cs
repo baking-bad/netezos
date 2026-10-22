@@ -165,6 +165,47 @@ namespace Netezos.Contracts
             throw new NotImplementedException();
         }
 
+        internal virtual int Compare(IMicheline x, IMicheline y)
+        {
+            throw new InvalidOperationException($"Values of type {Prim} are not comparable");
+        }
+
+        protected byte[] OptimizedBytes(IMicheline value)
+        {
+            return Optimize(value) is MichelineBytes micheBytes
+                ? micheBytes.Value
+                : throw FormatException(value);
+        }
+
+        protected static int CompareBytes(byte[] x, byte[] y)
+        {
+            return x.AsSpan().SequenceCompareTo(y);
+        }
+
+        protected static int CompareInts(Schema schema, IMicheline x, IMicheline y)
+        {
+            if (x is not MichelineInt xInt)
+                throw schema.FormatException(x);
+            if (y is not MichelineInt yInt)
+                throw schema.FormatException(y);
+
+            return xInt.Value.CompareTo(yInt.Value);
+        }
+
+        protected MichelineArray Sort(MichelineArray items, Schema keySchema, Func<IMicheline, IMicheline> key)
+        {
+            var comparer = Comparer<IMicheline>.Create(keySchema.Compare);
+
+            var sorted = new MichelineArray(items.Count);
+            sorted.AddRange(items.OrderBy(key, comparer));
+
+            for (int i = 1; i < sorted.Count; i++)
+                if (comparer.Compare(key(sorted[i - 1]), key(sorted[i])) == 0)
+                    throw MapFailedException($"duplicate key {keySchema.Humanize(key(sorted[i]))}");
+
+            return sorted;
+        }
+
         protected virtual List<IMicheline>? GetArgs()
         {
             return null;

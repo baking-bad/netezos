@@ -171,5 +171,27 @@ namespace Netezos.Contracts
 
             return new MichelineBytes(res);
         }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            var xBytes = OptimizedBytes(x);
+            var yBytes = OptimizedBytes(y);
+
+            if (xBytes.Length < 22)
+                throw FormatException(x);
+            if (yBytes.Length < 22)
+                throw FormatException(y);
+
+            var res = xBytes.AsSpan(0, 22).SequenceCompareTo(yBytes.AsSpan(0, 22));
+            if (res != 0) return res;
+
+            // an address without an entrypoint points to %default
+            return CompareBytes(Entrypoint(xBytes), Entrypoint(yBytes));
+
+            static byte[] Entrypoint(byte[] bytes) => bytes.Length > 22
+                ? bytes.GetBytes(22, bytes.Length - 22)
+                : Utf8.Parse("default");
+        }
+
     }
 }

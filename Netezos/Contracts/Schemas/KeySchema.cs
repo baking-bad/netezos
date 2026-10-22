@@ -92,5 +92,11 @@ namespace Netezos.Contracts
 
             return value;
         }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return CompareBytes(OptimizedBytes(x), OptimizedBytes(y));
+        }
+
     }
 }

@@ -338,6 +338,17 @@ namespace Netezos.Contracts
             }
             return value;
         }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            if (Uncomb(x) is not MichelinePrim { Prim: PrimType.Pair, Args.Count: 2 } xPair)
+                throw FormatException(x);
+            if (Uncomb(y) is not MichelinePrim { Prim: PrimType.Pair, Args.Count: 2 } yPair)
+                throw FormatException(y);
+
+            var res = Left.Compare(xPair.Args[0], yPair.Args[0]);
+            return res != 0 ? res : Right.Compare(xPair.Args[1], yPair.Args[1]);
+        }
     }
 
     public enum PairKind

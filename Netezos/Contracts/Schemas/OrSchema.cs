@@ -270,5 +270,21 @@ namespace Netezos.Contracts
 
             return value;
         }
+
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return (x, y) switch
+            {
+                (MichelinePrim { Prim: PrimType.Left, Args.Count: 1 } l1, MichelinePrim { Prim: PrimType.Left, Args.Count: 1 } l2)
+                    => Left.Compare(l1.Args[0], l2.Args[0]),
+                (MichelinePrim { Prim: PrimType.Right, Args.Count: 1 } r1, MichelinePrim { Prim: PrimType.Right, Args.Count: 1 } r2)
+                    => Right.Compare(r1.Args[0], r2.Args[0]),
+                (MichelinePrim { Prim: PrimType.Left, Args.Count: 1 }, MichelinePrim { Prim: PrimType.Right, Args.Count: 1 }) => -1,
+                (MichelinePrim { Prim: PrimType.Right, Args.Count: 1 }, MichelinePrim { Prim: PrimType.Left, Args.Count: 1 }) => 1,
+                (MichelinePrim { Prim: PrimType.Left or PrimType.Right, Args.Count: 1 }, _) => throw FormatException(y),
+                _ => throw FormatException(x)
+            };
+        }
+
     }
 }
