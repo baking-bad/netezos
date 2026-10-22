@@ -172,26 +172,22 @@ namespace Netezos.Contracts
             return new MichelineBytes(res);
         }
 
-        internal override int Compare(IMicheline x, IMicheline y)
+        internal override IMicheline Normalize(IMicheline value)
         {
-            var xBytes = OptimizedBytes(x);
-            var yBytes = OptimizedBytes(y);
-
-            if (xBytes.Length < 22)
-                throw FormatException(x);
-            if (yBytes.Length < 22)
-                throw FormatException(y);
-
-            var res = xBytes.AsSpan(0, 22).SequenceCompareTo(yBytes.AsSpan(0, 22));
-            if (res != 0) return res;
+            if (Optimize(value) is not MichelineBytes { Value.Length: >= 22 } micheBytes)
+                throw FormatException(value);
 
             // an address without an entrypoint points to %default
-            return CompareBytes(Entrypoint(xBytes), Entrypoint(yBytes));
-
-            static byte[] Entrypoint(byte[] bytes) => bytes.Length > 22
-                ? bytes.GetBytes(22, bytes.Length - 22)
-                : Utf8.Parse("default");
+            return micheBytes.Value.Length == 22
+                ? new MichelineBytes([.. micheBytes.Value, .. DefaultEntrypoint])
+                : micheBytes;
         }
 
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return CompareBytes(x, y);
+        }
+
+        static readonly byte[] DefaultEntrypoint = Utf8.Parse("default");
     }
 }

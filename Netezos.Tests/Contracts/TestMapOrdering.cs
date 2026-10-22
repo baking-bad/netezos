@@ -50,7 +50,8 @@ namespace Netezos.Tests.Contracts
 
         [Fact]
         public void TestBytesKeysSortedLexicographically()
-        { var set = Map("""{"prim":"set","args":[{"prim":"bytes"}]}""", new List<string> { "0102", "01", "ff", "" });
+        {
+            var set = Map("""{"prim":"set","args":[{"prim":"bytes"}]}""", new List<string> { "0102", "01", "ff", "" });
 
             Assert.Equal(["""{"bytes":""}""", """{"bytes":"01"}""", """{"bytes":"0102"}""", """{"bytes":"ff"}"""], Keys(set));
         }
@@ -61,11 +62,14 @@ namespace Netezos.Tests.Contracts
             var tz1 = new Key(ECKind.Ed25519).Address;
             var tz2 = new Key(ECKind.Secp256k1).Address;
             var tz3 = new Key(ECKind.NistP256).Address;
+            var tz4 = Base58.Convert(Enumerable.Repeat((byte)0xff, 20).ToArray(), Prefixes.tz4);
+            var tz5 = Base58.Convert(Enumerable.Repeat((byte)0xff, 20).ToArray(), Prefixes.tz5);
+            var sr1 = Base58.Convert(new byte[20], Prefixes.sr1);
 
             var set = Map("""{"prim":"set","args":[{"prim":"address"}]}""",
-                new[] { $"{KT1}%zzz", KT1, tz3, $"{KT1}%abc", tz2, tz1 });
+                new[] { sr1, $"{KT1}%zzz", KT1, tz5, tz3, $"{KT1}%abc", tz4, tz2, tz1 });
 
-            Assert.Equal([tz1, tz2, tz3, $"{KT1}%abc", KT1, $"{KT1}%zzz"],
+            Assert.Equal([tz1, tz2, tz3, tz4, tz5, $"{KT1}%abc", KT1, $"{KT1}%zzz", sr1],
                 ((MichelineArray)set).Select(x => ((MichelineString)x).Value));
         }
 
@@ -82,10 +86,12 @@ namespace Netezos.Tests.Contracts
             var tz1 = new Key(ECKind.Ed25519).PubKey.Address;
             var tz2 = new Key(ECKind.Secp256k1).PubKey.Address;
             var tz3 = new Key(ECKind.NistP256).PubKey.Address;
+            var tz4 = Base58.Convert(new byte[20], Prefixes.tz4);
+            var tz5 = Base58.Convert(new byte[20], Prefixes.tz5);
 
-            var set = Map("""{"prim":"set","args":[{"prim":"key_hash"}]}""", new[] { tz3, tz1, tz2 });
+            var set = Map("""{"prim":"set","args":[{"prim":"key_hash"}]}""", new[] { tz5, tz3, tz1, tz4, tz2 });
 
-            Assert.Equal([tz1, tz2, tz3], ((MichelineArray)set).Select(x => ((MichelineString)x).Value));
+            Assert.Equal([tz1, tz2, tz3, tz4, tz5], ((MichelineArray)set).Select(x => ((MichelineString)x).Value));
         }
 
         [Fact]

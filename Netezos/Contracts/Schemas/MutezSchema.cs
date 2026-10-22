@@ -35,10 +35,14 @@ namespace Netezos.Contracts
             };
         }
 
-        internal override int Compare(IMicheline x, IMicheline y)
+        internal override IMicheline Normalize(IMicheline value)
         {
-            return CompareInts(this, x, y);
+            return Expect<MichelineInt>(value);
         }
 
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return CompareInts(x, y);
+        }
     }
 }

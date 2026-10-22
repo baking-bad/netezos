@@ -32,15 +32,16 @@ namespace Netezos.Contracts
             return new MichelinePrim { Prim = PrimType.Unit };
         }
 
-        internal override int Compare(IMicheline x, IMicheline y)
+        internal override IMicheline Normalize(IMicheline value)
         {
-            if (x is not MichelinePrim { Prim: PrimType.Unit })
-                throw FormatException(x);
-            if (y is not MichelinePrim { Prim: PrimType.Unit })
-                throw FormatException(y);
-
-            return 0;
+            return value is MichelinePrim { Prim: PrimType.Unit }
+                ? value
+                : throw FormatException(value);
         }
 
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return 0;
+        }
     }
 }

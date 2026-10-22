@@ -30,10 +30,14 @@ namespace Netezos.Contracts
             };
         }
 
-        internal override int Compare(IMicheline x, IMicheline y)
+        internal override IMicheline Normalize(IMicheline value)
         {
-            return string.CompareOrdinal(Flatten(x), Flatten(y));
+            return Expect<MichelineString>(value);
         }
 
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return string.CompareOrdinal(((MichelineString)x).Value, ((MichelineString)y).Value);
+        }
     }
 }

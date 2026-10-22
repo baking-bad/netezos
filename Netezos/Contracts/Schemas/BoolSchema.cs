@@ -42,10 +42,16 @@ namespace Netezos.Contracts
             };
         }
 
-        internal override int Compare(IMicheline x, IMicheline y)
+        internal override IMicheline Normalize(IMicheline value)
         {
-            return (Flatten(x) == "true").CompareTo(Flatten(y) == "true");
+            return value is MichelinePrim { Prim: PrimType.True or PrimType.False }
+                ? value
+                : throw FormatException(value);
         }
 
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return (((MichelinePrim)x).Prim == PrimType.True).CompareTo(((MichelinePrim)y).Prim == PrimType.True);
+        }
     }
 }

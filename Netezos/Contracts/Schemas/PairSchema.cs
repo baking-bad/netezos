@@ -339,15 +339,25 @@ namespace Netezos.Contracts
             return value;
         }
 
+        internal override IMicheline Normalize(IMicheline value)
+        {
+            if (Uncomb(value) is not MichelinePrim { Prim: PrimType.Pair, Args.Count: 2 } pair)
+                throw FormatException(value);
+
+            return new MichelinePrim
+            {
+                Prim = PrimType.Pair,
+                Args = [Left.Normalize(pair.Args[0]), Right.Normalize(pair.Args[1])]
+            };
+        }
+
         internal override int Compare(IMicheline x, IMicheline y)
         {
-            if (Uncomb(x) is not MichelinePrim { Prim: PrimType.Pair, Args.Count: 2 } xPair)
-                throw FormatException(x);
-            if (Uncomb(y) is not MichelinePrim { Prim: PrimType.Pair, Args.Count: 2 } yPair)
-                throw FormatException(y);
+            var xArgs = ((MichelinePrim)x).Args!;
+            var yArgs = ((MichelinePrim)y).Args!;
 
-            var res = Left.Compare(xPair.Args[0], yPair.Args[0]);
-            return res != 0 ? res : Right.Compare(xPair.Args[1], yPair.Args[1]);
+            var res = Left.Compare(xArgs[0], yArgs[0]);
+            return res != 0 ? res : Right.Compare(xArgs[1], yArgs[1]);
         }
     }
 

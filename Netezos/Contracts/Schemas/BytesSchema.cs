@@ -39,10 +39,14 @@ namespace Netezos.Contracts
             }
         }
 
-        internal override int Compare(IMicheline x, IMicheline y)
+        internal override IMicheline Normalize(IMicheline value)
         {
-            return CompareBytes(OptimizedBytes(x), OptimizedBytes(y));
+            return Expect<MichelineBytes>(Optimize(value));
         }
 
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            return CompareBytes(x, y);
+        }
     }
 }

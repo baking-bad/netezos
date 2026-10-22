@@ -122,19 +122,29 @@ namespace Netezos.Contracts
             return value;
         }
 
-        internal override int Compare(IMicheline x, IMicheline y)
+        internal override IMicheline Normalize(IMicheline value)
         {
-            return (x, y) switch
+            return value switch
             {
-                (MichelinePrim { Prim: PrimType.None }, MichelinePrim { Prim: PrimType.None }) => 0,
-                (MichelinePrim { Prim: PrimType.None }, MichelinePrim { Prim: PrimType.Some }) => -1,
-                (MichelinePrim { Prim: PrimType.Some }, MichelinePrim { Prim: PrimType.None }) => 1,
-                (MichelinePrim { Prim: PrimType.Some, Args.Count: 1 } xSome, MichelinePrim { Prim: PrimType.Some, Args.Count: 1 } ySome)
-                    => Some.Compare(xSome.Args[0], ySome.Args[0]),
-                (MichelinePrim { Prim: PrimType.None or PrimType.Some }, _) => throw FormatException(y),
-                _ => throw FormatException(x)
+                MichelinePrim { Prim: PrimType.None } => value,
+                MichelinePrim { Prim: PrimType.Some, Args.Count: 1 } some => new MichelinePrim
+                {
+                    Prim = PrimType.Some,
+                    Args = [Some.Normalize(some.Args[0])]
+                },
+                _ => throw FormatException(value)
             };
         }
 
+        internal override int Compare(IMicheline x, IMicheline y)
+        {
+            var xPrim = (MichelinePrim)x;
+            var yPrim = (MichelinePrim)y;
+
+            if (xPrim.Prim != yPrim.Prim)
+                return xPrim.Prim == PrimType.None ? -1 : 1;
+
+            return xPrim.Prim == PrimType.None ? 0 : Some.Compare(xPrim.Args![0], yPrim.Args![0]);
+        }
     }
 }

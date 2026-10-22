@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -166,50 +165,46 @@ namespace Netezos.Contracts
             throw new NotImplementedException();
         }
 
+        internal virtual IMicheline Normalize(IMicheline value)
+        {
+            throw new InvalidOperationException($"Values of type {Prim} are not comparable");
+        }
+
         internal virtual int Compare(IMicheline x, IMicheline y)
         {
             throw new InvalidOperationException($"Values of type {Prim} are not comparable");
         }
 
-        protected byte[] OptimizedBytes(IMicheline value)
+        protected IMicheline Expect<T>(IMicheline value) where T : IMicheline
         {
-            return Optimize(value) is MichelineBytes micheBytes
-                ? micheBytes.Value
-                : throw FormatException(value);
+            return value is T ? value : throw FormatException(value);
         }
 
-        protected static int CompareBytes(byte[] x, byte[] y)
+        protected static int CompareInts(IMicheline x, IMicheline y)
         {
-            return x.AsSpan().SequenceCompareTo(y);
+            return ((MichelineInt)x).Value.CompareTo(((MichelineInt)y).Value);
         }
 
-        protected static int CompareInts(Schema schema, IMicheline x, IMicheline y)
+        protected static int CompareBytes(IMicheline x, IMicheline y)
         {
-            if (x is not MichelineInt xInt)
-                throw schema.FormatException(x);
-            if (y is not MichelineInt yInt)
-                throw schema.FormatException(y);
-
-            return xInt.Value.CompareTo(yInt.Value);
+            return ((MichelineBytes)x).Value.AsSpan().SequenceCompareTo(((MichelineBytes)y).Value);
         }
 
         protected MichelineArray Sort(MichelineArray items, Schema keySchema, Func<IMicheline, IMicheline> key)
         {
-            var comparer = Comparer<IMicheline>.Create(keySchema.Compare);
+            var keys = items.Select(x => keySchema.Normalize(key(x))).ToArray();
+            var order = Enumerable.Range(0, items.Count)
+                .OrderBy(i => keys[i], Comparer<IMicheline>.Create(keySchema.Compare))
+                .ToArray();
 
             var sorted = new MichelineArray(items.Count);
-            try
+            for (int i = 0; i < order.Length; i++)
             {
-                sorted.AddRange(items.OrderBy(key, comparer));
-            }
-            catch (InvalidOperationException e) when (e.InnerException != null)
-            {
-                ExceptionDispatchInfo.Throw(e.InnerException);
-            }
+                if (i > 0 && keySchema.Compare(keys[order[i - 1]], keys[order[i]]) == 0)
+                    throw MapFailedException($"duplicate key {keySchema.Humanize(key(items[order[i]]))}");
 
-            for (int i = 1; i < sorted.Count; i++)
-                if (comparer.Compare(key(sorted[i - 1]), key(sorted[i])) == 0)
-                    throw MapFailedException($"duplicate key {keySchema.Humanize(key(sorted[i]))}");
+                sorted.Add(items[order[i]]);
+            }
 
             return sorted;
         }
