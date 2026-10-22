@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using Netezos.Encoding;
 
@@ -197,7 +198,14 @@ namespace Netezos.Contracts
             var comparer = Comparer<IMicheline>.Create(keySchema.Compare);
 
             var sorted = new MichelineArray(items.Count);
-            sorted.AddRange(items.OrderBy(key, comparer));
+            try
+            {
+                sorted.AddRange(items.OrderBy(key, comparer));
+            }
+            catch (InvalidOperationException e) when (e.InnerException != null)
+            {
+                ExceptionDispatchInfo.Throw(e.InnerException);
+            }
 
             for (int i = 1; i < sorted.Count; i++)
                 if (comparer.Compare(key(sorted[i - 1]), key(sorted[i])) == 0)

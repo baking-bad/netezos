@@ -156,6 +156,13 @@ namespace Netezos.Tests.Contracts
         }
 
         [Fact]
+        public void TestInvalidKeyThrowsFormatException()
+        {
+            Assert.Throws<FormatException>(() => Map("""{"prim":"set","args":[{"prim":"timestamp"}]}""",
+                new List<string> { "abc", "1970-01-01T00:00:01Z" }));
+        }
+
+        [Fact]
         public void TestNestedMapsSorted()
         {
             var map = Map("""{"prim":"map","args":[{"prim":"string"},{"prim":"set","args":[{"prim":"nat"}]}]}""",
