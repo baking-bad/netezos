@@ -14,9 +14,15 @@ namespace Netezos.Contracts
             if (micheline.Args?.Count != 1 || micheline.Args[0] is not MichelinePrim contentType)
                 throw new FormatException($"Invalid {Prim} schema format");
 
-            contentType.Annots ??= new List<IAnnotation>(1);
-            if (contentType.Annots.Count == 0)
-                contentType.Annots.Add(new FieldAnnotation("content"));
+            if (contentType.Annots is not { Count: > 0 })
+            {
+                contentType = new MichelinePrim
+                {
+                    Prim = contentType.Prim,
+                    Args = contentType.Args,
+                    Annots = [new FieldAnnotation("content")]
+                };
+            }
 
             var ticket = new MichelinePrim
             {
