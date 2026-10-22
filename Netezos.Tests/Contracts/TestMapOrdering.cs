@@ -50,8 +50,7 @@ namespace Netezos.Tests.Contracts
 
         [Fact]
         public void TestBytesKeysSortedLexicographically()
-        {
-            var set = Map("""{"prim":"set","args":[{"prim":"bytes"}]}""", new[] { "0102", "01", "ff", "" });
+        { var set = Map("""{"prim":"set","args":[{"prim":"bytes"}]}""", new List<string> { "0102", "01", "ff", "" });
 
             Assert.Equal(["""{"bytes":""}""", """{"bytes":"01"}""", """{"bytes":"0102"}""", """{"bytes":"ff"}"""], Keys(set));
         }
@@ -140,7 +139,7 @@ namespace Netezos.Tests.Contracts
         [Fact]
         public void TestBoolAndMutezKeys()
         {
-            var bools = Map("""{"prim":"set","args":[{"prim":"bool"}]}""", new[] { true, false });
+            var bools = Map("""{"prim":"set","args":[{"prim":"bool"}]}""", new List<bool> { true, false });
             Assert.Equal(["""{"prim":"False"}""", """{"prim":"True"}"""], Keys(bools));
 
             var mutez = Map("""{"prim":"set","args":[{"prim":"mutez"}]}""", new[] { BigInteger.Pow(2, 63) - 1, BigInteger.One });
@@ -150,7 +149,7 @@ namespace Netezos.Tests.Contracts
         [Fact]
         public void TestDuplicateKeysThrow()
         {
-            Assert.Throws<FormatException>(() => Map("""{"prim":"set","args":[{"prim":"nat"}]}""", new[] { 1, 2, 1 }));
+            Assert.Throws<FormatException>(() => Map("""{"prim":"set","args":[{"prim":"nat"}]}""", new List<int> { 1, 2, 1 }));
 
             Assert.Throws<FormatException>(() => Map("""{"prim":"map","args":[{"prim":"timestamp"},{"prim":"unit"}]}""",
                 """[{"key":"1970-01-01T00:00:01Z","value":{}},{"key":1,"value":{}}]"""));
